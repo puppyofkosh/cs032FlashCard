@@ -1,0 +1,57 @@
+<html>
+
+<head>
+<center>
+<button type="button" onclick=""window.location='all_cards.html';"">Create New Flashcard</button>
+<button type="button" onclick="">See all Flashcards</button>
+<button type="button" onclick="">Export</button>
+</center>
+
+<center>
+<h2> US Capitals - Delaware </h2>
+</center>
+</head>
+
+
+Poops
+<center>
+Question:
+<img src = "waveform_1.gif" />
+</center>
+
+<center>
+  <button type="button" onclick="">
+    Begin Recoring
+  </button>
+  <button type="button" onclick="">
+    Select file
+  </button>
+</center>
+
+<center>
+Answer:
+<img src = "waveform_1.gif" />
+</center>
+
+<center>
+  <button type="button" onclick="">
+    Begin Recoring
+  </button>
+  <button type="button" onclick="">
+    Select file
+  </button>
+</center>
+
+<form>
+Time between Q & A: <input type="text" name="firstname"><br> seconds
+Estimated File Size: n kilobytes<br>
+Tags: <br><textarea cols="25" rows="5" name="myname">State, Delaware, Dover, Geography, United States, Capitals
+</textarea><br>
+
+</form>
+
+<button type="button">
+Save
+</button>
+
+</html>
