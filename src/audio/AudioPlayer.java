@@ -10,9 +10,10 @@ public interface AudioPlayer {
 	 * @param a The AudioFile to play
 	 */
 	void play(AudioFile a);
-	
 	/**
 	 * Stops the playback of any AudioFiles currently playing.
 	 */
+	
+	boolean isPlaying();
 	void stop();
 }

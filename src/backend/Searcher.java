@@ -12,6 +12,8 @@ import flashcard.FlashCard;
  */
 public interface Searcher {
 	
+	//Searcher(SearchType ...s);
+	//Might use these enums:	SearchType.TAG, SearchType.NAME, SearchType.LOCAL, SearchType.DB)
 	// Needs to be initialized with a Resources obj
 	
 	/**

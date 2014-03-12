@@ -32,6 +32,7 @@ TargetDataLine line;
 	public static void main(String[] args) {
 		
 		try {
+			System.out.println("start speaking");
 			new microphoneTest();
 			System.out.println("done");
 			

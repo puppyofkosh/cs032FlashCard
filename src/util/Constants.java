@@ -7,6 +7,6 @@ import javax.sound.sampled.AudioFormat;
  */
 public class Constants {
 
-//	AudioFormat standardizedFormat = .... 
+public static final	AudioFormat standardizedFormat = null; 
 	
 }
