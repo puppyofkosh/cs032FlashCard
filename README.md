@@ -23,7 +23,9 @@ http://docs.oracle.com/javase/tutorial/sound/capturing.html
 <b> Undo Functionality</b><br>
 http://www.processworks.de/blog/2009/08/add-undoredo-functionality-to-a-java-app/
 <br>
-<b> 
+<b>Concatenate Audio Files</b><br>
+http://karthicraghupathi.com/2013/01/12/concatenate-wav-files-in-java/
+<br>
 <b> Wit API </b> <br>
 https://www.wit.ai./
 <br>
