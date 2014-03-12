@@ -1,0 +1,4 @@
+Annoying stuff I've had to do:
+-install sharutils in order to unpack jsapi
+(sudo apt-get install sharutils)
+

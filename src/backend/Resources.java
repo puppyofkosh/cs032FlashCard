@@ -7,10 +7,16 @@ import flashcard.FlashCardSet;
 
 public interface Resources {
 	// Get names of flashcards with given tag
-	List<String> getByTag(String tag);
-	List<FlashCard> getByName(String name);
+	List<String> getFlashCardsByTag(String tag);
+	List<FlashCard> getFlashCardsByName(String name);
 	
 	List<FlashCard> getBySet(FlashCardSet s);
 	
+	FlashCardSet getSetByName(String setName);
+	
 	List<FlashCardSet> getAllSets();
 }
+// Interfaces for backend we haven't written yet:
+// Recorder, TTS thing, Importer, important GUI stuff
+//
+//
