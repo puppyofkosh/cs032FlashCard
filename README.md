@@ -32,4 +32,7 @@ https://www.wit.ai./
 <br>
 <b> Avoiding Exploding Indexes On App Engine Datastore</b> <br>
 https://developers.google.com/appengine/articles/indexselection
+<br>
+<b> Accessing App Engine Data From Java Apps</b> <br>
+<a href = "https://developers.google.com/appengine/docs/java/tools/remoteapi">The Java SDK includes a library called Remote API that lets you transparently access App Engine services from any Java application. For example, you can use Remote API to access a production datastore from an app running on your local machine. You can also use Remote API to access the datastore of one App Engine app from a different App Engine app.</a>
 </p>
