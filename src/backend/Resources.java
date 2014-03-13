@@ -41,6 +41,12 @@ public interface Resources {
 	 * @return
 	 */
 	List<FlashCardSet> getAllSets();
+	
+	/**
+	 * Used by GUI to display "library" of available cards
+	 * @return
+	 */
+	List<FlashCard> getAllCards();
 }
 // Interfaces for backend we haven't written yet:
 // Recorder, TTS thing, Importer, important GUI stuff
