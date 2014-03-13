@@ -26,7 +26,11 @@ public interface FlashCard {
 		/*FlashCard(String filePath)*/
 
 	
-	
+	/**
+	 * Returns the name of the current FlashCard as a string.
+	 * @return
+	 */
+	String getName();
 	/**
 	 * This method gets all sets a given FlashCard is a member of. Note this
 	 * information is not actually stored in the FlashCard object, but in
