@@ -7,6 +7,10 @@ import flashcard.FlashCardSet;
 
 /**
  * Export flashcards/sets to the dropbox database
+ * FIXME: Might use google app engine instead
+ * 
+ * Sam
+ * 
  * @author puppyofkosh
  *
  */

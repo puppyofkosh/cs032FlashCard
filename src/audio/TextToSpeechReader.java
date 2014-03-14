@@ -2,6 +2,8 @@ package audio;
 /**
  * An interface for objects that can convert Strings
  * into AudioFiles using text to speech
+ * 
+ * Implementations will be written by Ian
  */
 public interface TextToSpeechReader {
 	

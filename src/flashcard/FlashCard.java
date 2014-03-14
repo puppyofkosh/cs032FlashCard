@@ -9,7 +9,9 @@ import java.util.List;
  *The interface for the FlashCard objects that are the core of this project
  *Probably we will only have one class that implements this interface, but
  *we wanted to make it an interface to create stubs.
-
+ * 
+ * Sam
+ * 
  */
 public interface FlashCard {
 

@@ -2,6 +2,11 @@ package flashcard;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * sam
+ * @author puppyofkosh
+ *
+ */
 public interface FlashCardSet {
 	
 	/**

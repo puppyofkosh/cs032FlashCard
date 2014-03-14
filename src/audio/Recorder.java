@@ -1,6 +1,8 @@
 package audio;
 /**
  * An interface for Objects that can record audio from a microphone.
+ * 
+ * Peter
  */
 public interface Recorder {
 

@@ -2,6 +2,9 @@ package audio;
 
 /**
  * A class for playing audio
+ * 
+ * Peter
+ * 
  */
 public interface AudioPlayer {
 	

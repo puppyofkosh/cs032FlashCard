@@ -4,6 +4,9 @@ import javax.sound.sampled.AudioInputStream;
 
 /**
  * A representation of an AudioFile that can be used within the program
+ * 
+ * To be implemented by Peter
+ * 
  */
 public interface AudioFile {
 	/**
