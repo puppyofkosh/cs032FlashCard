@@ -7,6 +7,9 @@ import flashcard.FlashCardSet;
 
 /**
  * Lets us export a flashcard to a single wav file in a given directory
+ * 
+ * peter
+ * 
  * @author puppyofkosh
  *
  */

@@ -11,6 +11,9 @@ import flashcard.FlashCardSet;
  * This class is pretty core to the application. The GUI will
  * use it to display info about the cards, while the searcher will
  * also be using it
+ * 
+ * Sam
+ * 
  * @author puppyofkosh
  *
  */
@@ -48,7 +51,3 @@ public interface Resources {
 	 */
 	List<FlashCard> getAllCards();
 }
-// Interfaces for backend we haven't written yet:
-// Recorder, TTS thing, Importer, important GUI stuff
-//
-//

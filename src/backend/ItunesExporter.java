@@ -7,6 +7,9 @@ import flashcard.FlashCardSet;
 
 /**
  * Lets us export some flashcards to an itunes library somewhere
+ * 
+ * Peter
+ * 
  * @author puppyofkosh
  *
  */
