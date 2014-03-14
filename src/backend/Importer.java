@@ -16,15 +16,9 @@ import flashcard.FlashCard;
 public interface Importer {
 
 	/**
-	 * Ctor should initialize so that there is a "source"-whether it be a url or file path or whatever
+	 * Ctor should initialize so that there is a "source"-whether it be a url or file path or List<identifiers of cards>.
 	 */
 	
-	
-	/**
-	 * Imports the flashcards associated with this object into the flashcard "library"
-	 */
-	void importCards();
-
 	
 	/**
 	 * Get the cards requested for import

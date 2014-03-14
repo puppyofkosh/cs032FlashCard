@@ -17,6 +17,7 @@ import flashcard.FlashCardSet;
  * @author samkortchmar
  *
  */
+
 public class FlashCardPanel extends JPanel {
 	private static final long serialVersionUID = 2666411116428918076L;
 	JLabel cardName;

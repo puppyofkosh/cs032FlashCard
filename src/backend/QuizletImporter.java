@@ -14,16 +14,10 @@ public class QuizletImporter implements Importer{
 
 	// CTOR takes id of quizlet set
 	
-	@Override
-	public void importCards() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public List<FlashCard> getCardList() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

@@ -15,11 +15,6 @@ public class FileImporter implements Importer{
 	// Write ctor that takes filename, delimiter, and perhaps also a TTS object
 	// or flashcard factory
 	
-	@Override
-	public void importCards() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public List<FlashCard> getCardList() throws IOException {

@@ -14,12 +14,6 @@ import flashcard.FlashCard;
 public class DatabaseImporter implements Importer{
 
 	@Override
-	public void importCards() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public List<FlashCard> getCardList() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
