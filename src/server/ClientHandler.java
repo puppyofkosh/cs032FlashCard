@@ -44,11 +44,8 @@ public class ClientHandler extends Thread {
 	 * interpreted as the client's user-name.
 	 */
 	public void run() {
-		String user;
 		_running = true;
 		try {
-			user = _input.readLine();
-			_pool.broadcast("-- User " + user + " logged in. --", this);
 			while (_running) {
 				String msg = _input.readLine();
 				if (msg == null || msg.length() == 0 || msg.equalsIgnoreCase("logoff")) {
@@ -58,9 +55,9 @@ public class ClientHandler extends Thread {
 					_cardStream.writeObject(flashcard);
 					_cardStream.flush();
 				}
-				_pool.broadcast(user + ": " + msg, this);
+				_pool.broadcast("A chatter said" + ": " + msg, this);
 			}
-			_pool.broadcast("System: User: " + user + " logged off.", this);
+			_pool.broadcast("System: client logged off.", this);
 			send("");
 			kill();
 		} catch (IOException e) {
