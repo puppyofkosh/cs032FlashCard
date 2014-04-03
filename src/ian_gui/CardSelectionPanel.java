@@ -1,5 +1,8 @@
 package ian_gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
@@ -7,13 +10,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class CardSelectionPanel extends JPanel {
+public class CardSelectionPanel extends GenericPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField txtSearchField;
+	
+	// Name of screen to show when continue button is pushed
+	private String continueDestination = "DEFAULT";
 
+	
 	/**
 	 * Create the panel.
 	 */
@@ -33,9 +40,23 @@ public class CardSelectionPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(dataList);
 		add(scrollPane);
 		
-		JButton btnNewButton = new JButton("Select!");
-		add(btnNewButton);
+		JButton btnContinue = new JButton("Select!");
+		btnContinue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, continueDestination);
+			}
+		});
+		add(btnContinue);
+	}
 
+
+	public String getContinueDestination() {
+		return continueDestination;
+	}
+
+
+	public void setContinueDestination(String continueDestination) {
+		this.continueDestination = continueDestination;
 	}
 
 }

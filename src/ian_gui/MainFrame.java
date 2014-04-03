@@ -21,6 +21,8 @@ public class MainFrame extends JFrame {
 	private ImportPanel importPanel;
 	private ExportPanel exportPanel;
 	private CreatePanel createPanel;
+	private CardSelectionPanel exportCardSelectionPanel;
+	private FlashboardPanel flashboardPanel;
 	
 	private CardLayout mainPanelLayout;
 
@@ -42,8 +44,11 @@ public class MainFrame extends JFrame {
 
 	public final String IMPORT_PANEL_NAME = "import panel";
 
+	public final String EXPORT_SELECTION_PANEL_NAME = "export selection panel";
 	public final String EXPORT_PANEL_NAME = "export panel";
 	public final String CREATE_PANEL_NAME = "create panel";
+	
+	public final String FLASHBOARD_PANEL_NAME = "flashboard panel";
 	
 	/**
 	 * Create the frame.
@@ -91,6 +96,16 @@ public class MainFrame extends JFrame {
 		createPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(createPanel, CREATE_PANEL_NAME);
 		
+		exportCardSelectionPanel = new CardSelectionPanel();
+		exportCardSelectionPanel.setControlledLayout(mainPanelLayout);
+		exportCardSelectionPanel.setControlledPanel(mainPanelContainer);
+		exportCardSelectionPanel.setContinueDestination(EXPORT_PANEL_NAME);
+		mainPanelContainer.add(exportCardSelectionPanel, EXPORT_SELECTION_PANEL_NAME);
+
+		flashboardPanel = new FlashboardPanel();
+		mainPanelContainer.add(flashboardPanel, FLASHBOARD_PANEL_NAME);
+		
+		mainPanelLayout.show(mainPanelContainer, FLASHBOARD_PANEL_NAME);
 		contentPane.add(mainPanelContainer);
 	}
 }

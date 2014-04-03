@@ -36,6 +36,11 @@ public class SidePanel extends GenericPanel {
 		
 		JButton btnFlashboard = new JButton("Flashboard");
 		flashboardButtonPanel.add(btnFlashboard);
+		btnFlashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "flashboard panel");
+			}
+		});
 		
 		JPanel exportButtonPanel = new JPanel();
 		navigation.add(exportButtonPanel);
@@ -44,7 +49,7 @@ public class SidePanel extends GenericPanel {
 		JButton btnExport = new JButton("Export");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "export panel");
+				controlledLayout.show(controlledPanel, "export selection panel");
 			}
 		});
 		exportButtonPanel.add(btnExport);
