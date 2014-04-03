@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 /**
@@ -60,6 +61,12 @@ public class DiskAudioFile implements AudioFile{
 	@Override
 	public byte[] getRawBytes() {
 		return fileData;
+	}
+
+	@Override
+	public AudioFormat getFormat() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

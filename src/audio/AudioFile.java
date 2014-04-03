@@ -1,7 +1,6 @@
 package audio;
 
-import java.util.List;
-
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 /**
@@ -19,8 +18,22 @@ public interface AudioFile {
 	AudioInputStream getStream();
 	
 	/**
+	 * Also not Serializable - we may need to have a constants class to store it
+	 * on the client and server side.
+	 * @return
+	 */
+	AudioFormat getFormat();
+	
+	/**
+	 *
 	 * FIXME: Only for testing purposes! This is unsafe as a caller could modify the array we return
 	 * As soon as we implement getStream, we should remove this.
+	 * .....
+	 * 
+	 * Maybe this method does have a future - AudioInputStreams aren't serializable - meaning they can't
+	 * be sent/received over socket with Read/WriteObject. Obviously we can stream over socket but we'd have
+	 * to open additional ones like so.
+	 * http://stackoverflow.com/questions/7796179/how-does-one-establish-multiple-io-streams-between-a-client-and-server
 	 * @return
 	 */
 	byte[] getRawBytes();

@@ -1,6 +1,11 @@
 package server;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import flashcard.FlashCardStub;
 
 /**
  * Encapsulate IO for the given client {@link Socket}, with a group of
@@ -10,8 +15,9 @@ public class ClientHandler extends Thread {
 	private ClientPool _pool;
 	private Socket _client;
 	private BufferedReader _input;
-	private PrintWriter _output;
+	private ObjectOutputStream _cardStream;
 	private boolean _running;
+	private String FILEPATH = "./Example FileSystem/Application Data/CARDS/ABRAHAM LINCOLN'S BIRTHDAY/";
 	
 	/**
 	 * Constructs a {@link ClientHandler} on the given client with the given pool.
@@ -30,7 +36,7 @@ public class ClientHandler extends Thread {
 		_client = client;
 		_pool.add(this);
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
-		_output = new PrintWriter(_client.getOutputStream(), true);
+		_cardStream = new ObjectOutputStream(_client.getOutputStream());
 	}
 	
 	/**
@@ -41,20 +47,22 @@ public class ClientHandler extends Thread {
 		String user;
 		_running = true;
 		try {
-			_output.println("- What's your username?");
 			user = _input.readLine();
 			_pool.broadcast("-- User " + user + " logged in. --", this);
 			while (_running) {
 				String msg = _input.readLine();
 				if (msg == null || msg.length() == 0 || msg.equalsIgnoreCase("logoff")) {
 					break;
+				} else if (msg.equalsIgnoreCase("flashcard!")) {
+					FlashCardStub flashcard = new FlashCardStub(FILEPATH);
+					_cardStream.writeObject(flashcard);
+					_cardStream.flush();
 				}
 				_pool.broadcast(user + ": " + msg, this);
 			}
 			_pool.broadcast("System: User: " + user + " logged off.", this);
 			send("");
 			kill();
-			
 		} catch (IOException e) {
 			err("ERROR reading from client");
 			e.printStackTrace();
@@ -67,8 +75,12 @@ public class ClientHandler extends Thread {
 	 * @param message text to send
 	 */
 	public void send(String message) {
-		_output.println(message);
-		_output.flush();
+		try {
+			_cardStream.writeObject(message);
+			_cardStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -81,7 +93,7 @@ public class ClientHandler extends Thread {
 		out("Killing Client Handler");
 		_running = false;
 		_input.close();
-		_output.close();
+		_cardStream.close();
 		_client.close();
 		_pool.remove(this); //remove this from the pool since we are killing it.
 	}

@@ -36,6 +36,7 @@ public class Server extends Thread {
 	 */
 	public void run() {
 		_running = true;
+		out("Server running");
 		while (_running) {
 			try {
 				Socket clientConn = _socket.accept();

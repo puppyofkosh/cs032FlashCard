@@ -8,14 +8,15 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// Launch a chat server on the default port.
 		int port = DEFAULT_PORT;
-		if (args.length != 0) {
+		if (args.length != 0) 
+		{
 			try {
 				port = Integer.parseInt(args[0]);
 			} catch (NumberFormatException e) {
 				// Ignore it.
 			}
+			
 		}
-
 		Client client = new Client(port);
 		client.start();
 	}
