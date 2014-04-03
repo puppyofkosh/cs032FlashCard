@@ -2,6 +2,7 @@ package audio;
 
 import java.io.IOException;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 /**
@@ -17,4 +18,8 @@ public interface AudioFile {
 	 * @return The AudioInputStream for this AudioFile
 	 */
 	AudioInputStream getStream() throws IOException;
+	
+	byte[] getRawBytes();
+	
+	AudioFormat getFormat();
 }

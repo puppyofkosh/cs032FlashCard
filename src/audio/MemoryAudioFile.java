@@ -2,11 +2,13 @@ package audio;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import cs32flashcardutil.FlashcardConstants;
 
 /**
  * An AudioFile stored in the JVM's memory, rather than on disc
@@ -30,5 +32,17 @@ public class MemoryAudioFile implements AudioFile {
 			// TODO Auto-generated catch block
 			throw new IOException("Audio File Format Exception");
 		}
+	}
+
+	@Override
+	public AudioFormat getFormat() {
+		// TODO Auto-generated method stub
+		return FlashcardConstants.standardizedFormat;
+	}
+
+	@Override
+	public byte[] getRawBytes() throws IOException {
+		// TODO Auto-generated method stub
+		return data;
 	}
 }

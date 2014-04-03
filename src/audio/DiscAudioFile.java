@@ -1,10 +1,15 @@
 package audio;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.AudioFileFormat.Type;
+
+import cs32flashcardutil.FlashcardConstants;
 
 /**
  * An AudioFile that refers to a file on disc
@@ -29,5 +34,18 @@ public class DiscAudioFile extends File implements AudioFile {
 		catch (UnsupportedAudioFileException e) {
 			throw new IOException("Audio File Format Exception");
 		}
+	}
+	@Override
+	public AudioFormat getFormat() {
+		// TODO Auto-generated method stub
+		return FlashcardConstants.standardizedFormat;
+	}
+
+	@Override
+	public byte[] getRawBytes() throws IOException {
+		// TODO Auto-generated method stub
+		ByteArrayOutputStream bytStream = new ByteArrayOutputStream();
+		AudioSystem.write(getStream(), Type.WAVE, bytStream);
+		return bytStream.toByteArray();
 	}
 }

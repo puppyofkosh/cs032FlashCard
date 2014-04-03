@@ -1,10 +1,16 @@
 package audio;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+import javax.sound.sampled.AudioFileFormat.Type;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import cs32flashcardutil.FlashcardConstants;
 
 /**
  * An AudioFile that is temporarily stored on disc, and is deleted once the program closes
@@ -33,5 +39,19 @@ public class TempAudioFile implements AudioFile {
 		catch (UnsupportedAudioFileException e) {
 			throw new IOException("Audio File Format Exception");
 		}
+	}
+
+	@Override
+	public AudioFormat getFormat() {
+		// TODO Auto-generated method stub
+		return FlashcardConstants.standardizedFormat;
+	}
+
+	@Override
+	public byte[] getRawBytes() throws IOException {
+		// TODO Auto-generated method stub
+		ByteArrayOutputStream bytStream = new ByteArrayOutputStream();
+		AudioSystem.write(getStream(), Type.WAVE, bytStream);
+		return bytStream.toByteArray();
 	}
 }
