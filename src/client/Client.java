@@ -51,7 +51,7 @@ public class Client {
 	 */
 	public void start() {
 		try {
-			_socket = new Socket(InetAddress.getByName(IPAddress), _port);
+			_socket = new Socket(InetAddress.getByName(IP), _port);
 			_cardStream = new ObjectInputStream(_socket.getInputStream());
 			_output = new PrintWriter(_socket.getOutputStream(), true);
 			_running = true;
