@@ -1,5 +1,7 @@
 package audio;
 
+import java.io.IOException;
+
 import javax.sound.sampled.AudioInputStream;
 
 /**
@@ -14,5 +16,5 @@ public interface AudioFile {
 	 * This might be used for combining AudioFiles, or for playing an AudioFile.
 	 * @return The AudioInputStream for this AudioFile
 	 */
-	AudioInputStream getStream();
+	AudioInputStream getStream() throws IOException;
 }
