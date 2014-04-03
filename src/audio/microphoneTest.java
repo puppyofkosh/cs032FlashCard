@@ -14,7 +14,7 @@ import javax.sound.sampled.TargetDataLine;
 // taken mostly from :
 // http://www.developer.com/java/other/article.php/2105421/Java-Sound-Capturing-Microphone-Data-into-an-Audio-File.htm
 public class microphoneTest {
-TargetDataLine line;
+	TargetDataLine line;
 	AudioFormat format;
 	DataLine.Info info;
 	

@@ -1,22 +1,29 @@
 package ian_gui;
 
+import java.awt.CardLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class SidePanel extends JPanel {
+public class SidePanel extends GenericPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 
+	
 	/**
-	 * Create the panel.
+	 * Set up the swing components
 	 */
-	public SidePanel() {
+	public void initialize()
+	{
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		JPanel navigation = new JPanel();
@@ -29,12 +36,22 @@ public class SidePanel extends JPanel {
 		
 		JButton btnFlashboard = new JButton("Flashboard");
 		flashboardButtonPanel.add(btnFlashboard);
+		btnFlashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "flashboard panel");
+			}
+		});
 		
 		JPanel exportButtonPanel = new JPanel();
 		navigation.add(exportButtonPanel);
 		exportButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JButton btnExport = new JButton("Export");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "export selection panel");
+			}
+		});
 		exportButtonPanel.add(btnExport);
 		
 		JPanel importButtonPanel = new JPanel();
@@ -42,6 +59,11 @@ public class SidePanel extends JPanel {
 		importButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JButton btnImport = new JButton("Import");
+		btnImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "import panel");
+			}
+		});
 		importButtonPanel.add(btnImport);
 		
 		JPanel createButtonPanel = new JPanel();
@@ -49,11 +71,26 @@ public class SidePanel extends JPanel {
 		createButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JButton btnCreate = new JButton("Create");
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "create panel");
+			}
+		});
 		createButtonPanel.add(btnCreate);
 		
 		JPanel panel = new JPanel();
 		add(panel);
 
 	}
+	
+	/**
+	 * Create the panel.
+	 */
+	public SidePanel() {
+		
+		initialize();
+		
+	}
+
 
 }

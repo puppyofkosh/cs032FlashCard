@@ -1,17 +1,19 @@
 package ian_gui;
 
-import javax.swing.JPanel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.GridBagLayout;
+import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-public class CreatePanel extends JPanel {
+public class CreatePanel extends GenericPanel {
 
 	/**
 	 * 
@@ -23,7 +25,26 @@ public class CreatePanel extends JPanel {
 	private JLabel lblGlobalTags;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	
+	private RecordPanel recordPanel;
 
+
+	@Override
+	public void setControlledPanel(JPanel panel)
+	{
+		super.setControlledPanel(panel);
+		panel.add(recordPanel, "record panel");
+		
+		recordPanel.setControlledPanel(panel);
+	}
+	
+	@Override
+	public void setControlledLayout(CardLayout layout)
+	{
+		super.setControlledLayout(layout);
+		recordPanel.setControlledLayout(layout);
+	}
+	
 	/**
 	 * Create the panel.
 	 */
@@ -85,6 +106,19 @@ public class CreatePanel extends JPanel {
 		gbc_lblGlobalTags_1.gridx = 1;
 		gbc_lblGlobalTags_1.gridy = 10;
 		add(lblGlobalTags_1, gbc_lblGlobalTags_1);
+		
+		JButton btnContinue = new JButton("CONTINUE");
+		btnContinue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "record panel");
+			}
+		});
+		GridBagConstraints gbc_btnContinue = new GridBagConstraints();
+		gbc_btnContinue.gridx = 8;
+		gbc_btnContinue.gridy = 12;
+		add(btnContinue, gbc_btnContinue);
+		
+		recordPanel = new RecordPanel();
 	}
 
 }
