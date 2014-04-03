@@ -1,11 +1,12 @@
 package audio;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
-import com.sun.speech.freetts.audio.SingleFileAudioPlayer;
 import com.sun.speech.freetts.audio.AudioPlayer;
+import com.sun.speech.freetts.audio.SingleFileAudioPlayer;
 
 /**
  * Produce text to speech using the freeTTS library
@@ -29,7 +30,10 @@ public class FreeTTSReader implements TextToSpeechReader {
 	private String DEFAULT_VOICE = "kevin16";
 	private String TEMP_FILE_NAME = "tmp";
 	
-	// initialization will probably need the locations of some files and stuff (not important to design)
+	/**
+	 * Setup our TTS reader
+	 * @throws IOException - A lot can go wrong here-missing audio files, mainly.
+	 */
 	public FreeTTSReader() throws IOException
 	{
 		manager = VoiceManager.getInstance();
@@ -45,14 +49,23 @@ public class FreeTTSReader implements TextToSpeechReader {
 	}
 
 	
-	
+	/**
+	 * Turn text into speech
+	 * @param text - Text to "translate"
+	 */
 	@Override
 	public AudioFile read(String text) {
+		if (audioPlayer == null)
+		{
+			audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
+		}
+		
 		voice.speak(text);
 		audioPlayer.close();
-		audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
+		audioPlayer = null;
 		
-		return null;
+		
+		return new DiskAudioFile(Paths.get(TEMP_FILE_NAME + ".wav"));
 	}
 	
 	public static void main(String[] args)
@@ -68,7 +81,6 @@ public class FreeTTSReader implements TextToSpeechReader {
 			reader.read(args[0]);
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

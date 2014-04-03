@@ -1,5 +1,7 @@
 package audio;
 
+import java.util.List;
+
 import javax.sound.sampled.AudioInputStream;
 
 /**
@@ -15,4 +17,11 @@ public interface AudioFile {
 	 * @return The AudioInputStream for this AudioFile
 	 */
 	AudioInputStream getStream();
+	
+	/**
+	 * FIXME: Only for testing purposes! This is unsafe as a caller could modify the array we return
+	 * As soon as we implement getStream, we should remove this.
+	 * @return
+	 */
+	byte[] getRawBytes();
 }

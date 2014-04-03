@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 
-public class RecordPanel extends JPanel {
+public class RecordPanel extends GenericPanel {
 	/**
 	 * 
 	 */
@@ -129,6 +129,11 @@ public class RecordPanel extends JPanel {
 		QuestionPanels.add(textPane, gbc_textPane);
 		
 		JButton btnFlash = new JButton("Flash!");
+		btnFlash.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "create panel");
+			}
+		});
 		GridBagConstraints gbc_btnFlash = new GridBagConstraints();
 		gbc_btnFlash.gridwidth = 3;
 		gbc_btnFlash.insets = new Insets(0, 0, 0, 5);
