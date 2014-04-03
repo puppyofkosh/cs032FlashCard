@@ -18,6 +18,7 @@ import audio.AudioFileStub;
 
 public class FlashCardStub implements FlashCard, Serializable {
 
+	private static final long serialVersionUID = -5514013016523354268L;
 	String name, set, pathToFile;
 	String questionText, answerText = "";
 	List<String> tags;
