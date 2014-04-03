@@ -44,7 +44,12 @@ public class FreeTTSReader implements TextToSpeechReader {
 		}
 		voice.allocate();
 		audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
-        voice.setAudioPlayer(audioPlayer);
+		
+		// FIXME: Figure this shit out-what size do we want?
+		audioPlayer.setAudioFormat(AudioConstants.MICROPHONE_TEST);
+        
+		
+		voice.setAudioPlayer(audioPlayer);
 	}
 
 	

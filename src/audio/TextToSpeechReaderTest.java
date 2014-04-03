@@ -60,5 +60,4 @@ public class TextToSpeechReaderTest {
 		
 		assertTrue(Arrays.equals(expected.getRawBytes(), a.getRawBytes()));
 	}
-
 }
