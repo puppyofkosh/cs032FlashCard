@@ -48,10 +48,17 @@ public class TempAudioFile implements AudioFile {
 	}
 
 	@Override
-	public byte[] getRawBytes() throws IOException {
+	public byte[] getRawBytes() {
+			
 		// TODO Auto-generated method stub
 		ByteArrayOutputStream bytStream = new ByteArrayOutputStream();
-		AudioSystem.write(getStream(), Type.WAVE, bytStream);
+		try {
+			AudioSystem.write(getStream(), Type.WAVE, bytStream);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		return bytStream.toByteArray();
 	}
 }

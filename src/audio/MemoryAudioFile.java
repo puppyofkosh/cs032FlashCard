@@ -41,7 +41,7 @@ public class MemoryAudioFile implements AudioFile {
 	}
 
 	@Override
-	public byte[] getRawBytes() throws IOException {
+	public byte[] getRawBytes() {
 		// TODO Auto-generated method stub
 		return data;
 	}
