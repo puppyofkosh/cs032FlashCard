@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -31,14 +32,16 @@ public class Client {
 	private ReceiveThread _thread;
 	private volatile RECEIVE_MODE mode = RECEIVE_MODE.TEXT;
 	private enum RECEIVE_MODE {CARD, TEXT};
+	private String IP;
 
 	/**
 	 * Constructs a Client with the given port.
 	 * 
 	 * @param port the port number the client will connect to
 	 */
-	public Client(int port) {
+	public Client(String IPAddress, int port) {
 		_port = port;
+		IP = IPAddress;
 	}
 	
 	/**
@@ -48,7 +51,7 @@ public class Client {
 	 */
 	public void start() {
 		try {
-			_socket = new Socket("localhost", _port);
+			_socket = new Socket(InetAddress.getByName(IPAddress), _port);
 			_cardStream = new ObjectInputStream(_socket.getInputStream());
 			_output = new PrintWriter(_socket.getOutputStream(), true);
 			_running = true;

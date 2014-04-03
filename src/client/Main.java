@@ -17,7 +17,7 @@ public class Main {
 			}
 			
 		}
-		Client client = new Client(port);
+		Client client = new Client(arg[0], port);
 		client.start();
 	}
 }

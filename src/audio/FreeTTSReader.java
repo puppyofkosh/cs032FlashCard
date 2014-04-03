@@ -42,7 +42,6 @@ public class FreeTTSReader implements TextToSpeechReader {
 		{
 			throw new IOException("Could not load default voice!");
 		}
-		
 		voice.allocate();
 		audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
         voice.setAudioPlayer(audioPlayer);
