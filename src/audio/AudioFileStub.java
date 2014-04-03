@@ -15,6 +15,7 @@ import javax.sound.sampled.AudioSystem;
  */
 public class AudioFileStub implements AudioFile, Serializable {
 
+	private static final long serialVersionUID = -3543326351123982571L;
 	//These classes must be transient because no audio classes are serializable.
 	transient AudioInputStream stream;
 	transient AudioFormat format;
