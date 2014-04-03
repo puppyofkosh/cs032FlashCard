@@ -4,6 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
+*.jar
 *.war
 *.ear
 
@@ -13,3 +14,6 @@ hs_err_pid*
 # Eclipse
 .project
 .classpath
+
+# Mac
+/**/.DS_Store
