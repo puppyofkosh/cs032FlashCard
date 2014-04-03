@@ -107,5 +107,10 @@ public class MainFrame extends JFrame {
 		
 		mainPanelLayout.show(mainPanelContainer, FLASHBOARD_PANEL_NAME);
 		contentPane.add(mainPanelContainer);
+		
+		ImportSettingsPanel tmp = new ImportSettingsPanel();
+		mainPanelContainer.add(tmp, "TMP");
+		mainPanelLayout.show(mainPanelContainer, "TMP");
+		
 	}
 }

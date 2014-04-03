@@ -55,6 +55,9 @@ public class TextToSpeechReaderTest {
 		// We've stored an identical file-check to see they're the same
 		AudioFile expected = new DiskAudioFile(Paths.get("data/tts-test/strange-characters.wav"));
 		
+		System.out.println(expected.getRawBytes().length);
+		System.out.println(a.getRawBytes().length);
+		
 		assertTrue(Arrays.equals(expected.getRawBytes(), a.getRawBytes()));
 	}
 
