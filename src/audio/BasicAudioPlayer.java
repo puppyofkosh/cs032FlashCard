@@ -54,6 +54,23 @@ public class BasicAudioPlayer implements AudioPlayer {
 	
 	/**
 	 * Thread to play an audio clip, and close it automatically when it is done.
+	 * 
+	 * 
+	 * 			
+			
+			FIXME: Seems to be broken on linux. This may help:
+			
+			Mixer.Info pulse = null;
+			for (Mixer.Info m : AudioSystem.getMixerInfo())
+			{
+				if (m.getName().equals("PulseAudio Mixer"))
+					pulse = m;
+			}
+			System.out.println(pulse);
+			if (pulse == null)
+				clip = AudioSystem.getClip();
+			else
+				clip = AudioSystem.getClip(pulse);
 	 * @author Peter
 	 *
 	 */

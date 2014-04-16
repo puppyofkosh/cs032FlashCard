@@ -9,6 +9,8 @@ import java.util.Collection;
  */
 public interface FlashCardSet {
 	
+	public String getName();
+	
 	/**
 	 * We can use this method to get all flash cards in the FlashCardSet.
 	 * This method will be called by a wide variety of other classes - 

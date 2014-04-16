@@ -22,7 +22,7 @@ public class TextToSpeechReaderTest {
 	}
 	
 	@Test
-	public void testSmallExample()
+	public void testSmallExample() throws IOException
 	{
 		AudioFile a = reader.read("hi there");
 		
@@ -34,9 +34,10 @@ public class TextToSpeechReaderTest {
 	
 	/**
 	 * "CIT" should come out as CEE EYE TEE
+	 * @throws IOException 
 	 */
 	@Test
-	public void testAcronym()
+	public void testAcronym() throws IOException
 	{
 		String text = "I wish the C.I.T. were open longer hours. Then I'd be able to spend less time outside.";
 		
@@ -48,7 +49,7 @@ public class TextToSpeechReaderTest {
 	}
 	
 	@Test
-	public void testWeirdCharacters()
+	public void testWeirdCharacters() throws IOException
 	{
 		String text = "For 3/4 or 75% of his time, Dr. Walker practices for $90 a visit on Dr. Dr., next to King Philip X of St. Lameer St. in Nashua NH.";
 		AudioFile a = reader.read(text);

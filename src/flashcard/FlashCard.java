@@ -3,6 +3,8 @@ package flashcard;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+
+import audio.AudioFile;
 /**
  * 
  * @author samkortchmar/ian boros/peter krishner
@@ -11,6 +13,7 @@ import java.util.List;
  *we wanted to make it an interface to create stubs.
  * 
  * Sam
+ * 
  * 
  */
 public interface FlashCard {
@@ -78,5 +81,14 @@ public interface FlashCard {
 	 * FlashCard.
 	 */
 	void setInterval(int interval) throws IOException;
+	
+	/**
+	 * Returns the path this card is stored in
+	 * @return
+	 */
+	String getPath();
+	AudioFile getQuestionAudio();
+	
+	AudioFile getAnswerAudio();
 
 }
