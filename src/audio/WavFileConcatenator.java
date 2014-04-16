@@ -28,7 +28,8 @@ public class WavFileConcatenator {
 		if (!intervalAudio.exists()) {
 			AudioFormat format = cs32flashcardutil.FlashcardConstants.standardizedFormat;
 			int frames = (int) format.getFrameRate();
-			int size = (int) (format.getFrameSize() * frames);
+			// FIXME: Weird int cast
+			int size = (format.getFrameSize() * frames);
 			byte[] bytes = new byte[size];
 			Arrays.fill(bytes, (byte) 0);
 			

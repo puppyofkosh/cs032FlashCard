@@ -182,5 +182,4 @@ public class SimpleFactory implements FlashCardFactory{
 		//p.play(start);
 		//p.play(end);
 	}
-	
 }
