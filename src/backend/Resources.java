@@ -18,8 +18,7 @@ import flashcard.FlashCardSet;
  *
  */
 public interface Resources {
-	// Get names of flashcards with given tag-Used by search function
-	// 
+	// Get names of flashcards with given tag-used by search function
 	List<String> getFlashCardsByTag(String tag);
 	
 	/**
