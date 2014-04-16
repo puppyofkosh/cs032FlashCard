@@ -1,7 +1,9 @@
 package backend;
 
+import java.io.IOException;
 import java.util.List;
 
+import audio.WavFileConcatenator;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
@@ -15,18 +17,31 @@ import flashcard.FlashCardSet;
  */
 public class WavFileExporter implements Exporter{
 
-	// TODO: Ctor should take directory name to put the flashcards files in
+	//private String destination;
+	private WavFileConcatenator wavConcat;
+	
+	public WavFileExporter(String destination) throws IOException {
+		wavConcat = new WavFileConcatenator(destination);
+	}
+	
+	public void changeDestination(String destination) {
+		wavConcat.changeDestination(destination);
+	}
 	
 	@Override
-	public void export(List<FlashCard> f) {
+	public void export(List<FlashCard> f) throws IOException {
 		// TODO Auto-generated method stub
-		
+		for (FlashCard card : f) {
+			wavConcat.concatenate(card);
+		}
 	}
 
 	@Override
-	public void export(FlashCardSet s) {
+	public void export(FlashCardSet s) throws IOException {
 		// TODO Auto-generated method stub
-		
+		for (FlashCard card : s.getAll()) {
+			wavConcat.concatenate(card);
+		}
 	}
 	
 }

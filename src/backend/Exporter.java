@@ -1,5 +1,6 @@
 package backend;
 
+import java.io.IOException;
 import java.util.List;
 
 import flashcard.FlashCard;
@@ -28,13 +29,14 @@ public interface Exporter {
 	 * Export a bunch of flashcards to given destination. This would
 	 * be called when a user is in the export window/workflow
 	 * @param f
+	 * @throws IOException 
 	 */
-	void export(List<FlashCard> f);
+	void export(List<FlashCard> f) throws IOException;
 	
 	/**
 	 * Export a set of flashcards-also used while in the export
 	 * window/workflow
 	 * @param s
 	 */
-	void export(FlashCardSet s);
+	void export(FlashCardSet s) throws IOException;
 }
