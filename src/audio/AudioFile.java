@@ -39,5 +39,5 @@ public interface AudioFile {
 	 * http://stackoverflow.com/questions/7796179/how-does-one-establish-multiple-io-streams-between-a-client-and-server
 	 * @return
 	 */
-	byte[] getRawBytes();
+	byte[] getRawBytes() throws IOException;
 }

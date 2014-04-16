@@ -79,7 +79,14 @@ public class SimpleFactory implements FlashCardFactory{
 	public FlashCard create(String name, AudioFile question, AudioFile answer,
 			int interval, List<String> tags, String set) {
 		
-		FlashCardData data = new FlashCardData(question.getRawBytes(), answer.getRawBytes(), interval, tags, Arrays.asList(set), name);
+		FlashCardData data;
+		try {
+			data = new FlashCardData(question.getRawBytes(), answer.getRawBytes(), interval, tags, Arrays.asList(set), name);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		String filename = "files/" + set + "-" + name + ".ian";
 		saveData(filename, data);
 

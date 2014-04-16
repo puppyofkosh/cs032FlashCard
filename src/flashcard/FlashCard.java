@@ -3,6 +3,8 @@ package flashcard;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+
+import audio.AudioFile;
 /**
  * 
  * @author samkortchmar/ian boros/peter krishner
@@ -85,5 +87,8 @@ public interface FlashCard {
 	 * @return
 	 */
 	String getPath();
+	AudioFile getQuestionAudio();
+	
+	AudioFile getAnswerAudio();
 
 }

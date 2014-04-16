@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import audio.AudioFile;
+import audio.MemoryAudioFile;
+
 import flashcard.SimpleFactory.FlashCardData;
 
 
@@ -87,6 +90,20 @@ public class SimpleFlashCard implements FlashCard {
 	@Override
 	public String getPath() {
 		return path;
+	}
+
+	@Override
+	public AudioFile getQuestionAudio() {
+		FlashCardData data = loadData();
+		
+		return new MemoryAudioFile(data.questionBytes);
+	}
+
+	@Override
+	public AudioFile getAnswerAudio() {
+		FlashCardData data = loadData();
+		
+		return new MemoryAudioFile(data.answerBytes);
 	}
 
 }
