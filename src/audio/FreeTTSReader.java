@@ -8,6 +8,8 @@ import com.sun.speech.freetts.VoiceManager;
 import com.sun.speech.freetts.audio.AudioPlayer;
 import com.sun.speech.freetts.audio.SingleFileAudioPlayer;
 
+import cs32flashcardutil.FlashcardConstants;
+
 /**
  * Produce text to speech using the freeTTS library
  * 
@@ -46,7 +48,7 @@ public class FreeTTSReader implements TextToSpeechReader {
 		audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
 		
 		// FIXME: Figure this shit out-what size do we want?
-		audioPlayer.setAudioFormat(AudioConstants.MICROPHONE_TEST);
+		audioPlayer.setAudioFormat(FlashcardConstants.standardizedFormat);
         
 		
 		voice.setAudioPlayer(audioPlayer);

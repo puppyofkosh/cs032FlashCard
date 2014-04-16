@@ -133,6 +133,12 @@ public class FlashCardStub implements FlashCard, Serializable {
 		return String.format("Flashcard %s is in set %s with tags %s and interval %s", name, set, tags, interval);
 	}
 
+	@Override
+	public String getPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 

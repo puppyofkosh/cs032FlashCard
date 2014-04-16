@@ -12,6 +12,7 @@ import java.util.List;
  * 
  * Sam
  * 
+ * 
  */
 public interface FlashCard {
 
@@ -78,5 +79,11 @@ public interface FlashCard {
 	 * FlashCard.
 	 */
 	void setInterval(int interval) throws IOException;
+	
+	/**
+	 * Returns the path this card is stored in
+	 * @return
+	 */
+	String getPath();
 
 }
