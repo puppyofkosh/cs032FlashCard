@@ -10,12 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import client.Client;
+
 import audio.AudioFile;
+import audio.MemoryAudioFile;
 import audio.TextToSpeechReader;
 
 import util.TSVLineParser;
 
 import flashcard.FlashCard;
+import flashcard.FlashCardFactory;
 
 /**
  * Turn a file, with some known formatting into a list of flsahcards
@@ -30,21 +34,26 @@ public class FileImporter implements Importer{
 	
 	File file;
 	TextToSpeechReader ttsReader;
+	FlashCardFactory factory;
 	
 	List<FlashCard> cards = new ArrayList<>();
 	
-	public FileImporter(File file, TextToSpeechReader ttsReader)
+	public FileImporter(File file, TextToSpeechReader ttsReader, FlashCardFactory factory)
 	{
 		this.file = file;
 		this.ttsReader = ttsReader;
+		this.factory = factory;
 	}
 	
+	/**
+	 * FIXME: What happens when this is called twice?
+	 * @throws IOException
+	 */
 	public void importCards() throws IOException
 	{
 		
 		try (Scanner reader = new Scanner(new FileReader(file)))
 		{
-	
 			TSVLineParser parser = new TSVLineParser(new String[]{"question", "answer"});
 			
 			while (reader.hasNextLine()) {
@@ -53,11 +62,16 @@ public class FileImporter implements Importer{
 				
 				if (entry != null && entry.get("question") != null && entry.get("answer") != null)
 				{
-					AudioFile question = ttsReader.read(entry.get("question"));
-					AudioFile answer = ttsReader.read(entry.get("answer"));
-					
-					// FIXME: Finish this, create a flashcard from it
-					
+					// FIXME: Make these into memory audio files
+					//AudioFile question = ttsReader.read(entry.get("question"));
+					//AudioFile answer = ttsReader.read(entry.get("answer"));
+				
+					AudioFile question = new MemoryAudioFile(ttsReader.read("Hi thar").getRawBytes());
+					AudioFile answer = new MemoryAudioFile(ttsReader.read("hallo thar i am a cat").getRawBytes());
+					//Client.play(question.getRawBytes());
+					FlashCard f = factory.create("Generic name", question, answer, 5, Arrays.asList("nags"), "set");
+					this.cards.add(f);
+					// FIXME: Finish this, create a flashcard from it					
 				}
 			}
 		}
@@ -70,7 +84,7 @@ public class FileImporter implements Importer{
 	@Override
 	public List<FlashCard> getCardList() throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return cards;
 	}
 
 }
