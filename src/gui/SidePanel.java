@@ -1,4 +1,4 @@
-package ian_gui;
+package gui;
 
 import java.awt.CardLayout;
 import java.awt.GridLayout;

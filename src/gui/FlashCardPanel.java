@@ -12,10 +12,9 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
 /**
- * This class is used by the GUI to represent flashCards in the JFlow Browser, as
- * well as in the FlashBoard. 
+ * This class is used by the GUI to represent flashCards, as
+ * well as in the FlashBoard.																	
  * @author samkortchmar
- *
  */
 
 public class FlashCardPanel extends JPanel {
