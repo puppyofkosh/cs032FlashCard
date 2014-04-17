@@ -26,6 +26,8 @@ public class CardTablePanel extends JPanel {
 	private List<FlashCard> cards;
 	private JTable searchTable;
 	private DefaultTableModel searchTableModel;
+	
+	private List<FlashCard> selectedCards = new LinkedList<>();
 
 
 	/**
@@ -63,10 +65,12 @@ public class CardTablePanel extends JPanel {
 
 
 	public void updateSelectedCards() {
-		List<FlashCard> selectedCards = new LinkedList<>();
+		selectedCards = new LinkedList<>();
 		for(int index : searchTable.getSelectedRows()) {
 			selectedCards.add(cards.get(index));
 		}
+		
+		// FIXME: Not sure why resources knows about which cards are selected
 		ResourcesStub.setSelectedCards(selectedCards);
 	}
 
@@ -75,6 +79,13 @@ public class CardTablePanel extends JPanel {
 		updateTable();
 	}
 
+	public List<FlashCard> getSelectedCards()
+	{
+		updateSelectedCards();
+		
+		return selectedCards;
+	}
+	
 	private void updateTable() {
 		if (cards == null || cards.size() == 0) {
 			populateTableModel(new String[0][0], FlashcardConstants.DEFAULT_TABLE_COLUMNS);

@@ -10,8 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import audio.WavFileConcatenator;
+
 import flashcard.FlashCard;
 import flashcard.SimpleFactory;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class ExportPanel extends JPanel {
 	/**
@@ -50,8 +55,31 @@ public class ExportPanel extends JPanel {
 
 		
 		JButton btnExport = new JButton("Export!");
+		btnExport.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Export button clicked
+				
+				// FIXME: This should be run in a separate thread. The code should probably look like:
+				// controller.exportCards(_cardTable.getSelectedCards());
+				// For now, this will be ok
+				List<FlashCard> toExport = _cardTable.getSelectedCards();
+				System.out.println("Exporting " + toExport);
+				for (FlashCard f : toExport)
+				{
+					try {
+						WavFileConcatenator concat = new WavFileConcatenator("export/" + f.getName());
+						concat.concatenate(f);						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				System.out.println("Exporting");
+				
+			}
+		});
 		chooseMethodPanel.add(btnExport);
-
 		
 		_cardTable = new CardTablePanel();
 		add(_cardTable);

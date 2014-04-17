@@ -90,7 +90,7 @@ public class FlashCardPanel extends JPanel {
 				}
 			}
 		});
-		
+
 		spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
 		spinner.addChangeListener(new ChangeListener() {
 				@Override

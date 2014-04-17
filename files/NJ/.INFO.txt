@@ -1,2 +1,2 @@
 NAME	INTERVAL	SETS	TAGS
-Test3	0	null	[]	
+NJ	0	null	[eggplant]	
