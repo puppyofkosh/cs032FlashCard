@@ -70,7 +70,6 @@ public class SimpleFactory implements FlashCardFactory{
 		return resources;
 	}
 	
-	
 	public SimpleFactory()
 	{
 

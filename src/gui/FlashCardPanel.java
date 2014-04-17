@@ -1,33 +1,31 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import utils.Writer;
+import audio.ByteArrayAudioPlayer;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.BevelBorder;
-import javax.swing.JSpinner;
-
-import audio.ByteArrayAudioPlayer;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 /**
  * This class is used by the GUI to represent flashCards, as
@@ -93,7 +91,19 @@ public class FlashCardPanel extends JPanel {
 			}
 		});
 		
-		spinner = new JSpinner();
+		spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
+		spinner.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					int newValue = (int) spinner.getValue();
+					try {
+						_card.setInterval(newValue);
+					} catch (IOException e1) {
+						Writer.err("ERROR: Could not write change to card - reverting to original interval");
+						spinner.setValue(_card.getInterval());
+					}
+				}
+		});
 		
 		JLabel lblInterval = new JLabel("Interval");
 		GroupLayout groupLayout = new GroupLayout(this);
@@ -141,6 +151,8 @@ public class FlashCardPanel extends JPanel {
 					.addGap(42))
 		);
 		setLayout(groupLayout);
+		
+		
 		populateSets(_card.getSets());
 		populateTags(_card.getTags());
 		//Etc, etc/
