@@ -74,6 +74,7 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 					line.close();
 				}
 			} catch (Throwable e) {
+				e.printStackTrace();
 				playing = false;
 				line.stop();
 				line.close();

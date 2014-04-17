@@ -12,9 +12,6 @@ import javax.swing.JPanel;
  */
 public abstract class GenericPanel extends JPanel{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	// When the user presses a button, we use this layout to
@@ -38,5 +35,4 @@ public abstract class GenericPanel extends JPanel{
 	public void setControlledPanel(JPanel controlledPanel) {
 		this.controlledPanel = controlledPanel;
 	}
-
 }

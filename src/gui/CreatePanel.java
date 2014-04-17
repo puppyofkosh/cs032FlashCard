@@ -120,5 +120,4 @@ public class CreatePanel extends GenericPanel {
 		
 		recordPanel = new RecordPanel();
 	}
-
 }

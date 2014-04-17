@@ -1,12 +1,15 @@
 package gui;
 
+import java.awt.CardLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class ImportPanel extends JPanel {
+public class ImportPanel extends GenericPanel {
 
 	/**
 	 * 
@@ -31,7 +34,14 @@ public class ImportPanel extends JPanel {
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JButton btnNewButton_1 = new JButton("From DB");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, "record panel");
+			}
+		});
+
 		panel_1.add(btnNewButton_1);
+		
 		
 		JPanel panel_2 = new JPanel();
 		add(panel_2);
@@ -41,5 +51,4 @@ public class ImportPanel extends JPanel {
 		panel_2.add(btnNewButton_2);
 
 	}
-
 }
