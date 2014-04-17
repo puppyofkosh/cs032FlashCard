@@ -2,7 +2,6 @@ package flashcard;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 import audio.AudioFile;
 /**
@@ -83,7 +82,7 @@ public interface FlashCard {
 	void setInterval(int interval) throws IOException;
 	
 	/**
-	 * Returns the path this card is stored in
+	 * Returns the path this card is stored in (relative to the project folder)
 	 * @return
 	 */
 	String getPath();

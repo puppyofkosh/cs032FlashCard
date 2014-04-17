@@ -7,8 +7,10 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import protocol.CardListRequest;
 import protocol.Request;
 import protocol.Response;
+import search.SearchParameters;
 import utils.Print;
 import flashcard.FlashCard;
 /**
@@ -89,6 +91,10 @@ public class ClientHandler extends Thread {
 		switch (req.getType()) {
 		case CARD_LIST:
 			CardListRequest clR = (CardListRequest) req;
+			//Obviously will be different once we've implemented an actual database
+			SearchParameters params = clR.getSearchParameters();
+			String input = params.get_input();
+			_serverCardLibrary.get(input);
 			break;
 		case SET_LIST:
 			break;
@@ -98,6 +104,7 @@ public class ClientHandler extends Thread {
 
 		}
 	}
+	
 
 	/**
 	 * Kills this handler and cleans up its additional resources.
@@ -126,15 +133,16 @@ public class ClientHandler extends Thread {
 		@Override
 		public void run() {
 			try {
+				/*
 				if (_b.isDone()) {
 					//if backend finished some time in the past, send the client connection response.
 					_output.writeObject(new ClientConnectionResponse(_b.getInitialWays(), MapFactory.getTrafficMap(), Constants.MINIMUM_LATITUDE, Constants.MAXIMUM_LATITUDE, Constants.MINIMUM_LONGITUDE, Constants.MAXIMUM_LONGITUDE));
 					_output.flush();
-				} 
+				}
 				//if backend is not yet done, it will send the client connection response 
 				//when it finishes initializing.
 				_output.writeObject(new ServerStatus(_b.isDone()));
-				_output.flush();
+				_output.flush();*/
 				
 				while (_running) {
 					if (!_responseQueue.isEmpty()) {

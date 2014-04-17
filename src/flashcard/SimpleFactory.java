@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -20,11 +21,11 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import utils.FlashcardConstants;
+import utils.Print;
 import client.Client;
-
 import backend.FileImporter;
 import backend.SimpleResources;
-
 import audio.AudioConstants;
 import audio.AudioFile;
 import audio.BasicAudioPlayer;
@@ -33,10 +34,11 @@ import audio.FreeTTSReader;
 import audio.MemoryAudioFile;
 
 /**
- * Fixme: uses serialization
+ *
  * @author puppyofkosh
  *
  */
+//FIXME uses serialization
 public class SimpleFactory implements FlashCardFactory{	
 	/**
 	 * What it writes to disk. Just a hack using java serialization
@@ -163,7 +165,26 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
-
+	private String composeMetadata(FlashCard card) {
+		return card.getName() + "\t" +
+	           card.getInterval() + "\t" + 
+			   card.getSets() + "\t" +
+	           card.getTags() + "\t";
+	}
+	
+	public void writeMetadata(FlashCard card) {
+		try(FileWriter rewriter = new FileWriter(new File(card.getPath() + ".INFO.txt"), false)) {
+			String new_metadata = FlashcardConstants.METADATA_HEADER
+								  + "\n" + composeMetadata(card);	
+			rewriter.write(new_metadata);
+		} catch (IOException e) {
+			Print.err("Could not change metadata on card", card.getName(), 
+					"located at", card.getPath());
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	public static void main(String[] args) throws IOException
 	{

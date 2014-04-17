@@ -11,5 +11,51 @@ public class SearchParameters {
 	
 	//TODO expand this class to make it usable
 	
+	SearchParameters(String input, List<String> tags, int numberOfCards, int duration) {
+		this(input, tags, numberOfCards);
+		_duration = duration;
+	}
 	
+	SearchParameters(String input, List<String> tags, int numberOfCards) {
+		this(input, tags);
+		_numberOfCards = numberOfCards;
+	}
+	
+	SearchParameters(String input, List<String> tags) {
+		this(input);
+		_tags = tags;
+	}
+	
+	SearchParameters(String input) {
+		_input = input;
+	}
+
+	/**
+	 * @return the _numberOfCards
+	 */
+	public int get_numberOfCards() {
+		return _numberOfCards;
+	}
+
+	/**
+	 * @return the _tags
+	 */
+	public List<String> get_tags() {
+		return _tags;
+	}
+
+	/**
+	 * @return the _input
+	 */
+	public String get_input() {
+		return _input;
+	}
+
+	/**
+	 * @return the _duration
+	 */
+	public int get_duration() {
+		return _duration;
+	}
+
 }

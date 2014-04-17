@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
+import utils.FlashcardConstants;
 import utils.Print;
 import flashcard.FlashCard;
 import flashcard.FlashCardStub;
@@ -23,7 +24,6 @@ public class Server extends Thread {
 	private ClientPool _clients;
 	private boolean _running;
 	private volatile Map<String, FlashCard> _cardLibrary;
-	private final String CARDS_FOLDER = "./Example FileSystem/Application Data/CARDS";
 
 	/**
 	 * Initialize a server on the given port. This server will not listen until
@@ -49,7 +49,7 @@ public class Server extends Thread {
 	 */
 	private void initCardLibrary() {
 		
-		File dir = new File(CARDS_FOLDER);
+		File dir = new File(FlashcardConstants.CARDS_FOLDER);
 		if (_cardLibrary == null) {
 			_cardLibrary = new HashMap<>();
 		}
