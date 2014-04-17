@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import protocol.Request;
 import protocol.Response;
-import util.Util;
+import utils.Print;
 import flashcard.FlashCard;
 /**
  * A thread for handling client connections to the server.
@@ -66,9 +66,9 @@ public class ClientHandler extends Thread {
 				req = (Request) _input.readObject();
 				processRequest(req);
 			}
-			Util.out("Running has ceased. Goodbye.");
+			Print.out("Running has ceased. Goodbye.");
 		} catch(IOException | ClassNotFoundException e) {
-			Util.out("-- Client exited. --");
+			Print.out("-- Client exited. --");
 		} finally {
 			kill();
 		}
@@ -85,36 +85,17 @@ public class ClientHandler extends Thread {
 	 * A response containing the data received from the backend.
 	 */
 	private void processRequest(Request req) {
-		Util.debug("Processing Request...\n", req);
+		Print.debug("Processing Request...\n", req);
 		switch (req.getType()) {
-		case AUTO_CORRECTIONS:
-			AutocorrectRequest aReq = (AutocorrectRequest) req;
-			_sugGetter.suggestFor(aReq.getInput(), aReq.getBoxNo()); //start a new thread for request box #
+		case CARD_LIST:
+			CardListRequest clR = (CardListRequest) req;
 			break;
-
-		case NEAREST_NEIGHBORS:
-			NeighborsRequest nReq = (NeighborsRequest) req;
-			_nbrGetter.getNeighbors(nReq.getNumNeighbors(), nReq.getLocation(), nReq.isSource()); //start a new worker thread in getter
-			break;
-
-		case WAYS:
-			WayRequest wReq = (WayRequest) req;
-			_wayGetter.getWays(wReq.getMinLat(), wReq.getMaxLat(), wReq.getMinLon(), wReq.getMaxLon(), wReq.getZoom()); //start a new worker thread in the getter
-			break;
-		case PATH:
-			PathRequest pReq = (PathRequest) req;
-			//We check if there are intersections to be found
-			Node source =  MapFactory.createIntersection(pReq.getCrossStreet(true, 1), pReq.getCrossStreet(true, 2));
-			Node dest = MapFactory.createIntersection(pReq.getCrossStreet(false, 1), pReq.getCrossStreet(false, 2));
-			if (source == null || source == dest)
-				source = pReq.getSource();
-			if (dest == null || source == dest)
-				dest = pReq.getDest();
-			_pwGetter.findPath(source, dest, pReq.getTimeout());
+		case SET_LIST:
 			break;
 		default:
 			//not much we can do with an invalid request
 			throw new IllegalArgumentException("Unsupported request type");
+
 		}
 	}
 
@@ -132,7 +113,7 @@ public class ClientHandler extends Thread {
 			_output.close();
 			_client.close();			
 		} catch (IOException e) {
-			Util.err("ERROR killing client handler.\n", e.getMessage());	
+			Print.err("ERROR killing client handler.\n", e.getMessage());	
 		}
 	}
 
@@ -163,9 +144,9 @@ public class ClientHandler extends Thread {
 				}
 			} catch (IOException e) {
 				if (!_running)
-					Util.out("Connection closed. No more responses will be sent.");
+					Print.out("Connection closed. No more responses will be sent.");
 				else
-					Util.err("ERROR writing response in push thread");
+					Print.err("ERROR writing response in push thread");
 			}
 		}
 	}

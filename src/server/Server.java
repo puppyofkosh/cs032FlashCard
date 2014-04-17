@@ -8,9 +8,9 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
+import utils.Print;
 import flashcard.FlashCard;
 import flashcard.FlashCardStub;
-import util.Util;
 
 /**
  * A chat server, listening for incoming connections and passing them
@@ -72,18 +72,18 @@ public class Server extends Thread {
 	 */
 	public void run() {
 		_running = true;
-		Util.out("Server running");
+		Print.out("Server running");
 		while (_running) {
 			try {
 				Socket clientConn = _socket.accept();
-				Util.out("-- New client connection --");
+				Print.out("-- New client connection --");
 				new ClientHandler(_clients, clientConn, _cardLibrary).start();
 			} catch (IOException e) {
 				if(e instanceof SocketException && _running == false) {
-					Util.out("The server socket has been closed.");
+					Print.out("The server socket has been closed.");
 					return;
 				}
-				Util.err("ERROR connecting to client (SERVER)");
+				Print.err("ERROR connecting to client (SERVER)");
 				e.printStackTrace();
 			}
 		}
@@ -96,7 +96,7 @@ public class Server extends Thread {
 	 * @throws IOException if any socket is invalid.
 	 */
 	public void kill() throws IOException {
-		Util.out("Killing server");
+		Print.out("Killing server");
 		_running = false;
 		_clients.killall();
 		_socket.close();

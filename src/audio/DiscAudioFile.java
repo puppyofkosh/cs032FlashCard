@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.AudioFileFormat.Type;
 
-import cs32flashcardutil.FlashcardConstants;
+import utils.FlashcardConstants;
 
 /**
  * An AudioFile that refers to a file on disc

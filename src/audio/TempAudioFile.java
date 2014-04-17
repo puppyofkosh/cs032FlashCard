@@ -10,7 +10,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import cs32flashcardutil.FlashcardConstants;
+import utils.FlashcardConstants;
 
 /**
  * An AudioFile that is temporarily stored on disc, and is deleted once the program closes
