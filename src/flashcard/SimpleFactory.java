@@ -203,7 +203,7 @@ public class SimpleFactory implements FlashCardFactory{
 	public static FlashCard readCard(String filePath)
 	{
 		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
-		
+		data.pathToFile = filePath;
 		try {
 			FileReader infoReader = new FileReader(filePath + ".INFO.txt");
 			BufferedReader bufferedReader = new BufferedReader(infoReader);
@@ -254,6 +254,8 @@ public class SimpleFactory implements FlashCardFactory{
 		// test-card directory must exist before this is called
 		// The problem with this is is in Writer.writeAudioFile
 		
+		// 1) Create an audio flashcard with the following data and write it to file
+		// Must make sure directory for the card name exists beforehand!
 		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
 		data.answer = new DiscAudioFile("acronym.wav");
 		data.question = new DiscAudioFile("acronym.wav");
@@ -264,10 +266,14 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		SimpleFactory.writeCard(card);
 		
-		
+		// 2) Read the card in from file
 		FlashCard readCard = SimpleFactory.readCard("files/test-card/");
-		System.out.println(readCard.getQuestionAudio().getRawBytes().length);
+		System.out.println(readCard.getAnswerAudio().getRawBytes().length);
 		System.out.println(readCard.getName());
+		
+		// Just for S & g's play the audio file that's stored by the card we read in
+		ByteArrayAudioPlayer testPlayer = new ByteArrayAudioPlayer();
+		testPlayer.play(readCard.getAnswerAudio());
 		/////////////////////////////////////////////////////////
 		
 		
@@ -312,7 +318,7 @@ public class SimpleFactory implements FlashCardFactory{
 		//Client.play(end.getRawBytes());
 		
 		
-		FreeTTSReader reader = new FreeTTSReader();
+		/*FreeTTSReader reader = new FreeTTSReader();
 		FileImporter importer = new FileImporter(new File("files/testtsv"), reader, factory);
 
 		ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
@@ -342,6 +348,6 @@ public class SimpleFactory implements FlashCardFactory{
 				Thread.sleep(500);
 			}
 			System.out.println(f.getAnswerAudio().getRawBytes().length);
-		}
+		}*/
 	}
 }
