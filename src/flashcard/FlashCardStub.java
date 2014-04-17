@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import utils.Writer;
 import audio.AudioFile;
 import audio.AudioFileStub;
 
@@ -83,7 +85,7 @@ public class FlashCardStub implements FlashCard, Serializable {
 			System.out.println("Could not read files");
 			e.printStackTrace();
 		}	
-		System.out.println("Flashcard Made!");
+		Writer.debug("Flashcard Made!");
 	}
 
 	public AudioFile getQuestionAudio() {
@@ -102,14 +104,17 @@ public class FlashCardStub implements FlashCard, Serializable {
 
 	@Override
 	public Collection<FlashCardSet> getSets() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] setArray = sets.split(",");
+		List<FlashCardSet> setList = new LinkedList<>();
+		for(String s : setArray) {
+			setList.add(new SimpleSet(s.trim()));
+		}
+		return setList;
 	}
 
 	@Override
 	public Collection<String> getTags() {
-		// TODO Auto-generated method stub
-		return null;
+		return tags;
 	}
 
 	@Override
@@ -121,7 +126,7 @@ public class FlashCardStub implements FlashCard, Serializable {
 	@Override
 	public int getInterval() {
 		// TODO Auto-generated method stub
-		return 0;
+		return interval;
 	}
 
 	@Override

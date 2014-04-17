@@ -8,6 +8,8 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
+import utils.Writer;
+
 /**
  * http://stackoverflow.com/questions/7728850/java-broadcast-voice-over-java-sockets
  * @author samkortchmar
@@ -27,7 +29,7 @@ public class AudioFileStub implements AudioFile, Serializable {
 		this.rawBytes = getRawBytes();
 		if (AudioConstants.TTSREADER != null) {
 			AudioConstants.TTSREADER = getFormat();
-			System.out.println(String.format("Constructor should be:"
+			Writer.debug(String.format("Constructor should be:"
 					+ " new AudioFormat(%s, %s, %s, %s, %s, %s, %s",
 					format.getEncoding(),
 					format.getSampleRate(),

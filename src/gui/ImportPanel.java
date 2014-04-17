@@ -49,6 +49,22 @@ public class ImportPanel extends GenericPanel {
 		
 		JButton btnNewButton_2 = new JButton("From File");
 		panel_2.add(btnNewButton_2);
-
 	}
+/*
+	@Override
+	public void setControlledPanel(JPanel panel)
+	{
+		super.setControlledPanel(panel);
+		panel.add(, "client panel");
+		
+		l.setControlledPanel(panel);
+	}
+	
+	@Override
+	public void setControlledLayout(CardLayout layout)
+	{
+		super.setControlledLayout(layout);
+		recordPanel.setControlledLayout(layout);
+	}
+*/
 }

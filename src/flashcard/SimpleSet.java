@@ -45,4 +45,9 @@ public class SimpleSet implements FlashCardSet{
 		// TODO Auto-generated method stub
 		return name;
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import backend.ResourcesStub;
+import flashcard.FlashCard;
 import flashcard.FlashCardStub;
 
+@SuppressWarnings("serial")
 public class FlashboardPanel extends JPanel{
 
 	List<JPanel> cardPanels;
@@ -17,7 +20,7 @@ public class FlashboardPanel extends JPanel{
 
 
 	public FlashboardPanel(int numberOfBoxes) {
-		initCardPanels(numberOfBoxes);
+		initCardPanels(ResourcesStub.getAllCards());
 		NUM_ROWS = cardPanels.size() / NUM_COLS + (cardPanels.size() % NUM_COLS == 0 ? 0 : 1);
 		setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
 		for(int i = 0; i < cardPanels.size(); i++) {
@@ -25,11 +28,11 @@ public class FlashboardPanel extends JPanel{
 		}
 	}
 
-	private void initCardPanels(int num) {
-		cardPanels = new ArrayList<>(num);
-		for(int i = 0; i < num; i++) {
-			JPanel card = new FlashCardPanel(new FlashCardStub(EXAMPLE_PATH));
-			cardPanels.add(card);
+	private void initCardPanels(List<FlashCard> cards) {
+		cardPanels = new ArrayList<>();
+		for(FlashCard card : cards) {
+			JPanel cardPanel = new FlashCardPanel(card);
+			cardPanels.add(cardPanel);
 		}
 	}
 }

@@ -1,16 +1,24 @@
 package gui;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JTextField;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JLabel;
+
 import java.awt.Insets;
+
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
+
+import backend.ResourcesStub;
 
 public class ExportPanel extends JPanel {
 	/**
@@ -24,7 +32,7 @@ public class ExportPanel extends JPanel {
 	public ExportPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		JScrollPane cardListPanel = new JScrollPane();
+		CardTablePanel cardListPanel = new CardTablePanel();
 		add(cardListPanel);
 		
 		JPanel exportPanel = new JPanel();

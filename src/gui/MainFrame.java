@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import backend.ResourcesStub;
+
 public class MainFrame extends JFrame {
 
 	/**
@@ -97,6 +99,7 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(createPanel, CREATE_PANEL_NAME);
 		
 		exportCardSelectionPanel = new CardSelectionPanel();
+		exportCardSelectionPanel.updateCards(ResourcesStub.getAllCards());
 		exportCardSelectionPanel.setControlledLayout(mainPanelLayout);
 		exportCardSelectionPanel.setControlledPanel(mainPanelContainer);
 		exportCardSelectionPanel.setContinueDestination(EXPORT_PANEL_NAME);
@@ -111,4 +114,5 @@ public class MainFrame extends JFrame {
 		mainPanelLayout.show(mainPanelContainer, FLASHBOARD_PANEL_NAME);
 		contentPane.add(mainPanelContainer);
 	}
+	
 }
