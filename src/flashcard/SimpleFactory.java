@@ -244,11 +244,10 @@ public class SimpleFactory implements FlashCardFactory{
 		return new LocallyStoredFlashCard(data);
 	}
 	
-	
+
 	
 	public static void main(String[] args) throws IOException, InterruptedException
-	{
-		
+	{	
 		/// EXAMPLE USE OF READ CARD AND WRITE CARD
 		// RUN WITH java -cp "derived/cs032FlashCard.jar:lib/*" flashcard.SimpleFactory "$@"
 		// NOTE NOTE NOTE
@@ -281,6 +280,9 @@ public class SimpleFactory implements FlashCardFactory{
 		ByteArrayAudioPlayer testPlayer = new ByteArrayAudioPlayer();
 		testPlayer.play(readCard.getAnswerAudio());
 		/////////////////////////////////////////////////////////
+		
+		
+		
 	}
 }
 

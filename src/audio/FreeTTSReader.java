@@ -84,7 +84,7 @@ public class FreeTTSReader implements TextToSpeechReader {
 		
 		
 		//return new DiskAudioFile(Paths.get(TEMP_FILE_NAME + ".wav"));
-		return new DiscAudioFile(TEMP_FILE_NAME + ".wav");
+		return new MemoryAudioFile(new DiscAudioFile(TEMP_FILE_NAME + ".wav").getRawBytes());
 	}
 	
 	public static void main(String[] args)

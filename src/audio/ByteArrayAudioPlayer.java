@@ -65,20 +65,42 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 					line.write(buffer, 0, bytesRead);
 					bytesRead = stream.read(buffer);
 				}
-				if (playing) {
-					playing = false;
-					// FIXME: Wtf do these do and do we need them?
-					line.flush();
-			        line.drain();
-					line.stop();
-					line.close();
-				}
-			} catch (Throwable e) {
+		        line.drain();
+				line.stop();
+				line.close();
 				playing = false;
+			} catch (Throwable e) {
+				System.out.println(e.getMessage());
+				playing = false;
+				line.drain();
 				line.stop();
 				line.close();
 			}
 		}
+	}
+	
+	public static void main(String[] args) throws InterruptedException, IOException
+	{
+		
+		FreeTTSReader reader = new FreeTTSReader();
+		ByteArrayAudioPlayer player = new ByteArrayAudioPlayer();
+
+		AudioFile file = reader.read("Testing, testing 1 2 3, homie");
+		player.play(file);
+		Thread.sleep(6000);
+
+		file = reader.read("Whats up, homie");
+		player.play(file);
+		Thread.sleep(5000);
+
+		file = reader
+				.read("This clip does not contain the word homie");
+		player.play(file);
+		Thread.sleep(5000);
+
+		file = new DiscAudioFile("data/tts-test/strange-characters.wav");
+		player.play(file);
+		Thread.sleep(11000);
 	}
 }
 
