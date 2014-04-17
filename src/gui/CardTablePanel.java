@@ -34,6 +34,11 @@ public class CardTablePanel extends JPanel {
 	public CardTablePanel() {
 		setLayout(new BorderLayout(5, 5));
 		searchTableModel = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;

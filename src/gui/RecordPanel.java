@@ -13,6 +13,8 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
@@ -26,6 +28,11 @@ import audio.FreeTTSReader;
 import audio.MemoryRecorder;
 import audio.Recorder;
 import audio.TextToSpeechReader;
+
+import flashcard.LocallyStoredFlashCard;
+import flashcard.SimpleFactory;
+
+import javax.swing.JSpinner;
 
 public class RecordPanel extends GenericPanel {
 	/**
@@ -48,6 +55,9 @@ public class RecordPanel extends GenericPanel {
 	private boolean hasQuestion;
 	private boolean hasAnswer;
 	private boolean recording;
+	private JTextField textFieldName;
+	private JTextPane textPaneTags;
+	private JSpinner spinnerInterval;
 	
 
 	/**
@@ -73,9 +83,26 @@ public class RecordPanel extends GenericPanel {
 		GridBagLayout gbl_QuestionPanels = new GridBagLayout();
 		gbl_QuestionPanels.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_QuestionPanels.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_QuestionPanels.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_QuestionPanels.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
 		gbl_QuestionPanels.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		QuestionPanels.setLayout(gbl_QuestionPanels);
+		
+		JLabel lblName = new JLabel("Name");
+		GridBagConstraints gbc_lblName = new GridBagConstraints();
+		gbc_lblName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblName.gridx = 0;
+		gbc_lblName.gridy = 1;
+		QuestionPanels.add(lblName, gbc_lblName);
+		
+		textFieldName = new JTextField();
+		GridBagConstraints gbc_textFieldName = new GridBagConstraints();
+		gbc_textFieldName.gridwidth = 2;
+		gbc_textFieldName.insets = new Insets(0, 0, 5, 0);
+		gbc_textFieldName.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldName.gridx = 5;
+		gbc_textFieldName.gridy = 1;
+		QuestionPanels.add(textFieldName, gbc_textFieldName);
+		textFieldName.setColumns(10);
 		
 		JLabel lblQuestion = new JLabel("Question");
 		GridBagConstraints gbc_lblQuestion = new GridBagConstraints();
@@ -93,13 +120,13 @@ public class RecordPanel extends GenericPanel {
 		btnQuestionRecord.addActionListener(new RecordListener(true));
 		
 		textQuestion = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 2;
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 5;
-		gbc_textField.gridy = 3;
-		QuestionPanels.add(textQuestion, gbc_textField);
+		GridBagConstraints gbc_textQuestion = new GridBagConstraints();
+		gbc_textQuestion.gridwidth = 2;
+		gbc_textQuestion.insets = new Insets(0, 0, 5, 0);
+		gbc_textQuestion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textQuestion.gridx = 5;
+		gbc_textQuestion.gridy = 3;
+		QuestionPanels.add(textQuestion, gbc_textQuestion);
 		textQuestion.setColumns(10);
 		
 		btnQuestionPlay = new JButton("Play!");
@@ -126,6 +153,13 @@ public class RecordPanel extends GenericPanel {
 		gbc_btnUseTts.gridy = 4;
 		QuestionPanels.add(btnUseTts, gbc_btnUseTts);
 		btnUseTts.addActionListener(new TTSListener(true));
+		
+		spinnerInterval = new JSpinner();
+		GridBagConstraints gbc_spinnerInterval = new GridBagConstraints();
+		gbc_spinnerInterval.insets = new Insets(0, 0, 5, 5);
+		gbc_spinnerInterval.gridx = 3;
+		gbc_spinnerInterval.gridy = 6;
+		QuestionPanels.add(spinnerInterval, gbc_spinnerInterval);
 		
 		JLabel lblAnswer = new JLabel("Answer");
 		GridBagConstraints gbc_lblAnswer = new GridBagConstraints();
@@ -185,21 +219,17 @@ public class RecordPanel extends GenericPanel {
 		gbc_lblNewLabel.gridy = 9;
 		QuestionPanels.add(lblNewLabel, gbc_lblNewLabel);
 		
-		JTextPane textPane = new JTextPane();
-		GridBagConstraints gbc_textPane = new GridBagConstraints();
-		gbc_textPane.gridheight = 2;
-		gbc_textPane.insets = new Insets(0, 0, 5, 0);
-		gbc_textPane.fill = GridBagConstraints.BOTH;
-		gbc_textPane.gridx = 6;
-		gbc_textPane.gridy = 9;
-		QuestionPanels.add(textPane, gbc_textPane);
+		textPaneTags = new JTextPane();
+		GridBagConstraints gbc_textPaneTags = new GridBagConstraints();
+		gbc_textPaneTags.gridheight = 2;
+		gbc_textPaneTags.insets = new Insets(0, 0, 5, 0);
+		gbc_textPaneTags.fill = GridBagConstraints.BOTH;
+		gbc_textPaneTags.gridx = 6;
+		gbc_textPaneTags.gridy = 9;
+		QuestionPanels.add(textPaneTags, gbc_textPaneTags);
 		
 		JButton btnFlash = new JButton("Flash!");
-		btnFlash.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "create panel");
-			}
-		});
+		btnFlash.addActionListener(new FlashListener());
 		GridBagConstraints gbc_btnFlash = new GridBagConstraints();
 		gbc_btnFlash.gridwidth = 3;
 		gbc_btnFlash.insets = new Insets(0, 0, 0, 5);
@@ -220,6 +250,50 @@ public class RecordPanel extends GenericPanel {
 		btnAnswerRecord.setEnabled(value);
 		btnQuestionPlay.setEnabled(value);
 		btnAnswerPlay.setEnabled(value);
+	}
+	
+	/**
+	 * actionPerformed() is called when the user clicks the flash button. Is responsible for creating the flashcard
+	 * @author puppyofkosh
+	 *
+	 */
+	private class FlashListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			// FIXME: Should probably check more than this
+			if (question == null || answer == null)
+			{
+				// FIXME: Make a label say "Must record question and answer" here
+				return;
+			}
+			
+			// FIXME: All of this should be done in a worker thread.
+			LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+			data.name = textFieldName.getText();
+			data.question = question;
+			data.answer = answer;
+			data.interval = (int)spinnerInterval.getValue();
+			
+			// FIXME: This sucks-split on spaces/commas/tabs whatever
+			// Also check to make sure something is actually in the pane!
+			data.tags = new ArrayList<>(Arrays.asList(textPaneTags.getText().split(", ")));
+			// FIXME: Put files/ in a variable
+			// FIXME: Use a legit path (not the name of the flashcard!)
+			data.pathToFile = "files/" + data.name + "/";
+			
+			
+			LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
+			SimpleFactory.writeCard(card);
+			
+			// FIXME: Clear the fields here
+
+			// Move user to the next pane
+			controlledLayout.show(controlledPanel, "create panel");
+		}
+		
 	}
 	
 	private class RecordListener implements ActionListener {
