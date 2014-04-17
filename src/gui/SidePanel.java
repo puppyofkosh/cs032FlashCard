@@ -15,7 +15,7 @@ public class SidePanel extends GenericPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-
+	private final MainFrame _parent;
 	
 	/**
 	 * Set up the swing components
@@ -38,6 +38,8 @@ public class SidePanel extends GenericPanel {
 		btnFlashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, MainFrame.FLASHBOARD_PANEL_NAME);
+				update();
+
 			}
 		});
 		
@@ -49,6 +51,7 @@ public class SidePanel extends GenericPanel {
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, MainFrame.EXPORT_PANEL_NAME);
+				update();
 			}
 		});
 		exportButtonPanel.add(btnExport);
@@ -61,6 +64,8 @@ public class SidePanel extends GenericPanel {
 		btnImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, MainFrame.IMPORT_PANEL_NAME);
+				update();
+
 			}
 		});
 		importButtonPanel.add(btnImport);
@@ -73,20 +78,24 @@ public class SidePanel extends GenericPanel {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, MainFrame.CREATE_PANEL_NAME);
+				update();
 			}
 		});
 		createButtonPanel.add(btnCreate);
 		
 		JPanel panel = new JPanel();
 		add(panel);
-
+	}
+	
+	private void update() {
+		if (_parent != null) _parent.updateAll();
 	}
 	
 	/**
 	 * Create the panel.
 	 */
-	public SidePanel() {
-		
+	public SidePanel(MainFrame parent) {
+		_parent = parent;
 		initialize();
 		
 	}

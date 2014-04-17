@@ -25,22 +25,34 @@ public class FlashboardPanel extends JPanel{
 	List<JPanel> cardPanels;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
-	private static String EXAMPLE_PATH = "Example FileSystem/Application Data/CARDS/ABRAHAM LINCOLN'S BIRTHDAY/";
 
 
-	public FlashboardPanel(int numberOfBoxes) {
-		//initCardPanels(ResourcesStub.getAllCards());
-		
+	public FlashboardPanel() {
 		// Initialize using the factory that reads from resources.ian
-		initCardPanels(SimpleFactory.getResources().getAllCards());
+		updateFlashboard(SimpleFactory.getResources().getAllCards());
+	}
+	
+	public void updateFlashboard() {
+		updateFlashboard(SimpleFactory.getResources().getAllCards());
+	}
+
+	public void updateFlashboard(List<FlashCard> cards) {
+		updateCards(cards);
+		redrawGrid();
+	}
+	
+	private void redrawGrid() {
+		removeAll();
 		NUM_ROWS = cardPanels.size() / NUM_COLS + (cardPanels.size() % NUM_COLS == 0 ? 0 : 1);
 		setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
 		for(int i = 0; i < cardPanels.size(); i++) {
 			add(cardPanels.get(i));
 		}
-	}
-
-	private void initCardPanels(List<FlashCard> cards) {
+		revalidate();
+		repaint();
+	}	
+	
+	public void updateCards(List<FlashCard> cards) {
 		cardPanels = new ArrayList<>();
 		for(FlashCard card : cards) {
 			JPanel cardPanel = new FlashCardPanel(card);

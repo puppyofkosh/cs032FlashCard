@@ -11,6 +11,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import flashcard.FlashCard;
+import flashcard.SimpleFactory;
 
 public class ExportPanel extends JPanel {
 	/**
@@ -54,6 +55,11 @@ public class ExportPanel extends JPanel {
 		
 		_cardTable = new CardTablePanel();
 		add(_cardTable);
+	}
+	
+	
+	public void update() {
+		_cardTable.updateCards(SimpleFactory.getResources().getAllCards());
 	}
 	
 	public void update(List<FlashCard> cards) {

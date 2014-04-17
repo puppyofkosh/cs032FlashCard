@@ -52,7 +52,7 @@ public class Writer {
 	}
 	
 	public static String condenseCollection(Collection<? extends Object> collection) {
-		if (collection.size() == 0)
+		if (collection == null || collection.size() == 0)
 			return "";
 		Joiner joiner = Joiner.on(", ").skipNulls();
 		return joiner.join(collection);

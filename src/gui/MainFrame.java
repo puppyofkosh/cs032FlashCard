@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import flashcard.SimpleFactory;
 import backend.ResourcesStub;
 
 public class MainFrame extends JFrame {
@@ -71,7 +72,7 @@ public class MainFrame extends JFrame {
 		sidePanelContainer.setPreferredSize(new Dimension(WIDTH/5, HEIGHT));
 		contentPane.add(sidePanelContainer);
 		sidePanelContainer.setLayout(new GridLayout(0, 1, 0, 0));
-		SidePanel sidePanel = new SidePanel();
+		SidePanel sidePanel = new SidePanel(this);
 		sidePanelContainer.add(sidePanel);
 		
 		JPanel mainPanelContainer = new JPanel();
@@ -86,7 +87,7 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(importPanel, IMPORT_PANEL_NAME);
 		
 		exportPanel = new ExportPanel();
-		exportPanel.update(ResourcesStub.getAllCards());
+		exportPanel.update(SimpleFactory.getResources().getAllCards());
 		mainPanelContainer.add(exportPanel, EXPORT_PANEL_NAME);
 		
 		createPanel = new CreatePanel();
@@ -94,7 +95,7 @@ public class MainFrame extends JFrame {
 		createPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(createPanel, CREATE_PANEL_NAME);
 		
-		flashboardPanel = new FlashboardPanel(20);
+		flashboardPanel = new FlashboardPanel();
 		JScrollPane scroller = new JScrollPane(flashboardPanel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -102,6 +103,14 @@ public class MainFrame extends JFrame {
 		
 		mainPanelLayout.show(mainPanelContainer, FLASHBOARD_PANEL_NAME);
 		contentPane.add(mainPanelContainer);
+	}
+	
+	public void updateAll() {
+//		importPanel.up;
+		exportPanel.update();
+//		createPanel.update();
+		flashboardPanel.updateFlashboard();;
+
 	}
 	
 }

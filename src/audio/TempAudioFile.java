@@ -19,7 +19,7 @@ import utils.FlashcardConstants;
  */
 public class TempAudioFile implements AudioFile {
 
-	private File file;
+	File file;
 	private static int id = 0;
 
 	public TempAudioFile() {

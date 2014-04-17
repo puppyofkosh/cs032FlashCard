@@ -1,5 +1,4 @@
 package audio;
-import java.io.File;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -20,7 +19,7 @@ import utils.FlashcardConstants;
 public class DiscRecorder implements Recorder {
 	
 	TargetDataLine line;
-	AudioFile recordedAudio;
+	TempAudioFile recordedAudio;
 	AudioFormat format;
 
 	@Override
@@ -56,7 +55,7 @@ public class DiscRecorder implements Recorder {
 			}
 			line.start();
 			try {
-				AudioSystem.write(new AudioInputStream(line), fileType, (File) recordedAudio);
+				AudioSystem.write(new AudioInputStream(line), fileType, recordedAudio.file);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

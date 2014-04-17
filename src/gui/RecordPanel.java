@@ -1,38 +1,31 @@
 package gui;
 
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-
-import javax.swing.JButton;
-
+import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 
 import audio.AudioFile;
 import audio.AudioPlayer;
-import audio.BasicAudioPlayer;
 import audio.ByteArrayAudioPlayer;
+import audio.DiscRecorder;
 import audio.FreeTTSReader;
-import audio.MemoryRecorder;
 import audio.Recorder;
 import audio.TextToSpeechReader;
-
 import flashcard.LocallyStoredFlashCard;
 import flashcard.SimpleFactory;
-
-import javax.swing.JSpinner;
 
 public class RecordPanel extends GenericPanel {
 	/**
@@ -308,7 +301,9 @@ public class RecordPanel extends GenericPanel {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			enableButtons(false);
-			recorder = new MemoryRecorder();
+//			recorder = new MemoryRecorder();
+			recorder = new DiscRecorder();
+
 			recorder.startRecord();
 			recording = true;
 			if (isQuestion)
