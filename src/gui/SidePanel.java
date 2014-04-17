@@ -37,7 +37,7 @@ public class SidePanel extends GenericPanel {
 		flashboardButtonPanel.add(btnFlashboard);
 		btnFlashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "flashboard panel");
+				controlledLayout.show(controlledPanel, MainFrame.FLASHBOARD_PANEL_NAME);
 			}
 		});
 		
@@ -48,7 +48,7 @@ public class SidePanel extends GenericPanel {
 		JButton btnExport = new JButton("Export");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "export selection panel");
+				controlledLayout.show(controlledPanel, MainFrame.EXPORT_PANEL_NAME);
 			}
 		});
 		exportButtonPanel.add(btnExport);
@@ -60,7 +60,7 @@ public class SidePanel extends GenericPanel {
 		JButton btnImport = new JButton("Import");
 		btnImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "import panel");
+				controlledLayout.show(controlledPanel, MainFrame.IMPORT_PANEL_NAME);
 			}
 		});
 		importButtonPanel.add(btnImport);
@@ -72,7 +72,7 @@ public class SidePanel extends GenericPanel {
 		JButton btnCreate = new JButton("Create");
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "create panel");
+				controlledLayout.show(controlledPanel, MainFrame.CREATE_PANEL_NAME);
 			}
 		});
 		createButtonPanel.add(btnCreate);

@@ -1,46 +1,37 @@
 package gui;
 
-import javax.swing.JPanel;
-
-import java.awt.GridBagLayout;
-
-import javax.swing.JTextField;
-
-import java.awt.GridBagConstraints;
-
-import javax.swing.JLabel;
-
-import java.awt.Insets;
+import java.awt.Color;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JScrollPane;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
-import backend.ResourcesStub;
+import flashcard.FlashCard;
 
 public class ExportPanel extends JPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	CardTablePanel _cardTable;
 	/**
 	 * Create the panel.
 	 */
 	public ExportPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		CardTablePanel cardListPanel = new CardTablePanel();
-		add(cardListPanel);
-		
-		JPanel exportPanel = new JPanel();
-		add(exportPanel);
-		exportPanel.setLayout(new BoxLayout(exportPanel, BoxLayout.X_AXIS));
-		
 		JPanel chooseMethodPanel = new JPanel();
-		exportPanel.add(chooseMethodPanel);
+		add(chooseMethodPanel);
+		
+		JTextField searchBox = new JTextField(30);
+		searchBox.setForeground(Color.LIGHT_GRAY);
+		searchBox.setText("Search Here");
+		searchBox.setForeground(Color.BLACK);
+		chooseMethodPanel.add(searchBox);
 		
 		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("MP3");
 		chooseMethodPanel.add(rdbtnNewRadioButton_1);
@@ -55,13 +46,18 @@ public class ExportPanel extends JPanel {
 		group.add(rdbtnNewRadioButton_1);
 		group.add(rdbtnNewRadioButton_2);
 		group.add(rdbtnNewRadioButton);
-		
-		JPanel drawThingPanel = new JPanel();
-		exportPanel.add(drawThingPanel);
+
 		
 		JButton btnExport = new JButton("Export!");
-		drawThingPanel.add(btnExport);
+		chooseMethodPanel.add(btnExport);
+
 		
+		_cardTable = new CardTablePanel();
+		add(_cardTable);
+	}
+	
+	public void update(List<FlashCard> cards) {
+		_cardTable.updateCards(cards);
 	}
 
 }

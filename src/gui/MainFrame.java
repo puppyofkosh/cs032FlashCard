@@ -24,10 +24,17 @@ public class MainFrame extends JFrame {
 	private ImportPanel importPanel;
 	private ExportPanel exportPanel;
 	private CreatePanel createPanel;
-	private CardSelectionPanel exportCardSelectionPanel;
 	private FlashboardPanel flashboardPanel;
 	
 	private CardLayout mainPanelLayout;
+	
+
+	public static final String IMPORT_PANEL_NAME = "import panel";
+	public static final String EXPORT_PANEL_NAME = "export panel";
+	public static final String CREATE_PANEL_NAME = "create panel";
+	public static final String FLASHBOARD_PANEL_NAME = "flashboard panel";
+	private int WIDTH = 1000;
+	private int HEIGHT = 500;
 
 	/**
 	 * Launch the application.
@@ -45,14 +52,6 @@ public class MainFrame extends JFrame {
 			}
 		});
 	}
-
-	public final String IMPORT_PANEL_NAME = "import panel";
-	public final String EXPORT_SELECTION_PANEL_NAME = "export selection panel";
-	public final String EXPORT_PANEL_NAME = "export panel";
-	public final String CREATE_PANEL_NAME = "create panel";
-	public final String FLASHBOARD_PANEL_NAME = "flashboard panel";
-	private int WIDTH = 1000;
-	private int HEIGHT = 500;
 	
 	/**
 	 * Create the frame.
@@ -84,13 +83,10 @@ public class MainFrame extends JFrame {
 		sidePanel.setControlledPanel(mainPanelContainer);		
 		
 		importPanel = new ImportPanel();
-		//importPanel.setControlledLayout(mainPanelLayout);
-		//importPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(importPanel, IMPORT_PANEL_NAME);
 		
 		exportPanel = new ExportPanel();
-		//exportPanel.setControlledLayout(mainPanelLayout);
-		//exportPanel.setControlledPanel(mainPanelContainer);
+		exportPanel.update(ResourcesStub.getAllCards());
 		mainPanelContainer.add(exportPanel, EXPORT_PANEL_NAME);
 		
 		createPanel = new CreatePanel();
@@ -98,13 +94,6 @@ public class MainFrame extends JFrame {
 		createPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(createPanel, CREATE_PANEL_NAME);
 		
-		exportCardSelectionPanel = new CardSelectionPanel();
-		exportCardSelectionPanel.updateCards(ResourcesStub.getAllCards());
-		exportCardSelectionPanel.setControlledLayout(mainPanelLayout);
-		exportCardSelectionPanel.setControlledPanel(mainPanelContainer);
-		exportCardSelectionPanel.setContinueDestination(EXPORT_PANEL_NAME);
-		mainPanelContainer.add(exportCardSelectionPanel, EXPORT_SELECTION_PANEL_NAME);
-
 		flashboardPanel = new FlashboardPanel(20);
 		JScrollPane scroller = new JScrollPane(flashboardPanel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
