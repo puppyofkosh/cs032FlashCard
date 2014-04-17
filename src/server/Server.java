@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import utils.FlashcardConstants;
-import utils.Print;
+import utils.Writer;
 import flashcard.FlashCard;
 import flashcard.FlashCardStub;
 
@@ -72,18 +72,18 @@ public class Server extends Thread {
 	 */
 	public void run() {
 		_running = true;
-		Print.out("Server running");
+		Writer.out("Server running");
 		while (_running) {
 			try {
 				Socket clientConn = _socket.accept();
-				Print.out("-- New client connection --");
+				Writer.out("-- New client connection --");
 				new ClientHandler(_clients, clientConn, _cardLibrary).start();
 			} catch (IOException e) {
 				if(e instanceof SocketException && _running == false) {
-					Print.out("The server socket has been closed.");
+					Writer.out("The server socket has been closed.");
 					return;
 				}
-				Print.err("ERROR connecting to client (SERVER)");
+				Writer.err("ERROR connecting to client (SERVER)");
 				e.printStackTrace();
 			}
 		}
@@ -96,7 +96,7 @@ public class Server extends Thread {
 	 * @throws IOException if any socket is invalid.
 	 */
 	public void kill() throws IOException {
-		Print.out("Killing server");
+		Writer.out("Killing server");
 		_running = false;
 		_clients.killall();
 		_socket.close();

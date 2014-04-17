@@ -1,6 +1,13 @@
 package utils;
 
-public class Print {
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
+public class Writer {
 	
 	private static boolean DEBUG_MODE_ON = false;
 
@@ -15,6 +22,11 @@ public class Print {
 
 	public static void err(Object...strs) {
 		System.err.println(composeString(strs));
+	}
+	
+	public static void writeAudioFile(String path, AudioInputStream stream, boolean isQuestion) throws IOException {
+		File audioFile = new File(path + "/" + (isQuestion ? "q" : "a") + ".wav");
+		AudioSystem.write(stream, AudioFileFormat.Type.WAVE, audioFile);
 	}
 	
 	public static void debug(Object ... strs) {

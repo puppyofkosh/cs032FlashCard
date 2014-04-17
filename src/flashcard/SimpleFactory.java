@@ -22,7 +22,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import utils.FlashcardConstants;
-import utils.Print;
+import utils.Writer;
 import client.Client;
 import backend.FileImporter;
 import backend.SimpleResources;
@@ -178,10 +178,14 @@ public class SimpleFactory implements FlashCardFactory{
 								  + "\n" + composeMetadata(card);	
 			rewriter.write(new_metadata);
 		} catch (IOException e) {
-			Print.err("Could not change metadata on card", card.getName(), 
+			Writer.err("Could not change metadata on card", card.getName(), 
 					"located at", card.getPath());
 			e.printStackTrace();
 		}
+	}
+	
+	public void writeCard(FlashCard card) {
+		Writer.card.getPath();
 	}
 	
 	

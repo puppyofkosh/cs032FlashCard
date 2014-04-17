@@ -11,7 +11,7 @@ import protocol.CardListRequest;
 import protocol.Request;
 import protocol.Response;
 import search.SearchParameters;
-import utils.Print;
+import utils.Writer;
 import flashcard.FlashCard;
 /**
  * A thread for handling client connections to the server.
@@ -68,9 +68,9 @@ public class ClientHandler extends Thread {
 				req = (Request) _input.readObject();
 				processRequest(req);
 			}
-			Print.out("Running has ceased. Goodbye.");
+			Writer.out("Running has ceased. Goodbye.");
 		} catch(IOException | ClassNotFoundException e) {
-			Print.out("-- Client exited. --");
+			Writer.out("-- Client exited. --");
 		} finally {
 			kill();
 		}
@@ -87,7 +87,7 @@ public class ClientHandler extends Thread {
 	 * A response containing the data received from the backend.
 	 */
 	private void processRequest(Request req) {
-		Print.debug("Processing Request...\n", req);
+		Writer.debug("Processing Request...\n", req);
 		switch (req.getType()) {
 		case CARD_LIST:
 			CardListRequest clR = (CardListRequest) req;
@@ -120,7 +120,7 @@ public class ClientHandler extends Thread {
 			_output.close();
 			_client.close();			
 		} catch (IOException e) {
-			Print.err("ERROR killing client handler.\n", e.getMessage());	
+			Writer.err("ERROR killing client handler.\n", e.getMessage());	
 		}
 	}
 
@@ -152,9 +152,9 @@ public class ClientHandler extends Thread {
 				}
 			} catch (IOException e) {
 				if (!_running)
-					Print.out("Connection closed. No more responses will be sent.");
+					Writer.out("Connection closed. No more responses will be sent.");
 				else
-					Print.err("ERROR writing response in push thread");
+					Writer.err("ERROR writing response in push thread");
 			}
 		}
 	}
