@@ -8,7 +8,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import cs32flashcardutil.FlashcardConstants;
+import utils.FlashcardConstants;
 
 /**
  * An AudioFile stored in the JVM's memory, rather than on disc

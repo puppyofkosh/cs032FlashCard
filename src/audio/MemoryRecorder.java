@@ -13,7 +13,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
-import cs32flashcardutil.FlashcardConstants;
+import utils.FlashcardConstants;
 
 /**
  * Recorder that generates MemoryAudioFiles

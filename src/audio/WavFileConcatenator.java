@@ -26,7 +26,7 @@ public class WavFileConcatenator {
 		this.destination = destination;
 		
 		if (!intervalAudio.exists()) {
-			AudioFormat format = cs32flashcardutil.FlashcardConstants.standardizedFormat;
+			AudioFormat format = utils.FlashcardConstants.standardizedFormat;
 			int frames = (int) format.getFrameRate();
 			// FIXME: Weird int cast
 			int size = (format.getFrameSize() * frames);
@@ -54,7 +54,7 @@ public class WavFileConcatenator {
 	
 	public void concatenate(List<AudioInputStream> streams, String name) throws IOException  {
 		long frameLength = 0;
-		AudioFormat format = cs32flashcardutil.FlashcardConstants.standardizedFormat;
+		AudioFormat format = utils.FlashcardConstants.standardizedFormat;
 		for (AudioInputStream stream : streams) {
 			frameLength += stream.getFrameLength();
 		}

@@ -10,14 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import utils.TSVLineParser;
 import client.Client;
-
 import audio.AudioFile;
 import audio.MemoryAudioFile;
 import audio.TextToSpeechReader;
-
-import util.TSVLineParser;
-
 import flashcard.FlashCard;
 import flashcard.FlashCardFactory;
 

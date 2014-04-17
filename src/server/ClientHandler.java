@@ -1,118 +1,161 @@
 package server;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import flashcard.FlashCardStub;
-
+import protocol.CardListRequest;
+import protocol.Request;
+import protocol.Response;
+import search.SearchParameters;
+import utils.Writer;
+import flashcard.FlashCard;
 /**
- * Encapsulate IO for the given client {@link Socket}, with a group of
- * other clients in the given {@link ClientPool}.
+ * A thread for handling client connections to the server.
+ * @author skortchm
  */
 public class ClientHandler extends Thread {
-	private ClientPool _pool;
 	private Socket _client;
-	private BufferedReader _input;
-	private ObjectOutputStream _cardStream;
-	private boolean _running;
-	private String FILEPATH = "./Example FileSystem/Application Data/CARDS/ABRAHAM LINCOLN'S BIRTHDAY/";
-	
+	private ObjectInputStream _input;
+	private ObjectOutputStream _output;
+	private ClientPool _pool;
+	private boolean _running = false;
+	private volatile Map<String, FlashCard> _serverCardLibrary;
+	private PushThread _pushThread;
+	ConcurrentLinkedQueue<Response> _responseQueue;
+
+
 	/**
-	 * Constructs a {@link ClientHandler} on the given client with the given pool.
-	 * 
-	 * @param pool a group of other clients to chat with
-	 * @param client the client to handle
-	 * @throws IOException if the client socket is invalid
-	 * @throws IllegalArgumentException if pool or client is null
+	 * Default constructor.
+	 * Sets up this handler to be ready to receive requests 
+	 * from and write responses to the client.
+	 * @param pool - the shared pool of currently running client handlers on this server.
+	 * @param clientSocket - the connection to the client
+	 * @param backend - the backend which will compute and return the results of the requests sent from the client.
+	 * @throws IOException if the client connection is unable to open an input or output stream.
 	 */
-	public ClientHandler(ClientPool pool, Socket client) throws IOException {
-		if (pool == null || client == null) {
+	public ClientHandler(ClientPool pool, Socket clientSocket, Map<String, FlashCard> cardLibrary) throws IOException {
+		if (pool == null || clientSocket == null)
 			throw new IllegalArgumentException("Cannot accept null arguments.");
-		}
-		
+
+		_client = clientSocket;
 		_pool = pool;
-		_client = client;
+		_serverCardLibrary = cardLibrary;
+		
+		_responseQueue = new ConcurrentLinkedQueue<>();
+
+		_output = new ObjectOutputStream(_client.getOutputStream());
+		_input = new ObjectInputStream(_client.getInputStream());
+
 		_pool.add(this);
-		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
-		_cardStream = new ObjectOutputStream(_client.getOutputStream());
 	}
-	
+
+
 	/**
-	 * Send and receive data from the client. The first line received will be
-	 * interpreted as the client's user-name.
+	 * Process requests from the client and
+	 * respond with the data resulting from the request.
 	 */
 	public void run() {
 		_running = true;
+		_pushThread = new PushThread();
+		_pushThread.start();
 		try {
+			Request req;
 			while (_running) {
-				String msg = _input.readLine();
-				if (msg == null || msg.length() == 0 || msg.equalsIgnoreCase("logoff")) {
-					break;
-				} else if (msg.equalsIgnoreCase("flashcard!")) {
-					FlashCardStub flashcard = new FlashCardStub(FILEPATH);
-					_cardStream.writeObject(flashcard);
-					_cardStream.flush();
-				}
-				_pool.broadcast("A chatter said" + ": " + msg, this);
+				req = (Request) _input.readObject();
+				processRequest(req);
 			}
-			_pool.broadcast("System: client logged off.", this);
-			send("");
+			Writer.out("Running has ceased. Goodbye.");
+		} catch(IOException | ClassNotFoundException e) {
+			Writer.out("-- Client exited. --");
+		} finally {
 			kill();
-		} catch (IOException e) {
-			err("ERROR reading from client");
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Send a string to the client via the socket
-	 * 
-	 * @param message text to send
-	 */
-	public void send(String message) {
-		try {
-			_cardStream.writeObject(message);
-			_cardStream.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
-	
+
 	/**
-	 * Close this socket and its related streams.
-	 * 
-	 * @throws IOException Passed up from socket
+	 * Processes the parametric request and query the backend for
+	 * some type of data based on the type of the request. 
+	 * Then wraps the data received from the backend in a Response
+	 * object and returns that object to be written to the client.   
+	 * @param req - the request to process
+	 * @return
+	 * A response containing the data received from the backend.
 	 */
-	public void kill() throws IOException {
-		out("Killing Client Handler");
-		_running = false;
-		_input.close();
-		_cardStream.close();
-		_client.close();
-		_pool.remove(this); //remove this from the pool since we are killing it.
+	private void processRequest(Request req) {
+		Writer.debug("Processing Request...\n", req);
+		switch (req.getType()) {
+		case CARD_LIST:
+			CardListRequest clR = (CardListRequest) req;
+			//Obviously will be different once we've implemented an actual database
+			SearchParameters params = clR.getSearchParameters();
+			String input = params.get_input();
+			_serverCardLibrary.get(input);
+			break;
+		case SET_LIST:
+			break;
+		default:
+			//not much we can do with an invalid request
+			throw new IllegalArgumentException("Unsupported request type");
+
+		}
 	}
 	
-	
-	/**	
-	 * Utilities for printing.
-	 * @param strs
+
+	/**
+	 * Kills this handler and cleans up its additional resources.
+	 * 
+	 * @throws IOException when the client's connection or data streams 
+	 * is either already closed or cannot be closed for some reason.
 	 */
-		void out(Object...strs) {
-			System.out.println(composeString(strs));
+	public void kill() {
+		try {
+			_running = false;
+			_pool.remove(this);
+			_input.close();
+			_output.close();
+			_client.close();			
+		} catch (IOException e) {
+			Writer.err("ERROR killing client handler.\n", e.getMessage());	
 		}
-		
-		void err(Object...strs) {
-			System.err.println(composeString(strs));
-		}
-		
-		String composeString(Object...strs) {
-			String s = "" + strs[0];
-			for (int i = 1; i < strs.length; i++) {
-				s += (strs[i] +" ");
+	}
+
+	/**
+	 * A very important class - responsible for pushing thread responses to the client
+	 *
+	 */
+	private class PushThread extends Thread {
+
+		@Override
+		public void run() {
+			try {
+				/*
+				if (_b.isDone()) {
+					//if backend finished some time in the past, send the client connection response.
+					_output.writeObject(new ClientConnectionResponse(_b.getInitialWays(), MapFactory.getTrafficMap(), Constants.MINIMUM_LATITUDE, Constants.MAXIMUM_LATITUDE, Constants.MINIMUM_LONGITUDE, Constants.MAXIMUM_LONGITUDE));
+					_output.flush();
+				}
+				//if backend is not yet done, it will send the client connection response 
+				//when it finishes initializing.
+				_output.writeObject(new ServerStatus(_b.isDone()));
+				_output.flush();*/
+				
+				while (_running) {
+					if (!_responseQueue.isEmpty()) {
+						_output.writeObject(_responseQueue.poll());
+						_output.flush();
+					}
+				}
+			} catch (IOException e) {
+				if (!_running)
+					Writer.out("Connection closed. No more responses will be sent.");
+				else
+					Writer.err("ERROR writing response in push thread");
 			}
-			return s;
 		}
+	}
 }

@@ -19,7 +19,7 @@ import audio.AudioFileStub;
 public class FlashCardStub implements FlashCard, Serializable {
 
 	private static final long serialVersionUID = -5514013016523354268L;
-	String name, set, pathToFile;
+	String name, sets, pathToFile;
 	String questionText, answerText = "";
 	List<String> tags;
 	AudioFile question, answer;
@@ -32,8 +32,8 @@ public class FlashCardStub implements FlashCard, Serializable {
 		this.answer = answer;
 		this.interval = interval;
 		this.tags = tags;
-		this.set = set;
-	}	
+		this.sets = set;
+	}
 
 	FlashCardStub(String name, AudioFile question, String questionText,
 			AudioFile answer, String answerText, int interval, List<String> tags,  String set) {
@@ -52,6 +52,7 @@ public class FlashCardStub implements FlashCard, Serializable {
 			int lineNum = 0;
 			while((line = bufferedReader.readLine()) !=null) { //Loops while bufferedReader can find a next line
 				if (lineNum != 0) {
+					//FIXME predefine regex
 					String[] info = line.split("\t");
 					name = info[0];
 					try {
@@ -59,12 +60,13 @@ public class FlashCardStub implements FlashCard, Serializable {
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 					}
-					set = info[2];
+					sets = info[2];
 					tags = Arrays.asList(info[3].split(","));
 				}
 				lineNum++;
 			}
-			bufferedReader.close(); 
+			bufferedReader.close();
+			pathToFile = filePath;
 		} catch(FileNotFoundException ex) {
 			System.out.println(new File(".").getAbsolutePath());
 			System.out.println("ERROR: File cannot be found at location " + filePath);
@@ -130,7 +132,7 @@ public class FlashCardStub implements FlashCard, Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("Flashcard %s is in set %s with tags %s and interval %s", name, set, tags, interval);
+		return String.format("Flashcard %s is in set %s with tags %s and interval %s", name, sets, tags, interval);
 	}
 
 	@Override
