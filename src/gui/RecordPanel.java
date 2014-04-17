@@ -1,4 +1,4 @@
-package ian_gui;
+package gui;
 
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;

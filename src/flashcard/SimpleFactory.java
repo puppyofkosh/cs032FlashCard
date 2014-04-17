@@ -190,13 +190,12 @@ public class SimpleFactory implements FlashCardFactory{
 	}
 	
 	public static void writeCard(FlashCard card) {
-		//isQuestionWriter.card.getPath();
+
 		writeMetadata(card);
 		try {
 			Writer.writeAudioFile(card.getPath(), card.getQuestionAudio().getStream(), true);
 			Writer.writeAudioFile(card.getPath(), card.getAnswerAudio().getStream(), false);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -250,9 +249,11 @@ public class SimpleFactory implements FlashCardFactory{
 	{
 		
 		/// EXAMPLE USE OF READ CARD AND WRITE CARD
+		// RUN WITH java -cp "derived/cs032FlashCard.jar:lib/*" flashcard.SimpleFactory "$@"
 		// NOTE NOTE NOTE
 		// test-card directory must exist before this is called
 		// The problem with this is is in Writer.writeAudioFile
+		
 		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
 		data.answer = new DiscAudioFile("acronym.wav");
 		data.question = new DiscAudioFile("acronym.wav");
