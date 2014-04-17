@@ -33,7 +33,7 @@ public class FlashCardStub implements FlashCard, Serializable {
 		this.interval = interval;
 		this.tags = tags;
 		this.set = set;
-	}	
+	}
 
 	FlashCardStub(String name, AudioFile question, String questionText,
 			AudioFile answer, String answerText, int interval, List<String> tags,  String set) {
@@ -52,6 +52,7 @@ public class FlashCardStub implements FlashCard, Serializable {
 			int lineNum = 0;
 			while((line = bufferedReader.readLine()) !=null) { //Loops while bufferedReader can find a next line
 				if (lineNum != 0) {
+					//FIXME predefine regex
 					String[] info = line.split("\t");
 					name = info[0];
 					try {

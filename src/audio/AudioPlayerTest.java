@@ -1,9 +1,8 @@
 package audio;
-/*
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
+/*
 public class AudioPlayerTest {
 	AudioFile a1;
 	AudioPlayer ap = new AudioPlayerClass(util.Constants.standardizedFormat);
@@ -15,6 +14,5 @@ public class AudioPlayerTest {
 		ap.stop();
 		assertFalse(ap.isPlaying());
 	}
-
 }
 */
