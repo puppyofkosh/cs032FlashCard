@@ -105,5 +105,4 @@ public class SimpleFlashCard implements FlashCard {
 		
 		return new MemoryAudioFile(data.answerBytes);
 	}
-
 }

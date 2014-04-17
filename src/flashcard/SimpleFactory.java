@@ -1,10 +1,12 @@
 package flashcard;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import utils.FlashcardConstants;
 import utils.Writer;
@@ -28,6 +31,7 @@ import backend.FileImporter;
 import backend.SimpleResources;
 import audio.AudioConstants;
 import audio.AudioFile;
+import audio.AudioFileStub;
 import audio.BasicAudioPlayer;
 import audio.ByteArrayAudioPlayer;
 import audio.DiscAudioFile;
@@ -166,14 +170,14 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
-	private String composeMetadata(FlashCard card) {
+	private static String composeMetadata(FlashCard card) {
 		return card.getName() + "\t" +
 	           card.getInterval() + "\t" + 
 			   card.getSets() + "\t" +
 	           card.getTags() + "\t";
 	}
 	
-	public void writeMetadata(FlashCard card) {
+	public static void writeMetadata(FlashCard card) {
 		try(FileWriter rewriter = new FileWriter(new File(card.getPath() + ".INFO.txt"), false)) {
 			String new_metadata = FlashcardConstants.METADATA_HEADER
 								  + "\n" + composeMetadata(card);	
@@ -185,33 +189,98 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
-	public void writeCard(FlashCard card) {
+	public static void writeCard(FlashCard card) {
+
 		writeMetadata(card);
 		try {
 			Writer.writeAudioFile(card.getPath(), card.getQuestionAudio().getStream(), true);
 			Writer.writeAudioFile(card.getPath(), card.getAnswerAudio().getStream(), false);
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+	}
+	
+	public static FlashCard readCard(String filePath)
+	{
+		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
 		
+		try {
+			FileReader infoReader = new FileReader(filePath + ".INFO.txt");
+			BufferedReader bufferedReader = new BufferedReader(infoReader);
+			String line;
+			String name = "";
+			int lineNum = 0;
+			while((line = bufferedReader.readLine()) !=null) { //Loops while bufferedReader can find a next line
+				if (lineNum != 0) {
+					//FIXME predefine regex
+					String[] info = line.split("\t");
+					data.name = info[0];
+					try {
+						data.interval = Integer.parseInt(info[1]);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+					//sets = info[2];
+					data.tags = Arrays.asList(info[3].split(","));
+				}
+				lineNum++;
+			}
+			bufferedReader.close();
+		} catch(FileNotFoundException ex) {
+			System.out.println(new File(".").getAbsolutePath());
+			System.out.println("ERROR: File cannot be found at location " + filePath);
+			ex.printStackTrace();
+		} catch(IOException ex) {
+			System.out.println("Error reading file '" + filePath + "'");
+		}
+
+		//Read the audio files.
+		//	data.question = new AudioFileStub(AudioSystem.getAudioInputStream(new File(filePath + "q.wav")));
+		//	data.answer = new AudioFileStub(AudioSystem.getAudioInputStream(new File(filePath + "a.wav")));
+		data.question = new DiscAudioFile(filePath + "q.wav");
+		data.answer = new DiscAudioFile(filePath + "a.wav");
+		
+		return new LocallyStoredFlashCard(data);
 	}
 	
 	
 	
 	public static void main(String[] args) throws IOException, InterruptedException
 	{
+		
+		/// EXAMPLE USE OF READ CARD AND WRITE CARD
+		// RUN WITH java -cp "derived/cs032FlashCard.jar:lib/*" flashcard.SimpleFactory "$@"
+		// NOTE NOTE NOTE
+		// test-card directory must exist before this is called
+		// The problem with this is is in Writer.writeAudioFile
+		
+		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+		data.answer = new DiscAudioFile("acronym.wav");
+		data.question = new DiscAudioFile("acronym.wav");
+		data.pathToFile = "files/test-card/";
+		data.name = "test-card";
+		
+		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
+		
+		SimpleFactory.writeCard(card);
+		
+		
+		FlashCard readCard = SimpleFactory.readCard("files/test-card/");
+		System.out.println(readCard.getQuestionAudio().getRawBytes().length);
+		System.out.println(readCard.getName());
+		/////////////////////////////////////////////////////////
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		SimpleFactory factory = new SimpleFactory();
 		
-		//SimpleResources r = new SimpleResources();
-		//r.save();
-		//r.load();
-		//System.out.println(r.getFlashCardsByName("a"));
-		
-		
 		// FIXME: Watch out for the saving and loading problems!
-		System.out.println(factory.getResources().getFlashCardsByTag("tag 4").get(0));
 		
 		
 		
@@ -241,9 +310,6 @@ public class SimpleFactory implements FlashCardFactory{
 		//System.out.println("Do i exist " + start.exists());
 		//AudioFile end = new MemoryAudioFile(start.getRawBytes());
 		//Client.play(end.getRawBytes());
-		
-		
-		
 		
 		
 		FreeTTSReader reader = new FreeTTSReader();
