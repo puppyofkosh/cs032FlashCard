@@ -184,10 +184,6 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
-	public void writeCard(FlashCard card) {
-		Writer.card.getPath();
-	}
-	
 	
 	
 	public static void main(String[] args) throws IOException
