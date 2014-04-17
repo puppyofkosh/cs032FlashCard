@@ -193,6 +193,7 @@ public class SimpleFactory implements FlashCardFactory{
 
 		writeMetadata(card);
 		try {
+			// FIXME: This breaks stuff!
 			Writer.writeAudioFile(card.getPath(), card.getQuestionAudio().getStream(), true);
 			Writer.writeAudioFile(card.getPath(), card.getAnswerAudio().getStream(), false);
 		} catch (IOException e) {
@@ -256,6 +257,7 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		// 1) Create an audio flashcard with the following data and write it to file
 		// Must make sure directory for the card name exists beforehand!
+		
 		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
 		data.answer = new DiscAudioFile("acronym.wav");
 		data.question = new DiscAudioFile("acronym.wav");
@@ -266,8 +268,12 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		SimpleFactory.writeCard(card);
 		
+		
+		
+		
 		// 2) Read the card in from file
 		FlashCard readCard = SimpleFactory.readCard("files/test-card/");
+		readCard.setInterval(23);
 		System.out.println(readCard.getAnswerAudio().getRawBytes().length);
 		System.out.println(readCard.getName());
 		
@@ -275,79 +281,6 @@ public class SimpleFactory implements FlashCardFactory{
 		ByteArrayAudioPlayer testPlayer = new ByteArrayAudioPlayer();
 		testPlayer.play(readCard.getAnswerAudio());
 		/////////////////////////////////////////////////////////
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		SimpleFactory factory = new SimpleFactory();
-		
-		// FIXME: Watch out for the saving and loading problems!
-		
-		
-		
-		//f.create("test", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set");
-		//FlashCard card = f.create("set-test.ian");
-		//System.out.println(card.getInterval());
-		//System.out.println(card.getTags());
-		/*f.create("a", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1", "tag 2"), "set1");
-		f.create("b", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 2"), "set2");
-		f.create("c", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 3"), "set3");
-		f.create("d", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1", "tag 4"), "set2");
-		f.create("e", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set1");
-		f.create("f", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set1");
-		f.create("g", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set2");
-		*/
-		
-		//FreeTTSReader tts = new FreeTTSReader();
-		//tts.read("Hello world!");
-		//tts.read("How are you today?");
-		// FIXME: Wtf? This crashes on ubuntu 12.10
-		//DiscAudioFile start = new DiscAudioFile("acronym.wav");
-		//System.out.println(start.getRawBytes().length);
-		//ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
-		//plr.play(start);
-		// */
-		//Client.play(start.getRawBytes());
-		//System.out.println("Do i exist " + start.exists());
-		//AudioFile end = new MemoryAudioFile(start.getRawBytes());
-		//Client.play(end.getRawBytes());
-		
-		
-		/*FreeTTSReader reader = new FreeTTSReader();
-		FileImporter importer = new FileImporter(new File("files/testtsv"), reader, factory);
-
-		ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
-		
-		System.exit(0);
-		
-		importer.importCards();
-		List<FlashCard> allCards = importer.getCardList();
-		
-		for (FlashCard f : allCards)
-		{
-			System.out.println(f.getName());			
-			plr.play(f.getQuestionAudio());
-			Thread.sleep(500);
-
-			while (plr.isPlaying())
-			{
-				Thread.sleep(500);
-			}
-			Thread.sleep(1000);
-						
-			plr.play(f.getAnswerAudio());
-			Thread.sleep(500);
-
-			while (plr.isPlaying())
-			{
-				Thread.sleep(500);
-			}
-			System.out.println(f.getAnswerAudio().getRawBytes().length);
-		}*/
 	}
 }
+

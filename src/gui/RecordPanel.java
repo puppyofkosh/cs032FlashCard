@@ -20,6 +20,7 @@ import javax.swing.JTextPane;
 
 import audio.AudioFile;
 import audio.AudioPlayer;
+import audio.BasicAudioPlayer;
 import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.MemoryRecorder;
@@ -57,6 +58,7 @@ public class RecordPanel extends GenericPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		player = new ByteArrayAudioPlayer();
+		//player = new BasicAudioPlayer();
 		try{
 		reader = new FreeTTSReader();
 		} catch (Throwable e) {}
@@ -230,6 +232,7 @@ public class RecordPanel extends GenericPanel {
 			enableButtons(false);
 			recorder = new MemoryRecorder();
 			recorder.startRecord();
+			recording = true;
 			if (isQuestion)
 				btnQuestionStop.setEnabled(true);
 			else
@@ -254,7 +257,7 @@ public class RecordPanel extends GenericPanel {
 					btnQuestionStop.setEnabled(true);
 				}
 				else {
-					player.play(question);
+					player.play(answer);
 					btnQuestionStop.setEnabled(true);
 				}
 			} catch (IOException e1) {}
@@ -296,17 +299,20 @@ public class RecordPanel extends GenericPanel {
 		public void actionPerformed(ActionEvent e) {
 			
 			enableButtons(true);
+			btnQuestionStop.setEnabled(false);
+			btnAnswerStop.setEnabled(false);
 			
 			if (!recording) {
 				player.stop();
 				return;
 			}
 			
-			btnQuestionStop.setEnabled(false);
-			btnAnswerStop.setEnabled(false);
+			
+			recording = false;
 			
 			if (isQuestion) { 
 				question = recorder.stopRecord();
+				System.out.println("has question");
 				hasQuestion = true;
 				btnQuestionPlay.setVisible(true);
 			}
@@ -319,5 +325,4 @@ public class RecordPanel extends GenericPanel {
 		}
 		
 	}
-
 }

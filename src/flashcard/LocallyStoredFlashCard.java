@@ -52,7 +52,7 @@ public class LocallyStoredFlashCard implements FlashCard{
 	@Override
 	public void addTag(String tag) throws IOException {
 		data.tags.add(tag);
-		SimpleFactory.writeCard(this);
+		SimpleFactory.writeMetadata(this);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class LocallyStoredFlashCard implements FlashCard{
 	@Override
 	public void setInterval(int interval) throws IOException {
 		data.interval = interval;
-		SimpleFactory.writeCard(this);
+		SimpleFactory.writeMetadata(this);
 	}
 
 	@Override
