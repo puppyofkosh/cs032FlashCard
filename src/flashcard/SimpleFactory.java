@@ -1,20 +1,35 @@
 package flashcard;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+
+import client.Client;
+
+import backend.FileImporter;
 import backend.SimpleResources;
 
+import audio.AudioConstants;
 import audio.AudioFile;
 import audio.BasicAudioPlayer;
 import audio.DiscAudioFile;
+import audio.FreeTTSReader;
 import audio.MemoryAudioFile;
 
 /**
@@ -148,9 +163,11 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
+
+	
 	public static void main(String[] args) throws IOException
 	{
-		SimpleFactory f = new SimpleFactory();
+		SimpleFactory factory = new SimpleFactory();
 		
 		//SimpleResources r = new SimpleResources();
 		//r.save();
@@ -159,7 +176,7 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		
 		// FIXME: Watch out for the saving and loading problems!
-		System.out.println(f.getResources().getFlashCardsByTag("tag 4").get(0));
+		System.out.println(factory.getResources().getFlashCardsByTag("tag 4").get(0));
 		
 		
 		
@@ -176,8 +193,23 @@ public class SimpleFactory implements FlashCardFactory{
 		f.create("g", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set2");
 		*/
 		// FIXME: Wtf? This crashes on ubuntu 12.10
-		//AudioFile start = new DiscAudioFile("hi-there.wav");
+		//DiscAudioFile start = new DiscAudioFile("acronym.wav");
+		
+		//System.out.println("Do i exist " + start.exists());
 		//AudioFile end = new MemoryAudioFile(start.getRawBytes());
+		//Client.play(end.getRawBytes());
+		FreeTTSReader reader = new FreeTTSReader();
+		FileImporter importer = new FileImporter(new File("files/testtsv"), reader, factory);
+
+		importer.importCards();
+		List<FlashCard> allCards = importer.getCardList();
+		
+		for (FlashCard f : allCards)
+		{
+			Client.play(f.getAnswerAudio().getRawBytes());
+		}
+		
+		
 		//BasicAudioPlayer p = new BasicAudioPlayer();
 		//p.play(start);
 		//p.play(end);
