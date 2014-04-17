@@ -1,2 +1,2 @@
 NAME	INTERVAL	SETS	TAGS
-Arizona	4	null	[]	
+Arizona	3	null	[]	

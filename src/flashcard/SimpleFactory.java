@@ -75,8 +75,6 @@ public class SimpleFactory implements FlashCardFactory{
 
 	}
 	
-
-	
 	
 	private static String composeMetadata(FlashCard card) {
 		return card.getName() + "\t" +

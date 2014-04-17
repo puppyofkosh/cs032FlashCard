@@ -1,2 +1,2 @@
 NAME	INTERVAL	SETS	TAGS
-	3	null	[]	
+	1	null	[]	

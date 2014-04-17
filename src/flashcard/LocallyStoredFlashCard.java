@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import utils.Writer;
 import audio.AudioFile;
 
 
@@ -63,6 +64,7 @@ public class LocallyStoredFlashCard implements FlashCard{
 	@Override
 	public void setInterval(int interval) throws IOException {
 		data.interval = interval;
+		Writer.out("Changing interval");
 		SimpleFactory.writeMetadata(this);
 	}
 
