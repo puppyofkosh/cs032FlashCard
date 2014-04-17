@@ -32,7 +32,7 @@ public class FlashboardPanel extends JPanel{
 		//initCardPanels(ResourcesStub.getAllCards());
 		
 		// Initialize using the factory that reads from resources.ian
-		initCardPanels(SimpleFactory.getStaticResources().getAllCards());
+		initCardPanels(SimpleFactory.getResources().getAllCards());
 		NUM_ROWS = cardPanels.size() / NUM_COLS + (cardPanels.size() % NUM_COLS == 0 ? 0 : 1);
 		setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
 		for(int i = 0; i < cardPanels.size(); i++) {

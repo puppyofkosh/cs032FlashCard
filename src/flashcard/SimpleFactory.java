@@ -63,11 +63,11 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
-	private static LocallyStoredResources staticResources = new LocallyStoredResources("resources.ian");
+	private static LocallyStoredResources resources = new LocallyStoredResources("resources.ian");
 	
-	public static LocallyStoredResources getStaticResources()
+	public static LocallyStoredResources getResources()
 	{
-		return staticResources;
+		return resources;
 	}
 	
 	
@@ -115,8 +115,8 @@ public class SimpleFactory implements FlashCardFactory{
 			e.printStackTrace();
 		}
 		
-		staticResources.addFlashCard(card);
-		staticResources.save();
+		resources.addFlashCard(card);
+		resources.save();
 	}
 	
 	public static FlashCard readCard(String filePath)
