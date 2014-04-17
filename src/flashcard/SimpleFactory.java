@@ -29,6 +29,7 @@ import backend.SimpleResources;
 import audio.AudioConstants;
 import audio.AudioFile;
 import audio.BasicAudioPlayer;
+import audio.ByteArrayAudioPlayer;
 import audio.DiscAudioFile;
 import audio.FreeTTSReader;
 import audio.MemoryAudioFile;
@@ -184,9 +185,24 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
+	public void writeCard(FlashCard card) {
+		//isQuestionWriter.card.getPath();
+		writeMetadata(card);
+		try {
+			Writer.writeAudioFile(card.getPath(), card.getQuestionAudio().getStream(), true);
+			Writer.writeAudioFile(card.getPath(), card.getAnswerAudio().getStream(), false);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
 	
 	
-	public static void main(String[] args) throws IOException
+	
+	public static void main(String[] args) throws IOException, InterruptedException
 	{
 		SimpleFactory factory = new SimpleFactory();
 		
@@ -213,26 +229,55 @@ public class SimpleFactory implements FlashCardFactory{
 		f.create("f", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set1");
 		f.create("g", new DiscAudioFile("tmp.wav"), new DiscAudioFile("tmp.wav"), 3, Arrays.asList("tag 1"), "set2");
 		*/
+		
+		//FreeTTSReader tts = new FreeTTSReader();
+		//tts.read("Hello world!");
+		//tts.read("How are you today?");
 		// FIXME: Wtf? This crashes on ubuntu 12.10
 		//DiscAudioFile start = new DiscAudioFile("acronym.wav");
-		
+		//System.out.println(start.getRawBytes().length);
+		//ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
+		//plr.play(start);
+		// */
+		//Client.play(start.getRawBytes());
 		//System.out.println("Do i exist " + start.exists());
 		//AudioFile end = new MemoryAudioFile(start.getRawBytes());
 		//Client.play(end.getRawBytes());
+		
+		
+		
+		
+		
 		FreeTTSReader reader = new FreeTTSReader();
 		FileImporter importer = new FileImporter(new File("files/testtsv"), reader, factory);
 
+		ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
+		
+		System.exit(0);
+		
 		importer.importCards();
 		List<FlashCard> allCards = importer.getCardList();
 		
 		for (FlashCard f : allCards)
 		{
-			Client.play(f.getAnswerAudio().getRawBytes());
+			System.out.println(f.getName());			
+			plr.play(f.getQuestionAudio());
+			Thread.sleep(500);
+
+			while (plr.isPlaying())
+			{
+				Thread.sleep(500);
+			}
+			Thread.sleep(1000);
+						
+			plr.play(f.getAnswerAudio());
+			Thread.sleep(500);
+
+			while (plr.isPlaying())
+			{
+				Thread.sleep(500);
+			}
+			System.out.println(f.getAnswerAudio().getRawBytes().length);
 		}
-		
-		
-		//BasicAudioPlayer p = new BasicAudioPlayer();
-		//p.play(start);
-		//p.play(end);
 	}
 }

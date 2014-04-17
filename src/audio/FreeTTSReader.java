@@ -1,6 +1,7 @@
 package audio;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import utils.FlashcardConstants;
@@ -63,7 +64,18 @@ public class FreeTTSReader implements TextToSpeechReader {
 	public AudioFile read(String text) {
 		if (audioPlayer == null)
 		{
+			try
+			{
+				Files.delete(Paths.get(TEMP_FILE_NAME + ".wav"));
+			}
+			catch(Exception e)
+			{
+				
+			}
+			
 			audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
+			audioPlayer.setAudioFormat(FlashcardConstants.standardizedFormat);
+			voice.setAudioPlayer(audioPlayer);
 		}
 		
 		voice.speak(text);
@@ -71,7 +83,8 @@ public class FreeTTSReader implements TextToSpeechReader {
 		audioPlayer = null;
 		
 		
-		return new DiskAudioFile(Paths.get(TEMP_FILE_NAME + ".wav"));
+		//return new DiskAudioFile(Paths.get(TEMP_FILE_NAME + ".wav"));
+		return new DiscAudioFile(TEMP_FILE_NAME + ".wav");
 	}
 	
 	public static void main(String[] args)
@@ -85,7 +98,6 @@ public class FreeTTSReader implements TextToSpeechReader {
 		try {
 			FreeTTSReader reader = new FreeTTSReader();
 			reader.read(args[0]);
-		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

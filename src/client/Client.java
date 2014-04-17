@@ -160,7 +160,7 @@ public class Client {
         }
     }
 	
-	public void play (byte[] audioBuffer) {
+	public static void play (byte[] audioBuffer) {
 		try {
         InputStream input = new ByteArrayInputStream(audioBuffer);
         final AudioFormat format = AudioConstants.TTSREADER;
@@ -169,7 +169,7 @@ public class Client {
         SourceDataLine sline = (SourceDataLine)AudioSystem.getLine(info);
         sline.open(format);
         sline.start();              
-        int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
+        int bufferSize = (int) format.getSampleRate() * format.getFrameSize() * 500;
         byte buffer2[] = new byte[bufferSize];
         ais.read( buffer2, 0, buffer2.length);
         sline.write(buffer2, 0, buffer2.length);
