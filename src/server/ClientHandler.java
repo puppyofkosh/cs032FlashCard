@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import protocol.CardListRequest;
+import protocol.CardListResponse;
 import protocol.Request;
 import protocol.Response;
 import search.SearchParameters;
@@ -94,15 +97,20 @@ public class ClientHandler extends Thread {
 			//Obviously will be different once we've implemented an actual database
 			SearchParameters params = clR.getSearchParameters();
 			String input = params.get_input();
-			_serverCardLibrary.get(input);
+			List<FlashCard> cards = new LinkedList<>();
+			cards.add(_serverCardLibrary.get(input));
+			addResponse(new CardListResponse(cards));
 			break;
 		case SET_LIST:
 			break;
 		default:
 			//not much we can do with an invalid request
 			throw new IllegalArgumentException("Unsupported request type");
-
 		}
+	}
+	
+	private void addResponse(Response r) {
+		_responseQueue.add(r);
 	}
 	
 
@@ -133,17 +141,6 @@ public class ClientHandler extends Thread {
 		@Override
 		public void run() {
 			try {
-				/*
-				if (_b.isDone()) {
-					//if backend finished some time in the past, send the client connection response.
-					_output.writeObject(new ClientConnectionResponse(_b.getInitialWays(), MapFactory.getTrafficMap(), Constants.MINIMUM_LATITUDE, Constants.MAXIMUM_LATITUDE, Constants.MINIMUM_LONGITUDE, Constants.MAXIMUM_LONGITUDE));
-					_output.flush();
-				}
-				//if backend is not yet done, it will send the client connection response 
-				//when it finishes initializing.
-				_output.writeObject(new ServerStatus(_b.isDone()));
-				_output.flush();*/
-				
 				while (_running) {
 					if (!_responseQueue.isEmpty()) {
 						_output.writeObject(_responseQueue.poll());

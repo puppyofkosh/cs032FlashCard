@@ -1,10 +1,10 @@
 package gui;
 
-import javax.swing.JPanel;
+import java.awt.GridLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
+import javax.swing.JPanel;
 
 public class ImportPanel extends JPanel {
 

@@ -8,7 +8,7 @@ public class CardListResponse implements Response {
 
 	private List<FlashCard> _cards;
 	
-	CardListResponse(List<FlashCard> cards) {
+	public CardListResponse(List<FlashCard> cards) {
 		_cards = cards;
 	}
 	
@@ -20,5 +20,4 @@ public class CardListResponse implements Response {
 	public List<FlashCard> getSortedCards() {
 		return _cards;
 	}
-
 }

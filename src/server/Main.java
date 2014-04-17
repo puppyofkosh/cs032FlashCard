@@ -27,6 +27,7 @@ public class Main {
 			line = scanner.nextLine();
 			if (line.length() == 0 || line.equalsIgnoreCase("exit")) {
 				server.kill();
+				scanner.close();
 				System.exit(0);
 			}
 		}
