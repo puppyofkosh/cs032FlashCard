@@ -62,14 +62,17 @@ public class FileImporter implements Importer{
 				
 				if (entry != null && entry.get("question") != null && entry.get("answer") != null)
 				{
+					System.out.println(entry);
+					
 					// FIXME: Make these into memory audio files
-					//AudioFile question = ttsReader.read(entry.get("question"));
-					//AudioFile answer = ttsReader.read(entry.get("answer"));
-				
-					AudioFile question = new MemoryAudioFile(ttsReader.read("Hi thar").getRawBytes());
-					AudioFile answer = new MemoryAudioFile(ttsReader.read("hallo thar i am a cat").getRawBytes());
-					//Client.play(question.getRawBytes());
-					FlashCard f = factory.create("Generic name", question, answer, 5, Arrays.asList("nags"), "set");
+					AudioFile question = ttsReader.read(entry.get("question"));
+					question = new MemoryAudioFile(question.getRawBytes());
+
+					AudioFile answer = ttsReader.read(entry.get("answer"));
+					answer = new MemoryAudioFile(answer.getRawBytes());
+
+					System.out.println(question.getRawBytes().length);
+					FlashCard f = factory.create(entry.get("answer"), question, answer, 5, Arrays.asList("nags"), "set");
 					this.cards.add(f);
 					// FIXME: Finish this, create a flashcard from it					
 				}
@@ -77,7 +80,6 @@ public class FileImporter implements Importer{
 		}
 		catch(IOException e)
 		{
-			
 		}
 	}
 

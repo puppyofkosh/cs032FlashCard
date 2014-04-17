@@ -51,20 +51,25 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 		@Override
 		public void run() {
 			try {
-				AudioFormat format = file.getFormat();
-				AudioInputStream stream = file.getStream();
+				AudioFormat format = AudioConstants.TTSREADER;
+				byte[] data = file.getRawBytes();
+				
+				AudioInputStream stream = new AudioInputStream(new ByteArrayInputStream(data), format, data.length / format.getFrameSize());
 				DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 				line = (SourceDataLine) AudioSystem.getLine(info);
 				line.open(format);
 				line.start();
-				byte[] buffer = new byte[format.getFrameSize() * 8000];
-				while (playing && stream.read(buffer) != -1) {
-					
-					line.write(buffer, 0, buffer.length);	
+				byte[] buffer = new byte[format.getFrameSize() * (int)format.getFrameRate()];
+				int bytesRead = stream.read(buffer);
+				while (playing && bytesRead != -1) {
+					line.write(buffer, 0, bytesRead);
+					bytesRead = stream.read(buffer);
 				}
-				
 				if (playing) {
 					playing = false;
+					// FIXME: Wtf do these do and do we need them?
+					line.flush();
+			        line.drain();
 					line.stop();
 					line.close();
 				}
