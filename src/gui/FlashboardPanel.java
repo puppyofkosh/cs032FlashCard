@@ -1,4 +1,4 @@
-package ian_gui;
+package gui;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;

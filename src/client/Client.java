@@ -1,217 +1,191 @@
 package client;
-import java.io.ByteArrayInputStream;
+import gui.Frontend;
+
+import java.awt.Dimension;
+import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
-import java.net.InetAddress;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
+import java.net.SocketException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
+import javax.swing.UIManager;
 
-import audio.AudioConstants;
-import flashcard.FlashCardStub;
+import protocol.CardListResponse;
+import protocol.Request;
+import protocol.Response;
+import utils.Writer;
 
 /**
  * A Client Class that sends and receives messages from and to the server.
  */
-public class Client {
+public class Client extends Thread {
+	
 
 	private Socket _socket;
-	private boolean _running;
+	private volatile boolean _running, hasServer;
 	private int _port;
-	private PrintWriter _output;
-	private ObjectInputStream _cardStream;
+	private ObjectOutputStream _output;
+	private ObjectInputStream _input;
 	private ReceiveThread _thread;
-	private volatile RECEIVE_MODE mode = RECEIVE_MODE.TEXT;
-	private enum RECEIVE_MODE {CARD, TEXT};
-	private String IP;
-
+	private String _hostName;
+	private Queue<Request> _requests;
+	private Frontend _frontend;
+	
 	/**
 	 * Constructs a Client with the given port.
-	 * 
 	 * @param port the port number the client will connect to
 	 */
-	public Client(String IPAddress, int port) {
+	public Client(String hostName, int port, Frontend frontend) {
 		_port = port;
-		IP = IPAddress;
+		_hostName = hostName;
+		_running = false;
+		_frontend = frontend;
 	}
-	
+
 	/**
 	 * Starts the Client, so it connects to the sever.
 	 * It will set up all the necessary requirements, 
-	 * before sending and receiving messages.
+	 * and then launch the GUI.
 	 */
-	public void start() {
-		try {
-			_socket = new Socket((IP.equals("localhost")) ? InetAddress.getLocalHost(): InetAddress.getByName(IP), _port);
-			_cardStream = new ObjectInputStream(_socket.getInputStream());
-			_output = new PrintWriter(_socket.getOutputStream(), true);
-			_running = true;
-			run();
-		}
-		catch (IOException ex) {
-			err("ERROR: Can't connect to server");
-		}
-	}
-
-	/**
-	 * Starts a thread that will listen to messages sent by the
-	 * server. It will use the main thread to send messages to the server.
-	 */
-	private void run() {
-		// Listen for any commandline input; quit on "exit" or emptyline
-		_thread = new ReceiveThread();
-		_thread.start();
-		Scanner scanner = new Scanner(System.in);
-		String line = "";
-		while (scanner.hasNextLine() && !_socket.isClosed()) {
-			line = scanner.nextLine();
+	public void connect() {
+		UIManager.put("swing.boldMetal", Boolean.FALSE);
+		int num_attempts = 0;
+		while(!_running) {
+			
+			if (num_attempts > 7) {
+				Writer.err("ERROR: Server unavailable. Max number of reconnection attempts reached.");
+				return;
+			}
+			num_attempts++;
+			
 			try {
-				if (line.length() == 0 || line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("logoff")) {
-					out("Command to exit received.");
-					send("");
-					break;
-				} else if (line.equalsIgnoreCase("flashcard!")) {
-					out("Receive mode switched");
-					this.mode = RECEIVE_MODE.CARD;
+				//host is localhost or IP if an IP address is specified
+				_socket = new Socket(_hostName, _port);
+				_output = new ObjectOutputStream(_socket.getOutputStream());
+				_input = new ObjectInputStream(_socket.getInputStream());
+				
+				_running = true;
+
+				_requests = new LinkedList<>();
+
+				_thread = new ReceiveThread();
+				_thread.start();
+
+				run();
+			}
+			catch (IOException ex) {
+				Writer.out("ERROR: Can't connect to server");
+				_frontend.guiMessage("Server unavailable!");
+				hasServer = false;
+				try {
+					Thread.sleep(2500);
+					_frontend.guiMessage("Attempting to reconnect...");
+					Thread.sleep(2500);
+				} catch (InterruptedException e) {
+					Writer.err("ERROR trying to reconnect to server");
+					kill();
+					return;
 				}
-				send(line);
-			} catch (IOException e) {
-				err("Could not send input to client handler");
-				e.printStackTrace();
 			}
 		}
-		scanner.close();
-		this.kill();
 	}
 
-	/**
-	 * A method that sends a message to the server.
-	 * 
-	 * @param message that will be sent to the server for broadcasting.
-	 * @throws IOException 
-	 */
-	public void send(String message) throws IOException {
-		_output.println(message);
-		_output.flush();
+	public void run() {
+		while (_running && !_socket.isClosed()) {
+			if (!_requests.isEmpty() && hasServer) {
+				try {
+					Writer.debug("Sending Request");
+					_output.writeObject(_requests.poll());
+					_output.flush();
+				} catch (IOException e) {
+					Writer.out("Server closed");
+					kill();
+				}
+			}
+		}
 	}
 
 	/**
 	 * Shuts down the client closing all the connections.
 	 */
 	public void kill() {
-		out("Attempting to kill client.");
+		Writer.out("Attempting to kill client.");
 		_running = false;
 		try {
-			_cardStream.close();
+			_input.close();
 			_output.close();
 			_socket.close();
 			_thread.join();
-		} catch (IOException | InterruptedException e) {
-			if (e instanceof IOException) err("ERROR closing streams and/or socket");
-			else err("ERROR joining receive thread");
-			e.printStackTrace();
+		} catch (IOException e) {
+			Writer.err("ERROR closing streams and/or socket");
+		} catch (InterruptedException e) {
+			Writer.err("ERROR joining receive thread");
 		}
 	}
 
+	/**
+	 * A method that sends a message to the server.
+	 * @param message that will be sent to the server for broadcasting.
+	 * @throws IOException 
+	 */
+	public void request(Request r) {
+			_requests.add(r);
+	}
+	
+	public boolean serverReady() {
+		return hasServer;
+	}
+	
 	/**
 	 * A thread that will receive the messages sent by the server to
 	 * display to the user.
 	 */
 	class  ReceiveThread extends Thread {
-        public void run() {
-        	while(_running) {
-        		try {
-        			Object received = _cardStream.readObject();
-        			if (mode == RECEIVE_MODE.CARD) {
-        			FlashCardStub flashcard = (FlashCardStub) received;
-        			if (flashcard == null) break;
-        			out(flashcard.toString());
-        			out("Received card: ", flashcard.getName(), "\nPlaying question: ");
-        			byte[] qBytes = flashcard.getQuestionAudio().getRawBytes();
-        			play(qBytes);
-        			byte[] aBytes = flashcard.getAnswerAudio().getRawBytes();
-        			play(aBytes);
-        			mode = RECEIVE_MODE.TEXT;
-        			} else if (mode == RECEIVE_MODE.TEXT) {
-        				String msg = (String) received;
-        				out(msg);
-        			}
+		public void run() {
+			while(_running) {
+				try {
+					Response received = (Response) _input.readObject();
+					Writer.debug("Response received");
+					processResponse(received);
 				} catch (IOException e) {
-					if (_running == false) {
-						err("Error message:", e.getMessage());
-						out("Prob just closed the stream via client's kill()");
+					if (_running == false || e instanceof EOFException) {
+						Writer.out("Server has closed.");
+						_frontend.guiMessage("WARNING: Server unavailable", 7);
 						return;
+					} else if (e instanceof SocketException) {
+						Writer.err("Server unavailable. Please try again later");
+						break;
 					}
-					err("ERROR reading line from socket or write to STD_OUT");
-					e.printStackTrace();
+					Writer.err("ERROR reading line from socket or write to STD_OUT");
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
-        	}
-        }
-    }
-	
-	public static void play (byte[] audioBuffer) {
-		try {
-        InputStream input = new ByteArrayInputStream(audioBuffer);
-        final AudioFormat format = AudioConstants.TTSREADER;
-        final AudioInputStream ais = new AudioInputStream(input, format, audioBuffer.length /format.getFrameSize());
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-        SourceDataLine sline = (SourceDataLine)AudioSystem.getLine(info);
-        sline.open(format);
-        sline.start();              
-        int bufferSize = (int) format.getSampleRate() * format.getFrameSize() * 500;
-        byte buffer2[] = new byte[bufferSize];
-        ais.read( buffer2, 0, buffer2.length);
-        sline.write(buffer2, 0, buffer2.length);
-        sline.flush();
-        sline.drain();
-        sline.stop();
-        sline.close();  
-        buffer2 = null;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
+			}
 		}
-
 	}
-	public void play(AudioInputStream stream) {
-		try {
-		Clip clip = AudioSystem.getClip();
-		clip.open(stream);
-		clip.start();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}		
+	
+	/**
+	 * Process a response from the queue. Figures out which kind of response it
+	 * is and then acts accordingly.
+	 * @param resp - the response to be processed
+	 */
+	public void processResponse(Response resp) {
+		switch (resp.getType()) {
+		case SORTED_CARDS:
+			CardListResponse cLR = (CardListResponse) resp;
+			cLR.getSortedCards();
+			break;
+		case SORTED_SETS:
+			break;
+		default:
+			break;
+		}
 	}
 
-/**	
- * Utilities for printing.
- * @param strs
- */
-	void out(Object...strs) {
-		System.out.println(composeString(strs));
-	}
-	
-	void err(Object...strs) {
-		System.err.println(composeString(strs));
-	}
-	
-	String composeString(Object...strs) {
-		String s = "" + strs[0];
-		for (int i = 1; i < strs.length; i++) {
-			s += (strs[i] +" ");
-		}
-		return s;
-	}
 }

@@ -186,14 +186,12 @@ public class SimpleFactory implements FlashCardFactory{
 	}
 	
 	public void writeCard(FlashCard card) {
-		//isQuestionWriter.card.getPath();
 		writeMetadata(card);
 		try {
 			Writer.writeAudioFile(card.getPath(), card.getQuestionAudio().getStream(), true);
 			Writer.writeAudioFile(card.getPath(), card.getAnswerAudio().getStream(), false);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

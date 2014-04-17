@@ -1,4 +1,4 @@
-package ian_gui;
+package gui;
 
 /**
  * Acts as "bridge" between backend and frontend
