@@ -2,6 +2,8 @@ package utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -25,6 +27,10 @@ public class Writer {
 	}
 	
 	public static void writeAudioFile(String path, AudioInputStream stream, boolean isQuestion) throws IOException {
+		String filename = path + "/" + (isQuestion ? "q" : "a") + ".wav";
+		
+		Files.delete(Paths.get(filename));
+		
 		File audioFile = new File(path + "/" + (isQuestion ? "q" : "a") + ".wav");
 		AudioSystem.write(stream, AudioFileFormat.Type.WAVE, audioFile);
 	}

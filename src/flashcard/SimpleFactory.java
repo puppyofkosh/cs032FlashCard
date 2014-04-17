@@ -193,6 +193,7 @@ public class SimpleFactory implements FlashCardFactory{
 
 		writeMetadata(card);
 		try {
+			// FIXME: This breaks stuff!
 			Writer.writeAudioFile(card.getPath(), card.getQuestionAudio().getStream(), true);
 			Writer.writeAudioFile(card.getPath(), card.getAnswerAudio().getStream(), false);
 		} catch (IOException e) {
@@ -256,7 +257,8 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		// 1) Create an audio flashcard with the following data and write it to file
 		// Must make sure directory for the card name exists beforehand!
-		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+		
+		/*LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
 		data.answer = new DiscAudioFile("acronym.wav");
 		data.question = new DiscAudioFile("acronym.wav");
 		data.pathToFile = "files/test-card/";
@@ -265,9 +267,10 @@ public class SimpleFactory implements FlashCardFactory{
 		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
 		
 		SimpleFactory.writeCard(card);
-		
+		*/
 		// 2) Read the card in from file
 		FlashCard readCard = SimpleFactory.readCard("files/test-card/");
+		readCard.setInterval(23);
 		System.out.println(readCard.getAnswerAudio().getRawBytes().length);
 		System.out.println(readCard.getName());
 		

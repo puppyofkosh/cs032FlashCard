@@ -1,2 +1,2 @@
 NAME	INTERVAL	SETS	TAGS
-test-card	0	null	[]	
+test-card	23	null	[[[[[[]]]]]]	
