@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -191,6 +192,12 @@ public class SimpleFactory implements FlashCardFactory{
 	
 	public static void writeCard(FlashCard card) {
 
+		// Create the directory for the card if it doesn't exist yet
+		File dir = new File(card.getPath());
+		if (!dir.exists())
+			dir.mkdir();
+		
+		// WRite all files for the card
 		writeMetadata(card);
 		try {
 			// FIXME: This breaks stuff!
@@ -221,8 +228,11 @@ public class SimpleFactory implements FlashCardFactory{
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 					}
+					// FIXME: we need a notion of sets
 					//sets = info[2];
-					data.tags = Arrays.asList(info[3].split(","));
+					// replace [ and ] with nothing
+					info[3] = info[3].replaceAll("[\\[\\]]", "");
+					data.tags = new ArrayList<>(Arrays.asList(info[3].split(", ")));
 				}
 				lineNum++;
 			}
@@ -235,9 +245,6 @@ public class SimpleFactory implements FlashCardFactory{
 			System.out.println("Error reading file '" + filePath + "'");
 		}
 
-		//Read the audio files.
-		//	data.question = new AudioFileStub(AudioSystem.getAudioInputStream(new File(filePath + "q.wav")));
-		//	data.answer = new AudioFileStub(AudioSystem.getAudioInputStream(new File(filePath + "a.wav")));
 		data.question = new DiscAudioFile(filePath + "q.wav");
 		data.answer = new DiscAudioFile(filePath + "a.wav");
 		
