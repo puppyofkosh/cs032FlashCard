@@ -29,7 +29,15 @@ public class Writer {
 	public static void writeAudioFile(String path, AudioInputStream stream, boolean isQuestion) throws IOException {
 		String filename = path + "/" + (isQuestion ? "q" : "a") + ".wav";
 		
-		Files.delete(Paths.get(filename));
+		// If the file already exists, delete it and overwrite
+		try
+		{
+			Files.delete(Paths.get(filename));
+		}
+		catch(IOException ignore)
+		{
+			// ignore
+		}
 		
 		File audioFile = new File(path + "/" + (isQuestion ? "q" : "a") + ".wav");
 		AudioSystem.write(stream, AudioFileFormat.Type.WAVE, audioFile);

@@ -57,11 +57,14 @@ public class RecordPanel extends GenericPanel {
 	public RecordPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
+		System.out.println("Initializing");
 		player = new ByteArrayAudioPlayer();
 		//player = new BasicAudioPlayer();
 		try{
 		reader = new FreeTTSReader();
-		} catch (Throwable e) {}
+		} catch (Throwable e) {
+			System.out.println(e.getMessage());
+		}
 		hasQuestion = false;
 		hasAnswer = false;
 		
