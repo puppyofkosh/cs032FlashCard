@@ -1,2 +1,2 @@
 NAME	INTERVAL	SETS	TAGS
-test-card	23	null	[]	
+test1	0	null	[]	

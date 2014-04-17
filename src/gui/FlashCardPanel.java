@@ -23,6 +23,12 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.BevelBorder;
 import javax.swing.JSpinner;
 
+import audio.ByteArrayAudioPlayer;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+
 /**
  * This class is used by the GUI to represent flashCards, as
  * well as in the FlashBoard.																	
@@ -55,10 +61,37 @@ public class FlashCardPanel extends JPanel {
 		
 				
 				PlayAndStopQ = new JButton("Play Question");
+				PlayAndStopQ.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						
+						// FIXME: This should call a controller function like playAudio or something,
+						// not create its own player
+						ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
+						try {
+							plr.play(_card.getQuestionAudio());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
 		
 		
 		lblA = new JLabel("A");
 		PlayAndStopA = new JButton("Play Answer");
+		PlayAndStopA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// FIXME: This should call a controller function like playAudio or something,
+				// not create its own player
+				ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
+				try {
+					plr.play(_card.getAnswerAudio());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		spinner = new JSpinner();
 		

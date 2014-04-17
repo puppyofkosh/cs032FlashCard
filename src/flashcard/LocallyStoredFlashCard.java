@@ -80,5 +80,11 @@ public class LocallyStoredFlashCard implements FlashCard{
 	public AudioFile getAnswerAudio() {
 		return data.answer;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Flashcard at " + data.pathToFile;
+	}
 
 }

@@ -267,6 +267,7 @@ public class RecordPanel extends GenericPanel {
 			if (question == null || answer == null)
 			{
 				// FIXME: Make a label say "Must record question and answer" here
+				System.out.println("Press the Use TTS Button!");
 				return;
 			}
 			

@@ -1,43 +1,21 @@
 package flashcard;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 import utils.FlashcardConstants;
 import utils.Writer;
-import client.Client;
-import backend.FileImporter;
-import backend.SimpleResources;
-import audio.AudioConstants;
 import audio.AudioFile;
-import audio.AudioFileStub;
-import audio.BasicAudioPlayer;
 import audio.ByteArrayAudioPlayer;
 import audio.DiscAudioFile;
-import audio.FreeTTSReader;
-import audio.MemoryAudioFile;
 
 /**
  *
@@ -85,91 +63,21 @@ public class SimpleFactory implements FlashCardFactory{
 		}
 	}
 	
-	private SimpleResources resources = new SimpleResources();
+	private static LocallyStoredResources staticResources = new LocallyStoredResources("resources.ian");
+	
+	public static LocallyStoredResources getStaticResources()
+	{
+		return staticResources;
+	}
+	
 	
 	public SimpleFactory()
 	{
-		resources.setFactory(this);
-		resources.load();
-	}
-	
-	public SimpleResources getResources()
-	{
-		return resources;
-	}
-	
-	@Override
-	public FlashCard create(String name, AudioFile question, AudioFile answer,
-			int interval, List<String> tags, String set) {
-		
-		FlashCardData data;
-		try {
-			data = new FlashCardData(question.getRawBytes(), answer.getRawBytes(), interval, tags, Arrays.asList(set), name);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		String filename = "files/" + set + "-" + name + ".ian";
-		saveData(filename, data);
 
-		FlashCard card = new SimpleFlashCard(filename, this);
-		resources.addFlashCard(card);
-		resources.save();
-		return card;
-	}
-	
-	
-	public FlashCardData getData(String filePath)
-	{
-		
-		try {
-			FileInputStream fin = new FileInputStream(filePath);
-			ObjectInputStream objectIn = new ObjectInputStream(fin);
-			
-			Object o = objectIn.readObject();
-			
-			objectIn.close();
-			
-			FlashCardData data = (FlashCardData)o;
-			return data;
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	@Override
-	public FlashCard create(String filePath) {
-		return new SimpleFlashCard(filePath, this);
 	}
 	
 
-	public void saveData(String filename, FlashCardData data)
-	{
-		ObjectOutputStream objectOut;
-		try {
-			FileOutputStream fileOut = new FileOutputStream(filename);
-
-			objectOut = new ObjectOutputStream(fileOut);
-			objectOut.writeObject(data);
-			objectOut.close();
-
-		} catch (IOException e) {
-			System.out.println("Couldn't write to file");
-			System.out.println(e.getMessage());
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 	private static String composeMetadata(FlashCard card) {
 		return card.getName() + "\t" +
@@ -206,6 +114,9 @@ public class SimpleFactory implements FlashCardFactory{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		staticResources.addFlashCard(card);
+		staticResources.save();
 	}
 	
 	public static FlashCard readCard(String filePath)
@@ -252,9 +163,10 @@ public class SimpleFactory implements FlashCardFactory{
 	}
 	
 
-	
 	public static void main(String[] args) throws IOException, InterruptedException
 	{	
+		//System.out.println(staticResources.getAllCards());
+		
 		/// EXAMPLE USE OF READ CARD AND WRITE CARD
 		// RUN WITH java -cp "derived/cs032FlashCard.jar:lib/*" flashcard.SimpleFactory "$@"
 		// NOTE NOTE NOTE
@@ -272,7 +184,8 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
 		
-		SimpleFactory.writeCard(card);
+		// If you want, write the card to disk
+		//SimpleFactory.writeCard(card);
 		
 		
 		
@@ -290,6 +203,30 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		
 		
+	}
+
+
+	@Override
+	public FlashCard create(String name, AudioFile question, AudioFile answer,
+			int interval, List<String> tags, String set) {
+		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+		data.name = name;
+		data.question = question;
+		data.answer = answer;
+		data.interval = interval;
+		data.tags = tags;
+		data.sets = set;
+		
+		FlashCard card = new LocallyStoredFlashCard(data);
+		writeCard(card);
+		return card;
+		
+	}
+
+
+	@Override
+	public FlashCard create(String filePath) {
+		return readCard(filePath);
 	}
 }
 

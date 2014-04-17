@@ -1,2 +1,2 @@
 NAME	INTERVAL	SETS	TAGS
-test-card	23	null	[]	
+Arizona	4	null	[]	
