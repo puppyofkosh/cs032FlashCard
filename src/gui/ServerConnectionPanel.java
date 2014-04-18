@@ -89,6 +89,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 
 	}
 
+	@Override
 	public void displayConnectionStatus(boolean connected) {
 		if (status == null)
 			return;
@@ -118,6 +119,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 		_client.start();
 	}
 
+	@Override
 	public void update(List<FlashCard> cards) {
 		_cards.updateCards(cards);
 	}
@@ -138,7 +140,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 			}
 		} else if (e.getSource() == btnImportSelectedCards) {
 			for(FlashCard f : _cards.getSelectedCards())
-				SimpleFactory.getResources().addFlashCard(f);
+				SimpleFactory.writeCard(f);
 		} else if (e.getSource() == searchField) {
 			if (_client != null) {
 				_client.requestCard(searchField.getText());

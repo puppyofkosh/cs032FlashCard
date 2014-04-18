@@ -229,7 +229,7 @@ public class LocallyStoredResources implements Resources {
 			e.printStackTrace();
 		}
 	}
-	
+		
 	public void addFlashCard(FlashCard f)
 	{
 		for (String tag : f.getTags())

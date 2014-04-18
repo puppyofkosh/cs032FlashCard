@@ -1,6 +1,7 @@
 package client;
 
-import gui.ServerConnectionPanel;
+import flashcard.FlashCard;
+import gui.ClientFrontend;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -19,6 +21,8 @@ import protocol.CardListResponse;
 import protocol.ParametrizedCardRequest;
 import protocol.Request;
 import protocol.Response;
+import protocol.UploadCardsRequest;
+import protocol.UploadCardsResponse;
 import search.SearchParameters;
 import utils.Writer;
 
@@ -36,13 +40,13 @@ public class Client extends Thread {
 	private ReceiveThread _thread;
 	private String _hostName;
 	private Queue<Request> _requests;
-	private ServerConnectionPanel _frontend;
+	private ClientFrontend _frontend;
 	
 	/**
 	 * Constructs a Client with the given port.
 	 * @param port the port number the client will connect to
 	 */
-	public Client(String hostName, int port, ServerConnectionPanel frontend) {
+	public Client(String hostName, int port, ClientFrontend frontend) {
 		_port = port;
 		_hostName = hostName;
 		_running = false;
@@ -63,6 +67,7 @@ public class Client extends Thread {
 			
 			if (num_attempts > maxAttempts) {
 				Writer.err("ERROR: Server unavailable. Max number of reconnection attempts reached.");
+				return;
 			}
 			num_attempts++;
 			
@@ -156,12 +161,17 @@ public class Client extends Thread {
 	//TODO - these methods should go somewhere else probably?
 	public void requestAllCards() {
 		request(new AllCardsRequest());
-		
+	}
+	
+	public void uploadCards(List<FlashCard> cards) {
+		request(new UploadCardsRequest(cards));
 	}
 	
 	public void requestCard(String input) {
-		Writer.out("HERE WE ARE, REQUESTING", input);
-		request(new ParametrizedCardRequest(new SearchParameters(input, 1)));
+		if (input.length() == 0)
+			requestAllCards();
+		else
+			request(new ParametrizedCardRequest(new SearchParameters(input, 1)));
 	}
 	
 	/**
@@ -206,6 +216,9 @@ public class Client extends Thread {
 			break;
 		case SORTED_SETS:
 			break;
+		case UPLOAD: 
+			UploadCardsResponse ucR = (UploadCardsResponse) resp;
+			_frontend.guiMessage("Upload " + (ucR.confirmed() ? "Successful" : "Failed"));
 		default:
 			break;
 		}
