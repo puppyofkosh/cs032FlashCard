@@ -12,6 +12,8 @@ import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;
 import flashcard.FlashCardStub;
+import flashcard.LocallyStoredFlashCard;
+import flashcard.SimpleFactory;
 
 /**
  * A chat server, listening for incoming connections and passing them
@@ -62,7 +64,7 @@ public class Server extends Thread {
 		});
 		
 		for(int i = 0; i < cardPaths.length; i++) {
-			FlashCard card = new FlashCardStub(FlashcardConstants.CARDS_FOLDER + cardPaths[i] + "/");
+			FlashCard card = SimpleFactory.readCard(FlashcardConstants.CARDS_FOLDER + cardPaths[i] + "/");
 			_cardLibrary.put(card.getName(), card);
 		}
 	}
