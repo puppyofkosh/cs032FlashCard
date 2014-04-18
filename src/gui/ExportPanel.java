@@ -157,7 +157,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	}
 
 	public void connectAndExport() {
-		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
+		_client = new Client(FlashcardConstants.AMAZON_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
 		_client.start();
 		_client.uploadCards(_cardTable.getSelectedCards());
 	}
@@ -175,8 +175,10 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	public void guiMessage(String msg, int duration) {
 		if (msg.contains("Successful")) {
 			JOptionPane.showMessageDialog(panel, msg + "Shutting down Client");
-			if (_client != null)
+			if (_client != null) {
+				JOptionPane.showMessageDialog(panel, msg + "Shutting down Client");
 				_client.kill();
+			}
 		} else {
 			JOptionPane.showMessageDialog(panel, msg);
 

@@ -113,6 +113,7 @@ public class Client extends Thread {
 					Writer.out("Sending Request");
 					_output.writeObject(_requests.poll());
 					_output.flush();
+					Writer.out("Sent Request");
 				} catch (IOException e) {
 					e.printStackTrace();
 					Writer.out("??Server closed");
