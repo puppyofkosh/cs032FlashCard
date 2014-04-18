@@ -16,6 +16,11 @@ public class SearchParameters {
 		_duration = duration;
 	}
 	
+	public SearchParameters(String input, int numberOfCards) {
+		this(input);
+		_numberOfCards = numberOfCards;
+	}
+	
 	SearchParameters(String input, List<String> tags, int numberOfCards) {
 		this(input, tags);
 		_numberOfCards = numberOfCards;
@@ -26,7 +31,7 @@ public class SearchParameters {
 		_tags = tags;
 	}
 	
-	SearchParameters(String input) {
+	public SearchParameters(String input) {
 		_input = input;
 	}
 

@@ -14,7 +14,7 @@ import com.google.common.base.Joiner;
 
 public class Writer {
 	
-	private static boolean DEBUG_MODE_ON = false;
+	private static boolean DEBUG_MODE_ON = true;
 
 
 	/**	

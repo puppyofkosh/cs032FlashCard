@@ -62,7 +62,7 @@ public class Server extends Thread {
 		});
 		
 		for(int i = 0; i < cardPaths.length; i++) {
-			FlashCard card = new FlashCardStub(cardPaths[i]);
+			FlashCard card = new FlashCardStub(FlashcardConstants.CARDS_FOLDER + cardPaths[i] + "/");
 			_cardLibrary.put(card.getName(), card);
 		}
 	}

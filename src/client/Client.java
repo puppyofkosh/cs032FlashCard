@@ -1,5 +1,5 @@
 package client;
-import gui.Frontend;
+
 import gui.ServerConnectionPanel;
 
 import java.io.EOFException;
@@ -10,13 +10,16 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import protocol.AllCardsRequest;
 import protocol.CardListResponse;
+import protocol.ParametrizedCardRequest;
 import protocol.Request;
 import protocol.Response;
+import search.SearchParameters;
 import utils.Writer;
 
 /**
@@ -26,7 +29,7 @@ public class Client extends Thread {
 	
 
 	private Socket _socket;
-	private volatile boolean _running, hasServer;
+	private volatile boolean _running, _hasServer;
 	private int _port;
 	private ObjectOutputStream _output;
 	private ObjectInputStream _input;
@@ -44,6 +47,7 @@ public class Client extends Thread {
 		_hostName = hostName;
 		_running = false;
 		_frontend = frontend;
+		_requests = new ConcurrentLinkedQueue<>();
 	}
 
 	/**
@@ -51,14 +55,13 @@ public class Client extends Thread {
 	 * It will set up all the necessary requirements, 
 	 * and then launch the GUI.
 	 */
-	public void connect() {
+	public void connect(int maxAttempts) {
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
 		int num_attempts = 0;
 		while(!_running) {
 			
-			if (num_attempts > 7) {
+			if (num_attempts > maxAttempts) {
 				Writer.err("ERROR: Server unavailable. Max number of reconnection attempts reached.");
-				return;
 			}
 			num_attempts++;
 			
@@ -74,13 +77,13 @@ public class Client extends Thread {
 
 				_thread = new ReceiveThread();
 				_thread.start();
+				_hasServer = true;
 
-				run();
 			}
 			catch (IOException ex) {
 				Writer.out("ERROR: Can't connect to server");
 				_frontend.guiMessage("Server unavailable!");
-				hasServer = false;
+				_hasServer = false;
 				try {
 					Thread.sleep(2500);
 					_frontend.guiMessage("Attempting to reconnect...");
@@ -95,18 +98,21 @@ public class Client extends Thread {
 	}
 
 	public void run() {
+		connect(1);
+		_frontend.displayConnectionStatus(true);
 		while (_running && !_socket.isClosed()) {
-			if (!_requests.isEmpty() && hasServer) {
+			if (!_requests.isEmpty() && _hasServer) {
 				try {
-					Writer.debug("Sending Request");
+					Writer.out("Sending Request");
 					_output.writeObject(_requests.poll());
 					_output.flush();
 				} catch (IOException e) {
-					Writer.out("Server closed");
+					Writer.out("??Server closed");
 					kill();
 				}
 			}
 		}
+		kill();
 	}
 
 	/**
@@ -115,10 +121,15 @@ public class Client extends Thread {
 	public void kill() {
 		Writer.out("Attempting to kill client.");
 		_running = false;
+		_frontend.displayConnectionStatus(false);
 		try {
+			if (_input != null)
 			_input.close();
+			if (_output != null)
 			_output.close();
+			if (_socket != null)
 			_socket.close();
+			if (_thread != null)
 			_thread.join();
 		} catch (IOException e) {
 			Writer.err("ERROR closing streams and/or socket");
@@ -136,8 +147,19 @@ public class Client extends Thread {
 			_requests.add(r);
 	}
 	
-	public boolean serverReady() {
-		return hasServer;
+	public boolean isConnected() {
+		return _hasServer && _running;
+	}
+	
+	//TODO - these methods should go somewhere else probably?
+	public void requestAllCards() {
+		request(new AllCardsRequest());
+		
+	}
+	
+	public void requestCard(String input) {
+		Writer.out("HERE WE ARE, REQUESTING", input);
+		request(new ParametrizedCardRequest(new SearchParameters(input, 1)));
 	}
 	
 	/**
@@ -149,9 +171,10 @@ public class Client extends Thread {
 			while(_running) {
 				try {
 					Response received = (Response) _input.readObject();
-					Writer.debug("Response received");
+					Writer.out("Response received");
 					processResponse(received);
 				} catch (IOException e) {
+					e.printStackTrace();
 					if (_running == false || e instanceof EOFException) {
 						Writer.out("Server has closed.");
 						_frontend.guiMessage("WARNING: Server unavailable", 7);
@@ -177,7 +200,7 @@ public class Client extends Thread {
 		switch (resp.getType()) {
 		case SORTED_CARDS:
 			CardListResponse cLR = (CardListResponse) resp;
-			cLR.getSortedCards();
+			_frontend.update(cLR.getSortedCards());
 			break;
 		case SORTED_SETS:
 			break;

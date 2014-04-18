@@ -2,11 +2,11 @@ package protocol;
 
 import search.SearchParameters;
 
-public class CardListRequest implements Request {
+public class ParametrizedCardRequest implements Request {
 
 	private SearchParameters _params;
 	
-	CardListRequest(SearchParameters params) {
+	public ParametrizedCardRequest(SearchParameters params) {
 		_params = params;
 	}
 

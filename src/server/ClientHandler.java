@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import protocol.CardListRequest;
 import protocol.CardListResponse;
+import protocol.ParametrizedCardRequest;
 import protocol.Request;
 import protocol.Response;
 import search.SearchParameters;
@@ -90,17 +91,20 @@ public class ClientHandler extends Thread {
 	 * A response containing the data received from the backend.
 	 */
 	private void processRequest(Request req) {
-		Writer.debug("Processing Request...\n", req);
+		Writer.out("Processing Request...\n");
 		switch (req.getType()) {
 		case CARD_LIST:
-			CardListRequest clR = (CardListRequest) req;
+			ParametrizedCardRequest clR = (ParametrizedCardRequest) req;
 			//Obviously will be different once we've implemented an actual database
 			SearchParameters params = clR.getSearchParameters();
 			String input = params.get_input();
 			List<FlashCard> cards = new LinkedList<>();
 			cards.add(_serverCardLibrary.get(input));
-			addResponse(new CardListResponse(cards));
-			break;
+			respond(new CardListResponse(cards));
+			return;
+		case ALL:
+			respond(new CardListResponse(new ArrayList<FlashCard>(_serverCardLibrary.values())));
+			return;
 		case SET_LIST:
 			break;
 		default:
@@ -109,7 +113,7 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
-	private void addResponse(Response r) {
+	private void respond(Response r) {
 		_responseQueue.add(r);
 	}
 	

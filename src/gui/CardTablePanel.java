@@ -17,16 +17,14 @@ import utils.FlashcardConstants;
 import utils.Writer;
 import backend.ResourcesStub;
 import flashcard.FlashCard;
+
+@SuppressWarnings("serial")
 public class CardTablePanel extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private List<FlashCard> cards;
 	private JTable searchTable;
 	private DefaultTableModel searchTableModel;
-	
+
 	private List<FlashCard> selectedCards = new LinkedList<>();
 
 
@@ -36,10 +34,6 @@ public class CardTablePanel extends JPanel {
 	public CardTablePanel() {
 		setLayout(new BorderLayout(5, 5));
 		searchTableModel = new DefaultTableModel() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -55,8 +49,9 @@ public class CardTablePanel extends JPanel {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		add(scrollPane, BorderLayout.CENTER);
 		setBorder(BorderFactory.createRaisedSoftBevelBorder());
+		updateTable();
 	}
-	
+
 	public CardTablePanel(List<FlashCard> cards) {
 		this();
 		updateCards(cards);
@@ -69,9 +64,6 @@ public class CardTablePanel extends JPanel {
 		for(int index : searchTable.getSelectedRows()) {
 			selectedCards.add(cards.get(index));
 		}
-		
-		// FIXME: Not sure why resources knows about which cards are selected
-		ResourcesStub.setSelectedCards(selectedCards);
 	}
 
 	public void updateCards(List<FlashCard> cards) {
@@ -79,16 +71,15 @@ public class CardTablePanel extends JPanel {
 		updateTable();
 	}
 
-	public List<FlashCard> getSelectedCards()
-	{
+	public List<FlashCard> getSelectedCards() {
 		updateSelectedCards();
-		
 		return selectedCards;
 	}
-	
+
 	private void updateTable() {
 		if (cards == null || cards.size() == 0) {
 			populateTableModel(new String[0][0], FlashcardConstants.DEFAULT_TABLE_COLUMNS);
+			return;
 		}
 		ArrayList<String[]> data = new ArrayList<>();
 		Iterator<FlashCard> cardItr = cards.iterator();
