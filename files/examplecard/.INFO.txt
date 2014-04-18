@@ -1,0 +1,2 @@
+NAME	INTERVAL	SETS	TAGS
+examplecard	0	null	[abc]	
