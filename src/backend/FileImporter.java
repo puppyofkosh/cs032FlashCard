@@ -54,6 +54,7 @@ public class FileImporter implements Importer{
 		{
 			TSVLineParser parser = new TSVLineParser(new String[]{"question", "answer"});
 			
+			int lineNumber = 0;
 			while (reader.hasNextLine()) {
 				String line = reader.nextLine();
 				Map<String, String> entry = parser.read(line);
@@ -73,7 +74,7 @@ public class FileImporter implements Importer{
 					data.question = question;
 					
 					// FIXME: For now use question as the name
-					data.name = entry.get("question");
+					data.name = "imported" + lineNumber;
 					
 					// FIXME: These options should be set beforehand for the FileImporter, and applied to all the flashcards
 					data.interval = 5;
@@ -88,6 +89,7 @@ public class FileImporter implements Importer{
 					
 					this.cards.add(f);
 				}
+				lineNumber++;
 			}
 		}
 		catch(IOException e)
