@@ -14,9 +14,12 @@ import protocol.CardListResponse;
 import protocol.ParametrizedCardRequest;
 import protocol.Request;
 import protocol.Response;
+import protocol.UploadCardsRequest;
+import protocol.UploadCardsResponse;
 import search.SearchParameters;
 import utils.Writer;
 import flashcard.FlashCard;
+import flashcard.SimpleFactory;
 /**
  * A thread for handling client connections to the server.
  * @author skortchm
@@ -108,6 +111,14 @@ public class ClientHandler extends Thread {
 			return;
 		case SET_LIST:
 			break;
+		case UPLOAD: 
+			UploadCardsRequest ulR = (UploadCardsRequest) req;
+			for(FlashCard  card : ulR.getCardsForUpload()) {
+				SimpleFactory.writeCard(card);
+				_serverCardLibrary.put(card.getName(), card);
+			}
+			respond(new UploadCardsResponse(true));
+			
 		default:
 			//not much we can do with an invalid request
 			throw new IllegalArgumentException("Unsupported request type");
