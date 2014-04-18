@@ -1,6 +1,7 @@
 package flashcard;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 
 import audio.AudioFile;
@@ -15,7 +16,7 @@ import audio.AudioFile;
  * 
  * 
  */
-public interface FlashCard {
+public interface FlashCard extends Serializable {
 
 /*FlashCards will be created only after all the information in the constructors
  * below has been collected by our FlashCardFactory class - this way we avoid
