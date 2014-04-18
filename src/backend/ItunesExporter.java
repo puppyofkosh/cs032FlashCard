@@ -26,11 +26,11 @@ public class ItunesExporter implements Exporter{
 	
 	private WavFileConcatenator wavConcat;
 	private File playlist;
-	private static String itunesAddLocation;
+	private String destination;
 	
 	
 	public ItunesExporter(File playlist) throws IOException {
-		wavConcat = new WavFileConcatenator(itunesAddLocation);
+		wavConcat = new WavFileConcatenator();
 		this.playlist = playlist;
 	}
 	 
@@ -47,10 +47,9 @@ public class ItunesExporter implements Exporter{
 	public synchronized void export(List<FlashCard> f) throws IOException {
 		try (FileWriter writer = new FileWriter(playlist)) {
 			for (FlashCard card : f) {
-				wavConcat.concatenate(card);
 				if (playlist.exists())
 					writer.write("\n");
-				writer.write(card.getName() + ".wav");
+				writer.write(wavConcat.concatenate(card).getAbsolutePath());
 			}
 		}
 		
@@ -61,5 +60,4 @@ public class ItunesExporter implements Exporter{
 		
 		export(new ArrayList<>(s.getAll()));
 	}
-
 }

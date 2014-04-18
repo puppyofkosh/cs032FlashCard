@@ -20,13 +20,13 @@ public class WavFileExporter implements Exporter{
 	//private String destination;
 	private WavFileConcatenator wavConcat;
 	
-	public WavFileExporter(String destination) throws IOException {
-		wavConcat = new WavFileConcatenator(destination);
+	public WavFileExporter() throws IOException {
+		wavConcat = new WavFileConcatenator();
 	}
 	
-	public void changeDestination(String destination) {
-		wavConcat.changeDestination(destination);
-	}
+	//public void changeDestination(String destination) {
+	//	wavConcat.changeDestination(destination);
+	//}
 	
 	@Override
 	public void export(List<FlashCard> f) throws IOException {
