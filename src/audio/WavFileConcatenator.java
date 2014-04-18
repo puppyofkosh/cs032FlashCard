@@ -27,6 +27,10 @@ public class WavFileConcatenator {
 	private static DiscAudioFile intervalAudio = new DiscAudioFile("intervalaudio.wav");
 	private static String destination = "output";
 	
+	public WavFileConcatenator(String string) throws IOException {
+		this();
+	}
+	
 	public WavFileConcatenator() throws IOException {
 		//this.destination = destination;
 		
