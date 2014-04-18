@@ -2,6 +2,7 @@ package flashcard;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +35,7 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 		private static final long serialVersionUID = 1L;
 		public String name = "", sets = "", pathToFile = "";
 		public String questionText = "", answerText = "";
-		public List<String> tags = Arrays.asList();
+		public List<String> tags = new ArrayList<>();
 		public AudioFile question, answer;
 		public int interval = 0;
 	
