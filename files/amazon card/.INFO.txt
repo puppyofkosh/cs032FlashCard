@@ -1,0 +1,2 @@
+NAME	INTERVAL	SETS	TAGS
+amazon card	0	null	[the amazon, rainforests]	
