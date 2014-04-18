@@ -111,12 +111,17 @@ public class ClientHandler extends Thread {
 			return;
 		case SET_LIST:
 			break;
-		case UPLOAD: 
+		case UPLOAD:
+			Writer.out("Cards being uploaded");
 			UploadCardsRequest ulR = (UploadCardsRequest) req;
 			for(FlashCard  card : ulR.getCardsForUpload()) {
+				Writer.out("Writing card - " + card.getName());
 				SimpleFactory.writeCard(card);
+				Writer.out("Adding card to library " +  card.getName());
+
 				_serverCardLibrary.put(card.getName(), card);
 			}
+			Writer.out("Done");
 			respond(new UploadCardsResponse(true));
 			return;
 		default:

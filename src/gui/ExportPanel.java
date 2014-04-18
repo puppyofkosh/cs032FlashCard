@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import utils.FlashcardConstants;
+import utils.Writer;
 import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
@@ -159,6 +160,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	public void connectAndExport() {
 		_client = new Client(FlashcardConstants.AMAZON_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
 		_client.start();
+		Writer.out(_cardTable.getSelectedCards().size());
 		_client.uploadCards(_cardTable.getSelectedCards());
 	}
 

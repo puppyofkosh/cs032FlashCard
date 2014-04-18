@@ -165,6 +165,7 @@ public class Client extends Thread {
 	}
 	
 	public void uploadCards(List<FlashCard> cards) {
+		Writer.out("Upload cards command");
 		request(new UploadCardsRequest(cards));
 	}
 	
@@ -212,6 +213,7 @@ public class Client extends Thread {
 	public void processResponse(Response resp) {
 		switch (resp.getType()) {
 		case SORTED_CARDS:
+			Writer.out("Received sorted cards response");
 			CardListResponse cLR = (CardListResponse) resp;
 			_frontend.update(cLR.getSortedCards());
 			return;
