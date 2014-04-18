@@ -56,7 +56,6 @@ public class FlashCardPanel extends JPanel {
 				cardName.setHorizontalAlignment(SwingConstants.CENTER);
 				
 				lblQ = new JLabel("Q");
-		
 				
 				PlayAndStopQ = new JButton("Play Question");
 				PlayAndStopQ.addActionListener(new ActionListener() {
