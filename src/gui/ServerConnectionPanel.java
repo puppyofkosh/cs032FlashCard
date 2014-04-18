@@ -30,7 +30,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	CardTablePanel _cards;
 	Client _client;
 	JTextField host;
-	JFormattedTextField portNumber;
+	JTextField portNumber;
 	JTextPane status;
 	JButton btnConnect;
 	private JPanel searchPanel;
@@ -79,7 +79,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 		JLabel lblPort = new JLabel("PORT:");
 		connectionButtons.add(lblPort);
 
-		portNumber = new JFormattedTextField(NumberFormat.getNumberInstance());
+		portNumber = new JTextField();
 		portNumber.setColumns(5);
 		connectionButtons.add(portNumber);
 
@@ -130,11 +130,11 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 			String hostName = host.getText();
 			int port = -1;
 			try {
-				portNumber.commitEdit();
-				port = ((Long) portNumber.getValue()).intValue();
+				//portNumber.commitEdit();
+				port = (Integer.parseInt(portNumber.getText()));
 				if (!hostName.isEmpty() && port > 0)
 					attemptConnection(hostName, port);
-			} catch (ParseException e1) {
+			} catch (NumberFormatException e1) {
 				guiMessage("Could not parse port number");
 				portNumber.setText("");
 			}
