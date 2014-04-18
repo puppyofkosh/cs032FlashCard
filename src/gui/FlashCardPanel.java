@@ -22,10 +22,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import controller.Controller;
-
 import utils.Writer;
-import audio.ByteArrayAudioPlayer;
+import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 

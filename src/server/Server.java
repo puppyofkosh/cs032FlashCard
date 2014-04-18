@@ -11,8 +11,6 @@ import java.util.Map;
 import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;
-import flashcard.FlashCardStub;
-import flashcard.LocallyStoredFlashCard;
 import flashcard.SimpleFactory;
 
 /**

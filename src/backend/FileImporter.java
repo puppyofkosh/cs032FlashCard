@@ -1,6 +1,5 @@
 package backend;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,15 +10,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 import utils.TSVLineParser;
-import client.Client;
 import audio.AudioFile;
 import audio.MemoryAudioFile;
 import audio.TextToSpeechReader;
 import flashcard.FlashCard;
-import flashcard.FlashCardFactory;
 import flashcard.LocallyStoredFlashCard;
 import flashcard.SimpleFactory;
-import flashcard.LocallyStoredFlashCard.Data;
 
 /**
  * Turn a file, with some known formatting into a list of flsahcards

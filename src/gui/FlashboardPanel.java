@@ -6,9 +6,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import backend.ResourcesStub;
 import flashcard.FlashCard;
-import flashcard.FlashCardStub;
 import flashcard.SimpleFactory;
 
 public class FlashboardPanel extends JPanel{

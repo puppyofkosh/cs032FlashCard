@@ -5,6 +5,10 @@ import java.util.List;
 import flashcard.FlashCard;
 
 public class CardListResponse implements Response {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private List<FlashCard> _cards;
 	

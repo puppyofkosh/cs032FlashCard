@@ -1,24 +1,14 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
-import backend.ResourcesStub;
-import utils.FlashcardConstants;
-import utils.Writer;
 import flashcard.FlashCard;
 
 public class CardSelectionPanel extends GenericPanel {

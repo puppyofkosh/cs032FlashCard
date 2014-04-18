@@ -17,9 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import utils.FlashcardConstants;
-import utils.Writer;
-
 import backend.Resources;
 
 /**

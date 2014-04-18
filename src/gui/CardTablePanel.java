@@ -15,7 +15,6 @@ import javax.swing.table.DefaultTableModel;
 
 import utils.FlashcardConstants;
 import utils.Writer;
-import backend.ResourcesStub;
 import flashcard.FlashCard;
 
 @SuppressWarnings("serial")

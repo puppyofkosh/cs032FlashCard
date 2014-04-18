@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
-import audio.WavFileConcatenator;
 import controller.Controller;
 
 public class ImportPanel extends GenericPanel {

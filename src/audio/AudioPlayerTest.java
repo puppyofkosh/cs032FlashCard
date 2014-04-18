@@ -1,7 +1,4 @@
 package audio;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 /*
 public class AudioPlayerTest {
 	AudioFile a1;

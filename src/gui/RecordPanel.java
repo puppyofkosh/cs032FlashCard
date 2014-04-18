@@ -6,8 +6,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,8 +15,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-import controller.Controller;
-
 import audio.AudioFile;
 import audio.AudioPlayer;
 import audio.ByteArrayAudioPlayer;
@@ -26,8 +22,8 @@ import audio.DiscRecorder;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
+import controller.Controller;
 import flashcard.LocallyStoredFlashCard;
-import flashcard.SimpleFactory;
 
 public class RecordPanel extends GenericPanel {
 	/**

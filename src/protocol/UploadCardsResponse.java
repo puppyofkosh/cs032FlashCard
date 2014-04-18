@@ -1,7 +1,11 @@
 package protocol;
 
 public class UploadCardsResponse implements Response{
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	boolean _confirmed;
 	
 	UploadCardsResponse(boolean confirmed) {

@@ -3,6 +3,10 @@ package protocol;
 import search.SearchParameters;
 
 public class ParametrizedCardRequest implements Request {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private SearchParameters _params;
 	
