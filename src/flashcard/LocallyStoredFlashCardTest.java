@@ -21,7 +21,7 @@ public class LocallyStoredFlashCardTest {
 		data.question = new DiscAudioFile("data/flashcard-test/hi-there.wav");
 		data.answer = new DiscAudioFile("data/flashcard-test/acronym.wav");
 		data.tags = Arrays.asList("Tag A", "Tag B");
-		data.interval = 42;
+		data.interval = 5;
 		data.pathToFile = "files/test-card/";
 		data.name = "test-card";
 		
@@ -35,13 +35,12 @@ public class LocallyStoredFlashCardTest {
 		data.question = new DiscAudioFile("data/flashcard-test/hi-there.wav");
 		data.answer = new DiscAudioFile("data/flashcard-test/acronym.wav");
 		data.tags = Arrays.asList("Tag A", "Tag B");
-		data.interval = 42;
+		data.interval = 5;
 		data.pathToFile = "files/test-card/";
 		data.name = "test-card";
 		
 		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
 
-		
 		assertTrue(card.getQuestionAudio().getRawBytes().length == questionLength);
 		assertTrue(card.getAnswerAudio().getRawBytes().length == answerLength);
 		assertTrue(card.getPath().equals("files/test-card/"));
@@ -55,7 +54,7 @@ public class LocallyStoredFlashCardTest {
 		FlashCard card = SimpleFactory.readCard("files/test-card/");
 		assertTrue(card.getQuestionAudio().getRawBytes().length == questionLength);
 		assertTrue(card.getAnswerAudio().getRawBytes().length == answerLength);
-		assertTrue(card.getInterval() == 42);
+		assertTrue(card.getInterval() == 5);
 		assertTrue(card.getPath().equals("files/test-card/"));
 		assertTrue(card.getName().equals("test-card"));
 		assertTrue(card.getTags().equals(Arrays.asList("Tag A", "Tag B")));
@@ -69,18 +68,18 @@ public class LocallyStoredFlashCardTest {
 		// Check preconditions (we havent done anything yet)
 		assertTrue(card.getQuestionAudio().getRawBytes().length == questionLength);
 		assertTrue(card.getAnswerAudio().getRawBytes().length == answerLength);
-		assertTrue(card.getInterval() == 42);
+		assertTrue(card.getInterval() == 5);
 		assertTrue(card.getName().equals("test-card"));
 		assertTrue(card.getTags().equals(Arrays.asList("Tag A", "Tag B")));
 		
 		// Change something
 		card.addTag("Tag C");
-		card.setInterval(69);
+		card.setInterval(6);
 		
 		// Check all other conditions (make sure the file wasn't corrupted)
 		assertTrue(card.getQuestionAudio().getRawBytes().length == questionLength);
 		assertTrue(card.getAnswerAudio().getRawBytes().length == answerLength);
-		assertTrue(card.getInterval() == 69);
+		assertTrue(card.getInterval() == 6);
 		assertTrue(card.getPath().equals("files/test-card/"));
 		assertTrue(card.getName().equals("test-card"));
 		assertTrue(card.getTags().equals(Arrays.asList("Tag A", "Tag B", "Tag C")));
@@ -89,7 +88,7 @@ public class LocallyStoredFlashCardTest {
 		FlashCard secondCard = SimpleFactory.readCard("files/test-card/");
 		assertTrue(secondCard.getQuestionAudio().getRawBytes().length == questionLength);
 		assertTrue(secondCard.getAnswerAudio().getRawBytes().length == answerLength);
-		assertTrue(secondCard.getInterval() == 69);
+		assertTrue(secondCard.getInterval() == 6);
 		assertTrue(secondCard.getName().equals("test-card"));
 		assertTrue(secondCard.getTags().equals(Arrays.asList("Tag A", "Tag B", "Tag C")));
 	}

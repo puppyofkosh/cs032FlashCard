@@ -12,6 +12,11 @@ import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+/**
+ * FIXME: In the ideal world, this class would be re-usable
+ * @author puppyofkosh
+ *
+ */
 public class ByteArrayAudioPlayer implements AudioPlayer {
 
 	private boolean playing;

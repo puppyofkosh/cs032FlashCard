@@ -9,6 +9,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import controller.Controller;
+
 public class ImportPanel extends GenericPanel {
 
 	/**
@@ -48,6 +50,11 @@ public class ImportPanel extends GenericPanel {
 		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JButton btnNewButton_2 = new JButton("From File");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.importCardsToLibrary("test-tsv.tsv");
+			}
+		});
 		panel_2.add(btnNewButton_2);
 	}
 /*

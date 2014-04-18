@@ -22,6 +22,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import controller.Controller;
+
 import utils.Writer;
 import audio.ByteArrayAudioPlayer;
 import flashcard.FlashCard;
@@ -61,16 +63,7 @@ public class FlashCardPanel extends JPanel {
 				PlayAndStopQ = new JButton("Play Question");
 				PlayAndStopQ.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						
-						// FIXME: This should call a controller function like playAudio or something,
-						// not create its own player
-						ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
-						try {
-							plr.play(_card.getQuestionAudio());
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						Controller.playAudio(_card.getQuestionAudio());
 					}
 				});
 		
@@ -79,15 +72,7 @@ public class FlashCardPanel extends JPanel {
 		PlayAndStopA = new JButton("Play Answer");
 		PlayAndStopA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// FIXME: This should call a controller function like playAudio or something,
-				// not create its own player
-				ByteArrayAudioPlayer plr = new ByteArrayAudioPlayer();
-				try {
-					plr.play(_card.getAnswerAudio());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Controller.playAudio(_card.getAnswerAudio());
 			}
 		});
 

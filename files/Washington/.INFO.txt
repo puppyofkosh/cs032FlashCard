@@ -1,0 +1,2 @@
+NAME	INTERVAL	SETS	TAGS
+Washington	0	null	[washington, seattle, rain]	
