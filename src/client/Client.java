@@ -214,12 +214,13 @@ public class Client extends Thread {
 		case SORTED_CARDS:
 			CardListResponse cLR = (CardListResponse) resp;
 			_frontend.update(cLR.getSortedCards());
-			break;
+			return;
 		case SORTED_SETS:
 			break;
 		case UPLOAD: 
 			UploadCardsResponse ucR = (UploadCardsResponse) resp;
 			_frontend.guiMessage("Upload " + (ucR.confirmed() ? "Successful" : "Failed"));
+			return;
 		default:
 			break;
 		}
