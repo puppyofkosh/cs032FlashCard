@@ -103,6 +103,7 @@ public class ClientHandler extends Thread {
 			respond(new CardListResponse(cards));
 			return;
 		case ALL:
+			Writer.out("Returning all cards");
 			respond(new CardListResponse(new ArrayList<FlashCard>(_serverCardLibrary.values())));
 			return;
 		case SET_LIST:

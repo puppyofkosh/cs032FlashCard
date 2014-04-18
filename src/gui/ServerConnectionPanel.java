@@ -3,7 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
@@ -20,6 +19,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import utils.Writer;
 import client.Client;
 import flashcard.FlashCard;
 import flashcard.SimpleFactory;
@@ -116,10 +116,6 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 		guiMessage("Attempting connection", 1);
 		_client = new Client(hostname, port, this);
 		_client.start();
-		if (_client.isConnected()) {
-			displayConnectionStatus(true);
-			_client.requestAllCards();
-		}
 	}
 
 	public void update(List<FlashCard> cards) {

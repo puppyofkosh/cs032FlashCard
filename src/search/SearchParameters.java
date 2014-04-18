@@ -1,9 +1,10 @@
 package search;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SearchParameters {
+public class SearchParameters implements Serializable {
 	private int _numberOfCards = 5;
 	private List<String> _tags = new LinkedList<>();
 	private String _input = "";

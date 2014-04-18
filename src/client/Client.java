@@ -48,6 +48,7 @@ public class Client extends Thread {
 		_running = false;
 		_frontend = frontend;
 		_requests = new ConcurrentLinkedQueue<>();
+		requestAllCards();
 	}
 
 	/**
@@ -100,6 +101,7 @@ public class Client extends Thread {
 	public void run() {
 		connect(1);
 		_frontend.displayConnectionStatus(true);
+		requestAllCards();
 		while (_running && !_socket.isClosed()) {
 			if (!_requests.isEmpty() && _hasServer) {
 				try {
@@ -107,8 +109,8 @@ public class Client extends Thread {
 					_output.writeObject(_requests.poll());
 					_output.flush();
 				} catch (IOException e) {
+					e.printStackTrace();
 					Writer.out("??Server closed");
-					kill();
 				}
 			}
 		}

@@ -43,6 +43,11 @@ public class WavFileConcatenator {
 		}
 	}
 	
+	public WavFileConcatenator(String destination) throws IOException {
+		this();
+		changeDestination(destination);
+	}
+	
 	public static void changeDestination(String destination) {
 
 		WavFileConcatenator.destination = destination;
