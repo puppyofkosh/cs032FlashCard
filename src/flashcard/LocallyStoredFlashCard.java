@@ -42,6 +42,8 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 		
 		/**
 		 * Override so that we convert question and answer to memory audio files
+		 * FIXME: This is a pretty crappy way of doing serialization IMO. Maybe we should make
+		 * AudioFiles serializable?
 		 * @param stream
 		 * @throws IOException
 		 */
@@ -75,6 +77,7 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 			pathToFile = (String)stream.readObject();
 			questionText = (String)stream.readObject();
 			answerText = (String)stream.readObject();
+			tags = new ArrayList<>();
 			
 			Object o = stream.readObject();
 			if ((o instanceof List<?>))
@@ -83,7 +86,9 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 				for (Object v : vals)
 				{
 					if (v instanceof String)
+					{
 						tags.add((String)v);
+					}
 				}
 			}
 			
