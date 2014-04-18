@@ -17,6 +17,8 @@ import audio.AudioFile;
  */
 public class LocallyStoredFlashCard implements FlashCard{
 
+
+	
 	public static class Data
 	{
 		public String name = "", sets = "", pathToFile = "";
@@ -24,6 +26,17 @@ public class LocallyStoredFlashCard implements FlashCard{
 		public List<String> tags = Arrays.asList();
 		public AudioFile question, answer;
 		public int interval = 0;
+	}
+	
+	/**
+	 * Given some information about a flashcard, determine where it should be stored
+	 * @param d
+	 * @return
+	 */
+	public static String makeFlashCardPath(Data d)
+	{
+		// FIXME: Choose a better convention
+		return "files/" + d.name + "/";
 	}
 	
 	private Data data;

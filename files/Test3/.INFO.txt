@@ -1,2 +1,0 @@
-NAME	INTERVAL	SETS	TAGS
-Test3	0	null	[]	

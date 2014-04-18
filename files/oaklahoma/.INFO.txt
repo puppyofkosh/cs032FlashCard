@@ -1,2 +1,0 @@
-NAME	INTERVAL	SETS	TAGS
-oaklahoma	0	null	[]	

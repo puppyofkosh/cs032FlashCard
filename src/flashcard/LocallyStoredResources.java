@@ -1,8 +1,12 @@
 package flashcard;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,6 +16,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import utils.FlashcardConstants;
+import utils.Writer;
 
 import backend.Resources;
 
@@ -31,6 +38,8 @@ public class LocallyStoredResources implements Resources {
 		/**
 		 * 
 		 */
+		
+		// FIXME: When we call addTag to a card, will that affect this?
 		private static final long serialVersionUID = 1L;
 
 		// [tag -> list of flash card file names with that tag]
@@ -63,6 +72,8 @@ public class LocallyStoredResources implements Resources {
 		
 	public void load()
 	{
+		loadHumanReadable();
+		
 		try {
 			FileInputStream fin = new FileInputStream(filename);
 			ObjectInputStream objectIn = new ObjectInputStream(fin);
@@ -72,7 +83,9 @@ public class LocallyStoredResources implements Resources {
 			objectIn.close();
 			
 			ResourceData data = (ResourceData)o;
-			this.data = data;
+			
+			// FIXME: To use serialized version uncomment this
+			//this.data = data;
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -86,8 +99,121 @@ public class LocallyStoredResources implements Resources {
 		}
 	}
 	
-	public void save()
+	public void saveHumanReadable()
 	{
+		// Write the tag hash map
+		try(FileWriter rewriter = new FileWriter(new File("index/tag-index.dat"), false)) {
+			for (Map.Entry<String, List<String>> e : data.tagMap.entrySet())
+			{
+				rewriter.write(e.getKey() + "\t" + e.getValue() + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// Write the name map
+		try(FileWriter rewriter = new FileWriter(new File("index/name-index.dat"), false)) {
+			for (Map.Entry<String, List<String>> e : data.nameMap.entrySet())
+			{
+				rewriter.write(e.getKey() + "\t" + e.getValue() + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// Write the list of available cards
+		try(FileWriter rewriter = new FileWriter(new File("index/names.dat"), false)) {
+			for (String path : data.flashCardFiles)
+			{
+				rewriter.write(path + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void loadHumanReadable()
+	{
+		String filePath = "index/tag-index.dat";
+			
+		// Read in the tags
+		try {
+			FileReader infoReader = new FileReader(filePath);
+			BufferedReader bufferedReader = new BufferedReader(infoReader);
+			String line;
+			while((line = bufferedReader.readLine()) !=null) { //Loops while bufferedReader can find a next line
+					//FIXME predefine regex
+					String[] info = line.split("\t");
+					String tag = info[0];
+					
+					String pathsString = info[1];
+					pathsString = pathsString.replaceAll("[\\[\\]]", "");
+					
+					String[] paths = pathsString.split(", ");
+					data.tagMap.put(tag, new ArrayList<>(Arrays.asList(paths)));
+			}
+			bufferedReader.close();
+		} catch(FileNotFoundException ex) {
+			System.out.println(new File(".").getAbsolutePath());
+			System.out.println("ERROR: File cannot be found at location " + filePath);
+			ex.printStackTrace();
+		} catch(IOException ex) {
+			System.out.println("Error reading file '" + filePath + "'");
+		}
+		
+		
+		filePath = "index/name-index.dat";
+		// Read in the names -> file path list
+		try {
+			FileReader infoReader = new FileReader(filePath);
+			BufferedReader bufferedReader = new BufferedReader(infoReader);
+			String line;
+			while((line = bufferedReader.readLine()) !=null) { //Loops while bufferedReader can find a next line
+					//FIXME predefine regex
+					String[] info = line.split("\t");
+					String name = info[0];
+					
+					String namesString = info[1];
+					namesString = namesString.replaceAll("[\\[\\]]", "");
+					
+					String[] names = namesString.split(", ");
+					data.nameMap.put(name, new ArrayList<>(Arrays.asList(names)));
+			}
+			bufferedReader.close();
+		} catch(FileNotFoundException ex) {
+			System.out.println(new File(".").getAbsolutePath());
+			System.out.println("ERROR: File cannot be found at location " + filePath);
+			ex.printStackTrace();
+		} catch(IOException ex) {
+			System.out.println("Error reading file '" + filePath + "'");
+		}
+		
+		
+		filePath = "index/names.dat";
+		// Read in the list of names
+		try {
+			FileReader infoReader = new FileReader(filePath);
+			BufferedReader bufferedReader = new BufferedReader(infoReader);
+			String line;
+			while((line = bufferedReader.readLine()) !=null) { //Loops while bufferedReader can find a next line
+				data.flashCardFiles.add(line);
+			}
+			bufferedReader.close();
+		} catch(FileNotFoundException ex) {
+			System.out.println(new File(".").getAbsolutePath());
+			System.out.println("ERROR: File cannot be found at location " + filePath);
+			ex.printStackTrace();
+		} catch(IOException ex) {
+			System.out.println("Error reading file '" + filePath + "'");
+		}
+	}
+	
+	public void save()
+	{	
+		saveHumanReadable();
+		
 		ObjectOutputStream objectOut;
 		try {
 			FileOutputStream fileOut = new FileOutputStream(filename);
@@ -108,6 +234,9 @@ public class LocallyStoredResources implements Resources {
 	{
 		for (String tag : f.getTags())
 		{
+			if (tag.equals(""))
+				continue;
+			
 			List<String> taggedCards = data.tagMap.get(tag);
 			if (taggedCards == null)
 				taggedCards = new ArrayList<>();
@@ -117,7 +246,7 @@ public class LocallyStoredResources implements Resources {
 			data.tagMap.put(tag, taggedCards);
 		}
 		
-		List<String> cardsWithName = data.tagMap.get(f.getName());
+		List<String> cardsWithName = data.nameMap.get(f.getName());
 		if (cardsWithName == null)
 		{
 			cardsWithName = new ArrayList<>();

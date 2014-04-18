@@ -1,3 +1,0 @@
-
-
-java -cp "derived/cs032FlashCard.jar:lib/*" flashcard.LocallyStoredResources "$@"

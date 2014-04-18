@@ -1,0 +1,2 @@
+NAME	INTERVAL	SETS	TAGS
+New Hampshire	0	null	[connecticut, concord, tag]	

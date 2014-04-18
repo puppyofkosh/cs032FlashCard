@@ -1,5 +1,7 @@
 package audio;
 
+
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,10 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
 import flashcard.FlashCard;
+
+//FIXME: There's a bug in here. When we run something like:
+// WavFileConcatenator("myfile")
+// The file produced after calling concatenate is "myfilemyfile.wav"
 
 public class WavFileConcatenator {
 

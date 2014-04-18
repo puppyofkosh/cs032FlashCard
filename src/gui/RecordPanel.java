@@ -17,6 +17,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
+import controller.Controller;
+
 import audio.AudioFile;
 import audio.AudioPlayer;
 import audio.ByteArrayAudioPlayer;
@@ -34,6 +36,7 @@ public class RecordPanel extends GenericPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField textQuestion;
 	private JTextField textAnswer;
+	// FIXME: Potential concurrency issue. What if we're recording while exporting?
 	private AudioFile question;
 	private AudioFile answer;
 	private JButton btnQuestionRecord;
@@ -62,7 +65,6 @@ public class RecordPanel extends GenericPanel {
 		
 		System.out.println("Initializing");
 		player = new ByteArrayAudioPlayer();
-		//player = new BasicAudioPlayer();
 		try{
 		reader = new FreeTTSReader();
 		} catch (Throwable e) {
@@ -256,7 +258,6 @@ public class RecordPanel extends GenericPanel {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			// FIXME: Should probably check more than this
 			if (question == null || answer == null)
 			{
 				// FIXME: Make a label say "Must record question and answer" here
@@ -264,23 +265,19 @@ public class RecordPanel extends GenericPanel {
 				return;
 			}
 			
-			// FIXME: All of this should be done in a worker thread.
 			LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
 			data.name = textFieldName.getText();
 			data.question = question;
 			data.answer = answer;
 			data.interval = (int)spinnerInterval.getValue();
 			
-			// FIXME: This sucks-split on spaces/commas/tabs whatever
-			// Also check to make sure something is actually in the pane!
-			data.tags = new ArrayList<>(Arrays.asList(textPaneTags.getText().split(", ")));
+			data.tags = Controller.parseTags(textPaneTags.getText());
 			// FIXME: Put files/ in a variable
 			// FIXME: Use a legit path (not the name of the flashcard!)
-			data.pathToFile = "files/" + data.name + "/";
+			data.pathToFile = LocallyStoredFlashCard.makeFlashCardPath(data);
 			
 			
-			LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
-			SimpleFactory.writeCard(card);
+			Controller.createCard(data);
 			
 			// FIXME: Clear the fields here
 

@@ -28,7 +28,6 @@ public interface FlashCard {
 	
 /*This constructor builds a FlashCard object form the filePath to the FlashCard on the filesystem.
 		/*FlashCard(String filePath)*/
-
 	
 	/**
 	 * Returns the name of the current FlashCard as a string.

@@ -16,6 +16,7 @@ import utils.Writer;
 import audio.AudioFile;
 import audio.ByteArrayAudioPlayer;
 import audio.DiscAudioFile;
+import audio.WavFileConcatenator;
 
 /**
  *
@@ -178,9 +179,7 @@ public class SimpleFactory implements FlashCardFactory{
 		data.question = new DiscAudioFile("acronym.wav");
 		data.pathToFile = "files/test-card/";
 		data.name = "test-card";
-		
-		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
-		
+
 		// If you want, write the card to disk
 		//SimpleFactory.writeCard(card);
 		
@@ -189,9 +188,12 @@ public class SimpleFactory implements FlashCardFactory{
 		
 		// 2) Read the card in from file
 		FlashCard readCard = SimpleFactory.readCard("files/test-card/");
-		readCard.setInterval(23);
+		readCard.setInterval(8);
 		System.out.println(readCard.getAnswerAudio().getRawBytes().length);
 		System.out.println(readCard.getName());
+		
+		WavFileConcatenator wCat = new WavFileConcatenator("test-final");
+		wCat.concatenate(readCard);
 		
 		// Just for S & g's play the audio file that's stored by the card we read in
 		ByteArrayAudioPlayer testPlayer = new ByteArrayAudioPlayer();

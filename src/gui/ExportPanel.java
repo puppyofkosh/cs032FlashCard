@@ -10,8 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import controller.Controller;
+
+import audio.WavFileConcatenator;
+
 import flashcard.FlashCard;
 import flashcard.SimpleFactory;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class ExportPanel extends JPanel {
 	/**
@@ -50,8 +57,23 @@ public class ExportPanel extends JPanel {
 
 		
 		JButton btnExport = new JButton("Export!");
+		btnExport.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Export button clicked
+				List<FlashCard> toExport = _cardTable.getSelectedCards();
+				System.out.println("Exporting " + toExport);
+				for (FlashCard f : toExport)
+				{
+					// FIXME: We should use like a file chooser or something to select the destination folder
+					String destFolder = "export/";
+					Controller.exportCard(f, destFolder);
+				}
+				System.out.println("Exported");
+				
+			}
+		});
 		chooseMethodPanel.add(btnExport);
-
 		
 		_cardTable = new CardTablePanel();
 		add(_cardTable);
