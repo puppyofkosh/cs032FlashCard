@@ -7,11 +7,6 @@ public class ParametrizedCardRequest implements Request {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private SearchParameters _params;
 	
 	public ParametrizedCardRequest(SearchParameters params) {
