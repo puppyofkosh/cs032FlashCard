@@ -25,11 +25,10 @@ import flashcard.FlashCard;
 public class WavFileConcatenator {
 
 	private static DiscAudioFile intervalAudio = new DiscAudioFile("intervalaudio.wav");
+	private static String destination = "output";
 	
-	private String destination;
-	
-	public WavFileConcatenator(String destination) throws IOException {
-		this.destination = destination;
+	public WavFileConcatenator() throws IOException {
+		//this.destination = destination;
 		
 		if (!intervalAudio.exists()) {
 			AudioFormat format = utils.FlashcardConstants.standardizedFormat;
@@ -44,32 +43,34 @@ public class WavFileConcatenator {
 		}
 	}
 	
-	public void changeDestination(String destination) {
-		this.destination = destination;
+	public static void changeDestination(String destination) {
+
+		WavFileConcatenator.destination = destination;
 	}
 	
 	public File getNewFile(String fileName) {
-		File output = new File(this.destination + fileName + ".wav");
+		File output = new File(destination + "/"+ fileName + ".wav");
 		int collisionPreventer = 0;
 		while (output.exists()) {
-			output = new File(this.destination + fileName + collisionPreventer++ + ".wav");
+			output = new File(destination + "/" + fileName + collisionPreventer++ + ".wav");
 		}
 		
 		return output;
 	}
 	
-	public void concatenate(List<AudioInputStream> streams, String name) throws IOException  {
+	public File concatenate(List<AudioInputStream> streams, String name) throws IOException  {
 		long frameLength = 0;
 		AudioFormat format = utils.FlashcardConstants.standardizedFormat;
 		for (AudioInputStream stream : streams) {
 			frameLength += stream.getFrameLength();
 		}
 		AudioInputStream output = new AudioInputStream(new SequenceInputStream(Collections.enumeration(streams)), format, frameLength);
-		
-		AudioSystem.write(output, Type.WAVE, getNewFile(name));
+		File file = getNewFile(name);
+		AudioSystem.write(output, Type.WAVE, file);
+		return file;
 	}
 	
-	public void concatenate(FlashCard card) throws IOException {
+	public File concatenate(FlashCard card) throws IOException {
 		List<AudioInputStream> streams = new ArrayList<>();
 		streams.add(card.getQuestionAudio().getStream());
 		for (int i = 0; i < card.getInterval(); i++) {
@@ -77,6 +78,6 @@ public class WavFileConcatenator {
 		}
 		streams.add(card.getAnswerAudio().getStream());
 		
-		concatenate(streams, card.getName());
+		return concatenate(streams, card.getName());
 	}
 }
