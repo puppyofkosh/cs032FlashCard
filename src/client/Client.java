@@ -1,5 +1,6 @@
 package client;
 import gui.Frontend;
+import gui.ServerConnectionPanel;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import protocol.CardListResponse;
@@ -31,13 +33,13 @@ public class Client extends Thread {
 	private ReceiveThread _thread;
 	private String _hostName;
 	private Queue<Request> _requests;
-	private Frontend _frontend;
+	private ServerConnectionPanel _frontend;
 	
 	/**
 	 * Constructs a Client with the given port.
 	 * @param port the port number the client will connect to
 	 */
-	public Client(String hostName, int port, Frontend frontend) {
+	public Client(String hostName, int port, ServerConnectionPanel frontend) {
 		_port = port;
 		_hostName = hostName;
 		_running = false;
