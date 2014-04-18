@@ -118,7 +118,7 @@ public class ClientHandler extends Thread {
 				_serverCardLibrary.put(card.getName(), card);
 			}
 			respond(new UploadCardsResponse(true));
-			
+			return;
 		default:
 			//not much we can do with an invalid request
 			throw new IllegalArgumentException("Unsupported request type");
