@@ -103,7 +103,10 @@ public class SimpleFactory implements FlashCardFactory{
 	}
 	
 	public static void writeCard(FlashCard card) {
-
+		String path = card.getPath();
+		if (path == null || path.isEmpty()) {
+			
+		}
 		// Create the directory for the card if it doesn't exist yet
 		File dir = new File(card.getPath());
 		if (!dir.exists())
@@ -208,8 +211,6 @@ public class SimpleFactory implements FlashCardFactory{
 		ByteArrayAudioPlayer testPlayer = new ByteArrayAudioPlayer();
 		testPlayer.play(readCard.getAnswerAudio());
 		/////////////////////////////////////////////////////////
-		
-		
 		
 	}
 

@@ -84,6 +84,9 @@ public class MainFrame extends JFrame {
 		sidePanel.setControlledPanel(mainPanelContainer);		
 		
 		importPanel = new ImportPanel();
+		importPanel.setControlledLayout(mainPanelLayout);
+		importPanel.setControlledPanel(mainPanelContainer);
+
 		mainPanelContainer.add(importPanel, IMPORT_PANEL_NAME);
 		
 		exportPanel = new ExportPanel();

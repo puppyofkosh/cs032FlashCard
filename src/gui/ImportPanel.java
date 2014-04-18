@@ -1,13 +1,16 @@
 package gui;
 
+import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
+import audio.WavFileConcatenator;
 import controller.Controller;
 
 public class ImportPanel extends GenericPanel {
@@ -16,6 +19,8 @@ public class ImportPanel extends GenericPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	ServerConnectionPanel dbPanel;
+	public static final String DATABASE_PANEL_NAME = "database panel";
 
 	/**
 	 * Create the panel.
@@ -37,7 +42,7 @@ public class ImportPanel extends GenericPanel {
 		JButton btnNewButton_1 = new JButton("From DB");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, "record panel");
+				controlledLayout.show(controlledPanel, DATABASE_PANEL_NAME);
 			}
 		});
 
@@ -51,26 +56,32 @@ public class ImportPanel extends GenericPanel {
 		JButton btnNewButton_2 = new JButton("From File");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Controller.importCardsToLibrary("test-tsv.tsv");
+				JFileChooser fileChooser = new JFileChooser();
+				String tsvPath;
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int returnedValue = fileChooser.showDialog(null, "Select TSV");
+				if (returnedValue == JFileChooser.APPROVE_OPTION) {
+					tsvPath = fileChooser.getSelectedFile().getPath();
+					Controller.importCardsToLibrary(tsvPath);
+				}
+
 			}
 		});
 		panel_2.add(btnNewButton_2);
 	}
-/*
+	
 	@Override
 	public void setControlledPanel(JPanel panel)
 	{
 		super.setControlledPanel(panel);
-		panel.add(, "client panel");
+		dbPanel = new ServerConnectionPanel();
+		panel.add(dbPanel, DATABASE_PANEL_NAME);
 		
-		l.setControlledPanel(panel);
 	}
 	
 	@Override
-	public void setControlledLayout(CardLayout layout)
-	{
+	public void setControlledLayout(CardLayout layout) {
 		super.setControlledLayout(layout);
-		recordPanel.setControlledLayout(layout);
+//		dbPanel.setControlledLayout(layout);
 	}
-*/
 }

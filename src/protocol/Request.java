@@ -7,9 +7,9 @@ public interface Request extends Serializable {
 	public enum RequestType {
 		CARD_LIST,
 		SET_LIST,
-		ALL
+		ALL,
+		UPLOAD
 	}
 	
 	RequestType getType();		
-
 }
