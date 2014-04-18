@@ -71,7 +71,7 @@ public class LocallyStoredResources implements Resources {
 	{
 		loadHumanReadable();
 		
-		try {
+		/*try {
 			FileInputStream fin = new FileInputStream(filename);
 			ObjectInputStream objectIn = new ObjectInputStream(fin);
 			
@@ -93,7 +93,7 @@ public class LocallyStoredResources implements Resources {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public void saveHumanReadable()
@@ -211,7 +211,7 @@ public class LocallyStoredResources implements Resources {
 	{	
 		saveHumanReadable();
 		
-		ObjectOutputStream objectOut;
+		/*ObjectOutputStream objectOut;
 		try {
 			FileOutputStream fileOut = new FileOutputStream(filename);
 
@@ -224,7 +224,7 @@ public class LocallyStoredResources implements Resources {
 			System.out.println(e.getMessage());
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 		
 	public void addFlashCard(FlashCard f)

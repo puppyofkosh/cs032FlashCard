@@ -10,7 +10,6 @@ public class UploadCardsRequest implements Request {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
 	List<FlashCard> _cards;
 	
 	public UploadCardsRequest(List<FlashCard> card) {

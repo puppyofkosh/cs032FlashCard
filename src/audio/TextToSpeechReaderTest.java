@@ -27,7 +27,7 @@ public class TextToSpeechReaderTest {
 		AudioFile a = reader.read("hi there");
 		
 		// We've stored an identical file-check to see they're the same
-		AudioFile expected = new DiskAudioFile(Paths.get("data/tts-test/hi-there.wav"));
+		AudioFile expected = new DiscAudioFile(("data/tts-test/hi-there.wav"));
 		
 		assertTrue(Arrays.equals(expected.getRawBytes(), a.getRawBytes()));
 	}
@@ -43,7 +43,7 @@ public class TextToSpeechReaderTest {
 		
 		AudioFile a = reader.read(text);
 		// We've stored an identical file-check to see they're the same
-		AudioFile expected = new DiskAudioFile(Paths.get("data/tts-test/acronym.wav"));
+		AudioFile expected = new DiscAudioFile(("data/tts-test/acronym.wav"));
 		
 		assertTrue(Arrays.equals(expected.getRawBytes(), a.getRawBytes()));
 	}
@@ -54,7 +54,7 @@ public class TextToSpeechReaderTest {
 		String text = "For 3/4 or 75% of his time, Dr. Walker practices for $90 a visit on Dr. Dr., next to King Philip X of St. Lameer St. in Nashua NH.";
 		AudioFile a = reader.read(text);
 		// We've stored an identical file-check to see they're the same
-		AudioFile expected = new DiskAudioFile(Paths.get("data/tts-test/strange-characters.wav"));
+		AudioFile expected = new DiscAudioFile(("data/tts-test/strange-characters.wav"));
 		
 		System.out.println(expected.getRawBytes().length);
 		System.out.println(a.getRawBytes().length);

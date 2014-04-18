@@ -2,6 +2,7 @@ package audio;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -15,12 +16,21 @@ import utils.FlashcardConstants;
  * @author Peter
  *
  */
-public class MemoryAudioFile implements AudioFile {
+public class MemoryAudioFile implements AudioFile, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private byte[] data;
 	
 	public MemoryAudioFile(byte[] data) {
 		this.data = data;
+	}
+	
+	public MemoryAudioFile(AudioFile a) throws IOException
+	{
+		this(a.getRawBytes());
 	}
 	
 	@Override

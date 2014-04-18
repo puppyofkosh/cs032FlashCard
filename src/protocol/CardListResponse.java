@@ -10,6 +10,10 @@ public class CardListResponse implements Response {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<FlashCard> _cards;
 	
 	public CardListResponse(List<FlashCard> cards) {

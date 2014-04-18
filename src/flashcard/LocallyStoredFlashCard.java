@@ -1,12 +1,14 @@
 package flashcard;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import utils.Writer;
 import audio.AudioFile;
+import audio.MemoryAudioFile;
 
 
 /**
@@ -15,17 +17,79 @@ import audio.AudioFile;
  * @author puppyofkosh
  *
  */
-public class LocallyStoredFlashCard implements FlashCard{
+public class LocallyStoredFlashCard implements FlashCard, Serializable{
 
 
 	
-	public static class Data
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public static class Data implements Serializable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		public String name = "", sets = "", pathToFile = "";
 		public String questionText = "", answerText = "";
 		public List<String> tags = Arrays.asList();
 		public AudioFile question, answer;
 		public int interval = 0;
+	
+		
+		/**
+		 * Override so that we convert question and answer to memory audio files
+		 * @param stream
+		 * @throws IOException
+		 */
+		private void writeObject(java.io.ObjectOutputStream stream)
+	            throws IOException {
+			stream.writeObject(name);
+			stream.writeObject(sets);
+			stream.writeObject(pathToFile);
+			stream.writeObject(questionText);
+			stream.writeObject(answerText);
+			stream.writeObject(tags);
+			
+			MemoryAudioFile q = new MemoryAudioFile(question.getRawBytes());
+			MemoryAudioFile a = new MemoryAudioFile(answer.getRawBytes());
+			
+			stream.writeObject(q);
+			stream.writeObject(a);
+			stream.writeInt(interval);
+	    }
+
+		/**
+		 * Override so that we can convert question and answer to MemoryAudioFile
+		 * @param stream
+		 * @throws IOException
+		 * @throws ClassNotFoundException
+		 */
+	    private void readObject(java.io.ObjectInputStream stream)
+	            throws IOException, ClassNotFoundException {
+	    	name = (String)stream.readObject();
+			sets = (String)stream.readObject();
+			pathToFile = (String)stream.readObject();
+			questionText = (String)stream.readObject();
+			answerText = (String)stream.readObject();
+			
+			Object o = stream.readObject();
+			if ((o instanceof List<?>))
+			{
+				List<?> vals = (List<?>)o;
+				for (Object v : vals)
+				{
+					if (v instanceof String)
+						tags.add((String)v);
+				}
+			}
+			
+			question = (AudioFile)stream.readObject();
+			answer = (AudioFile)stream.readObject();
+			interval = stream.readInt();
+	    }
 	}
 	
 	/**

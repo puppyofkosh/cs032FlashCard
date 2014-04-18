@@ -9,7 +9,6 @@ public class SearchParameters implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	private int _numberOfCards = 5;
 	private List<String> _tags = new LinkedList<>();
 	private String _input = "";

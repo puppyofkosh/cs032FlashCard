@@ -8,18 +8,19 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import audio.DiscAudioFile;
+import audio.MemoryAudioFile;
 
 public class LocallyStoredFlashCardTest {
 	
 	public static final int questionLength = 30764;
 	public static final int answerLength = 200694;
 
-	public LocallyStoredFlashCardTest()
+	public LocallyStoredFlashCardTest() throws IOException
 	{
 		// Write us some default data
 		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
-		data.question = new DiscAudioFile("data/flashcard-test/hi-there.wav");
-		data.answer = new DiscAudioFile("data/flashcard-test/acronym.wav");
+		data.question = new MemoryAudioFile(new DiscAudioFile("data/flashcard-test/hi-there.wav"));
+		data.answer = new MemoryAudioFile(new DiscAudioFile("data/flashcard-test/acronym.wav"));
 		data.tags = Arrays.asList("Tag A", "Tag B");
 		data.interval = 5;
 		data.pathToFile = "files/test-card/";
@@ -32,8 +33,8 @@ public class LocallyStoredFlashCardTest {
 	@Test
 	public void testCreation() throws IOException {
 		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
-		data.question = new DiscAudioFile("data/flashcard-test/hi-there.wav");
-		data.answer = new DiscAudioFile("data/flashcard-test/acronym.wav");
+		data.question = new MemoryAudioFile(new DiscAudioFile("data/flashcard-test/hi-there.wav"));
+		data.answer = new MemoryAudioFile(new DiscAudioFile("data/flashcard-test/acronym.wav"));
 		data.tags = Arrays.asList("Tag A", "Tag B");
 		data.interval = 5;
 		data.pathToFile = "files/test-card/";
