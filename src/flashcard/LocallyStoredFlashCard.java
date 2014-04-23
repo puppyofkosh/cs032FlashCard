@@ -105,7 +105,7 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 	 */
 	public static String makeFlashCardPath(Data d)
 	{
-		// FIXME: Choose a better convention
+		// FIXME: Choose a better convention, if possible, based on sets
 		return "files/" + d.name + "/";
 	}
 	

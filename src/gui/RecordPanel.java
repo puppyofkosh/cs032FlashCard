@@ -268,8 +268,6 @@ public class RecordPanel extends GenericPanel {
 			data.interval = (int)spinnerInterval.getValue();
 			
 			data.tags = Controller.parseTags(textPaneTags.getText());
-			// FIXME: Put files/ in a variable
-			// FIXME: Use a legit path (not the name of the flashcard!)
 			data.pathToFile = LocallyStoredFlashCard.makeFlashCardPath(data);
 			
 			
