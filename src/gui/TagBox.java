@@ -27,9 +27,9 @@ public class TagBox extends JPanel implements MouseListener{
 	String _tagText;
 	
 	TagBox(String s, List<TagBox> tags) {
-		this(s, 15, 20, tags);
+		this(s, 15, 10, tags);
 	}
-
+	
 	TagBox(String s, int size, int roundedness, List<TagBox> tags) {
 		super();
 		_tagText = s;
@@ -55,6 +55,10 @@ public class TagBox extends JPanel implements MouseListener{
 		setBackground(Color.GREEN);
 		setOpaque(false);
 	}
+	
+	public String getText() {
+		return _tagText;
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -74,10 +78,12 @@ public class TagBox extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override

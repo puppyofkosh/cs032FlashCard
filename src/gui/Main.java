@@ -23,8 +23,8 @@ public class Main {
 					final JTextField test = new JTextField(20);
 					
 					final JPanel panel = new JPanel(new BorderLayout());
-					panel.add(box, BorderLayout.CENTER);
-					panel.add(test, BorderLayout.NORTH);
+					panel.add(test, BorderLayout.SOUTH);
+					panel.add(new JScrollPane(box), BorderLayout.NORTH);
 					frame.add(panel);
 
 					test.addActionListener(new ActionListener() {
