@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import backend.FileImporter;
-
 import audio.AudioFile;
 import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
@@ -118,5 +117,10 @@ public class Controller {
 			return Arrays.asList();
 		
 		return new ArrayList<>(Arrays.asList(allTags.split(", ")));
+	}
+
+	public void requestAutocorrections(String text, int boxNo) {
+		// TODO Auto-generated method stub
+		
 	}
 }
