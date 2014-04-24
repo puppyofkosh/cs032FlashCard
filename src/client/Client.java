@@ -41,6 +41,7 @@ public class Client extends Thread {
 	private String _hostName;
 	private Queue<Request> _requests;
 	private ClientFrontend _frontend;
+	private int numRequests;
 	
 	/**
 	 * Constructs a Client with the given port.
@@ -52,7 +53,6 @@ public class Client extends Thread {
 		_running = false;
 		_frontend = frontend;
 		_requests = new ConcurrentLinkedQueue<>();
-		requestAllCards();
 	}
 
 	/**
@@ -72,18 +72,17 @@ public class Client extends Thread {
 			num_attempts++;
 			
 			try {
+				Writer.out("Client Connecting");
 				//host is localhost or IP if an IP address is specified
 				_socket = new Socket(_hostName, _port);
 				_output = new ObjectOutputStream(_socket.getOutputStream());
 				_input = new ObjectInputStream(_socket.getInputStream());
-				
-				_running = true;
 
-				_requests = new LinkedList<>();
+				_running = true;
+				_hasServer = true;
 
 				_thread = new ReceiveThread();
 				_thread.start();
-				_hasServer = true;
 
 			}
 			catch (IOException ex) {
@@ -104,16 +103,16 @@ public class Client extends Thread {
 	}
 
 	public void run() {
-		connect(1);
+		connect(0);
 		_frontend.displayConnectionStatus(true);
-		requestAllCards();
 		while (_running && !_socket.isClosed()) {
 			if (!_requests.isEmpty() && _hasServer) {
 				try {
 					Writer.out("Sending Request");
 					_output.writeObject(_requests.poll());
 					_output.flush();
-					Writer.out("Sent Request");
+					Writer.out("Sent Request", numRequests);
+					numRequests++;
 				} catch (IOException e) {
 					e.printStackTrace();
 					Writer.out("??Server closed");
