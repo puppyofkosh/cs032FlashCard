@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 
 public class ImageToggleButton extends JButton implements ActionListener{
 
+	private static final long serialVersionUID = -3150533535670093580L;
 	ImageIcon _onImage, _offImage;
 	String _onString, _offString;
 	boolean _on;
