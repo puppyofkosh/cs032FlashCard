@@ -146,9 +146,9 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	}
 
 	public void connectAndExport() {
-		_client = new Client(FlashcardConstants.AMAZON_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
+		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
+		Writer.out("Starting client");
 		_client.start();
-		Writer.out(_cardTable.getSelectedCards().size());
 		_client.uploadCards(_cardTable.getSelectedCards());
 	}
 

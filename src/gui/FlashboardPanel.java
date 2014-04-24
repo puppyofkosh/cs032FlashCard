@@ -21,7 +21,7 @@ public class FlashboardPanel extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 	List<JPanel> cardPanels;
-	private static int NUM_COLS = 3;
+	private static int NUM_COLS = 4;
 	private static int NUM_ROWS;
 
 

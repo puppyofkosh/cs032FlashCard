@@ -131,6 +131,7 @@ public class ClientHandler extends Thread {
 	}
 	
 	private void respond(Response r) {
+		Writer.out("Responding");
 		_responseQueue.add(r);
 	}
 	
