@@ -2,8 +2,10 @@ package gui;
 
 import java.awt.EventQueue;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
+
+import flashcard.SimpleFactory;
 
 public class Main {
 	
@@ -13,8 +15,9 @@ public class Main {
 				try {
 					JFrame frame = new JFrame();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					ServerConnectionPanel p = new ServerConnectionPanel();
-					frame.add(new JScrollPane(p));
+					FlashCardPanel p = new FlashCardPanel(SimpleFactory.readCard("files/Fighting Irish/"));
+					frame.add(p);
+//					frame.add(new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"), new ImageIcon("./res/img/Stop Button.png"), "play", "stop"));
 					frame.pack();
 					frame.setVisible(true);
 				} catch (Exception e) {
