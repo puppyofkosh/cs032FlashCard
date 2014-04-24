@@ -203,8 +203,7 @@ public class SimpleFactory implements FlashCardFactory{
 		System.out.println(readCard.getAnswerAudio().getRawBytes().length);
 		System.out.println(readCard.getName());
 		
-		WavFileConcatenator wCat = new WavFileConcatenator("test-final");
-		wCat.concatenate(readCard);
+		WavFileConcatenator.concatenate(readCard);
 		
 		// Just for S & g's play the audio file that's stored by the card we read in
 		ByteArrayAudioPlayer testPlayer = new ByteArrayAudioPlayer();

@@ -18,11 +18,11 @@ import flashcard.FlashCardSet;
 public class WavFileExporter implements Exporter{
 
 	//private String destination;
-	private WavFileConcatenator wavConcat;
+	//private WavFileConcatenator wavConcat;
 	
-	public WavFileExporter() throws IOException {
-		wavConcat = new WavFileConcatenator();
-	}
+	//public WavFileExporter() throws IOException {
+	//	wavConcat = new WavFileConcatenator();
+	//}
 	
 	//public void changeDestination(String destination) {
 	//	wavConcat.changeDestination(destination);
@@ -32,7 +32,7 @@ public class WavFileExporter implements Exporter{
 	public void export(List<FlashCard> f) throws IOException {
 		// TODO Auto-generated method stub
 		for (FlashCard card : f) {
-			wavConcat.concatenate(card);
+			WavFileConcatenator.concatenate(card);
 		}
 	}
 
@@ -40,7 +40,7 @@ public class WavFileExporter implements Exporter{
 	public void export(FlashCardSet s) throws IOException {
 		// TODO Auto-generated method stub
 		for (FlashCard card : s.getAll()) {
-			wavConcat.concatenate(card);
+			WavFileConcatenator.concatenate(card);
 		}
 	}
 	
