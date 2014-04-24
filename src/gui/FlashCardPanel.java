@@ -49,7 +49,7 @@ public class FlashCardPanel extends JPanel {
 	FlashCardPanel(FlashCard card) {
 		super(new GridLayout(0, 1, 0, 0));
 		_card = card;
-		setBackground(Color.red);
+		setBackground(Color.CYAN);
 		Border border = new CompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(0, 20, 0, 20));
 		setBorder(border);
 
@@ -61,7 +61,7 @@ public class FlashCardPanel extends JPanel {
 		cardName.setHorizontalAlignment(SwingConstants.CENTER);
 
 		PlayAndStopQ = new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
-				new ImageIcon("./res/img/Stop Button.png"), playText +  " Q", stopText);
+				new ImageIcon("./res/img/Stop Button.png"), playText +  " Q", stopText + " Q");
 		PlayAndStopQ.setHorizontalAlignment(SwingConstants.CENTER);
 		add(PlayAndStopQ);
 		PlayAndStopQ.addActionListener(new ActionListener() {
@@ -93,7 +93,7 @@ public class FlashCardPanel extends JPanel {
 			}
 		});
 		PlayAndStopA = new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
-				new ImageIcon("./res/img/Stop Button.png"), playText + " A", stopText);
+				new ImageIcon("./res/img/Stop Button.png"), playText + " A", stopText + " Q");
 		PlayAndStopA.setHorizontalAlignment(SwingConstants.CENTER);
 		add(PlayAndStopA);
 		PlayAndStopA.addActionListener(new ActionListener() {

@@ -17,7 +17,6 @@ public class Main {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					FlashCardPanel p = new FlashCardPanel(SimpleFactory.readCard("files/Fighting Irish/"));
 					frame.add(p);
-//					frame.add(new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"), new ImageIcon("./res/img/Stop Button.png"), "play", "stop"));
 					frame.pack();
 					frame.setVisible(true);
 				} catch (Exception e) {
