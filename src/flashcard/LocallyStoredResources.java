@@ -36,7 +36,6 @@ public class LocallyStoredResources implements Resources {
 		 * 
 		 */
 		
-		// FIXME: When we call addTag to a card, will that affect this?
 		private static final long serialVersionUID = 1L;
 
 		// [tag -> list of flash card file names with that tag]

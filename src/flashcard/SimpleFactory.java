@@ -29,7 +29,6 @@ import audio.WavFileConcatenator;
  * @author puppyofkosh
  *
  */
-//FIXME uses serialization
 public class SimpleFactory implements FlashCardFactory{	
 	/**
 	 * What it writes to disk. Just a hack using java serialization
