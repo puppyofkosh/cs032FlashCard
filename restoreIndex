@@ -1,0 +1,4 @@
+#! /bin/bash
+
+rm index/*
+cp index-backup/* index/

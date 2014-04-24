@@ -7,6 +7,10 @@ import javax.swing.JPanel;
 
 public class TagPanel extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	List<TagBox> _tags;
 
 	TagPanel(List<String> tags) {
