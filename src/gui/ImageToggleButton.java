@@ -27,9 +27,12 @@ public class ImageToggleButton extends JButton implements ActionListener{
 		addActionListener(this);
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setVerticalAlignment(SwingConstants.CENTER);
-		setMargin(new Insets(0, 0, 0, 0));
+		setMargin(new Insets(0, 0, 0, 0));		
 		setContentAreaFilled(false);
-//		this.setFont(font);
+		
+		setBorderPainted(false);
+		setBorder(null);
+		setFocusable(false);
 		setIcon(getImage());
 		setText(getString());
 	}

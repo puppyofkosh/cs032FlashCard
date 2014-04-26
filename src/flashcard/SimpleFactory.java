@@ -157,7 +157,7 @@ public class SimpleFactory implements FlashCardFactory{
 		} catch(FileNotFoundException ex) {
 			System.out.println(new File(".").getAbsolutePath());
 			System.out.println("ERROR: File cannot be found at location " + filePath);
-			ex.printStackTrace();
+//			ex.printStackTrace();
 		} catch(IOException ex) {
 			System.out.println("Error reading file '" + filePath + "'");
 		}

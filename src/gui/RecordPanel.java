@@ -15,9 +15,7 @@ import javax.swing.JTextField;
 
 import audio.AudioFile;
 import audio.AudioPlayer;
-import audio.ByteArrayAudioPlayer;
 import audio.DiscRecorder;
-import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
 import controller.Controller;
@@ -35,7 +33,6 @@ public class RecordPanel extends GenericPanel implements ActionListener {
 	private boolean recording;
 	private ImageIcon recordImage = new ImageIcon("./res/img/Record Button.png");
 	private String recordText = "Generate Audio";
-	private ImageIcon playImage = new ImageIcon("./res/img/Record Button.png");
 	private String playText = "Play";
 	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
 	private String stopText = "Stop";
