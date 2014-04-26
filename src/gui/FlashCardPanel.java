@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -9,14 +9,15 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.event.ChangeEvent;
@@ -35,72 +36,60 @@ import flashcard.FlashCardSet;
 
 public class FlashCardPanel extends JPanel {
 	private static final long serialVersionUID = 2666411116428918076L;
-	JLabel cardName;
-	JButton PlayAndStopQ, PlayAndStopA;
-	JComboBox<Integer> incrementInterval;
-	List<JLabel> tags;
-	List<JLabel> sets;
-	private JSpinner spinner;
+	JLabel _cardName;
+	JButton _playAndStop;
+	JComboBox<Integer> _incrementInterval;
+	List<JLabel> _tags, _sets;
+	private JSpinner _spinner;
 	private FlashCard _card;
-	private String playText = "Play";
-	private String stopText = "Stop";
-	private JPanel panel;
+	private JPanel _panel;
+	private TagPanel _tagPanel;
 
 	FlashCardPanel(FlashCard card) {
-		super(new GridLayout(0, 1, 0, 0));
 		_card = card;
-		setBackground(Color.CYAN);
+		setBackground(GuiConstants.CARD_BACKGROUND);
 		Border border = new CompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(0, 20, 0, 20));
 		setBorder(border);
 
-		System.out.println("Loading " + _card);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		//JLabel Displaying the Card's Name
-		cardName = new JLabel(_card.getName());
-		add(cardName);
-		cardName.setHorizontalAlignment(SwingConstants.CENTER);
 
-		PlayAndStopQ = new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
-				new ImageIcon("./res/img/Stop Button.png"), playText +  " Q", stopText + " Q");
-		PlayAndStopQ.setHorizontalAlignment(SwingConstants.CENTER);
-		add(PlayAndStopQ);
-		PlayAndStopQ.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.playAudio(_card.getQuestionAudio());
-			}
-		});
+		_panel = new JPanel();
+		_panel.setOpaque(false);
+		add(_panel);
+		
+		_cardName = new JLabel(_card.getName());
+		_panel.add(_cardName);
 
-		panel = new JPanel();
-		panel.setOpaque(false);
-		add(panel);
 
 		JLabel lblInterval = new JLabel("Interval");
-		panel.add(lblInterval);
-		lblInterval.setHorizontalAlignment(SwingConstants.CENTER);
-		spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
-		panel.add(spinner);
-		((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setColumns(2);
-		spinner.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				int newValue = (int) spinner.getValue();
-				try {
-					_card.setInterval(newValue);
-				} catch (IOException e1) {
-					Writer.err("ERROR: Could not write change to card - reverting to original interval");
-					spinner.setValue(_card.getInterval());
-				}
-			}
-		});
-		PlayAndStopA = new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
-				new ImageIcon("./res/img/Stop Button.png"), playText + " A", stopText + " Q");
-		PlayAndStopA.setHorizontalAlignment(SwingConstants.CENTER);
-		add(PlayAndStopA);
-		PlayAndStopA.addActionListener(new ActionListener() {
+		_panel.add(lblInterval);
+		_spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
+		_panel.add(_spinner);
+		_playAndStop = ImageToggleButton.playStopButton("A: ", "A: ");
+		_panel.add(_playAndStop);
+		_playAndStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.playAudio(_card.getAnswerAudio());
 			}
 		});
+		((JSpinner.DefaultEditor)_spinner.getEditor()).getTextField().setColumns(2);
+		_spinner.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				int newValue = (int) _spinner.getValue();
+				try {
+					_card.setInterval(newValue);
+				} catch (IOException e1) {
+					Writer.err("ERROR: Could not write change to card - reverting to original interval");
+					_spinner.setValue(_card.getInterval());
+				}
+			}
+		});
+
+		_tagPanel = new TagPanel();
+		add(_tagPanel);
 
 		populateSets(_card.getSets());
 		populateTags(_card.getTags());
@@ -111,6 +100,18 @@ public class FlashCardPanel extends JPanel {
 	private void populateSets(Collection<FlashCardSet> sets) {
 	}
 
-	private void populateTags(Collection<String> tags) {		
+	private void populateTags(Collection<String> tags) {
+		//TODO we shouldn't be handling this here.
+		boolean hasTag = false;
+		for(String tag : tags) {
+			if (tag.equalsIgnoreCase("null") || (tag.equals("")))
+				continue;
+			else {
+			_tagPanel.addTag(tag);
+			hasTag = true;
+			}
+		}
+		if (!hasTag)
+			_tagPanel.setVisible(false);
 	}
 }

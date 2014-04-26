@@ -88,7 +88,7 @@ public class CreatePanel extends GenericPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == setTextField) {
-			
+
 		} else if (e.getSource() == authorTextField) {
 
 		} else if (e.getSource() == tagTextField) {

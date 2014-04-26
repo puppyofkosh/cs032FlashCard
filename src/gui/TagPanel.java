@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,16 +14,40 @@ public class TagPanel extends JPanel {
 	}
 
 	TagPanel(List<String> tags) {
-		super(new WrapLayout(WrapLayout.LEADING, 3, 5));
-		setBackground(Color.WHITE);
+		super(new WrapLayout(WrapLayout.LEADING, 1, 1));
+		setOpaque(false);
 		_tags = new LinkedList<>();
 		for(String tag :  tags) 
 			addTag(tag);
 	}
 
 	public void addTag(String tag) {
-		add(new TagBox(tag, _tags));
+		new TagBox(tag, this);
+		update();
+	}
+	
+	private void update() {
+		setVisible(!_tags.isEmpty());
 		revalidate();
 		repaint();
+	}
+	
+	public List<String> getTags() {
+		LinkedList<String> strings = new LinkedList<>();
+		for(TagBox tag : _tags) {
+			strings.add(tag.getText());
+		}
+		return strings;
+	}
+	
+	public void clear() {
+		_tags = new LinkedList<>();
+		update();
+	}
+	
+	public void deleteTag(TagBox tag) {
+		remove(tag);
+		_tags.remove(tag);
+		update();
 	}
 }

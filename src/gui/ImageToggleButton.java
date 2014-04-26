@@ -16,7 +16,7 @@ public class ImageToggleButton extends JButton implements ActionListener{
 	String _onString, _offString;
 	boolean _on;
 	int _size = 32;
-
+	
 	ImageToggleButton(ImageIcon onImage, ImageIcon offImage, String onString, String offString) {
 		super();
 		_onImage = onImage;
@@ -29,6 +29,7 @@ public class ImageToggleButton extends JButton implements ActionListener{
 		setVerticalAlignment(SwingConstants.CENTER);
 		setMargin(new Insets(0, 0, 0, 0));
 		setContentAreaFilled(false);
+//		this.setFont(font);
 		setIcon(getImage());
 		setText(getString());
 	}
@@ -36,6 +37,11 @@ public class ImageToggleButton extends JButton implements ActionListener{
 	ImageToggleButton(ImageIcon onImage, ImageIcon offImage, String onString, String offString, int size) {
 		this(onImage, offImage, onString, offString);
 		setSize(size);
+	}
+	
+	public static ImageToggleButton playStopButton(String playText, String stopText) {
+		return new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
+				new ImageIcon("./res/img/Stop Button.png"), playText, stopText);
 	}
 
 	public void setSize(int size) {
@@ -64,6 +70,10 @@ public class ImageToggleButton extends JButton implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this)
 			toggle();
+	}
+
+	public boolean isOn() {
+		return _on;
 	}
 }
 

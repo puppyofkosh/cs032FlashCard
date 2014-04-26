@@ -1,19 +1,17 @@
 package gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.ParseException;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 
 import audio.AudioFile;
 import audio.AudioPlayer;
@@ -25,368 +23,315 @@ import audio.TextToSpeechReader;
 import controller.Controller;
 import flashcard.LocallyStoredFlashCard;
 
-public class RecordPanel extends GenericPanel {
-	/**
-	 * 
-	 */
+public class RecordPanel extends GenericPanel implements ActionListener {
+
+	//Instance variables that are not gui components or are used multiple times
 	private static final long serialVersionUID = 1L;
-	private JTextField textQuestion;
-	private JTextField textAnswer;
-	// FIXME: Potential concurrency issue. What if we're recording while exporting?
 	private AudioFile question;
 	private AudioFile answer;
-	private JButton btnQuestionRecord;
-	private JButton btnAnswerRecord;
-	private JButton btnQuestionPlay;
-	private JButton btnAnswerPlay;
-	private JButton btnQuestionStop;
-	private JButton btnAnswerStop;
 	private Recorder recorder;
 	private AudioPlayer player;
 	private TextToSpeechReader reader;
-	private boolean hasQuestion;
-	private boolean hasAnswer;
 	private boolean recording;
+	private ImageIcon recordImage = new ImageIcon("./res/img/Record Button.png");
+	private String recordText = "Generate Audio";
+	private ImageIcon playImage = new ImageIcon("./res/img/Record Button.png");
+	private String playText = "Play";
+	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
+	private String stopText = "Stop";
+
+	//The following gui variables are arranged from top to bottom, like their
+	//physical representations on the screen.
+
+	private JPanel namePanel;
 	private JTextField textFieldName;
-	private JTextPane textPaneTags;
+
+	private JPanel qPanel;
+	private boolean hasQuestion;
+	private ImageToggleButton btnQuestionRecord, btnQuestionPlay;
+	private JTextField textQuestion;
+
+	private JPanel intervalPanel;
 	private JSpinner spinnerInterval;
-	
+	private JLabel lblInterval;
+
+	private JPanel aPanel;
+	private boolean hasAnswer;
+	private ImageToggleButton btnAnswerRecord, btnAnswerPlay;
+	private JTextField textAnswer;
+
+	private JPanel tagsContainerPanel;
+	private JTextField txtInputTagsHere;
+	private String inputHint = "Input Tags";
+	private TagPanel tagPanel;
+
+	private JButton btnFlash;
+
 
 	/**
 	 * Create the panel.
-	 * @throws IOException 
 	 */
 	public RecordPanel() {
+		Controller.guiMessage("Initializing", false);
+		initPanelComponents();
+		initFunctionality();
+	}
+
+	private void initPanelComponents() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		System.out.println("Initializing");
-		player = new ByteArrayAudioPlayer();
-		try{
-		reader = new FreeTTSReader();
-		} catch (Throwable e) {
-			System.out.println(e.getMessage());
-		}
-		hasQuestion = false;
-		hasAnswer = false;
-		
-		JPanel QuestionPanels = new JPanel();
-		add(QuestionPanels);
-		GridBagLayout gbl_QuestionPanels = new GridBagLayout();
-		gbl_QuestionPanels.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_QuestionPanels.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_QuestionPanels.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
-		gbl_QuestionPanels.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		QuestionPanels.setLayout(gbl_QuestionPanels);
-		
+		setBackground(GuiConstants.CARD_BACKGROUND);
+
+		//A row for creating the name of the card.
+		namePanel = new JPanel();
+		add(namePanel);
 		JLabel lblName = new JLabel("Name");
-		GridBagConstraints gbc_lblName = new GridBagConstraints();
-		gbc_lblName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblName.gridx = 0;
-		gbc_lblName.gridy = 1;
-		QuestionPanels.add(lblName, gbc_lblName);
-		
+		namePanel.add(lblName);
+
 		textFieldName = new JTextField();
-		GridBagConstraints gbc_textFieldName = new GridBagConstraints();
-		gbc_textFieldName.gridwidth = 2;
-		gbc_textFieldName.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldName.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldName.gridx = 5;
-		gbc_textFieldName.gridy = 1;
-		QuestionPanels.add(textFieldName, gbc_textFieldName);
 		textFieldName.setColumns(10);
-		
-		JLabel lblQuestion = new JLabel("Question");
-		GridBagConstraints gbc_lblQuestion = new GridBagConstraints();
-		gbc_lblQuestion.insets = new Insets(0, 0, 5, 5);
-		gbc_lblQuestion.gridx = 0;
-		gbc_lblQuestion.gridy = 3;
-		QuestionPanels.add(lblQuestion, gbc_lblQuestion);
-		
-		btnQuestionRecord = new JButton("Record!");
-		GridBagConstraints gbc_btnRecord = new GridBagConstraints();
-		gbc_btnRecord.insets = new Insets(0, 0, 5, 5);
-		gbc_btnRecord.gridx = 3;
-		gbc_btnRecord.gridy = 3;
-		QuestionPanels.add(btnQuestionRecord, gbc_btnRecord);
-		btnQuestionRecord.addActionListener(new RecordListener(true));
-		
+		textFieldName.addActionListener(this);
+		namePanel.add(textFieldName);
+
+		namePanel.setOpaque(false);
+		removeEmptySpace(namePanel);
+
+
+		qPanel = new JPanel();
+		add(qPanel);
+
+		JLabel lblQuestion = new JLabel("Q:");
+
 		textQuestion = new JTextField();
-		GridBagConstraints gbc_textQuestion = new GridBagConstraints();
-		gbc_textQuestion.gridwidth = 2;
-		gbc_textQuestion.insets = new Insets(0, 0, 5, 0);
-		gbc_textQuestion.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textQuestion.gridx = 5;
-		gbc_textQuestion.gridy = 3;
-		QuestionPanels.add(textQuestion, gbc_textQuestion);
 		textQuestion.setColumns(10);
-		
-		btnQuestionPlay = new JButton("Play!");
-		GridBagConstraints gbc_btnPlay = new GridBagConstraints();
-		gbc_btnPlay.insets = new Insets(0, 0, 5, 5);
-		gbc_btnPlay.gridx = 3;
-		gbc_btnPlay.gridy = 4;
-		QuestionPanels.add(btnQuestionPlay, gbc_btnPlay);
-		btnQuestionPlay.addActionListener(new PlayListener(true));
-		btnQuestionPlay.setVisible(false);
-		
-		btnQuestionStop = new JButton("Stop");
-		GridBagConstraints gbc_btnStop = new GridBagConstraints();
-		gbc_btnStop.insets = new Insets(0, 0, 5, 5);
-		gbc_btnStop.gridx = 5;
-		gbc_btnStop.gridy = 4;
-		QuestionPanels.add(btnQuestionStop, gbc_btnStop);
-		btnQuestionStop.addActionListener(new StopListener(true));
-		
-		JButton btnUseTts = new JButton("Use TTS");
-		GridBagConstraints gbc_btnUseTts = new GridBagConstraints();
-		gbc_btnUseTts.insets = new Insets(0, 0, 5, 0);
-		gbc_btnUseTts.gridx = 6;
-		gbc_btnUseTts.gridy = 4;
-		QuestionPanels.add(btnUseTts, gbc_btnUseTts);
-		btnUseTts.addActionListener(new TTSListener(true));
-		
+		textQuestion.addActionListener(this);
+
+		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
+		btnQuestionRecord.addActionListener(this);
+
+		btnQuestionPlay = ImageToggleButton.playStopButton(playText, stopText);
+		qPanel.add(lblQuestion);
+		qPanel.add(btnQuestionRecord);
+		qPanel.add(textQuestion);
+		qPanel.add(btnQuestionPlay);
+		btnQuestionPlay.addActionListener(this);
+
+		qPanel.setOpaque(false);
+		removeEmptySpace(qPanel);
+
+		intervalPanel = new JPanel();
+		add(intervalPanel);
+
+		lblInterval = new JLabel("Interval:");
+		intervalPanel.add(lblInterval);
+
 		spinnerInterval = new JSpinner();
-		GridBagConstraints gbc_spinnerInterval = new GridBagConstraints();
-		gbc_spinnerInterval.insets = new Insets(0, 0, 5, 5);
-		gbc_spinnerInterval.gridx = 3;
-		gbc_spinnerInterval.gridy = 6;
-		QuestionPanels.add(spinnerInterval, gbc_spinnerInterval);
-		
-		JLabel lblAnswer = new JLabel("Answer");
-		GridBagConstraints gbc_lblAnswer = new GridBagConstraints();
-		gbc_lblAnswer.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAnswer.gridx = 0;
-		gbc_lblAnswer.gridy = 7;
-		QuestionPanels.add(lblAnswer, gbc_lblAnswer);
-		
-		btnAnswerRecord = new JButton("Record!");
-		GridBagConstraints gbc_btnAnswer = new GridBagConstraints();
-		gbc_btnAnswer.insets = new Insets(0, 0, 5, 5);
-		gbc_btnAnswer.gridx = 3;
-		gbc_btnAnswer.gridy = 7;
-		QuestionPanels.add(btnAnswerRecord, gbc_btnAnswer);
-		btnAnswerRecord.addActionListener(new RecordListener(false));
-		
+		intervalPanel.add(spinnerInterval);
+
+		intervalPanel.setOpaque(false);
+		removeEmptySpace(intervalPanel);
+
+		aPanel = new JPanel();
+		add(aPanel);
+
+		JLabel lblAnswer = new JLabel("A:");
+		aPanel.add(lblAnswer);
+
+		btnAnswerRecord =  new ImageToggleButton(recordImage, stopImage, recordText, stopText);
+		btnAnswerRecord.addActionListener(this);
+		aPanel.add(btnAnswerRecord);
+
 		textAnswer = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.gridwidth = 2;
-		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 5;
-		gbc_textField_1.gridy = 7;
-		QuestionPanels.add(textAnswer, gbc_textField_1);
 		textAnswer.setColumns(10);
-		
-		btnAnswerPlay = new JButton("Play");
-		GridBagConstraints gbc_btnAnswerPlay = new GridBagConstraints();
-		gbc_btnAnswerPlay.insets = new Insets(0, 0, 5, 5);
-		gbc_btnAnswerPlay.gridx = 3;
-		gbc_btnAnswerPlay.gridy = 8;
-		QuestionPanels.add(btnAnswerPlay, gbc_btnAnswerPlay);
-		btnAnswerPlay.addActionListener(new PlayListener(false));
-		btnAnswerPlay.setVisible(false);
-		
-		btnAnswerStop = new JButton("Stop");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 5;
-		gbc_btnNewButton.gridy = 8;
-		QuestionPanels.add(btnAnswerStop, gbc_btnNewButton);
-		btnAnswerStop.addActionListener(new StopListener(false));
-		
-		JButton btnUseTts_1 = new JButton("Use TTS");
-		GridBagConstraints gbc_btnUseTts_1 = new GridBagConstraints();
-		gbc_btnUseTts_1.insets = new Insets(0, 0, 5, 0);
-		gbc_btnUseTts_1.gridx = 6;
-		gbc_btnUseTts_1.gridy = 8;
-		QuestionPanels.add(btnUseTts_1, gbc_btnUseTts_1);
-		btnUseTts_1.addActionListener(new TTSListener(false));
-		
-		JLabel lblNewLabel = new JLabel("Tags");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.gridwidth = 4;
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 9;
-		QuestionPanels.add(lblNewLabel, gbc_lblNewLabel);
-		
-		textPaneTags = new JTextPane();
-		GridBagConstraints gbc_textPaneTags = new GridBagConstraints();
-		gbc_textPaneTags.gridheight = 2;
-		gbc_textPaneTags.insets = new Insets(0, 0, 5, 0);
-		gbc_textPaneTags.fill = GridBagConstraints.BOTH;
-		gbc_textPaneTags.gridx = 6;
-		gbc_textPaneTags.gridy = 9;
-		QuestionPanels.add(textPaneTags, gbc_textPaneTags);
-		
-		JButton btnFlash = new JButton("Flash!");
-		btnFlash.addActionListener(new FlashListener());
-		GridBagConstraints gbc_btnFlash = new GridBagConstraints();
-		gbc_btnFlash.gridwidth = 3;
-		gbc_btnFlash.insets = new Insets(0, 0, 0, 5);
-		gbc_btnFlash.gridx = 0;
-		gbc_btnFlash.gridy = 16;
-		QuestionPanels.add(btnFlash, gbc_btnFlash);
-		
-		JPanel AnswerInformation = new JPanel();
-		add(AnswerInformation);
+		textAnswer.addActionListener(this);
+		aPanel.add(textAnswer);
 
-		btnAnswerPlay.setEnabled(false);
-		btnQuestionPlay.setEnabled(false);
-		
+		btnAnswerPlay = ImageToggleButton.playStopButton(playText, stopText);
+		btnAnswerPlay.addActionListener(this);
+		aPanel.add(btnAnswerPlay);
+
+		aPanel.setOpaque(false);
+		removeEmptySpace(aPanel);
+
+		tagsContainerPanel = new JPanel();
+		add(tagsContainerPanel);
+
+		JLabel lblNewLabel = new JLabel("Add Tags");
+		tagsContainerPanel.add(lblNewLabel);
+
+		txtInputTagsHere = new JTextField();
+		txtInputTagsHere.setColumns(10);
+		txtInputTagsHere.setText(inputHint);
+		txtInputTagsHere.addActionListener(this);
+		tagsContainerPanel.add(txtInputTagsHere);
+
+		tagsContainerPanel.setOpaque(false);
+		removeEmptySpace(tagsContainerPanel);
+
+		tagPanel = new TagPanel();
+		add(tagPanel);
+
+		btnFlash = new JButton("Flash!");
+		add(btnFlash);
+		btnFlash.addActionListener(this);
 	}
 	
-	private void enableButtons(boolean value) {
-		btnQuestionRecord.setEnabled(value);
-		btnAnswerRecord.setEnabled(value);
-		btnQuestionPlay.setEnabled(value);
-		btnAnswerPlay.setEnabled(value);
+	private void initFunctionality() {
+		hasQuestion = false;
+		question = null;
+		hasAnswer = false;
+		answer = null;
+		recording = false;
+		player = Controller.getPlayer();
+		reader = Controller.getReader();
+		enablePlayback(player != null);
+		enableTTS(reader != null);
 	}
-	
-	/**
-	 * actionPerformed() is called when the user clicks the flash button. Is responsible for creating the flashcard
-	 * @author puppyofkosh
-	 *
-	 */
-	private class FlashListener implements ActionListener
-	{
 
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
-			if (question == null || answer == null)
-			{
-				// FIXME: Make a label say "Must record question and answer" here
-				System.out.println("Press the Use TTS Button!");
-				return;
+
+
+	private void removeEmptySpace(JPanel panel) {
+		panel.setMaximumSize(panel.getPreferredSize());
+	}
+
+	private void recordToggle(boolean isQuestion) {
+		if (recording) {
+			if (isQuestion) {
+				question = recorder.stopRecord();
+				Controller.guiMessage("has question");
+				hasQuestion = true;
+			} else {
+				answer = recorder.stopRecord();
+				Controller.guiMessage("has answer");
+				hasAnswer = true;
 			}
-			
-			LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
-			data.name = textFieldName.getText();
-			data.question = question;
-			data.answer = answer;
-			data.interval = (int)spinnerInterval.getValue();
-			
-			data.tags = Controller.parseTags(textPaneTags.getText());
-			data.pathToFile = LocallyStoredFlashCard.makeFlashCardPath(data);
-			
-			
-			Controller.createCard(data);
-			
-			// FIXME: Clear the fields here
-
-			// Move user to the next pane
-			controlledLayout.show(controlledPanel, "create panel");
-		}
-		
-	}
-	
-	private class RecordListener implements ActionListener {
-
-		private boolean isQuestion;
-		
-		RecordListener(boolean isQuestion) {
-			this.isQuestion = isQuestion;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			enableButtons(false);
-//			recorder = new MemoryRecorder();
+			recording = false;
+		} else {
 			recorder = new DiscRecorder();
-
 			recorder.startRecord();
 			recording = true;
-			if (isQuestion)
-				btnQuestionStop.setEnabled(true);
+		}
+	}
+
+	private void playToggle(boolean isQuestion, boolean play) {
+		try {
+			if (play)
+				player.play(isQuestion ? question : answer);
 			else
-				btnAnswerStop.setEnabled(true);
-		}
-	}
-	
-	private class PlayListener implements ActionListener {
-
-		private boolean isQuestion;
-		
-		PlayListener(boolean isQuestion) {
-			this.isQuestion = isQuestion;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			try {
-				enableButtons(false);
-				if (isQuestion) {
-					player.play(question);
-					btnQuestionStop.setEnabled(true);
-				}
-				else {
-					player.play(answer);
-					btnQuestionStop.setEnabled(true);
-				}
-			} catch (IOException e1) {}
-		}
-	}
-	
-	private class TTSListener implements ActionListener {
-	
-		private boolean isQuestion;
-		
-		TTSListener(boolean isQuestion) {
-			this.isQuestion = isQuestion;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (isQuestion) {
-				question = reader.read(textQuestion.getText());
-				btnQuestionPlay.setVisible(true);
-			}
-			
-			else {
-				answer = reader.read(textAnswer.getText());
-				hasAnswer = true;
-				btnAnswerPlay.setVisible(true);
-			}
-		}
-	}
-	
-	private class StopListener implements ActionListener {
-		
-		private boolean isQuestion;
-		
-		StopListener(boolean isQuestion) {
-			this.isQuestion = isQuestion;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			enableButtons(true);
-			btnQuestionStop.setEnabled(false);
-			btnAnswerStop.setEnabled(false);
-			
-			if (!recording) {
 				player.stop();
+		} catch (IOException e1) {
+			if (isQuestion)
+				btnQuestionPlay.toggle();
+			else
+				btnAnswerPlay.toggle();
+			Controller.guiMessage("ERROR: could not play audio", true);
+		}
+	}
+
+	/**
+	 * Reads the value of one of the two tts fields and writes the WAV audio.
+	 * @param isQuestion - the field can be the question or the answer field.
+	 */
+	private void readTTS(boolean isQuestion) {
+		if (isQuestion) {
+			question = reader.read(textQuestion.getText());
+			hasQuestion = true;
+		} else {
+			answer = reader.read(textAnswer.getText());
+			hasAnswer = true;
+		}
+	}
+
+	/**
+	 * Enables or disables user interaction with the text to speech fields
+	 * and prints a useful message.
+	 * @param enabled
+	 */
+	private void enableTTS(boolean enabled) {
+		String disableText = "TTS unavailable.";
+		textAnswer.setText(enabled ? "" : disableText);
+		textAnswer.setEnabled(enabled);
+		textQuestion.setText(enabled ? "" : disableText);
+		textQuestion.setEnabled(enabled);
+	}
+
+	/**
+	 * Enables or disables user interaction with playback buttons.
+	 * @param enabled
+	 */
+	private void enablePlayback(boolean enabled) {
+		btnQuestionPlay.setEnabled(enabled);
+		btnAnswerPlay.setEnabled(enabled);
+	}
+
+	private void clear() {
+		removeAll();
+		initPanelComponents();
+		initFunctionality();
+	}
+
+	/**
+	 * Handles user interactions with this panel.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == textFieldName) {
+			//Do nothing - we only want to hold on to this value for later.
+		} else if (e.getSource() == btnQuestionRecord) {
+			//This, and the following boolean values usually correspond to
+			//isQuestion - whether or not the recording is being done for the
+			//question or answer audio file.
+			recordToggle(true);
+		} else if (e.getSource() == btnQuestionPlay) {
+			playToggle(true, btnQuestionPlay.isOn());
+		} else if (e.getSource() == textQuestion) {
+			readTTS(true);
+		} else if (e.getSource() == btnAnswerRecord) {
+			recordToggle(false);
+		} else if (e.getSource() == btnAnswerPlay) {
+			playToggle(false, btnAnswerPlay.isOn());
+		} else if (e.getSource() == textAnswer) {
+			readTTS(false);
+		} else if (e.getSource() == txtInputTagsHere) {
+			//The controller parses the input programatically, but we check here
+			//to make sure the user didn't just hit enter before typing anything.
+			String input = txtInputTagsHere.getText();
+			if (Controller.verifyInput(input) && !input.equals(inputHint))
+				tagPanel.addTag(txtInputTagsHere.getText());
+			else
+				Controller.guiMessage(String.format("Your input: \"%s\" is an invalid tag", input), true);
+			//Regardless, we clear the field so they can type the next one.
+			txtInputTagsHere.setText("");
+		}
+		else if (e.getSource() == btnFlash) {
+			//The user wants to create the card and move on to the next one.
+			if (question == null || answer == null || !hasQuestion || !hasAnswer) {
+				Controller.guiMessage("Must record question and answer", true);
 				return;
 			}
-			
-			
-			recording = false;
-			
-			if (isQuestion) { 
-				question = recorder.stopRecord();
-				System.out.println("has question");
-				hasQuestion = true;
-				btnQuestionPlay.setVisible(true);
+
+			LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+			data.name = Controller.parseCardName(textFieldName.getText());
+
+			data.question = question;
+			data.answer = answer;
+
+			try {
+				spinnerInterval.commitEdit();
+			} catch (ParseException e1) {
+				Controller.guiMessage("ERROR: Could not commit spinner edit", true);
+				e1.printStackTrace();
 			}
-			
-			else { 
-				answer = recorder.stopRecord();
-				hasAnswer = true;
-				btnAnswerPlay.setVisible(true);
-			}
+			data.interval = (int) spinnerInterval.getValue();
+
+			data.tags = tagPanel.getTags();
+			data.pathToFile = LocallyStoredFlashCard.makeFlashCardPath(data);
+
+			Controller.createCard(data);
+
+			clear();
+			// Move user to the next pane
+			controlledLayout.show(controlledPanel, "create panel");
+
 		}
-		
 	}
 }

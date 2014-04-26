@@ -18,17 +18,20 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 
 	private boolean playing;
 	private SourceDataLine line;
-	
+
 	@Override
 	public void play(AudioFile a) throws IOException {
-		stop();
-		playing = true;
-		new PlayThread(a).start();
+		if (a == null)
+			throw new IOException("Received null AudioFile");
+		else {
+			stop();
+			playing = true;
+			new PlayThread(a).start();
+		}
 	}
-	
+
 	@Override
 	public boolean isPlaying() {
-		// TODO Auto-generated method stub
 		return playing;
 	}
 
@@ -40,22 +43,22 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 			line.close();
 		}
 	}
-	
+
 	private class PlayThread extends Thread {
-	
+
 		AudioFile file;
-		
+
 		PlayThread(AudioFile file) {
 			this.file = file;
-		
+
 		}
-		
+
 		@Override
 		public void run() {
 			try {
 				AudioFormat format = AudioConstants.TTSREADER;
 				byte[] data = file.getRawBytes();
-				
+
 				AudioInputStream stream = new AudioInputStream(new ByteArrayInputStream(data), format, data.length / format.getFrameSize());
 				DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 				line = (SourceDataLine) AudioSystem.getLine(info);
@@ -67,7 +70,7 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 					line.write(buffer, 0, bytesRead);
 					bytesRead = stream.read(buffer);
 				}
-		        line.drain();
+				line.drain();
 				line.stop();
 				line.close();
 				playing = false;
@@ -80,10 +83,10 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) throws InterruptedException, IOException
 	{
-		
+
 		FreeTTSReader reader = new FreeTTSReader();
 		ByteArrayAudioPlayer player = new ByteArrayAudioPlayer();
 

@@ -2,19 +2,23 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import backend.FileImporter;
+import utils.Writer;
 import audio.AudioFile;
+import audio.AudioPlayer;
 import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
+import backend.FileImporter;
 import flashcard.FlashCard;
 import flashcard.LocallyStoredFlashCard;
 import flashcard.SimpleFactory;
+import gui.TagPanel;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call
@@ -26,10 +30,10 @@ import flashcard.SimpleFactory;
  *
  */
 public class Controller {
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Import a tsv or similar
 	 * @param filename
@@ -43,14 +47,14 @@ public class Controller {
 
 			FileImporter importer = new FileImporter(new File(filename), ttsReader);
 			importer.importCards();
-			
+
 			System.out.println("Imported " + importer.getCardList().size() + " cards");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
-	
+
 	/**
 	 * Export a card to flat wav
 	 * @param f
@@ -69,8 +73,8 @@ public class Controller {
 			e1.printStackTrace();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Play a chunk of audio. This method should ensure that only one piece
 	 * of audio is playing at a time
@@ -81,7 +85,7 @@ public class Controller {
 		// We want to store only 1 player, and use that all the time to
 		// make sure we dont play 2 things at once
 		ByteArrayAudioPlayer player = new ByteArrayAudioPlayer();
-		
+
 		if (player.isPlaying())
 			player.stop();
 
@@ -92,7 +96,7 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Create a flashcard from the given data and save it to file
 	 * @param data
@@ -103,7 +107,7 @@ public class Controller {
 		SimpleFactory.writeCard(card);
 		return card;
 	}
-	
+
 	/***
 	 * Turn a string like "tag1, tag2 tag3..." into
 	 * [tag1, tag2, tag3]
@@ -115,12 +119,54 @@ public class Controller {
 		// FIXME: This sucks. Split on spaces/commas/tabs whatever
 		if (allTags.equals(""))
 			return Arrays.asList();
-		
+
 		return new ArrayList<>(Arrays.asList(allTags.split(", ")));
 	}
 
 	public void requestAutocorrections(String text, int boxNo) {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	public static void guiMessage(String text, int duration, boolean error) {
+		//FIXME - do for real
+		if (error)
+			Writer.err(text);
+		else
+			Writer.out(text);
+	}
+	
+	public static void guiMessage(String text, boolean error) {
+		guiMessage(text, 3, error);
+	}
+	
+	public static void guiMessage(String text, int duration) {
+		guiMessage(text, duration, false);
+	}
+	
+	public static void guiMessage(String text) {
+		guiMessage(text, 3);
+	}
+
+	public static String parseCardName(String text) {
+		//FIXME implement for real
+		return text;
+	}
+
+	public static boolean verifyInput(String input) {
+		//FIXME implement for real
+		return input.length() > 0;
+	}
+
+	public static AudioPlayer getPlayer() {
+		return new ByteArrayAudioPlayer();
+	}
+	
+	public static TextToSpeechReader getReader() {
+		try{
+			return new FreeTTSReader();
+		} catch (Throwable e) {
+			guiMessage("Could not load reader", true);
+			return null;
+		}
 	}
 }
