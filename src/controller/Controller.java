@@ -66,8 +66,7 @@ public class Controller {
 			System.out.println("WARNING: destinationFolder should end with a slash(/)");
 
 		try {
-			WavFileConcatenator concat = new WavFileConcatenator(destinationFolder + f.getName());
-			concat.concatenate(f);						
+			WavFileConcatenator.concatenate(f);						
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

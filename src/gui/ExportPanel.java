@@ -11,7 +11,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -22,7 +21,6 @@ import utils.Writer;
 import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
-import backend.WavFileExporter;
 import client.Client;
 import flashcard.FlashCard;
 import flashcard.SimpleFactory;
@@ -36,10 +34,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	private JRadioButton rdbtnWav;
 	private JRadioButton rdbtnNetwork;
 	private JRadioButton rdbtnItunes;
-	private Exporter wavExporter;
 	private Exporter itunesExporter;
-	private JLabel lblGroupName;
-	private JTextField groupName;
 	private JPanel panel;
 	private JButton btnChangeDestination;
 	private Client _client;
@@ -49,13 +44,6 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	 */
 	public ExportPanel()  {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		try {
-			wavExporter = new WavFileExporter();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		JPanel chooseMethodPanel = new JPanel();
 		add(chooseMethodPanel);
@@ -97,7 +85,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 
 				if (rdbtnWav.isSelected()) {
 					try {
-						wavExporter.export(cards);
+						WavFileConcatenator.concatenate(cards);
 						JOptionPane.showMessageDialog(panel, "Audio has been created");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -108,7 +96,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 				else if (rdbtnItunes.isSelected()) {
 					try {
 						String playlist = JOptionPane.showInputDialog(panel, "Choose name of playlist");
-						if (playlist == null || playlist == "") {
+						if (playlist == null || playlist.equals("")) {
 							JOptionPane.showMessageDialog(panel, "Playlist not created because no name was selected");
 							return;
 						}
@@ -117,7 +105,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 						itunesExporter.export(cards);
 						JOptionPane.showMessageDialog(panel, "Playlist has been created! To use this playlist, open Itunes and click Import Playlist, and choose the file \'"
 								+ playlist + ".m3u\' in the directory this program is located in.");
-					} catch (IOException e) {
+					} catch (Throwable e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

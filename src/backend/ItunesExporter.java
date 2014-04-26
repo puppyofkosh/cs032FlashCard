@@ -23,13 +23,13 @@ public class ItunesExporter implements Exporter{
 	// Write CTOR that takes location of an itunes library file
 	// as well as the itunes music directory
 	
-	private WavFileConcatenator wavConcat;
+	//private WavFileConcatenator wavConcat;
 	private File playlist;
-	private String destination;
+//	private String destination;
 	
 	
 	public ItunesExporter(File playlist) throws IOException {
-		wavConcat = new WavFileConcatenator();
+	//	wavConcat = new WavFileConcatenator();
 		this.playlist = playlist;
 	}
 	 
@@ -48,10 +48,9 @@ public class ItunesExporter implements Exporter{
 			for (FlashCard card : f) {
 				if (playlist.exists())
 					writer.write("\n");
-				writer.write(wavConcat.concatenate(card).getAbsolutePath());
+				writer.write(WavFileConcatenator.concatenate(card).getAbsolutePath());
 			}
 		}
-		
 	}
 
 	@Override
