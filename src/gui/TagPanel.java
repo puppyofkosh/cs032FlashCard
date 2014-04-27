@@ -1,25 +1,27 @@
 package gui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+
+import controller.Controller;
+import flashcard.FlashCard;
 
 public class TagPanel extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField _inputField;
-	private JLabel emptyLabel = new JLabel("This card has no tags. Add some?", JLabel.CENTER);
+	private JLabel emptyLabel = new JLabel("This card has no tags. Add some?", JLabel.TRAILING);
 	List<TagLabel> _tags;
+	private FlashCard _card;
 
 	TagPanel() {
 		this(new LinkedList<String>());
@@ -35,6 +37,15 @@ public class TagPanel extends JPanel implements MouseListener {
 
 		initInputField();
 		update();
+	}
+
+	TagPanel(FlashCard card) {
+		super(new WrapLayout(WrapLayout.LEADING, 1, 1));
+		addMouseListener(this);
+		setOpaque(false);
+		_card = card;
+		for(String tag : _card.getTags())
+			addTag(tag);
 	}
 
 	private void initInputField() {
@@ -58,8 +69,16 @@ public class TagPanel extends JPanel implements MouseListener {
 	}
 
 	public void addTag(String tag) {
-		new TagLabel(tag, this).addMouseListener(this);
-		update();
+		if (!_tags.contains(tag)) {
+			try {
+				Controller.addTag(_card, tag);
+			} catch (IOException e) {
+				Controller.guiMessage("Could not add tag to card", true);
+				return;
+			}
+			new TagLabel(tag, this).addMouseListener(this);
+			update();
+		}
 	}
 
 	private void update() {
@@ -90,6 +109,11 @@ public class TagPanel extends JPanel implements MouseListener {
 	public void deleteTag(TagLabel tag) {
 		remove(tag);
 		_tags.remove(tag);
+		try {
+			Controller.removeTag(_card, tag.getText());
+		} catch (IOException e) {
+			Controller.guiMessage("Could not remove tag from card", true);
+		}
 		update();
 	}
 
@@ -109,7 +133,6 @@ public class TagPanel extends JPanel implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		_inputField.setVisible(true);
-		_inputField.requestFocusInWindow();
 		update();
 	}
 
