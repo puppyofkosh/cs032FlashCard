@@ -48,7 +48,7 @@ public class FlashboardPanel extends JPanel{
 		}
 		revalidate();
 		repaint();
-	}	
+	}
 	
 	public void updateCards(List<FlashCard> cards) {
 		cardPanels = new ArrayList<>();
