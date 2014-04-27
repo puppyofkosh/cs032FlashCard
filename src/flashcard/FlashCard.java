@@ -60,6 +60,7 @@ public interface FlashCard extends Serializable {
 	 * found.
 	 */
 	void addTag(String tag) throws IOException;
+	void removeTag(String tag) throws IOException;
 	
 	/**
 	 * Returns the interval for the current FlashCard. This information will be
@@ -89,5 +90,4 @@ public interface FlashCard extends Serializable {
 	AudioFile getQuestionAudio();
 	
 	AudioFile getAnswerAudio();
-
 }
