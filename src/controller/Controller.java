@@ -164,6 +164,20 @@ public class Controller {
 		//FIXME implement for real
 		return input.length() > 0;
 	}
+	
+	public static void addTag(FlashCard card, String tag) throws IOException {
+		if (card == null)
+			return;
+		else
+			card.addTag(tag);
+	}
+	
+	public static void removeTag(FlashCard card, String tag) throws IOException {
+		if (card == null)
+			return;
+		else
+			card.removeTag(tag);
+	}
 
 	public static TextToSpeechReader getReader() {
 		try {
@@ -172,5 +186,10 @@ public class Controller {
 			guiMessage("Could not load reader", true);
 			return null;
 		}
+	}
+
+	public static void deleteCard(FlashCard card) {
+		//FIXME implement for real
+		guiMessage("BANG you're dead", false);
 	}
 }
