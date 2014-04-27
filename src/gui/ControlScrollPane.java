@@ -8,12 +8,15 @@ import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
+/**
+ * <a href= "http://stackoverflow.com/questions/1377887/jtextpane-prevents-scrolling-in-the-parent-jscrollpane">
+ * FROM THE INTERNET</a><br><br>
+ * A JScrollPane that will bubble a mouse wheel scroll event to the parent 
+ * JScrollPane if one exists when this scrollpane either tops out or bottoms out.
+ * @author Nemi
+ */
 public class ControlScrollPane extends JScrollPane {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * A JScrollPane that will bubble a mouse wheel scroll event to the parent 
-	 * JScrollPane if one exists when this scrollpane either tops out or bottoms out.
-	 */
 	public ControlScrollPane() {
 		super();
 		addMouseWheelListener(new PDMouseWheelListener());
