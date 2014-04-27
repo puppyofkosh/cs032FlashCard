@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,8 +21,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import controller.Controller;
 import utils.Writer;
+import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
@@ -102,13 +101,11 @@ public class FlashCardPanel extends JPanel {
 
 	private void populateTags(Collection<String> tags) {
 		//TODO we probably shouldn't be handling this here.
-		boolean hasTag = false;
 		for(String tag : tags) {
 			if (tag.equalsIgnoreCase("null") || (tag.equals("")))
 				continue;
 			else {
 				_tagPanel.addTag(tag);
-				hasTag = true;
 			}
 		}
 	}
