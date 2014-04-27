@@ -18,7 +18,7 @@ import audio.MemoryAudioFile;
  * @author puppyofkosh
  *
  */
-public class LocallyStoredFlashCard implements FlashCard, Serializable{
+public class SerializableFlashCard implements FlashCard, Serializable{
 
 
 	
@@ -39,6 +39,11 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 		public AudioFile question, answer;
 		public int interval = 0;
 	
+		public Data()
+		{
+			
+		}
+		
 		public Data(FlashCard f)
 		{
 			name = f.getName();
@@ -131,9 +136,14 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 	
 	private Data data;
 	
-	public LocallyStoredFlashCard(Data data)
+	public SerializableFlashCard(Data data)
 	{
 		this.data = data;
+	}
+	
+	public SerializableFlashCard(FlashCard f)
+	{
+		this.data = new Data(f);
 	}
 	
 	
@@ -156,12 +166,10 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 	@Override
 	public void addTag(String tag) throws IOException {
 		data.tags.add(tag);
-		SimpleFactory.writeMetadata(this);
 	}
 	
 	public void removeTag(String tag) throws IOException {
 		data.tags.remove(tag);
-		SimpleFactory.writeMetadata(this);
 	}
 
 	@Override
@@ -173,7 +181,6 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 	public void setInterval(int interval) throws IOException {
 		data.interval = interval;
 		Writer.out("Changing interval");
-		SimpleFactory.writeMetadata(this);
 	}
 
 	@Override
@@ -196,12 +203,4 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 	{
 		return "Flashcard at " + data.pathToFile;
 	}
-
-
-	@Override
-	public void removeTag(String tag) throws IOException {
-		data.tags.remove(tag);
-		SimpleFactory.writeMetadata(this);
-	}
-
 }

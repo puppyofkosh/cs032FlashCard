@@ -16,8 +16,7 @@ import audio.WavFileConcatenator;
 import backend.FileImporter;
 import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.LocallyStoredFlashCard;
-import flashcard.SimpleFactory;
+import flashcard.SerializableFlashCard;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call
@@ -105,9 +104,9 @@ public class Controller {
 	 * Create a flashcard from the given data and save it to file
 	 * @param data
 	 */
-	public static FlashCard createCard(LocallyStoredFlashCard.Data data)
+	public static FlashCard createCard(SerializableFlashCard.Data data)
 	{
-		FlashCard card = new LocallyStoredFlashCard(data);
+		FlashCard card = new SerializableFlashCard(data);
 		card = DatabaseFactory.writeCard(card);
 		
 		return card;

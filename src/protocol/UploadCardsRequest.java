@@ -1,8 +1,11 @@
 package protocol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import flashcard.FlashCard;
+import flashcard.SerializableFlashCard;
+import flashcard.SerializableFlashCard.Data;
 
 public class UploadCardsRequest implements Request {
 	
@@ -10,10 +13,13 @@ public class UploadCardsRequest implements Request {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	List<FlashCard> _cards;
+	List<FlashCard> _cards = new ArrayList<>();
 	
 	public UploadCardsRequest(List<FlashCard> card) {
-		_cards = card;
+		for (FlashCard c : card)
+		{
+			_cards.add(new SerializableFlashCard(c));
+		}
 	}
 
 	@Override

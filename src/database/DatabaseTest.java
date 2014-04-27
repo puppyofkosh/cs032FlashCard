@@ -1,6 +1,6 @@
 package database;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,8 +11,7 @@ import org.junit.Test;
 import audio.DiscAudioFile;
 import audio.MemoryAudioFile;
 import flashcard.FlashCard;
-import flashcard.LocallyStoredFlashCard;
-import flashcard.SimpleFactory;
+import flashcard.SerializableFlashCard;
 
 public class DatabaseTest {
 
@@ -21,15 +20,16 @@ public class DatabaseTest {
 	public static final int questionLength = 30764;
 	public static final int answerLength = 200694;
 	
-	private LocallyStoredFlashCard testCard;
+	private SerializableFlashCard testCard;
 	
 	public DatabaseTest() throws ClassNotFoundException, SQLException, IOException
 	{
+		FlashCardDatabase.clear("data/", "testdb");
 		FlashCardDatabase.initialize("data/", "testdb");
 		db = new FlashCardDatabase("data/", "testdb");
 		
 		// Set up a test card
-		LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
 		data.question = new MemoryAudioFile(new DiscAudioFile("data/flashcard-test/hi-there.wav"));
 		data.answer = new MemoryAudioFile(new DiscAudioFile("data/flashcard-test/acronym.wav"));
 		data.tags = Arrays.asList("Tag A", "Tag B");
@@ -37,7 +37,7 @@ public class DatabaseTest {
 		data.pathToFile = "files/test-card/";
 		data.name = "test-card";
 		
-		testCard = new LocallyStoredFlashCard(data);
+		testCard = new SerializableFlashCard(data);
 	}
 	
 	/**

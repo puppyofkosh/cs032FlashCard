@@ -9,15 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import database.DatabaseFactory;
-
 import utils.TSVLineParser;
 import audio.AudioFile;
 import audio.MemoryAudioFile;
 import audio.TextToSpeechReader;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.LocallyStoredFlashCard;
-import flashcard.SimpleFactory;
+import flashcard.SerializableFlashCard;
 
 /**
  * Turn a file, with some known formatting into a list of flsahcards
@@ -67,7 +65,7 @@ public class FileImporter implements Importer{
 					answer = new MemoryAudioFile(answer.getRawBytes());
 
 					//FlashCard f = factory.create(entry.get("answer"), question, answer, 5, Arrays.asList("nags"), "set");
-					LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+					SerializableFlashCard.Data data = new SerializableFlashCard.Data();
 					data.answer = answer;
 					data.question = question;
 					
@@ -79,11 +77,10 @@ public class FileImporter implements Importer{
 					data.tags = Arrays.asList();
 					data.sets = "set";
 					
-					data.pathToFile = LocallyStoredFlashCard.makeFlashCardPath(data);
+					data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 					
 					// Save the card
-					FlashCard f = new LocallyStoredFlashCard(data);
-					SimpleFactory.writeCard(f);
+					FlashCard f = new SerializableFlashCard(data);
 					f = DatabaseFactory.writeCard(f);
 					
 					this.cards.add(f);

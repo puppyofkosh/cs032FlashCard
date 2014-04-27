@@ -7,9 +7,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import database.DatabaseFactory;
-
 import flashcard.FlashCard;
-import flashcard.SimpleFactory;
 
 public class FlashboardPanel extends JPanel{
 

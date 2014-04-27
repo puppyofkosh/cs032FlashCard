@@ -1,10 +1,6 @@
 package database;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,10 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.h2.tools.DeleteDbFiles;
-
 import backend.Resources;
-
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.FlashCardStub;
@@ -168,7 +161,7 @@ public class FlashCardDatabase implements Resources{
 
 		return tagIdCheck.getInt("ID");
 	}
-
+	
 	@Override
 	public List<FlashCard> getFlashCardsByName(String name) {
 		List<FlashCard> cards = new ArrayList<>();
@@ -231,6 +224,26 @@ public class FlashCardDatabase implements Resources{
 		statement.execute(query);
 	}
 
+	/**
+	 * Remove everything from a DB if it exists. If it does not exist it will be created in an uninitialized state
+	 * 
+	 * @param dir
+	 * @param db
+	 * @throws ClassNotFoundException 
+	 * @throws SQLException 
+	 */
+	public static void clear(String dir, String db) throws ClassNotFoundException, SQLException
+	{
+		Class.forName("org.h2.Driver");
+		
+		// Create a new one (just connect to it)
+		Connection conn = DriverManager.getConnection("jdbc:h2:" + dir + db);
+
+		Statement stat = conn.createStatement();
+		
+		stat.execute("DROP ALL OBJECTS");
+	}
+	
 	/**
 	 * Create a database at given location. Will initialize all of the tables
 	 * and stuff

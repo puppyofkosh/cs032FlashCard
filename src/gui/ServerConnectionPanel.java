@@ -17,8 +17,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import client.Client;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.SimpleFactory;
 
 @SuppressWarnings("serial")
 public class ServerConnectionPanel extends JPanel implements ClientFrontend, ActionListener {
@@ -136,7 +136,10 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 			}
 		} else if (e.getSource() == btnImportSelectedCards) {
 			for(FlashCard f : _cards.getSelectedCards())
-				SimpleFactory.writeCard(f);
+			{
+				System.out.println(f.getName());
+				DatabaseFactory.writeCard(f);
+			}
 		} else if (e.getSource() == searchField) {
 			if (_client != null) {
 				_client.requestCard(searchField.getText());

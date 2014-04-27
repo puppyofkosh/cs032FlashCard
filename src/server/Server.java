@@ -1,6 +1,5 @@
 package server;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,8 +9,8 @@ import java.util.Map;
 
 import utils.FlashcardConstants;
 import utils.Writer;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.SimpleFactory;
 
 /**
  * A chat server, listening for incoming connections and passing them
@@ -54,6 +53,14 @@ public class Server extends Thread {
 			_cardLibrary = new HashMap<>();
 		}
 		
+		for (FlashCard f : DatabaseFactory.getResources().getAllCards())
+		{
+			_cardLibrary.put(f.getName(), f);
+		}
+		
+		System.out.println(_cardLibrary);
+		
+		/*
 		String[] cardPaths = dir.list(new FilenameFilter() {
 			@Override
 			public boolean accept(File current, String name) {
@@ -65,6 +72,7 @@ public class Server extends Thread {
 			FlashCard card = SimpleFactory.readCard(FlashcardConstants.CARDS_FOLDER + cardPaths[i] + "/");
 			_cardLibrary.put(card.getName(), card);
 		}
+		*/
 	}
 
 	/**

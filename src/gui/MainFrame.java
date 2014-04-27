@@ -13,8 +13,6 @@ import javax.swing.border.EmptyBorder;
 
 import database.DatabaseFactory;
 
-import flashcard.SimpleFactory;
-
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;

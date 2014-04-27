@@ -18,8 +18,8 @@ import protocol.UploadCardsRequest;
 import protocol.UploadCardsResponse;
 import search.SearchParameters;
 import utils.Writer;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.SimpleFactory;
 /**
  * A thread for handling client connections to the server.
  * @author skortchm
@@ -116,9 +116,10 @@ public class ClientHandler extends Thread {
 			UploadCardsRequest ulR = (UploadCardsRequest) req;
 			for(FlashCard  card : ulR.getCardsForUpload()) {
 				Writer.out("Writing card - " + card.getName());
-				SimpleFactory.writeCard(card);
+						
+				card = DatabaseFactory.writeCard(card);
+				
 				Writer.out("Adding card to library " +  card.getName());
-
 				_serverCardLibrary.put(card.getName(), card);
 			}
 			Writer.out("Done");

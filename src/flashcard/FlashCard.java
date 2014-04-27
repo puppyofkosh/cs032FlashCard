@@ -16,7 +16,7 @@ import audio.AudioFile;
  * 
  * 
  */
-public interface FlashCard extends Serializable {
+public interface FlashCard {
 
 /*FlashCards will be created only after all the information in the constructors
  * below has been collected by our FlashCardFactory class - this way we avoid
@@ -62,10 +62,7 @@ public interface FlashCard extends Serializable {
 	 * found.
 	 */
 	void addTag(String tag) throws IOException;
-	void removeTag(String tag) throws IOException;
-	
-	void removeTag(String tag) throws IOException;
-	
+	void removeTag(String tag) throws IOException;	
 	/**
 	 * Returns the interval for the current FlashCard. This information will be
 	 * in the metaData file but also be loaded into the buffered FlashCards from
