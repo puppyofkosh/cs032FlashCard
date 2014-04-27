@@ -24,7 +24,7 @@ public class TagLabel extends JPanel implements MouseListener{
 	String _tagText;
 	
 	TagLabel(String s, TagPanel tagPanel) {
-		this(s, 15, 10, tagPanel);
+		this(s, 15, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel);
 	}
 	
 	TagLabel(String s, int size, int roundedness, TagPanel tagPanel) {
@@ -38,7 +38,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 		
 		ImageIcon current = new ImageIcon("./res/img/delete x.png");
-		Image img = current.getImage() ;  
+		Image img = current.getImage();
 		Image newimg = img.getScaledInstance(_size, _size,  java.awt.Image.SCALE_SMOOTH ) ;  
 		current = new ImageIcon(newimg);
 		_delete = new JLabel(current);
