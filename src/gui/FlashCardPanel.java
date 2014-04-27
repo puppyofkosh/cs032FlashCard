@@ -1,16 +1,20 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,36 +38,93 @@ import flashcard.FlashCardSet;
 
 public class FlashCardPanel extends JPanel {
 	private static final long serialVersionUID = 2666411116428918076L;
+	private FlashCard _card;
+
+	private JPanel _headerPanel;
 	JLabel _cardName;
+	private JLabel _delete;
+
+	private JPanel _interactionPanel;
 	ImageToggleButton _playAndStop;
 	JComboBox<Integer> _incrementInterval;
-	List<JLabel> _tags, _sets;
 	private JSpinner _spinner;
-	private FlashCard _card;
-	private JPanel _panel;
+
 	private TagPanel _tagPanel;
 
+	
+	/**
+	 * Constructs a FlashCardPanel from a given card.
+	 * @param card
+	 */
 	FlashCardPanel(FlashCard card) {
-		setPreferredSize(new Dimension(250, 200));
+		setPreferredSize(new Dimension(225, 200));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
 		setBorder(BorderFactory.createRaisedBevelBorder());
-
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
-		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(_cardName);
 
-		_panel = new JPanel();
-		_panel.setOpaque(false);
+		//The header will contain the given card's name and a delete button.
+		_headerPanel = new JPanel();
+		_headerPanel.setOpaque(false);
+
+		//Add the card's name to the header panel.
+		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
+		_headerPanel.add(_cardName);
+		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		//Initialize the delete card button.
+		ImageIcon current = new ImageIcon("./res/img/delete x.png");
+		Image img = current.getImage() ;  
+		Image newimg = img.getScaledInstance(GuiConstants.DEFAULT_BUTTON_SIZE, 
+				GuiConstants.DEFAULT_BUTTON_SIZE, java.awt.Image.SCALE_SMOOTH);  
+		current = new ImageIcon(newimg);
+		_delete = new JLabel(current);
+		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		//This mouse listener adds functionality to the X that appears next to.
+		//the Card's name.
+		_delete.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				_delete.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				_delete.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				Controller.deleteCard(_card);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				_delete.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {		
+				_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+			}
+		});
+
+		_headerPanel.add(_delete);
+		_headerPanel.setMaximumSize(_headerPanel.getPreferredSize());
+		add(_headerPanel);
+
+		//This panel displays the interval as well as a play button which plays
+		//the card as you might hear it after you export it, including the
+		//assigned interval between the question and answer.
+		_interactionPanel = new JPanel();
+		_interactionPanel.setOpaque(false);
 
 		JLabel lblInterval = new JLabel("Interval");
-		_panel.add(lblInterval);
+		_interactionPanel.add(lblInterval);
 		_spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
-		_panel.add(_spinner);
+		_interactionPanel.add(_spinner);
 		_playAndStop = ImageToggleButton.playStopButton();
-		_panel.add(_playAndStop);
+		_interactionPanel.add(_playAndStop);
 		_playAndStop.addActionListener(new PlayStopListener(_playAndStop));
 
 		((JSpinner.DefaultEditor) _spinner.getEditor()).getTextField().setColumns(2);
@@ -80,12 +141,18 @@ public class FlashCardPanel extends JPanel {
 				}
 			}
 		});
-		
-		_panel.setMaximumSize(_panel.getPreferredSize());
-		add(_panel);
 
+		_interactionPanel.setMaximumSize(_interactionPanel.getPreferredSize());
+		add(_interactionPanel);
+
+		//This panel maintains all information about the tags and displays them
+		//as bubbles in a scroll window. When you mouse over it, it will display
+		//a text field where you can add more tags.
 		_tagPanel = new TagPanel();
-		JScrollPane js = new JScrollPane(_tagPanel);
+		
+		//A ControlScrollPane allows us to responsively scroll through cards as
+		//well as tags.
+		JScrollPane js = new ControlScrollPane(_tagPanel);
 		js.setOpaque(false);
 		js.getViewport().setOpaque(false);
 		js.setBorder(BorderFactory.createEmptyBorder());
@@ -96,9 +163,17 @@ public class FlashCardPanel extends JPanel {
 		revalidate();
 	}
 
+	/**
+	 * As yet unimplemented
+	 * @param sets
+	 */
 	private void populateSets(Collection<FlashCardSet> sets) {
 	}
 
+	/**
+	 * Adds all the tags on the card to the panel's _tagPanel.
+	 * @param tags - the tags to be added.
+	 */
 	private void populateTags(Collection<String> tags) {
 		//TODO we probably shouldn't be handling this here.
 		for(String tag : tags) {
@@ -110,6 +185,11 @@ public class FlashCardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * A special action listener for play/pause buttons.
+	 * @author samkortchmar
+	 *
+	 */
 	private class PlayStopListener implements ActionListener {
 		boolean _play;
 		ImageToggleButton _button;
