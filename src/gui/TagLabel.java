@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class TagBox extends JPanel implements MouseListener{
+public class TagLabel extends JPanel implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	JLabel _tag, _delete;
@@ -23,11 +23,11 @@ public class TagBox extends JPanel implements MouseListener{
 	TagPanel _tagPanel;
 	String _tagText;
 	
-	TagBox(String s, TagPanel tagPanel) {
+	TagLabel(String s, TagPanel tagPanel) {
 		this(s, 15, 10, tagPanel);
 	}
 	
-	TagBox(String s, int size, int roundedness, TagPanel tagPanel) {
+	TagLabel(String s, int size, int roundedness, TagPanel tagPanel) {
 		super();
 		_tagText = s;
 		_size = size;
@@ -72,6 +72,13 @@ public class TagBox extends JPanel implements MouseListener{
 		graphics.fillRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height);//paint background
 		graphics.setColor(getForeground());
 		graphics.drawRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height);//paint border
+	}
+	
+	@Override
+	public void addMouseListener(MouseListener ml) {
+		_tag.addMouseListener(ml);
+		_delete.addMouseListener(ml);
+		_tagPanel.addMouseListener(ml);
 	}
 
 	@Override

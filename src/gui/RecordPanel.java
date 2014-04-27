@@ -28,7 +28,6 @@ public class RecordPanel extends GenericPanel implements ActionListener {
 	private AudioFile question;
 	private AudioFile answer;
 	private Recorder recorder;
-	private AudioPlayer player;
 	private TextToSpeechReader reader;
 	private boolean recording;
 	private ImageIcon recordImage = new ImageIcon("./res/img/Record Button.png");
@@ -178,13 +177,9 @@ public class RecordPanel extends GenericPanel implements ActionListener {
 		hasAnswer = false;
 		answer = null;
 		recording = false;
-		player = Controller.getPlayer();
-		reader = Controller.getReader();
-		enablePlayback(player != null);
-		enableTTS(reader != null);
+		enablePlayback(Controller.hasPlayer());
+		enableTTS(Controller.hasReader());
 	}
-
-
 
 	private void removeEmptySpace(JPanel panel) {
 		panel.setMaximumSize(panel.getPreferredSize());
@@ -212,14 +207,15 @@ public class RecordPanel extends GenericPanel implements ActionListener {
 	private void playToggle(boolean isQuestion, boolean play) {
 		try {
 			if (play)
-				player.play(isQuestion ? question : answer);
+				Controller.playAudio(isQuestion ? question : answer);
 			else
-				player.stop();
+				Controller.stopAudio();
 		} catch (IOException e1) {
 			if (isQuestion)
 				btnQuestionPlay.toggle();
 			else
 				btnAnswerPlay.toggle();
+			
 			Controller.guiMessage("ERROR: could not play audio", true);
 		}
 	}

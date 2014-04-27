@@ -20,20 +20,8 @@ public class Main {
 					JFrame frame = new JFrame();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					final TagPanel box = new TagPanel(Arrays.asList(new String[] {"Hat", "Cat", "Dog", "Wanderlust", "Sleep"}));
-					final JTextField test = new JTextField(20);
 					
-					final JPanel panel = new JPanel(new BorderLayout());
-					panel.add(test, BorderLayout.SOUTH);
-					panel.add(new JScrollPane(box), BorderLayout.NORTH);
-					frame.add(panel);
-
-					test.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-								box.addTag(test.getText());
-								test.setText("");
-							}
-						});
+					frame.add(box);
 					frame.pack();
 					frame.setVisible(true);
 				} catch (Exception e) {

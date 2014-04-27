@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class FlashboardPanel extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 	List<JPanel> cardPanels;
-	private static int NUM_COLS = 4;
+	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
 
 
@@ -54,8 +53,6 @@ public class FlashboardPanel extends JPanel{
 	public void updateCards(List<FlashCard> cards) {
 		cardPanels = new ArrayList<>();
 		for(FlashCard card : cards) {
-			if(card.getName().equalsIgnoreCase("Many tags"))
-				return;
 			JPanel cardPanel = new FlashCardPanel(card);
 			cardPanels.add(cardPanel);
 		}

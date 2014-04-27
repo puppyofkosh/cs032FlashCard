@@ -46,6 +46,10 @@ public class ImageToggleButton extends JButton implements ActionListener{
 		return new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
 				new ImageIcon("./res/img/Stop Button.png"), playText, stopText);
 	}
+	
+	public static ImageToggleButton playStopButton() {
+		return playStopButton("","");
+	}
 
 	public void setSize(int size) {
 		_size = size;
