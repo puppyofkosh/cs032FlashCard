@@ -39,6 +39,26 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 		public AudioFile question, answer;
 		public int interval = 0;
 	
+		public Data(FlashCard f)
+		{
+			name = f.getName();
+			// FIXME: Sets!
+			sets = ""; // f.getSets()
+			//sets = f.getSets();
+			try {
+				pathToFile = f.getPath();
+				tags = new ArrayList<>(f.getTags());
+				
+				question = f.getQuestionAudio();
+				answer = f.getAnswerAudio();
+				interval = f.getInterval();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
 		
 		/**
 		 * Override so that we convert question and answer to memory audio files
@@ -170,6 +190,13 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 	public String toString()
 	{
 		return "Flashcard at " + data.pathToFile;
+	}
+
+
+	@Override
+	public void removeTag(String tag) throws IOException {
+		data.tags.remove(tag);
+		SimpleFactory.writeMetadata(this);
 	}
 
 }

@@ -65,6 +65,12 @@ public class LocallyStoredResources implements Resources {
 	{
 		
 	}
+	
+	@Override
+	public List<FlashCard> getFlashCardsWithTag(String tag)
+	{
+		return null;
+	}
 		
 	public void load()
 	{
@@ -228,6 +234,15 @@ public class LocallyStoredResources implements Resources {
 		
 	public void addFlashCard(FlashCard f)
 	{
+		String cardPath = "";
+		try {
+			cardPath = f.getPath();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Couldn't add card");
+			return;
+		}
+		
 		for (String tag : f.getTags())
 		{
 			if (tag.equals(""))
@@ -236,7 +251,7 @@ public class LocallyStoredResources implements Resources {
 			List<String> taggedCards = data.tagMap.get(tag);
 			if (taggedCards == null)
 				taggedCards = new ArrayList<>();
-			taggedCards.add(f.getPath());
+			taggedCards.add(cardPath);
 			
 			// Not necessary unless taggedCards was null, just being super verbose
 			data.tagMap.put(tag, taggedCards);
@@ -247,10 +262,10 @@ public class LocallyStoredResources implements Resources {
 		{
 			cardsWithName = new ArrayList<>();
 		}	
-		cardsWithName.add(f.getPath());
+		cardsWithName.add(cardPath);
 		data.nameMap.put(f.getName(), cardsWithName);
 
-		data.flashCardFiles.add(f.getPath());
+		data.flashCardFiles.add(cardPath);
 	}
 	
 	@Override

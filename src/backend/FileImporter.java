@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import database.DatabaseFactory;
+
 import utils.TSVLineParser;
 import audio.AudioFile;
 import audio.MemoryAudioFile;
@@ -82,6 +84,7 @@ public class FileImporter implements Importer{
 					// Save the card
 					FlashCard f = new LocallyStoredFlashCard(data);
 					SimpleFactory.writeCard(f);
+					f = DatabaseFactory.writeCard(f);
 					
 					this.cards.add(f);
 				}

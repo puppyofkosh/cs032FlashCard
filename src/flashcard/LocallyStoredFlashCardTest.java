@@ -76,6 +76,8 @@ public class LocallyStoredFlashCardTest {
 		// Change something
 		card.addTag("Tag C");
 		card.setInterval(6);
+		card.addTag("Tag D");
+		card.removeTag("Tag D");
 		
 		// Check all other conditions (make sure the file wasn't corrupted)
 		assertTrue(card.getQuestionAudio().getRawBytes().length == questionLength);

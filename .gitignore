@@ -24,3 +24,6 @@ derived/*
 # Application files
 index/*
 files/*
+
+# Database files
+database/*

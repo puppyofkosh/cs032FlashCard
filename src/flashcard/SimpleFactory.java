@@ -30,44 +30,7 @@ import audio.WavFileConcatenator;
  *
  */
 public class SimpleFactory implements FlashCardFactory{	
-	/**
-	 * What it writes to disk. Just a hack using java serialization
-	 * @author puppyofkosh
-	 *
-	 */
-	public static class FlashCardData implements Serializable
-	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		
-		/**
-		 * FIXME: These public fields are unsafe
-		 */
-		public byte[] questionBytes;
-		public byte[] answerBytes;
-		public int interval;
-		public List<String> tags;
-		public List<String> setNames;
-		public String name;
-		
-		public FlashCardData(byte[] question, byte[] answer, int interval, List<String> tags, List<String> setNames, String name)
-		{
-			this.questionBytes = question;
-			this.answerBytes = answer;
-			this.tags = tags;
-			this.interval = interval;
-			this.setNames = setNames;
-			this.name = name;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return "Flashcard Data: question: " + questionBytes.length + " answer: " + answerBytes.length + " tags: " + tags;
-		}
-	}
+
 	
 	private static LocallyStoredResources resources = new LocallyStoredResources("resources.ian");
 	
@@ -90,24 +53,42 @@ public class SimpleFactory implements FlashCardFactory{
 	}
 	
 	public static void writeMetadata(FlashCard card) {
+		String path = "";
+		try {
+			path = card.getPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		
+		
 		try(FileWriter rewriter = new FileWriter(new File(card.getPath() + ".INFO.txt"), false)) {
 			String new_metadata = FlashcardConstants.METADATA_HEADER
 								  + "\n" + composeMetadata(card);	
 			rewriter.write(new_metadata);
 		} catch (IOException e) {
 			Writer.err("Could not change metadata on card", card.getName(), 
-					"located at", card.getPath());
+					"located at", path);
 			e.printStackTrace();
 		}
 	}
 	
 	public static void writeCard(FlashCard card) {
-		String path = card.getPath();
+		String path;
+		try {
+			path = card.getPath();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return;
+		}
 		if (path == null || path.isEmpty()) {
-			
+			System.out.println("Invalid path");
+			return;
 		}
 		// Create the directory for the card if it doesn't exist yet
-		File dir = new File(card.getPath());
+		File dir = new File(path);
 		if (!dir.exists())
 			dir.mkdir();
 		

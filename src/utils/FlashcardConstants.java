@@ -21,4 +21,10 @@ public class FlashcardConstants {
 	public static final int DEFAULT_PORT = 9888;
 	
 	public static final String[] DEFAULT_TABLE_COLUMNS = {"Name", "Interval", "Sets", "Tags"};
+	
+	public static final String QUESTION_FILE = "q.wav";
+	public static final String ANSWER_FILE = "a.wav";
+	
+	public static final String DB_DIR = "./database/";
+	public static final String DB_FILE = "carddb";
 }

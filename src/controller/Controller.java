@@ -2,7 +2,6 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +14,10 @@ import audio.FreeTTSReader;
 import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
 import backend.FileImporter;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
 import flashcard.LocallyStoredFlashCard;
 import flashcard.SimpleFactory;
-import gui.TagPanel;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call
@@ -102,8 +101,10 @@ public class Controller {
 	 */
 	public static FlashCard createCard(LocallyStoredFlashCard.Data data)
 	{
-		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
+		FlashCard card = new LocallyStoredFlashCard(data);
 		SimpleFactory.writeCard(card);
+		card = DatabaseFactory.writeCard(card);
+		
 		return card;
 	}
 

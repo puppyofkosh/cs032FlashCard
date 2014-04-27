@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import database.DatabaseFactory;
+
 import flashcard.SimpleFactory;
 
 public class MainFrame extends JFrame {
@@ -77,7 +79,7 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(importPanel, GuiConstants.IMPORT_PANEL_NAME);
 
 		exportPanel = new ExportPanel();
-		exportPanel.update(SimpleFactory.getResources().getAllCards());
+		exportPanel.update(DatabaseFactory.getResources().getAllCards());
 		mainPanelContainer.add(exportPanel, GuiConstants.EXPORT_PANEL_NAME);
 
 		createPanel = new CreatePanel();

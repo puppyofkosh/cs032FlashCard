@@ -146,6 +146,12 @@ public class FlashCardStub implements FlashCard, Serializable {
 		return null;
 	}
 
+	@Override
+	public void removeTag(String tag) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 

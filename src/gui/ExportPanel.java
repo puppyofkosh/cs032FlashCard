@@ -22,8 +22,8 @@ import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
 import client.Client;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.SimpleFactory;
 
 public class ExportPanel extends JPanel implements ClientFrontend {
 	/**
@@ -153,7 +153,7 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	}
 
 	public void update() {
-		_cardTable.updateCards(SimpleFactory.getResources().getAllCards());
+		_cardTable.updateCards(DatabaseFactory.getResources().getAllCards());
 	}
 
 	public void update(List<FlashCard> cards) {

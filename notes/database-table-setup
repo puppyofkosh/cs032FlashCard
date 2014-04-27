@@ -1,0 +1,34 @@
+# Create flashcard database
+
+CREATE TABLE flashcards (id INTEGER PRIMARY KEY AUTO_INCREMENT, file_path VARCHAR(255), name VARCHAR(255))
+
+# example insert
+INSERT INTO FLASHCARDS (FILE_PATH, NAME) VALUES ('hi', 'hello')
+
+#Create the tags table (contains a "description of a TAG-just its name)
+CREATE TABLE TAGS (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255))
+
+# Create tags instance table (connects a flashcard to a tag-so if flashcard n has tag m, there's an entry (n,m))
+CREATE TABLE FLASHCARDS_TAGS (flashcard_id INTEGER, tag_id INTEGER)
+
+
+
+# Create sets table
+CREATE TABLE SETS (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255))
+
+# Table between flashcards and sets (if flashcard x is in set y, there's an entry y,x)
+CREATE TABLE SETS_FLASHCARDS (set_id INTEGER, flashcard_id INTEGER)
+
+# Create global tags table
+CREATE TABLE GLOBAL_TAGS (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255))
+
+# Create map between sets and global tags
+CREATE TABLE SETS_GLOBAL_TAGS (set_id INTEGER, global_tag_id INTEGER)
+
+# Easy example searches:
+
+# Get all flashcards with a certain tag
+
+SELECT * FROM FLASHCARDS INNER JOIN 
+(SELECT FLASHCARD_ID FROM FLASHCARDS_TAGS WHERE TAG_ID = 1)
+ON FLASHCARDS.ID = FLASHCARD_ID
