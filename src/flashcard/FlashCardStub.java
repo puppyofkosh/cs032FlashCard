@@ -18,6 +18,11 @@ import utils.Writer;
 import audio.AudioFile;
 import audio.AudioFileStub;
 
+/**
+ * Deprecated, should not be used except for testing.
+ * @author samkortchmar
+ *
+ */
 public class FlashCardStub implements FlashCard, Serializable {
 
 	private static final long serialVersionUID = -5514013016523354268L;

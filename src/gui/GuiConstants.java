@@ -15,4 +15,7 @@ public class GuiConstants {
 	public static final Color BLACK = Color.BLACK;
 	public static final Color CARD_BACKGROUND = Color.CYAN;
 
+	//Some default settings for tag label.
+	public static final int DEFAULT_TAG_LABEL_ROUNDEDNESS = 10;
+	public static final int DEFAULT_BUTTON_SIZE = 15;
 }

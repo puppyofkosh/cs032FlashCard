@@ -30,15 +30,14 @@ import flashcard.SimpleFactory;
  */
 public class Controller {
 
-
-
+	private static AudioPlayer player;
+	private static TextToSpeechReader reader;
 
 	/**
 	 * Import a tsv or similar
 	 * @param filename
 	 */
-	public static void importCardsToLibrary(String filename)
-	{
+	public static void importCardsToLibrary(String filename) {
 		// FIXME: Not necessary to create a new reader every time
 		TextToSpeechReader ttsReader;
 		try {
@@ -59,11 +58,9 @@ public class Controller {
 	 * @param f
 	 * @param destination
 	 */
-	public static void exportCard(FlashCard f, String destinationFolder)
-	{
+	public static void exportCard(FlashCard f, String destinationFolder) {
 		if (!destinationFolder.endsWith("/"))
-			System.out.println("WARNING: destinationFolder should end with a slash(/)");
-
+			guiMessage("WARNING: destinationFolder should end with a slash(/)", true);
 		try {
 			WavFileConcatenator.concatenate(f);						
 		} catch (IOException e1) {
@@ -77,22 +74,31 @@ public class Controller {
 	 * Play a chunk of audio. This method should ensure that only one piece
 	 * of audio is playing at a time
 	 */
-	public static void playAudio(AudioFile file)
-	{	
+	public static void playAudio(AudioFile file) throws IOException {	
 		// FIXME: This is due to a bug in audioplayer (it is not re-usable)
 		// We want to store only 1 player, and use that all the time to
 		// make sure we dont play 2 things at once
-		ByteArrayAudioPlayer player = new ByteArrayAudioPlayer();
+		if (player == null)
+			player = new ByteArrayAudioPlayer();
 
 		if (player.isPlaying())
 			player.stop();
 
-		try {
-			player.play(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		player.play(file);
+	}
+
+	public static void stopAudio() {
+		player.stop();
+	}
+	
+	public static boolean hasPlayer() {
+		//FIXME: implement for real.
+		return true;
+	}
+	
+	public static boolean hasReader() {
+		//FIXME: implement for real.
+		return true;
 	}
 
 	/**
@@ -102,7 +108,6 @@ public class Controller {
 	public static FlashCard createCard(LocallyStoredFlashCard.Data data)
 	{
 		FlashCard card = new LocallyStoredFlashCard(data);
-		SimpleFactory.writeCard(card);
 		card = DatabaseFactory.writeCard(card);
 		
 		return card;
@@ -126,7 +131,7 @@ public class Controller {
 	public void requestAutocorrections(String text, int boxNo) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	public static void guiMessage(String text, int duration, boolean error) {
 		//FIXME - do for real
 		if (error)
@@ -134,15 +139,15 @@ public class Controller {
 		else
 			Writer.out(text);
 	}
-	
+
 	public static void guiMessage(String text, boolean error) {
 		guiMessage(text, 3, error);
 	}
-	
+
 	public static void guiMessage(String text, int duration) {
 		guiMessage(text, duration, false);
 	}
-	
+
 	public static void guiMessage(String text) {
 		guiMessage(text, 3);
 	}
@@ -152,21 +157,40 @@ public class Controller {
 		return text;
 	}
 
+	public static void playFlashCard(FlashCard card) throws IOException {
+		playAudio(card.getQuestionAudio());
+	}
+
 	public static boolean verifyInput(String input) {
 		//FIXME implement for real
 		return input.length() > 0;
 	}
-
-	public static AudioPlayer getPlayer() {
-		return new ByteArrayAudioPlayer();
+	
+	public static void addTag(FlashCard card, String tag) throws IOException {
+		if (card == null)
+			return;
+		else
+			card.addTag(tag);
 	}
 	
+	public static void removeTag(FlashCard card, String tag) throws IOException {
+		if (card == null)
+			return;
+		else
+			card.removeTag(tag);
+	}
+
 	public static TextToSpeechReader getReader() {
-		try{
+		try {
 			return new FreeTTSReader();
 		} catch (Throwable e) {
 			guiMessage("Could not load reader", true);
 			return null;
 		}
+	}
+
+	public static void deleteCard(FlashCard card) {
+		//FIXME implement for real
+		guiMessage("BANG you're dead", false);
 	}
 }

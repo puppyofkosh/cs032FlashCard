@@ -158,6 +158,11 @@ public class LocallyStoredFlashCard implements FlashCard, Serializable{
 		data.tags.add(tag);
 		SimpleFactory.writeMetadata(this);
 	}
+	
+	public void removeTag(String tag) throws IOException {
+		data.tags.remove(tag);
+		SimpleFactory.writeMetadata(this);
+	}
 
 	@Override
 	public int getInterval() {

@@ -62,6 +62,7 @@ public interface FlashCard extends Serializable {
 	 * found.
 	 */
 	void addTag(String tag) throws IOException;
+	void removeTag(String tag) throws IOException;
 	
 	void removeTag(String tag) throws IOException;
 	
@@ -93,5 +94,4 @@ public interface FlashCard extends Serializable {
 	AudioFile getQuestionAudio();
 	
 	AudioFile getAnswerAudio();
-
 }
