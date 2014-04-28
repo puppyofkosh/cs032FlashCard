@@ -5,3 +5,6 @@
 /database
 /flashcard
 /gui
+/protocol
+/server
+/utils

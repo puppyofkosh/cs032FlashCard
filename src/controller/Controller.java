@@ -17,6 +17,7 @@ import audio.WavFileConcatenator;
 import backend.FileImporter;
 import database.DatabaseFactory;
 import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 
 /**
@@ -200,6 +201,6 @@ public class Controller {
 
 	public static Collection<FlashCardSet> getAllSets() {
 		//FIXME implement for real
-		return SimpleFactory.getResources().getAllSets();
+		return DatabaseFactory.getResources().getAllSets();
 	}
 }
