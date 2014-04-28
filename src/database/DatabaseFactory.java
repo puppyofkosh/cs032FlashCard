@@ -3,7 +3,6 @@ package database;
 import java.io.File;
 import java.io.IOException;
 
-import backend.Resources;
 import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;
@@ -72,7 +71,7 @@ public class DatabaseFactory {
 		return db.writeCard(card);
 	}
 
-	public static Resources getResources() {
+	public static FlashCardDatabase getResources() {
 		return db;
 	}
 }
