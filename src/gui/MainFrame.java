@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import controller.Controller;
 import database.DatabaseFactory;
 
 public class MainFrame extends JFrame {
@@ -31,9 +32,7 @@ public class MainFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainFrame frame = new MainFrame();
-					frame.pack();
-					frame.setVisible(true);
+					Controller.launchGUI();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -93,6 +92,8 @@ public class MainFrame extends JFrame {
 
 		mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
 		contentPane.add(mainPanelContainer);
+		pack();
+		setVisible(true);
 	}
 
 	public void updateAll() {

@@ -334,7 +334,7 @@ public class FlashCardDatabase implements Resources {
 	private List<FlashCardSet> demoSets() {
 		List<FlashCard> cards = getAllCards();
 		Random r = new Random();
-		int numSets = r.nextInt(cards.size()) + 1;
+		int numSets = r.nextInt(cards.size() + 1);
 		List<FlashCardSet> sets = new ArrayList<>(numSets);
 		for(int i = 0; i < numSets; i++) {
 			sets.add(new SimpleSet("Set " + i));

@@ -23,7 +23,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener {
 	private JTextField setTextField, authorTextField;
 	private JButton btnContinue;
 	private TagPanel tags;
-
+	private SetBrowser setBrowser;
 	private CardCreationPanel recordPanel;
 
 
@@ -45,14 +45,16 @@ public class SetCreationPanel extends GenericPanel implements ActionListener {
 	 * Create the panel.
 	 */
 	public SetCreationPanel() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout(0, 0));
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
 		JLabel lblAssignSet = new JLabel("Assign Set", SwingConstants.CENTER);
 		lblAssignSet.setHorizontalAlignment(SwingConstants.CENTER);
-		add(lblAssignSet);
+		mainPanel.add(lblAssignSet);
 
 		JPanel headerPanel = new JPanel();
-		add(headerPanel);
+		mainPanel.add(headerPanel);
 
 		JLabel lblNewLabel = new JLabel("Set Name");
 		headerPanel.add(lblNewLabel);
@@ -69,7 +71,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener {
 		headerPanel.add(authorTextField);
 
 		JPanel tagPanel = new JPanel(new BorderLayout());
-		add(tagPanel);
+		mainPanel.add(tagPanel);
 
 		JLabel lblGlobalTags = new JLabel("Global Tags");
 		lblGlobalTags.setHorizontalAlignment(SwingConstants.CENTER);
@@ -81,9 +83,13 @@ public class SetCreationPanel extends GenericPanel implements ActionListener {
 		btnContinue = new JButton("CONTINUE");
 		btnContinue.setHorizontalAlignment(SwingConstants.RIGHT);
 		btnContinue.addActionListener(this);
-		add(btnContinue);
+		mainPanel.add(btnContinue);
 
 		recordPanel = new CardCreationPanel();
+		add(mainPanel, BorderLayout.CENTER);
+		
+		setBrowser = new SetBrowser();
+		add(setBrowser, BorderLayout.EAST);
 	}
 
 	@Override
