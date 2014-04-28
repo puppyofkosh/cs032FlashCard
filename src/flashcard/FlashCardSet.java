@@ -30,6 +30,14 @@ public interface FlashCardSet {
 	 */
 	void addTag(String tag) throws IOException;
 	
+	
+	
+	void addCard(FlashCard card);
+	
+	
+	
+	
+	
 	/**
 	 * Removes a "global" tag from the FlashCardSet. This method affects the
 	 * buffered FlashCardSet as well as its on-disk representation. It also 

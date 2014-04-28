@@ -2,6 +2,8 @@ package flashcard;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /***
  * Not completely implemented-just contains a name
@@ -11,15 +13,20 @@ import java.util.Collection;
 public class SimpleSet implements FlashCardSet{
 
 	private String name;
-	public SimpleSet(String name)
-	{
+	private Set<FlashCard> cards;
+	
+	public SimpleSet(String name) {
 		this.name = name;
+		cards = new HashSet<>();
+	}
+	
+	public void addCard(FlashCard card) {
+		cards.add(card);
 	}
 	
 	@Override
 	public Collection<FlashCard> getAll() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return cards;
 	}
 
 	@Override
