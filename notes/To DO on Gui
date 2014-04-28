@@ -5,7 +5,9 @@ Tooltips for everything
 Figure out card representaton for flashboard. Perhaps a table and single viewer at top?
 
 Fix sets window, add sidebar for create
+Fix recordPanel/create tags stuff
 
-fix stop button on flashcard panel
 
 text to speech from generate audio
+
+todo - autocorrections in gui from list of tags.
