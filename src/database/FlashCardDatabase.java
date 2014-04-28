@@ -9,11 +9,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import backend.Resources;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
-import flashcard.FlashCardStub;
+import flashcard.SimpleSet;
 
 public class FlashCardDatabase implements Resources {
 
@@ -76,25 +77,25 @@ public class FlashCardDatabase implements Resources {
 					+ f.getPath() + "'";
 			ResultSet rs = statement.executeQuery(query);
 
-			
+
 			if (!rs.next())
 			{
 				// card doesn't exist to begin with
 				return;
 			}
-			
+
 			int cardId = rs.getInt("ID");
-			
+
 			// 1) Remove its entry from FLASHCARDS
 			String deleteQuery = "DELETE FROM FLASHCARDS WHERE ID=" + cardId;
 			statement.execute(deleteQuery);
-			
+
 			// 2) Remove all entries from FLASHCARDS_TAGS table
 			deleteQuery = "DELETE FROM FLASHCARDS_TAGS WHERE FLASHCARD_ID=" + cardId;
 			statement.execute(deleteQuery);
 
 			// FIXME: Delete for sets!
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -326,8 +327,24 @@ public class FlashCardDatabase implements Resources {
 	@Override
 	public List<FlashCardSet> getAllSets() {
 		// TODO Auto-generated method stub
-		return Arrays.asList();
+		return demoSets();
 	}
+
+
+	private List<FlashCardSet> demoSets() {
+		List<FlashCard> cards = getAllCards();
+		Random r = new Random();
+		int numSets = r.nextInt(cards.size()) + 1;
+		List<FlashCardSet> sets = new ArrayList<>(numSets);
+		for(int i = 0; i < numSets; i++) {
+			sets.add(new SimpleSet("Set " + i));
+		}
+		for(FlashCard card : cards) {
+			sets.get(r.nextInt(numSets)).addCard(card);
+		}
+		return sets;
+	}
+
 
 	@Override
 	public List<FlashCard> getAllCards() {
