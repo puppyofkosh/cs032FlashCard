@@ -1,0 +1,3 @@
+run java -jar h2-1.3.176.jar (should be in the lib/ folder)
+Connect to whatever database (probable ../cards or whatever)
+Username/password should be both blank.

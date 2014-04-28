@@ -16,7 +16,7 @@ import audio.AudioFile;
  * 
  * 
  */
-public interface FlashCard extends Serializable {
+public interface FlashCard {
 
 /*FlashCards will be created only after all the information in the constructors
  * below has been collected by our FlashCardFactory class - this way we avoid
@@ -29,6 +29,8 @@ public interface FlashCard extends Serializable {
 	
 /*This constructor builds a FlashCard object form the filePath to the FlashCard on the filesystem.
 		/*FlashCard(String filePath)*/
+	
+	// FIXME: Should flashcards throw io exceptions for all of these methods? Seeing as they're stored on disk, I think yes.
 	
 	/**
 	 * Returns the name of the current FlashCard as a string.
@@ -60,8 +62,7 @@ public interface FlashCard extends Serializable {
 	 * found.
 	 */
 	void addTag(String tag) throws IOException;
-	void removeTag(String tag) throws IOException;
-	
+	void removeTag(String tag) throws IOException;	
 	/**
 	 * Returns the interval for the current FlashCard. This information will be
 	 * in the metaData file but also be loaded into the buffered FlashCards from
@@ -86,7 +87,7 @@ public interface FlashCard extends Serializable {
 	 * Returns the path this card is stored in (relative to the project folder)
 	 * @return
 	 */
-	String getPath();
+	String getPath() throws IOException;
 	AudioFile getQuestionAudio();
 	
 	AudioFile getAnswerAudio();

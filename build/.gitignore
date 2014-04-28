@@ -1,5 +1,7 @@
-/gui
-/controller
 /audio
 /backend
+/client
+/controller
+/database
 /flashcard
+/gui

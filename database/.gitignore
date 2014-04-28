@@ -1,0 +1,5 @@
+# Ignore all DB files
+*
+
+# Except the gitignore so the directory stays in the repo
+!.gitignore

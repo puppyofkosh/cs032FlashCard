@@ -19,7 +19,10 @@ import flashcard.FlashCardSet;
  */
 public interface Resources {
 	// Get names of flashcards with given tag-used by search function
+	// FIXME: Wtf do we use strings?
 	List<String> getFlashCardsByTag(String tag);
+	
+	List<FlashCard> getFlashCardsWithTag(String tag);
 	
 	/**
 	 * Used by search function

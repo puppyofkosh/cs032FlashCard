@@ -1,2 +1,0 @@
-NAME	INTERVAL	SETS	TAGS
-Farm Animals	4	null	[]	

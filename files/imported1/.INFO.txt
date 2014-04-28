@@ -1,2 +1,0 @@
-NAME	INTERVAL	SETS	TAGS
-imported1	5	null	[]	

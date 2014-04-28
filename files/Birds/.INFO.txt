@@ -1,2 +1,0 @@
-NAME	INTERVAL	SETS	TAGS
-Birds	0	null	[]	

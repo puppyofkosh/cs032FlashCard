@@ -15,10 +15,9 @@ import audio.FreeTTSReader;
 import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
 import backend.FileImporter;
+import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.FlashCardSet;
-import flashcard.LocallyStoredFlashCard;
-import flashcard.SimpleFactory;
+import flashcard.SerializableFlashCard;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call
@@ -106,9 +105,11 @@ public class Controller {
 	 * Create a flashcard from the given data and save it to file
 	 * @param data
 	 */
-	public static FlashCard createCard(LocallyStoredFlashCard.Data data) {
-		LocallyStoredFlashCard card = new LocallyStoredFlashCard(data);
-		SimpleFactory.writeCard(card);
+	public static FlashCard createCard(SerializableFlashCard.Data data)
+	{
+		FlashCard card = new SerializableFlashCard(data);
+		card = DatabaseFactory.writeCard(card);
+		
 		return card;
 	}
 
@@ -168,8 +169,11 @@ public class Controller {
 	public static void addTag(FlashCard card, String tag) throws IOException {
 		if (card == null)
 			return;
-		else
+		else {
 			card.addTag(tag);
+			System.out.println("Added tag");
+		}
+		
 	}
 	
 	public static void removeTag(FlashCard card, String tag) throws IOException {
@@ -191,6 +195,7 @@ public class Controller {
 	public static void deleteCard(FlashCard card) {
 		//FIXME implement for real
 		guiMessage("BANG you're dead", false);
+		DatabaseFactory.deleteCard(card);
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {

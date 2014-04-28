@@ -22,7 +22,7 @@ import audio.DiscRecorder;
 import audio.Recorder;
 import audio.TextToSpeechReader;
 import controller.Controller;
-import flashcard.LocallyStoredFlashCard;
+import flashcard.SerializableFlashCard;
 
 public class CardCreationPanel extends GenericPanel implements ActionListener {
 
@@ -287,7 +287,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 				return;
 			}
 
-			LocallyStoredFlashCard.Data data = new LocallyStoredFlashCard.Data();
+			SerializableFlashCard.Data data = new SerializableFlashCard.Data();
 			data.name = Controller.parseCardName(textFieldName.getText());
 
 			data.question = question;
@@ -302,7 +302,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			data.interval = (int) spinnerInterval.getValue();
 
 			data.tags = tagPanel.getTags();
-			data.pathToFile = LocallyStoredFlashCard.makeFlashCardPath(data);
+			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 			Controller.createCard(data);
 
