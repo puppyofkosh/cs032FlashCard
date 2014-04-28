@@ -15,7 +15,7 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.FlashCardStub;
 
-public class FlashCardDatabase implements Resources{
+public class FlashCardDatabase implements Resources {
 
 	private Connection connection;
 	protected Statement statement;
@@ -25,20 +25,18 @@ public class FlashCardDatabase implements Resources{
 		if (!dir.endsWith("/")) {
 			System.out.println("Directory should end with /");
 		}
-				
+
 		try {
-			
+
 			initialize(dir, db);
-			
+
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection("jdbc:h2:" + dir + db);
 			statement = connection.createStatement();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -70,9 +68,44 @@ public class FlashCardDatabase implements Resources{
 		}
 	}
 
+	public void deleteCard(FlashCard f) {
+
+		// Get the flashcard that has the same path as f
+		try {
+			String query = "SELECT ID FROM FLASHCARDS WHERE FILE_PATH='"
+					+ f.getPath() + "'";
+			ResultSet rs = statement.executeQuery(query);
+
+			
+			if (!rs.next())
+			{
+				// card doesn't exist to begin with
+				return;
+			}
+			
+			int cardId = rs.getInt("ID");
+			
+			// 1) Remove its entry from FLASHCARDS
+			String deleteQuery = "DELETE FROM FLASHCARDS WHERE ID=" + cardId;
+			statement.execute(deleteQuery);
+			
+			// 2) Remove all entries from FLASHCARDS_TAGS table
+			deleteQuery = "DELETE FROM FLASHCARDS_TAGS WHERE FLASHCARD_ID=" + cardId;
+			statement.execute(deleteQuery);
+
+			// FIXME: Delete for sets!
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/***
-	 * Write given flashcard to the database
-	 * -returns flashcard object linked to the database (meaning anything you do with it will change the database)
+	 * Write given flashcard to the database -returns flashcard object linked to
+	 * the database (meaning anything you do with it will change the database)
 	 * -returns null on failure to write to DB or read from given flashcard
 	 * 
 	 * @param flashcard
@@ -85,10 +118,11 @@ public class FlashCardDatabase implements Resources{
 					+ flashcard.getName() + "' AND file_path='"
 					+ flashcard.getPath() + "'";
 			ResultSet rs = statement.executeQuery(idQuery);
-					
-			if (rs.next())
-			{
-				System.out.println("WARNING: A card with that path " + flashcard.getPath() + " already exists. Writing a new duplicate entry!");
+
+			if (rs.next()) {
+				System.out.println("WARNING: A card with that path "
+						+ flashcard.getPath()
+						+ " already exists. Writing a new duplicate entry!");
 			}
 
 			// 2) Insert to flashcards table
@@ -96,32 +130,29 @@ public class FlashCardDatabase implements Resources{
 					+ flashcard.getName()
 					+ "', '"
 					+ flashcard.getPath()
-					+ "', "
-					+ flashcard.getInterval() + ")";
+					+ "', " + flashcard.getInterval() + ")";
 
 			statement.execute(query);
-			
+
 			// 3) Get the ID of whatever we just inserted
 			rs = statement.executeQuery(idQuery);
-			
-			
-			if (!rs.next())
-			{
+
+			if (!rs.next()) {
 				System.out.println("ERROR with database!");
 			}
 			int flashCardId = rs.getInt("ID");
 
-
-			// Now we need to add all of the tags and sets. To do this, create a DatabaseFlashCard object, which will let us just "add" tags to the card
+			// Now we need to add all of the tags and sets. To do this, create a
+			// DatabaseFlashCard object, which will let us just "add" tags to
+			// the card
 			DatabaseFlashCard dbCard = new DatabaseFlashCard(flashCardId, this);
-			
-			for (String tag : flashcard.getTags())
-			{
+
+			for (String tag : flashcard.getTags()) {
 				dbCard.addTag(tag);
 			}
-			
+
 			return dbCard;
-			
+
 			// TODO: Sets
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -130,7 +161,7 @@ public class FlashCardDatabase implements Resources{
 		}
 
 		return null;
-		
+
 	}
 
 	/**
@@ -161,22 +192,23 @@ public class FlashCardDatabase implements Resources{
 
 		return tagIdCheck.getInt("ID");
 	}
-	
+
+	/**
+	 * Get all of the flashcards with the given name
+	 */
 	@Override
 	public List<FlashCard> getFlashCardsByName(String name) {
 		List<FlashCard> cards = new ArrayList<>();
 
-		try
-		{
-			ResultSet rs = statement.executeQuery("SELECT ID FROM FLASHCARDS WHERE name='" + name + "'");
-			
-			while (rs.next())
-			{
+		try {
+			ResultSet rs = statement
+					.executeQuery("SELECT ID FROM FLASHCARDS WHERE name='"
+							+ name + "'");
+
+			while (rs.next()) {
 				cards.add(new DatabaseFlashCard(rs.getInt("ID"), this));
 			}
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return cards;
@@ -184,28 +216,24 @@ public class FlashCardDatabase implements Resources{
 
 	@Override
 	public List<FlashCard> getFlashCardsWithTag(String tag) {
-		
+
 		List<FlashCard> cards = new ArrayList<>();
-		try
-		{	
+		try {
 			Integer tagId = getTagId(tag);
-			
+
 			if (tagId == null)
 				return Arrays.asList();
-			
-			String query = "SELECT ID FROM FLASHCARDS INNER JOIN " +
-							"(SELECT FLASHCARD_ID FROM FLASHCARDS_TAGS WHERE TAG_ID = " + tagId + ")" +
-							"ON FLASHCARDS.ID = FLASHCARD_ID";
-			
+
+			String query = "SELECT ID FROM FLASHCARDS INNER JOIN "
+					+ "(SELECT FLASHCARD_ID FROM FLASHCARDS_TAGS WHERE TAG_ID = "
+					+ tagId + ")" + "ON FLASHCARDS.ID = FLASHCARD_ID";
+
 			ResultSet rs = statement.executeQuery(query);
-			
-			while (rs.next())
-			{
+
+			while (rs.next()) {
 				cards.add(new DatabaseFlashCard(rs.getInt("ID"), this));
 			}
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return cards;
@@ -225,25 +253,26 @@ public class FlashCardDatabase implements Resources{
 	}
 
 	/**
-	 * Remove everything from a DB if it exists. If it does not exist it will be created in an uninitialized state
+	 * Remove everything from a DB if it exists. If it does not exist it will be
+	 * created in an uninitialized state
 	 * 
 	 * @param dir
 	 * @param db
-	 * @throws ClassNotFoundException 
-	 * @throws SQLException 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
-	public static void clear(String dir, String db) throws ClassNotFoundException, SQLException
-	{
+	public static void clear(String dir, String db)
+			throws ClassNotFoundException, SQLException {
 		Class.forName("org.h2.Driver");
-		
+
 		// Create a new one (just connect to it)
 		Connection conn = DriverManager.getConnection("jdbc:h2:" + dir + db);
 
 		Statement stat = conn.createStatement();
-		
+
 		stat.execute("DROP ALL OBJECTS");
 	}
-	
+
 	/**
 	 * Create a database at given location. Will initialize all of the tables
 	 * and stuff
@@ -260,7 +289,7 @@ public class FlashCardDatabase implements Resources{
 		}
 
 		Class.forName("org.h2.Driver");
-		
+
 		// Create a new one (just connect to it)
 		Connection conn = DriverManager.getConnection("jdbc:h2:" + dir + db);
 
@@ -277,9 +306,8 @@ public class FlashCardDatabase implements Resources{
 		stat.close();
 		conn.close();
 	}
-	
-	public void close()
-	{
+
+	public void close() {
 		try {
 			statement.close();
 			connection.close();
@@ -287,54 +315,6 @@ public class FlashCardDatabase implements Resources{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public static void main(String[] args) throws SQLException,
-			ClassNotFoundException, IOException {
-
-		FlashCardDatabase db = new FlashCardDatabase("./", "carddb");
-		System.out.println(db.getAllTags());
-
-		DatabaseFlashCard card = new DatabaseFlashCard(2, db);
-		System.out.println(card.getTags());
-		card.addTag("math");
-
-		System.out.println(card.getInterval());
-		card.setInterval(3);
-		System.out.println(card.getInterval());
-
-		System.out.println(card.getPath());
-		System.out.println(card.getName());
-		
-		FlashCard localCard = new FlashCardStub("files/DaBest/");
-		
-		DatabaseFlashCard dbCard = db.writeCard(localCard);
-		dbCard.setInterval(2);
-		
-		
-		// db.addTagToCard(2, "tall people");
-		// db.addTagToCard(2, "a new tag");
-
-		/*
-		 * // Do stuff
-		 * 
-		 * // delete the database named 'test' in the user home directory
-		 * //DeleteDbFiles.execute("./", "test", true);
-		 * 
-		 * Class.forName("org.h2.Driver"); Connection conn =
-		 * DriverManager.getConnection("jdbc:h2:./carddb"); Statement stat =
-		 * conn.createStatement();
-		 * 
-		 * // this line would initialize the database // from the SQL script
-		 * file 'init.sql' // stat.execute("runscript from 'init.sql'");
-		 * 
-		 * //stat.execute("create table test(id int primary key, name varchar(255))"
-		 * ); //stat.execute("insert into test values(2, 'hello again')");
-		 * //stat.execute("insert into test values(1, 'Hello')"); ResultSet rs;
-		 * rs = stat.executeQuery("select * from FLASHCARDS"); while (rs.next())
-		 * { System.out.println(rs.getString("name")); } stat.close();
-		 * conn.close();
-		 */
 	}
 
 	@Override
@@ -352,17 +332,12 @@ public class FlashCardDatabase implements Resources{
 	@Override
 	public List<FlashCard> getAllCards() {
 		List<FlashCard> cards = new ArrayList<>();
-		try
-		{
+		try {
 			ResultSet rs = statement.executeQuery("SELECT ID FROM FLASHCARDS");
-			while (rs.next())
-			{
+			while (rs.next()) {
 				cards.add(new DatabaseFlashCard(rs.getInt("ID"), this));
 			}
-			System.out.println(cards.size());
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return cards;
