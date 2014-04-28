@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
 	private JPanel contentPane;
 	private ImportPanel importPanel;
 	private ExportPanel exportPanel;
-	private CreatePanel createPanel;
+	private SetCreationPanel createPanel;
 	private FlashboardPanel flashboardPanel;
 	private CardLayout mainPanelLayout;
 
@@ -80,7 +80,7 @@ public class MainFrame extends JFrame {
 		exportPanel.update(SimpleFactory.getResources().getAllCards());
 		mainPanelContainer.add(exportPanel, GuiConstants.EXPORT_PANEL_NAME);
 
-		createPanel = new CreatePanel();
+		createPanel = new SetCreationPanel();
 		createPanel.setControlledLayout(mainPanelLayout);
 		createPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(createPanel, GuiConstants.CREATE_PANEL_NAME);
