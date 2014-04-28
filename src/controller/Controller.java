@@ -2,9 +2,9 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import utils.Writer;
@@ -16,9 +16,9 @@ import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
 import backend.FileImporter;
 import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 import flashcard.LocallyStoredFlashCard;
 import flashcard.SimpleFactory;
-import gui.TagPanel;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call
@@ -191,5 +191,10 @@ public class Controller {
 	public static void deleteCard(FlashCard card) {
 		//FIXME implement for real
 		guiMessage("BANG you're dead", false);
+	}
+
+	public static Collection<FlashCardSet> getAllSets() {
+		//FIXME implement for real
+		return SimpleFactory.getResources().getAllSets();
 	}
 }
