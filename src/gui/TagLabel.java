@@ -33,7 +33,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		_size = size;
 		_roundedness = roundedness;
 		_tagPanel = tagPanel;
-		_tag = new JLabel(_tagText);
+		_tag = new JLabel(shortenText(_tagText));
 		_tag.setBorder(BorderFactory.createEmptyBorder(1, 1, 3, 1));
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 		
@@ -45,8 +45,8 @@ public class TagLabel extends JPanel implements MouseListener{
 		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		_delete.addMouseListener(this);
 		
-		add(_tag);
 		add(_delete);
+		add(_tag);
 		setBackground(Color.GREEN);
 		setOpaque(false);
 		
@@ -56,6 +56,14 @@ public class TagLabel extends JPanel implements MouseListener{
 	
 	public String getText() {
 		return _tagText;
+	}
+	
+	private String shortenText(String text) {
+		if (text.length() > GuiConstants.MAX_TAG_LENGTH) {
+			return text.substring(0, GuiConstants.MAX_TAG_LENGTH) + "...";
+		} else {
+			return text;
+		}
 	}
 
 	@Override
