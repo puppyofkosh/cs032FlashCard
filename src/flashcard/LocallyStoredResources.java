@@ -2,20 +2,18 @@ package flashcard;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import backend.Resources;
 
@@ -284,7 +282,21 @@ public class LocallyStoredResources implements Resources {
 	@Override
 	public List<FlashCardSet> getAllSets() {
 		// TODO Auto-generated method stub
-		return null;
+		return demoSets();
+	}
+	
+	private List<FlashCardSet> demoSets() {
+		List<FlashCard> cards = getAllCards();
+		Random r = new Random();
+		int numSets = r.nextInt(cards.size()) + 1;
+		List<FlashCardSet> sets = new ArrayList<>(numSets);
+		for(int i = 0; i < numSets; i++) {
+			sets.add(new SimpleSet("Set " + i));
+		}
+		for(FlashCard card : cards) {
+			sets.get(r.nextInt(numSets)).addCard(card);
+		}
+		return sets;
 	}
 
 	@Override
