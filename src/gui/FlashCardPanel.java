@@ -29,6 +29,7 @@ import utils.Writer;
 import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import java.awt.BorderLayout;
 
 /**
  * This class is used by the GUI to represent flashCards, as
@@ -67,10 +68,11 @@ public class FlashCardPanel extends JPanel {
 		//The header will contain the given card's name and a delete button.
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
+		_headerPanel.setLayout(new BorderLayout(0, 0));
 
 		//Add the card's name to the header panel.
 		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
-		_headerPanel.add(_cardName);
+		_headerPanel.add(_cardName, BorderLayout.CENTER);
 		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		//Initialize the delete card button.
@@ -80,6 +82,7 @@ public class FlashCardPanel extends JPanel {
 				GuiConstants.DEFAULT_BUTTON_SIZE, java.awt.Image.SCALE_SMOOTH);  
 		current = new ImageIcon(newimg);
 		_delete = new JLabel(current);
+		_delete.setHorizontalAlignment(SwingConstants.TRAILING);
 		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		//This mouse listener adds functionality to the X that appears next to.
 		//the Card's name.
@@ -109,7 +112,7 @@ public class FlashCardPanel extends JPanel {
 			}
 		});
 
-		_headerPanel.add(_delete);
+		_headerPanel.add(_delete, BorderLayout.EAST);
 		_headerPanel.setMaximumSize(_headerPanel.getPreferredSize());
 		add(_headerPanel);
 
