@@ -19,6 +19,10 @@ public interface FlashCardSet {
 	 */
 	Collection<FlashCard> getAll() throws IOException;
 	
+	/**
+	 * Add a card to the set
+	 */
+	public void addCard(FlashCard f) throws IOException;
 	
 	/**
 	 * Adds a "global" tag to the FlashCardSet - i.e. a tag that applies for
@@ -30,10 +34,7 @@ public interface FlashCardSet {
 	 */
 	void addTag(String tag) throws IOException;
 	
-	
-	
-	void addCard(FlashCard card);
-	
+		
 	
 	String getAuthor();
 	

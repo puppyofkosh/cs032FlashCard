@@ -30,6 +30,11 @@ public class DatabaseFlashCard implements FlashCard {
 		this.database = db;
 	}
 
+	public int getId()
+	{
+		return id;
+	}
+	
 	@Override
 	public String getName() {
 		try {
@@ -49,8 +54,20 @@ public class DatabaseFlashCard implements FlashCard {
 
 	@Override
 	public Collection<FlashCardSet> getSets() {
-		// TODO Auto-generated method stub
-		return null;
+		List<FlashCardSet> sets = new ArrayList<>();
+		try {
+			String query = "SELECT SET_ID FROM SETS_FLASHCARDS WHERE FLASHCARD_ID=" + id;
+			ResultSet rs = database.getStatement().executeQuery(query);
+			
+			while (rs.next())
+			{
+				sets.add(new DatabaseSet(rs.getInt("SET_ID"), database));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sets;
 	}
 
 	/**
@@ -94,8 +111,7 @@ public class DatabaseFlashCard implements FlashCard {
 			// If result set is empty (tag does not yet exist in TAGS table)
 			if (tagId == null) {
 				// make a tag with the given name
-				database.getStatement().execute(
-						"INSERT INTO TAGS (NAME) VALUES ('" + tag + "')");
+				database.makeTag(tag);
 
 				// re-perform the query to get the ID (Would use SCOPE_IDENTITY,
 				// but unsure of support for it)

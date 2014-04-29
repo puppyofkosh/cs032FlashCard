@@ -3,6 +3,7 @@ package flashcard;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		public String name = "", sets = "", pathToFile = "";
+		public String name = "", pathToFile = "";
 		public String questionText = "", answerText = "";
 		public List<String> tags = new ArrayList<>();
 		public AudioFile question, answer;
@@ -43,12 +44,24 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 			
 		}
 		
+		public Data(Data d)
+		{
+			name = d.name;
+			pathToFile = d.pathToFile;
+			questionText = d.questionText;
+			answerText = d.answerText;
+			
+			tags = new ArrayList<>(d.tags);
+			question = d.question;
+			answer = d.answer;
+			
+			interval = d.interval;
+		}
+		
 		public Data(FlashCard f)
 		{
 			name = f.getName();
 			// FIXME: Sets!
-			sets = ""; // f.getSets()
-			//sets = f.getSets();
 			try {
 				pathToFile = f.getPath();
 				tags = new ArrayList<>(f.getTags());
@@ -74,7 +87,6 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 		private void writeObject(java.io.ObjectOutputStream stream)
 	            throws IOException {
 			stream.writeObject(name);
-			stream.writeObject(sets);
 			stream.writeObject(pathToFile);
 			stream.writeObject(questionText);
 			stream.writeObject(answerText);
@@ -97,7 +109,6 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	    private void readObject(java.io.ObjectInputStream stream)
 	            throws IOException, ClassNotFoundException {
 	    	name = (String)stream.readObject();
-			sets = (String)stream.readObject();
 			pathToFile = (String)stream.readObject();
 			questionText = (String)stream.readObject();
 			answerText = (String)stream.readObject();
@@ -137,7 +148,7 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	
 	public SerializableFlashCard(Data data)
 	{
-		this.data = data;
+		this.data = new Data(data);
 	}
 	
 	public SerializableFlashCard(FlashCard f)
@@ -154,7 +165,7 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	// FIXME: Implement
 	@Override
 	public Collection<FlashCardSet> getSets() {
-		return null;
+		return Arrays.asList();
 	}
 
 	@Override
