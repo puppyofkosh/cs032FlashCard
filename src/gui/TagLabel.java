@@ -47,7 +47,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		
 		add(_delete);
 		add(_tag);
-		setBackground(Color.GREEN);
+		setBackground(Color.YELLOW);
 		setOpaque(false);
 		
 		_tagPanel._tags.add(this);
