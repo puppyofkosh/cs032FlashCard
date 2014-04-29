@@ -1,10 +1,6 @@
 package database;
 
-import java.io.File;
-import java.io.IOException;
-
 import utils.FlashcardConstants;
-import utils.Writer;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 

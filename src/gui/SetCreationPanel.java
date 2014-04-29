@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -27,6 +28,8 @@ import javax.swing.SwingConstants;
 
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
+
+import controller.Controller;
 
 public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener {
 
@@ -149,7 +152,26 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		} else if (e.getSource() == authorTextField) {
 
 		} else if (e.getSource() == btnContinue) {
-			controlledLayout.show(controlledPanel, "record panel");
+			try {
+				spinnerInterval.commitEdit();
+			} catch (ParseException e1) {
+				Controller.guiMessage("Could not parse new spinner value", true);
+			}
+			int interval = (int) spinnerInterval.getValue();
+			String nameInput = setNameField.getText();
+			if (!Controller.verifyInput(nameInput))
+				nameInput = Controller.parseCardName(nameInput);
+					
+			FlashCardSet currentSet = Controller.createSet(nameInput, authorTextField.getText(), tags.getTags(), interval);
+			recordPanel.assignWorkingSet(currentSet);
+			
+			if (recordPanel.hasWorkingSet())
+				controlledLayout.show(controlledPanel, "record panel");
+			else {
+				Controller.guiMessage("Must create a set or choose an existing one", true);
+				return;
+			}
+				
 		}
 	}
 

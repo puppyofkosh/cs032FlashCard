@@ -112,10 +112,11 @@ public class Controller {
 	 * Create a flashcard from the given data and save it to file
 	 * @param data
 	 */
-	public static void createCard(SerializableFlashCard.Data data) {
+	public static FlashCard createCard(SerializableFlashCard.Data data) {
 		FlashCard card = new SerializableFlashCard(data);
 		DatabaseFactory.writeCard(card);
 		gui.updateAll();
+		return card;
 	}
 
 	/***

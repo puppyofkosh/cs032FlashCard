@@ -1,8 +1,5 @@
 package gui;
 
-import flashcard.SerializableFlashCard;
-import gui.IconFactory.IconType;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -25,6 +22,9 @@ import javax.swing.SwingConstants;
 
 import audio.AudioFile;
 import controller.Controller;
+import flashcard.FlashCardSet;
+import flashcard.SerializableFlashCard;
+import gui.IconFactory.IconType;
 
 public class CardCreationPanel extends GenericPanel implements ActionListener {
 
@@ -38,6 +38,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	private String playText = "Play";
 	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
 	private String stopText = "Stop";
+	private FlashCardSet workingSet;
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
@@ -314,12 +315,26 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			data.tags = tagPanel.getTags();
 			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
-			Controller.createCard(data);
+			try {
+				workingSet.addCard(Controller.createCard(data));
+			} catch (IOException e1) {
+				Controller.guiMessage("Could not write card into set", true);
+				e1.printStackTrace();
+			}
 
 			clear();
 			// Move user to the next pane
 			controlledLayout.show(controlledPanel, "create panel");
 
 		}
+	}
+	
+	public boolean hasWorkingSet() {
+		return workingSet != null;
+	}
+
+	public void assignWorkingSet(FlashCardSet currentSet) {
+		workingSet = currentSet;
+		//IF WE ADD A SETBROWSER HERE, SELECT IT.
 	}
 }

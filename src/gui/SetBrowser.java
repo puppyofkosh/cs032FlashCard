@@ -100,7 +100,6 @@ public class SetBrowser extends JPanel  {
 			}
 		});
 
-
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
 		revalidate();
