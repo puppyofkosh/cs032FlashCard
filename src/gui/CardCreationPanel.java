@@ -1,7 +1,11 @@
 package gui;
 
+import flashcard.SerializableFlashCard;
+import gui.IconFactory.IconType;
+
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,10 +20,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 import audio.AudioFile;
 import controller.Controller;
-import flashcard.SerializableFlashCard;
 
 public class CardCreationPanel extends GenericPanel implements ActionListener {
 
@@ -69,12 +74,17 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	}
 
 	private void initPanelComponents() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout(0,0));
 		setBackground(GuiConstants.CARD_BACKGROUND);
+
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setOpaque(false);
+		add(mainPanel, BorderLayout.CENTER);
 
 		//A row for creating the name of the card.
 		namePanel = new JPanel();
-		add(namePanel);
+		mainPanel.add(namePanel);
 		JLabel lblName = new JLabel("Name");
 		namePanel.add(lblName);
 
@@ -88,7 +98,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 
 		qPanel = new JPanel();
-		add(qPanel);
+		mainPanel.add(qPanel);
 
 		JLabel lblQuestion = new JLabel("Q:");
 
@@ -110,19 +120,19 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		removeEmptySpace(qPanel);
 
 		intervalPanel = new JPanel();
-		add(intervalPanel);
+		mainPanel.add(intervalPanel);
 
 		lblInterval = new JLabel("Interval:");
 		intervalPanel.add(lblInterval);
 
-		spinnerInterval = new JSpinner();
+		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
 		intervalPanel.add(spinnerInterval);
 
 		intervalPanel.setOpaque(false);
 		removeEmptySpace(intervalPanel);
 
 		aPanel = new JPanel();
-		add(aPanel);
+		mainPanel.add(aPanel);
 
 		JLabel lblAnswer = new JLabel("A:");
 		aPanel.add(lblAnswer);
@@ -144,22 +154,29 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		removeEmptySpace(aPanel);
 
 		//This panel has an input field and a space for tags to be added.
-		panel_1 = new JPanel(new BorderLayout());
-		add(panel_1);
-		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
-		panel_1.setOpaque(false);
 		tagPanel = new TagPanel();
 		tagPanel.setEmptyText("Add Tags:");
 		JScrollPane scroller = new JScrollPane(tagPanel);
 		scroller.setBorder(BorderFactory.createEmptyBorder());
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
-		panel_1.add(scroller, BorderLayout.CENTER);
-		panel_1.setMaximumSize(new Dimension(aPanel.getPreferredSize().width, 1000));
+		mainPanel.add(scroller);
 
-		btnFlash = new JButton("Flash!");
-		add(btnFlash);
+
+		JPanel flashPanel= new JPanel(new BorderLayout(0, 0));
+		flashPanel.setOpaque(true);
+		flashPanel.setBackground(Color.BLACK);
+
+		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 36));
+		btnFlash.setOpaque(false);
+		btnFlash.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+		btnFlash.setHorizontalAlignment(SwingConstants.CENTER);
 		btnFlash.addActionListener(this);
+		btnFlash.setBorder(BorderFactory.createEmptyBorder());
+		btnFlash.addActionListener(this);
+		flashPanel.add(btnFlash);
+		flashPanel.setMaximumSize(flashPanel.getPreferredSize());
+		add(flashPanel, BorderLayout.SOUTH);
 	}
 
 	private void initFunctionality() {
