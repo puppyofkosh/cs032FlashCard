@@ -140,38 +140,93 @@ public class DatabaseSet implements FlashCardSet{
 	@Override
 	public int getInterval()
 	{
-		// FIXME: Implement
-		return 9;
+		try (Statement statement = database.getStatement()){
+			String query = "SELECT INTERVAL FROM SETS WHERE ID=" + id;
+			ResultSet rs = statement.executeQuery(query);
+			
+			if (!rs.next())
+			{
+				System.out.println("BAD SET ID "+  id);
+			}
+			
+			return rs.getInt("INTERVAL");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	@Override
 	public String getAuthor()
 	{
-		return "ian";
+		try (Statement statement = database.getStatement()){
+			String query = "SELECT AUTHOR FROM SETS WHERE ID=" + id;
+			ResultSet rs = statement.executeQuery(query);
+			
+			if (!rs.next())
+			{
+				System.out.println("BAD SET ID "+  id);
+			}
+			
+			return rs.getString("AUTHOR");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	@Override
 	public void addAuthor() {
 		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("What is this method supposed to do?");
 	}
 
 	@Override
 	public void setTags(List<String> tags) throws IOException {
-		// TODO Auto-generated method stub
+		try (Statement statement = database.getStatement()){
+			
+			// Remove all current tags
+			String deleteQuery = "DELETE FROM SETS_TAGS WHERE SET_ID=" + id;
+			statement.execute(deleteQuery);	
+			
+			// Add the new tags
+			for (String tag : tags)
+				addTag(tag);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void setAuthor(String author) {
-		// TODO Auto-generated method stub
-		
+		try (Statement statement = database.getStatement()){
+			String query = "UPDATE SETS\n" +
+							"SET AUTHOR='" + author + "'\n" +
+							"WHERE ID=" + id;
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void setInterval(int interval) {
-		// TODO Auto-generated method stub
-		
+		try (Statement statement = database.getStatement()){
+			String query = "UPDATE SETS\n" +
+							"SET INTERVAL=" + interval + "\n" +
+							"WHERE ID=" + id;
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 }

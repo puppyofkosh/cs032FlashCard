@@ -47,6 +47,11 @@ public class FlashCardDatabase implements Resources {
 		conn.close();
 	}
 
+	/***
+	 * Remove a cards files from disk (that is the q and a files as well as the folder containing them.)
+	 * @param card
+	 * @throws IOException
+	 */
 	private static void deleteCardFromDisk(FlashCard card) throws IOException {
 		String path = card.getPath();
 
@@ -90,7 +95,7 @@ public class FlashCardDatabase implements Resources {
 		// entry (X, Y) will appear in this table
 		stat.execute("CREATE TABLE IF NOT EXISTS FLASHCARDS_TAGS (flashcard_id INTEGER, tag_id INTEGER)");
 
-		stat.execute("CREATE TABLE IF NOT EXISTS SETS (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), interval INTEGER)");
+		stat.execute("CREATE TABLE IF NOT EXISTS SETS (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), interval INTEGER, author VARCHAR(255))");
 		// Keep track of which sets have which cards. If set X contains card Y,
 		// the entry (X, Y) will appear
 		stat.execute("CREATE TABLE IF NOT EXISTS SETS_FLASHCARDS (set_id INTEGER, flashcard_id INTEGER)");
@@ -666,8 +671,8 @@ public class FlashCardDatabase implements Resources {
 			String idQuery = "SELECT ID FROM SETS WHERE name='" + name + "'";
 
 			// 2) Insert to sets table
-			String query = "INSERT INTO SETS (name) VALUES ('" + name + "', "
-					+ ")";
+			String query = "INSERT INTO SETS (name, interval, author) VALUES ('" + name + "', "
+					+ s.getInterval() + ", '" + s.getAuthor() + "'" + ")";
 
 			statement.execute(query);
 
