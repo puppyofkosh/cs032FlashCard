@@ -5,8 +5,11 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
+
+import utils.FlashcardConstants;
 
 import audio.DiscAudioFile;
 import audio.MemoryAudioFile;
@@ -23,6 +26,7 @@ public class DatabaseTest {
 	public static final int answerLength = 200694;
 
 	private SerializableFlashCard testCard;
+	private SerializableFlashCard.Data testData;
 
 	public DatabaseTest() throws ClassNotFoundException, SQLException,
 			IOException {
@@ -31,17 +35,17 @@ public class DatabaseTest {
 		db = new FlashCardDatabase("data/", "testdb");
 
 		// Set up a test card
-		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-		data.question = new MemoryAudioFile(new DiscAudioFile(
+		testData = new SerializableFlashCard.Data();
+		testData.question = new MemoryAudioFile(new DiscAudioFile(
 				"data/flashcard-test/hi-there.wav"));
-		data.answer = new MemoryAudioFile(new DiscAudioFile(
+		testData.answer = new MemoryAudioFile(new DiscAudioFile(
 				"data/flashcard-test/acronym.wav"));
-		data.tags = Arrays.asList("Tag A", "Tag B");
-		data.interval = 5;
-		data.pathToFile = "files/test-card/";
-		data.name = "test-card";
+		testData.tags = Arrays.asList("Tag A", "Tag B");
+		testData.interval = 5;
+		testData.pathToFile = "files/test-card/";
+		testData.name = "test-card";
 
-		testCard = new SerializableFlashCard(data);
+		testCard = new SerializableFlashCard(testData);
 	}
 
 	/**
@@ -80,6 +84,40 @@ public class DatabaseTest {
 
 		// PUT THIS AT THE END OF EVERY TEST
 		db.close();
+	}
+	
+	/**
+	 * Test having one card in 2 sets
+	 * @throws IOException 
+	 */
+	@Test
+	public void testMultipleContainment() throws IOException
+	{
+		FlashCardSet set = new SimpleSet("presidents");		
+		
+		// Now, if we change set the changes will go in the DB
+		
+		// Try adding a card for example
+		testData.pathToFile = "files/abraham/";
+		testData.name = "abroham";
+		FlashCard abrahamCard = new SerializableFlashCard(testData);
+		set.addCard(abrahamCard);
+		
+		// Write the set we just described up there and replace our reference to it with a set that will reflect what's in the database
+		set = db.writeSet(set);
+		
+		// Now add the same abraham card to a different set
+		set = new SimpleSet("state capitals");
+		set.addCard(abrahamCard);
+		db.writeSet(set);
+		
+		// Make sure the abraham card has 2 sets according to the database
+		List<FlashCard> abrohamCards = db.getFlashCardsByName("abroham");
+		assertTrue(abrohamCards.size() == 1);
+		FlashCard dbCard = abrohamCards.get(0);
+		
+		assertTrue(dbCard.getSets().size() == 2);
+		
 	}
 	
 	@Test

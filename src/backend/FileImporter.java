@@ -75,7 +75,6 @@ public class FileImporter implements Importer{
 					// FIXME: These options should be set beforehand for the FileImporter, and applied to all the flashcards
 					data.interval = 5;
 					data.tags = Arrays.asList();
-					data.sets = "set";
 					
 					data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 					

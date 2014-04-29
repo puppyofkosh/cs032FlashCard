@@ -10,12 +10,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import utils.FlashcardConstants;
 import utils.Writer;
 import backend.Resources;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import flashcard.SerializableFlashCard;
+import flashcard.SimpleSet;
+
+import audio.MemoryAudioFile;
+import audio.DiscAudioFile;
 
 public class FlashCardDatabase implements Resources {
 
@@ -95,6 +101,59 @@ public class FlashCardDatabase implements Resources {
 		conn.close();
 	}
 
+	/***
+	 * Currently called by bin/populateDatabase. Just a temporary method to add a few sets to the DB.
+	 * @param args
+	 * @throws IOException
+	 */
+	public static void main(String[] args) throws IOException
+	{
+		FlashCardSet set = new SimpleSet("presidents");
+		
+		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
+		data.question = new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/hi-there.wav"));
+		data.answer = new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/acronym.wav"));
+		data.tags = Arrays.asList("Tag A", "Weird people");
+		data.interval = 5;
+		data.pathToFile = "files/george-washington/";
+		data.name = "george washington";
+		
+		set.addCard(new SerializableFlashCard(data));
+		
+		FlashCardDatabase db = new FlashCardDatabase(FlashcardConstants.DB_DIR, FlashcardConstants.DB_FILE);
+		
+		// Write the set we just described up there and replace our reference to it with a set that will reflect what's in the database
+		set = db.writeSet(set);
+		
+		// Now, if we change set the changes will go in the DB
+		
+		// Try adding a card for example
+		data.pathToFile = "files/abraham/";
+		data.name = "abroham";
+		set.addCard(new SerializableFlashCard(data));
+		
+		// Create another set just for fun
+		set = new SimpleSet("state capitals");
+		data.pathToFile = "files/vermont/";
+		data.name = "vermont";
+		
+		FlashCard vermontCard = new SerializableFlashCard(data);
+		
+		set.addCard(vermontCard);
+		db.writeSet(set);
+		
+		
+		// Now say we're in another function and just wanna get a set based on its name, ya know?
+		set = db.getSetByName("presidents");
+		if (set != null)
+		{
+			// Add the state capital card to the presidents set. Makes no sense, but tests having a card in more than 1 set.
+			set.addCard(vermontCard);
+		}
+	}
+
 	/**
 	 * Write all of the cards info to disk based on the path it gives
 	 * 
@@ -134,7 +193,6 @@ public class FlashCardDatabase implements Resources {
 			connection = DriverManager.getConnection("jdbc:h2:" + dir + db);
 			statement = connection.createStatement();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -174,17 +232,117 @@ public class FlashCardDatabase implements Resources {
 				+ setId + ", " + tagId + ")";
 		statement.execute(query);
 	}
-
+	
 	public void close() {
 		try {
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	
+	public void deleteCard(FlashCard f) {
+
+		// Get the flashcard that has the same path as f
+		try {
+			deleteCardFromDisk(f);
+
+			String query = "SELECT ID FROM FLASHCARDS WHERE FILE_PATH='"
+					+ f.getPath() + "'";
+			ResultSet rs = statement.executeQuery(query);
+
+
+
+			if (!rs.next())
+			{
+				// card doesn't exist to begin with
+				return;
+			}
+
+			int cardId = rs.getInt("ID");
+
+			// 1) Remove its entry from FLASHCARDS
+			String deleteQuery = "DELETE FROM FLASHCARDS WHERE ID=" + cardId;
+			statement.execute(deleteQuery);
+
+			// 2) Remove all entries from FLASHCARDS_TAGS table
+			deleteQuery = "DELETE FROM FLASHCARDS_TAGS WHERE FLASHCARD_ID="
+					+ cardId;
+			statement.execute(deleteQuery);
+
+			// 3) Remove entries from SETS_FLASHCARDS table
+			deleteQuery = "DELETE FROM SETS_FLASHCARDS WHERE FLASHCARD_ID=" + cardId;
+			statement.execute(deleteQuery);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteSet(FlashCardSet s) {
+		try {
+			String query = "SELECT ID FROM SETS WHERE NAME='" + s.getName()
+					+ "'";
+			ResultSet rs = statement.executeQuery(query);
+
+			if (!rs.next()) {
+				// card doesn't exist to begin with
+				return;
+			}
+
+			int setId = rs.getInt("ID");
+
+			// 1) Remove its entry from SETS
+			String deleteQuery = "DELETE FROM SETS WHERE ID=" + setId;
+			statement.execute(deleteQuery);
+
+			// 2) Remove all entries from SETS_TAGS table
+			deleteQuery = "DELETE FROM SETS_TAGS WHERE SET_ID=" + setId;			
+			statement.execute(deleteQuery);
+			
+			// 3) Remove entries from FLASHCARDS_SETS table
+			deleteQuery = "DELETE FROM FLASHCARDS_SETS WHERE SET_ID=" + setId;			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Takes care of duplicate set names. If a set with the given name already exists, then it will find a set name (like name5) that hasn't been used yet.
+	 * @param namePrefix
+	 * @throws SQLException 
+	 */
+	private String findUniqueName(String originalName) throws SQLException
+	{
+		String name = originalName;
+		boolean hasNext = false;
+		int number = 0;
+		do
+		{
+			name = originalName;
+			if (number != 0)
+			{
+				name += number;
+			}
+			
+			String idQuery = "SELECT ID FROM SETS WHERE name='" + name
+					+ "'";
+			ResultSet rs = statement.executeQuery(idQuery);
+			
+			hasNext = rs.next();
+			number++;
+		}
+		while(hasNext);
+		
+		return name;
+	}
+
 	public List<String> getAllCardNames()
 	{
 		ResultSet rs;
@@ -203,90 +361,8 @@ public class FlashCardDatabase implements Resources {
 	 * @param f
 	 */
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Arrays.asList();
-		}
-	}
-
-	
-	public List<String> getAllSetNames()
-	{
-		ResultSet rs;
-		try {
-			rs = statement.executeQuery("SELECT NAME FROM SETS");
-			List<String> names = new ArrayList<>();
-			while (rs.next()) {
-				names.add(rs.getString("NAME"));
-			}
-			return names;
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Arrays.asList();
-		}
-	}
-	
-	
-	public void deleteCard(FlashCard f) {
-
-		// Get the flashcard that has the same path as f
-		try {
-			deleteCardFromDisk(f);
-
-			String query = "SELECT ID FROM FLASHCARDS WHERE FILE_PATH='"
-					+ f.getPath() + "'";
-			ResultSet rs = statement.executeQuery(query);
-
-			if (!rs.next()) {
-				// card doesn't exist to begin with
-				return;
-			}
-
-			int cardId = rs.getInt("ID");
-
-			// 1) Remove its entry from FLASHCARDS
-			String deleteQuery = "DELETE FROM FLASHCARDS WHERE ID=" + cardId;
-			statement.execute(deleteQuery);
-
-			// 2) Remove all entries from FLASHCARDS_TAGS table
-			deleteQuery = "DELETE FROM FLASHCARDS_TAGS WHERE FLASHCARD_ID="
-					+ cardId;
-			statement.execute(deleteQuery);
-
-			// FIXME: Delete for sets!
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void deleteSet(FlashCardSet s) {
-		try {
-			String query = "SELECT ID FROM SETS WHERE NAME='" + s.getName()
-					+ "'";
-			ResultSet rs = statement.executeQuery(query);
-
-			if (!rs.next()) {
-				// card doesn't exist to begin with
-				return;
-			}
-
-			int cardId = rs.getInt("ID");
-
-			// 1) Remove its entry from FLASHCARDS
-			String deleteQuery = "DELETE FROM SETS WHERE ID=" + cardId;
-			statement.execute(deleteQuery);
-
-			// 2) Remove all entries from FLASHCARDS_TAGS table
-			deleteQuery = "DELETE FROM SETS_TAGS WHERE SET_ID=" + cardId;
-			statement.execute(deleteQuery);
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -304,6 +380,23 @@ public class FlashCardDatabase implements Resources {
 		return cards;
 	}
 
+	public List<String> getAllSetNames()
+	{
+		ResultSet rs;
+		try {
+			rs = statement.executeQuery("SELECT NAME FROM SETS");
+			List<String> names = new ArrayList<>();
+			while (rs.next()) {
+				names.add(rs.getString("NAME"));
+			}
+			return names;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return Arrays.asList();
+		}
+	}
+
 	@Override
 	public List<FlashCardSet> getAllSets() {
 		List<FlashCardSet> sets = new ArrayList<>();
@@ -317,6 +410,7 @@ public class FlashCardDatabase implements Resources {
 		}
 		return sets;
 	}
+
 
 	/**
 	 * Do a query on the tags database to get all possible tags a card can have
@@ -335,7 +429,6 @@ public class FlashCardDatabase implements Resources {
 			return tags;
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Arrays.asList();
 		}
@@ -360,12 +453,6 @@ public class FlashCardDatabase implements Resources {
 			e.printStackTrace();
 		}
 		return cards;
-	}
-
-	@Override
-	public List<String> getFlashCardsByTag(String tag) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -394,8 +481,28 @@ public class FlashCardDatabase implements Resources {
 	}
 
 	@Override
-	public FlashCardSet getSetByName(String setName) {
-		// TODO Auto-generated method stub
+	public FlashCardSet getSetByName(String name) {
+		try {
+			String query = "SELECT ID FROM SETS WHERE name='"
+					+ name + "'";
+			ResultSet rs = statement
+					.executeQuery(query);
+
+			if (!rs.next()) {
+				return null;
+			}
+			FlashCardSet set = new DatabaseSet(rs.getInt("ID"), this);
+			
+			// If there was more than 1 result
+			if (rs.next())
+			{
+				System.out.println("ERROR: Database is in bad state. More than one set with same name");
+			}
+			return set;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -442,12 +549,13 @@ public class FlashCardDatabase implements Resources {
 		statement.execute(query);
 	}
 
+
 	public void removeTagFromSet(int setId, int tagId) throws SQLException {
 		String query = "DELETE FROM SETS_TAGS WHERE TAG_ID = " + tagId
 				+ " AND SET_ID = " + setId;
 		statement.execute(query);
 	}
-
+	
 	/***
 	 * Write given flashcard to the database -returns flashcard object linked to
 	 * the database (meaning anything you do with it will change the database)
@@ -501,9 +609,9 @@ public class FlashCardDatabase implements Resources {
 				dbCard.addTag(tag);
 			}
 
+			
+			
 			return dbCard;
-
-			// TODO: Sets
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IOException e1) {
@@ -512,37 +620,34 @@ public class FlashCardDatabase implements Resources {
 
 		return null;
 	}
-
+	
 	/**
 	 * Write the given set to the database, and return a DatabaseSet that can be
 	 * used to modify/update it
+	 * 
+	 * May return a set with a different name than the one given to deal with name collisions
+	 * 
+	 * You can use the set returned to change what's in the database (ie. the set returned represents what is stored in the database, and changing it will change the database)
 	 * 
 	 * @param s
 	 */
 	public DatabaseSet writeSet(FlashCardSet s) {
 		try {
 
-			// 1) Check if this card exists already:
-			String idQuery = "SELECT ID FROM SETS WHERE name='" + s.getName()
+			// Check if set with the same name exists already. If one does, append the number (1, 2, ...) to the set name until we find an unused set name.
+			String name = findUniqueName(s.getName());
+			
+			String idQuery = "SELECT ID FROM SETS WHERE name='" + name
 					+ "'";
-			ResultSet rs = statement.executeQuery(idQuery);
-
-			if (rs.next()) {
-				// FIXME: No duplicate set names, bitchez
-				System.out
-						.println("WARNING: A set with the name "
-								+ s.getName()
-								+ " already exists. Writing a duplicate entry. Collision resolving code goes here");
-			}
 
 			// 2) Insert to sets table
-			String query = "INSERT INTO SETS (name) VALUES ('" + s.getName()
+			String query = "INSERT INTO SETS (name) VALUES ('" + name
 					+ "', " + ")";
 
 			statement.execute(query);
 
 			// 3) Get the ID of whatever we just inserted
-			rs = statement.executeQuery(idQuery);
+			ResultSet rs = statement.executeQuery(idQuery);
 
 			if (!rs.next()) {
 				System.out.println("ERROR with database!");

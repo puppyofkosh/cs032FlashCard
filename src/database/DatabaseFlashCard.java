@@ -22,9 +22,6 @@ import flashcard.FlashCardSet;
  */
 public class DatabaseFlashCard implements FlashCard {
 
-	/**
-	 * 
-	 */
 	private int id;
 	private FlashCardDatabase database;
 
@@ -57,8 +54,20 @@ public class DatabaseFlashCard implements FlashCard {
 
 	@Override
 	public Collection<FlashCardSet> getSets() {
-		// TODO Auto-generated method stub
-		return null;
+		List<FlashCardSet> sets = new ArrayList<>();
+		try {
+			String query = "SELECT SET_ID FROM SETS_FLASHCARDS WHERE FLASHCARD_ID=" + id;
+			ResultSet rs = database.getStatement().executeQuery(query);
+			
+			while (rs.next())
+			{
+				sets.add(new DatabaseSet(rs.getInt("SET_ID"), database));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sets;
 	}
 
 	/**

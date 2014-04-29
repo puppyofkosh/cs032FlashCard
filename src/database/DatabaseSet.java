@@ -22,6 +22,12 @@ public class DatabaseSet implements FlashCardSet{
 	}
 	
 	@Override
+	public String toString()
+	{
+		return "DB Set id " + id;
+	}
+	
+	@Override
 	public String getName() {
 		try {
 			ResultSet rs = database.getStatement().executeQuery(
