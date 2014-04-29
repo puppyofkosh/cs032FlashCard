@@ -1,6 +1,7 @@
 package flashcard;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * sam
@@ -34,12 +35,6 @@ public interface FlashCardSet {
 	 */
 	void addTag(String tag) throws IOException;
 	
-		
-	
-	String getAuthor();
-	
-	
-	
 	/**
 	 * Removes a "global" tag from the FlashCardSet. This method affects the
 	 * buffered FlashCardSet as well as its on-disk representation. It also 
@@ -48,6 +43,13 @@ public interface FlashCardSet {
 	 * @throws IOException - if there is trouble with the requisite on-disk files 
 	 */
 	void removeTag(String tag) throws IOException;
+	
+	void setTags(List<String> tags) throws IOException;
+	
+	String getAuthor();
+	
+	void addAuthor();
+
 	
 	/**
 	 * Displays all the tags for the specific FlashCard set. Draws information

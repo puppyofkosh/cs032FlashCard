@@ -37,7 +37,7 @@ public class SimpleSet implements FlashCardSet{
 	public void addTag(String tag) throws IOException {
 		globalTags.add(tag);
 	}
-
+	
 	@Override
 	public void removeTag(String tag) throws IOException {
 		globalTags.remove(tag);
@@ -72,5 +72,17 @@ public class SimpleSet implements FlashCardSet{
 	public int getInterval() {
 		// TODO Auto-generated method stub
 		return 8;
+	}
+
+	@Override
+	public void addAuthor() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTags(List<String> tags) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }

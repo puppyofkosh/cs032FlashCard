@@ -145,4 +145,16 @@ public class DatabaseSet implements FlashCardSet{
 		return "ian";
 	}
 
+	@Override
+	public void addAuthor() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTags(List<String> tags) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

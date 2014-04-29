@@ -10,18 +10,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import utils.FlashcardConstants;
 import utils.Writer;
+import audio.DiscAudioFile;
+import audio.MemoryAudioFile;
 import backend.Resources;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
-
-import audio.MemoryAudioFile;
-import audio.DiscAudioFile;
 
 public class FlashCardDatabase implements Resources {
 

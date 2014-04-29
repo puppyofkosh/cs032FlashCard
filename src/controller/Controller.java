@@ -3,6 +3,7 @@ package controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
+import flashcard.SimpleSet;
 import gui.MainFrame;
 
 import java.io.File;
@@ -220,6 +221,19 @@ public class Controller {
 
 	public static Collection<FlashCardSet> getAllSets() {
 		return DatabaseFactory.getResources().getAllSets();
+	}
+	
+	public static FlashCardSet createSet(String name, String author, List<String> tags, int interval) {
+		FlashCardSet set = new SimpleSet(name);
+		for(String tag : tags) {
+			try {
+				set.addTag(tag);
+			} catch (IOException e) {
+				Controller.guiMessage("Could not write tag: " + tag, true);
+			}
+		}
+		DatabaseFactory.writeSet(set);
+		return set;
 	}
 
 	public static void launchGUI() {
