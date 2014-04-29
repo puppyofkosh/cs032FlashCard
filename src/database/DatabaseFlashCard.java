@@ -27,8 +27,6 @@ public class DatabaseFlashCard implements FlashCard {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-
 	private int id;
 	private FlashCardDatabase database;
 
@@ -37,6 +35,11 @@ public class DatabaseFlashCard implements FlashCard {
 		this.database = db;
 	}
 
+	public int getId()
+	{
+		return id;
+	}
+	
 	@Override
 	public String getName() {
 		try {
@@ -101,8 +104,7 @@ public class DatabaseFlashCard implements FlashCard {
 			// If result set is empty (tag does not yet exist in TAGS table)
 			if (tagId == null) {
 				// make a tag with the given name
-				database.getStatement().execute(
-						"INSERT INTO TAGS (NAME) VALUES ('" + tag + "')");
+				database.makeTag(tag);
 
 				// re-perform the query to get the ID (Would use SCOPE_IDENTITY,
 				// but unsure of support for it)
