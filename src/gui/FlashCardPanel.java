@@ -58,10 +58,10 @@ public class FlashCardPanel extends JPanel {
 	 * @param card
 	 */
 	FlashCardPanel(FlashCard card) {
-		setPreferredSize(new Dimension(225, 200));
+		setPreferredSize(new Dimension(225, 150));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
-		setBorder(BorderFactory.createRaisedBevelBorder());
+		setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
