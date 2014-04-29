@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import database.DatabaseFactory;
@@ -26,6 +27,8 @@ public class FlashboardPanel extends JPanel{
 
 
 	public FlashboardPanel() {
+		super();
+		setBorder(BorderFactory.createEmptyBorder());
 		// Initialize using the factory that reads from resources.ian
 		updateFlashboard(DatabaseFactory.getResources().getAllCards());
 	}
