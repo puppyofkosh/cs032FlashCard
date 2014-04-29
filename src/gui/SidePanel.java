@@ -1,95 +1,27 @@
 package gui;
 
-import java.awt.GridLayout;
+import gui.IconFactory.IconType;
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 
-public class SidePanel extends GenericPanel {
+public class SidePanel extends GenericPanel implements MouseListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private final MainFrame _parent;
-	
-	/**
-	 * Set up the swing components
-	 */
-	public void initialize()
-	{
-
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		JPanel navigation = new JPanel();
-		add(navigation);
-		navigation.setLayout(new BoxLayout(navigation, BoxLayout.Y_AXIS));
-		
-		JPanel flashboardButtonPanel = new JPanel();
-		navigation.add(flashboardButtonPanel);
-		flashboardButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		JButton btnFlashboard = new JButton("Flashboard");
-		flashboardButtonPanel.add(btnFlashboard);
-		btnFlashboard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
-				update();
-
-			}
-		});
-		
-		JPanel exportButtonPanel = new JPanel();
-		navigation.add(exportButtonPanel);
-		exportButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		JButton btnExport = new JButton("Export");
-		btnExport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, GuiConstants.EXPORT_PANEL_NAME);
-				update();
-			}
-		});
-		exportButtonPanel.add(btnExport);
-		
-		JPanel importButtonPanel = new JPanel();
-		navigation.add(importButtonPanel);
-		importButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		JButton btnImport = new JButton("Import");
-		btnImport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, GuiConstants.IMPORT_PANEL_NAME);
-				update();
-
-			}
-		});
-		importButtonPanel.add(btnImport);
-		
-		JPanel createButtonPanel = new JPanel();
-		navigation.add(createButtonPanel);
-		createButtonPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		JButton btnCreate = new JButton("Create");
-		btnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, GuiConstants.CREATE_PANEL_NAME);
-				update();
-			}
-		});
-		createButtonPanel.add(btnCreate);
-		
-		JPanel panel = new JPanel();
-		add(panel);
-	}
-	
-	private void update() {
-		if (_parent != null) _parent.updateAll();
-	}
+	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSelected;
 	
 	/**
 	 * Create the panel.
@@ -97,8 +29,93 @@ public class SidePanel extends GenericPanel {
 	public SidePanel(MainFrame parent) {
 		_parent = parent;
 		initialize();
+	}
+
+	/**
+	 * Set up the swing components
+	 */
+	public void initialize() {
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBackground(Color.BLACK);
+		
+		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32), JLabel.LEFT);
+		initMenuItem(btnFlashboard);
+		add(btnFlashboard);
+		
+		btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32), JLabel.LEFT);
+		initMenuItem(btnExport);
+		add(btnExport);
+
+		add(Box.createVerticalStrut(10));
+		btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32), JLabel.LEFT);
+		initMenuItem(btnImport);
+		add(btnImport);
+
+		add(Box.createVerticalStrut(10));
+		btnCreate = new JLabel("Create    ", IconFactory.loadIcon(IconType.CREATE, 32), JLabel.LEFT);
+		initMenuItem(btnCreate);
+		add(btnCreate);
+		
+		setSelected(btnFlashboard);
+	}
+	
+	private void initMenuItem(JLabel button) {
+		button.setForeground(Color.WHITE);
+		button.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
+		button.setBorder(BorderFactory.createEmptyBorder(10,0,10,10));
+		button.addMouseListener(this);
+	}
+
+	private void update() {
+		if (_parent != null) _parent.updateAll();
+	}
+	
+	private void setSelected(JLabel button) {
+		if (btnSelected != null) btnSelected.setOpaque(false);
+		btnSelected = button;
+		btnSelected.setBackground(GuiConstants.CARD_BACKGROUND);
+		btnSelected.setOpaque(true);
+		repaint();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (e.getSource() == btnFlashboard) {
+			controlledLayout.show(controlledPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
+			setSelected(btnFlashboard);
+		} else if (e.getSource() == btnExport) {
+			controlledLayout.show(controlledPanel, GuiConstants.EXPORT_PANEL_NAME);
+			setSelected(btnExport);
+		} else if (e.getSource() == btnImport) {
+			controlledLayout.show(controlledPanel, GuiConstants.IMPORT_PANEL_NAME);
+			setSelected(btnImport);
+		} else if (e.getSource() == btnCreate) {
+			controlledLayout.show(controlledPanel, GuiConstants.CREATE_PANEL_NAME);
+			setSelected(btnCreate);
+		}
+		update();
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
-
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
