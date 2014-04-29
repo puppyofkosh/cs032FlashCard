@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.CardLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
@@ -18,6 +19,11 @@ public abstract class GenericPanel extends JPanel{
 	// show the right screen
 	protected CardLayout controlledLayout;
 	protected JPanel controlledPanel;
+	
+	GenericPanel() {
+		super();
+		setBorder(BorderFactory.createEmptyBorder());
+	}
 	
 
 	public CardLayout getControlledLayout() {
