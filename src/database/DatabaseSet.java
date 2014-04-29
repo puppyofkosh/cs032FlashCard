@@ -3,6 +3,7 @@ package database;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,8 +30,8 @@ public class DatabaseSet implements FlashCardSet{
 	
 	@Override
 	public String getName() {
-		try {
-			ResultSet rs = database.getStatement().executeQuery(
+		try (Statement statement = database.getStatement()){
+			ResultSet rs = statement.executeQuery(
 					"SELECT NAME FROM SETS WHERE ID=" + id);
 			if (rs.next() == false) {
 				System.out.println("BAD SET ID!");
@@ -48,9 +49,9 @@ public class DatabaseSet implements FlashCardSet{
 	public Collection<FlashCard> getAll() throws IOException {
 		List<FlashCard> cards = new ArrayList<FlashCard>();
 
-		try {
+		try (Statement statement = database.getStatement()){
 			String query = "SELECT FLASHCARD_ID FROM SETS_FLASHCARDS WHERE SET_ID=" + id;
-			ResultSet rs = database.getStatement().executeQuery(query);
+			ResultSet rs = statement.executeQuery(query);
 			
 			while (rs.next())
 			{
@@ -103,11 +104,11 @@ public class DatabaseSet implements FlashCardSet{
 	@Override
 	public Collection<String> getTags() {
 		List<String> tags = new ArrayList<>();
-		try {
+		try (Statement statement = database.getStatement()){
 			String query = "SELECT NAME FROM "
 					+ "(SELECT TAG_ID FROM SETS_TAGS WHERE SET_ID="
 					+ id + ")" + "INNER JOIN TAGS ON TAGS.ID=TAG_ID";
-			ResultSet rs = database.getStatement().executeQuery(query);
+			ResultSet rs = statement.executeQuery(query);
 			
 			while (rs.next())
 				tags.add(rs.getString("NAME"));

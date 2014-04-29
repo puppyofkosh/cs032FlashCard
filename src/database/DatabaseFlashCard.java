@@ -3,6 +3,7 @@ package database;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,8 +38,8 @@ public class DatabaseFlashCard implements FlashCard {
 	
 	@Override
 	public String getName() {
-		try {
-			ResultSet rs = database.getStatement().executeQuery(
+		try (Statement statement = database.getStatement()){
+			ResultSet rs = statement.executeQuery(
 					"SELECT NAME FROM FLASHCARDS WHERE ID=" + id);
 			if (rs.next() == false) {
 				System.out.println("BAD FLASHCARD ID!");
@@ -55,9 +56,9 @@ public class DatabaseFlashCard implements FlashCard {
 	@Override
 	public Collection<FlashCardSet> getSets() {
 		List<FlashCardSet> sets = new ArrayList<>();
-		try {
+		try (Statement statement = database.getStatement()){
 			String query = "SELECT SET_ID FROM SETS_FLASHCARDS WHERE FLASHCARD_ID=" + id;
-			ResultSet rs = database.getStatement().executeQuery(query);
+			ResultSet rs = statement.executeQuery(query);
 			
 			while (rs.next())
 			{
@@ -76,11 +77,11 @@ public class DatabaseFlashCard implements FlashCard {
 	@Override
 	public Collection<String> getTags() {
 		List<String> tags = new ArrayList<>();
-		try {
+		try (Statement statement = database.getStatement()){
 			String query = "SELECT NAME FROM "
 					+ "(SELECT TAG_ID FROM FLASHCARDS_TAGS WHERE FLASHCARD_ID="
 					+ id + ")" + "INNER JOIN TAGS ON TAGS.ID=TAG_ID";
-			ResultSet rs = database.getStatement().executeQuery(query);
+			ResultSet rs = statement.executeQuery(query);
 			
 			while (rs.next())
 				tags.add(rs.getString("NAME"));
@@ -131,9 +132,9 @@ public class DatabaseFlashCard implements FlashCard {
 
 	@Override
 	public int getInterval() {
-		try
+		try (Statement statement = database.getStatement())
 		{
-			ResultSet rs = database.getStatement().executeQuery("SELECT INTERVAL FROM FLASHCARDS WHERE ID=" + id);
+			ResultSet rs = statement.executeQuery("SELECT INTERVAL FROM FLASHCARDS WHERE ID=" + id);
 			if (rs.next() == false)
 			{
 				System.out.println("BAD CARD ID!");
@@ -155,8 +156,8 @@ public class DatabaseFlashCard implements FlashCard {
 						"SET interval=" + interval + "\n" +
 						"WHERE ID=" + id;
 		
-		try {
-			database.getStatement().execute(query);
+		try (Statement statement = database.getStatement()){
+			statement.execute(query);
 		} catch (SQLException e) {
 			throw new IOException(e.getMessage());
 		}
@@ -164,8 +165,8 @@ public class DatabaseFlashCard implements FlashCard {
 
 	@Override
 	public String getPath() throws IOException {
-		try {
-			ResultSet rs = database.getStatement().executeQuery(
+		try (Statement statement = database.getStatement()){
+			ResultSet rs = statement.executeQuery(
 					"SELECT FILE_PATH FROM FLASHCARDS WHERE ID=" + id);
 			if (rs.next() == false)
 				throw new IOException("Bad flashcard ID!");
