@@ -5,7 +5,6 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -90,6 +89,10 @@ public class SetCreationPanel extends GenericPanel implements ActionListener {
 		
 		setBrowser = new SetBrowser();
 		add(setBrowser, BorderLayout.EAST);
+	}
+	
+	public void update() {
+		setBrowser.updateSourceList();
 	}
 
 	@Override
