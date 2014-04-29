@@ -49,6 +49,8 @@ public class MainFrame extends JFrame {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
+		contentPane.setBackground(GuiConstants.CARD_BACKGROUND);
+		contentPane.setBorder(BorderFactory.createEmptyBorder());
 
 		// The card layout that we'll use to switch between views
 		mainPanelLayout = new CardLayout(0,0);
@@ -63,6 +65,8 @@ public class MainFrame extends JFrame {
 		JPanel mainPanelContainer = new JPanel();
 		mainPanelContainer.setPreferredSize(new Dimension(4*GuiConstants.WIDTH/5, GuiConstants.HEIGHT));
 		mainPanelContainer.setLayout(mainPanelLayout);
+		mainPanelContainer.setBackground(GuiConstants.CARD_BACKGROUND);
+
 
 		// set up the side panel so pressing the "home" button will bring us home and such
 		sidePanel.setControlledLayout(mainPanelLayout);
@@ -87,6 +91,7 @@ public class MainFrame extends JFrame {
 		JScrollPane scroller = new JScrollPane(flashboardPanel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setBorder(BorderFactory.createEmptyBorder());
 		mainPanelContainer.add(scroller, GuiConstants.FLASHBOARD_PANEL_NAME);
 
 		mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
