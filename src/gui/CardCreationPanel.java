@@ -18,9 +18,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 import audio.AudioFile;
-import audio.DiscRecorder;
-import audio.Recorder;
-import audio.TextToSpeechReader;
 import controller.Controller;
 import flashcard.SerializableFlashCard;
 
@@ -30,8 +27,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private AudioFile question;
 	private AudioFile answer;
-	private Recorder recorder;
-	private TextToSpeechReader reader;
 	private boolean recording;
 	private ImageIcon recordImage = new ImageIcon("./res/img/Record Button.png");
 	private String recordText = "Generate Audio";
@@ -184,18 +179,17 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	private void recordToggle(boolean isQuestion) {
 		if (recording) {
 			if (isQuestion) {
-				question = recorder.stopRecord();
+				question = Controller.finishRecording();
 				Controller.guiMessage("has question");
 				hasQuestion = true;
 			} else {
-				answer = recorder.stopRecord();
+				answer = Controller.finishRecording();
 				Controller.guiMessage("has answer");
 				hasAnswer = true;
 			}
 			recording = false;
 		} else {
-			recorder = new DiscRecorder();
-			recorder.startRecord();
+			Controller.startRecord();
 			recording = true;
 		}
 	}
@@ -222,10 +216,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	 */
 	private void readTTS(boolean isQuestion) {
 		if (isQuestion) {
-			question = reader.read(textQuestion.getText());
+			question = Controller.readTTS(textQuestion.getText());
 			hasQuestion = true;
 		} else {
-			answer = reader.read(textAnswer.getText());
+			answer = Controller.readTTS(textAnswer.getText());
 			hasAnswer = true;
 		}
 	}

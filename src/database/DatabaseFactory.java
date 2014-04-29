@@ -3,7 +3,6 @@ package database;
 import java.io.File;
 import java.io.IOException;
 
-import backend.Resources;
 import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;
@@ -36,7 +35,7 @@ public class DatabaseFactory {
 		db.deleteSet(s);
 	}
 
-	public static Resources getResources() {
+	public static FlashCardDatabase getResources() {
 		return db;
 	}
 }

@@ -13,13 +13,9 @@ import java.util.List;
 
 import utils.FlashcardConstants;
 import utils.Writer;
-import audio.DiscAudioFile;
-import audio.MemoryAudioFile;
 import backend.Resources;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
-import flashcard.SerializableFlashCard;
-import flashcard.SimpleSet;
 
 public class FlashCardDatabase implements Resources {
 
@@ -188,6 +184,17 @@ public class FlashCardDatabase implements Resources {
 			e.printStackTrace();
 		}
 	}
+	
+	public List<String> getAllCardNames()
+	{
+		ResultSet rs;
+		try {
+			rs = statement.executeQuery("SELECT NAME FROM FLASHCARDS");
+			List<String> names = new ArrayList<>();
+			while (rs.next()) {
+				names.add(rs.getString("NAME"));
+			}
+			return names;
 
 	/**
 	 * Delete a card from the database (remove any entries containing it's card
@@ -195,6 +202,33 @@ public class FlashCardDatabase implements Resources {
 	 * 
 	 * @param f
 	 */
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Arrays.asList();
+		}
+	}
+
+	
+	public List<String> getAllSetNames()
+	{
+		ResultSet rs;
+		try {
+			rs = statement.executeQuery("SELECT NAME FROM SETS");
+			List<String> names = new ArrayList<>();
+			while (rs.next()) {
+				names.add(rs.getString("NAME"));
+			}
+			return names;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Arrays.asList();
+		}
+	}
+	
+	
 	public void deleteCard(FlashCard f) {
 
 		// Get the flashcard that has the same path as f
@@ -477,7 +511,6 @@ public class FlashCardDatabase implements Resources {
 		}
 
 		return null;
-
 	}
 
 	/**

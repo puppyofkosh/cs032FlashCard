@@ -8,12 +8,10 @@ import java.util.Collection;
 import java.util.List;
 
 import utils.FlashcardConstants;
-
-import flashcard.FlashCard;
-import flashcard.FlashCardSet;
-
 import audio.AudioFile;
 import audio.DiscAudioFile;
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 
 /***
  * Stores the database ID of a flashcard. All methods just perform queries on

@@ -1,5 +1,10 @@
 package controller;
 
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
+import flashcard.SerializableFlashCard;
+import gui.MainFrame;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,14 +16,13 @@ import utils.Writer;
 import audio.AudioFile;
 import audio.AudioPlayer;
 import audio.ByteArrayAudioPlayer;
+import audio.DiscRecorder;
 import audio.FreeTTSReader;
+import audio.Recorder;
 import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
 import backend.FileImporter;
 import database.DatabaseFactory;
-import flashcard.FlashCard;
-import flashcard.FlashCardSet;
-import flashcard.SerializableFlashCard;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call
@@ -33,6 +37,8 @@ public class Controller {
 
 	private static AudioPlayer player;
 	private static TextToSpeechReader reader;
+	private static Recorder recorder;
+	private static MainFrame gui;
 
 	/**
 	 * Import a tsv or similar
@@ -91,27 +97,24 @@ public class Controller {
 	public static void stopAudio() {
 		player.stop();
 	}
-	
+
 	public static boolean hasPlayer() {
 		//FIXME: implement for real.
 		return true;
 	}
-	
+
 	public static boolean hasReader() {
-		//FIXME: implement for real.
-		return true;
+		return getReader() != null;
 	}
 
 	/**
 	 * Create a flashcard from the given data and save it to file
 	 * @param data
 	 */
-	public static FlashCard createCard(SerializableFlashCard.Data data)
-	{
+	public static void createCard(SerializableFlashCard.Data data) {
 		FlashCard card = new SerializableFlashCard(data);
-		card = DatabaseFactory.writeCard(card);
-		
-		return card;
+		DatabaseFactory.writeCard(card);
+		gui.updateAll();
 	}
 
 	/***
@@ -120,8 +123,7 @@ public class Controller {
 	 * @param allTags
 	 * @return
 	 */
-	public static List<String> parseTags(String allTags)
-	{
+	public static List<String> parseTags(String allTags) {
 		// FIXME: This sucks. Split on spaces/commas/tabs whatever
 		if (allTags.equals(""))
 			return Arrays.asList();
@@ -159,6 +161,7 @@ public class Controller {
 	}
 
 	public static void playFlashCard(FlashCard card) throws IOException {
+		//FIXME implement for real
 		playAudio(card.getQuestionAudio());
 	}
 
@@ -166,17 +169,16 @@ public class Controller {
 		//FIXME implement for real
 		return input.length() > 0;
 	}
-	
+
 	public static void addTag(FlashCard card, String tag) throws IOException {
 		if (card == null)
 			return;
 		else {
 			card.addTag(tag);
-			System.out.println("Added tag");
 		}
-		
+
 	}
-	
+
 	public static void removeTag(FlashCard card, String tag) throws IOException {
 		if (card == null)
 			return;
@@ -184,23 +186,43 @@ public class Controller {
 			card.removeTag(tag);
 	}
 
-	public static TextToSpeechReader getReader() {
-		try {
-			return new FreeTTSReader();
-		} catch (Throwable e) {
-			guiMessage("Could not load reader", true);
-			return null;
+	private static TextToSpeechReader getReader() {
+		if (reader != null)
+			return reader;
+		else {
+			try {
+				reader =  new FreeTTSReader();
+				return reader;
+			} catch (Throwable e) {
+				guiMessage("Could not load reader", true);
+				return null;
+			}
 		}
 	}
 
+	public static AudioFile readTTS(String text) {
+		return reader.read(text);
+	}
+
+	public static void startRecord() {
+		recorder = new DiscRecorder();
+		recorder.startRecord();
+	}
+
+	public static AudioFile finishRecording() {
+		return recorder.stopRecord();
+	}
+
 	public static void deleteCard(FlashCard card) {
-		//FIXME implement for real
-		guiMessage("BANG you're dead", false);
 		DatabaseFactory.deleteCard(card);
+		gui.updateAll();
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {
-		//FIXME implement for real
 		return DatabaseFactory.getResources().getAllSets();
+	}
+
+	public static void launchGUI() {
+		gui = new MainFrame();
 	}
 }
