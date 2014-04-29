@@ -11,11 +11,14 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import utils.Writer;
+
 import com.explodingpixels.macwidgets.SourceList;
 import com.explodingpixels.macwidgets.SourceListCategory;
 import com.explodingpixels.macwidgets.SourceListDarkColorScheme;
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListModel;
+import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 import flashcard.FlashCard;
@@ -38,6 +41,7 @@ public class SetBrowser extends JPanel  {
 	private Map<SourceListItem, FlashCard> _cards;
 	private Map<SourceListItem, FlashCardSet> _sets;
 	private Map<SourceListItem, SourceListItem> _parents;
+	private SourceListSelectionListener _parentComponent;
 
 	SourceList sourceList;
 
@@ -49,6 +53,12 @@ public class SetBrowser extends JPanel  {
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
 		updateSourceList();
 	}
+	
+	SetBrowser(SourceListSelectionListener parentComponent) {
+		this();
+		_parentComponent = parentComponent;
+	}
+
 
 	/**
 	 * Updates the source list with all the cards from the library.
@@ -60,7 +70,7 @@ public class SetBrowser extends JPanel  {
 		_sets = new HashMap<>();
 		_parents = new HashMap<>();
 		SourceListModel model = new SourceListModel();
-		sourceList = new SourceList(model);			
+		sourceList = new SourceList(model);	
 		SourceListCategory setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
 		for(FlashCardSet set : Controller.getAllSets()) {
@@ -84,10 +94,23 @@ public class SetBrowser extends JPanel  {
 		sourceList.setExpanded(setsCategory, true);
 		sourceList.setFocusable(true);
 		sourceList.setColorScheme(new CustomColorScheme());
+		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
+			@Override
+			public void sourceListItemSelected(SourceListItem arg0) {
+				if (_parentComponent != null)
+					_parentComponent.sourceListItemSelected(arg0);
+			}
+		});
+
+
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
 		revalidate();
 		repaint();
+	}
+	
+	public SourceList getSourceList() {
+		return sourceList;
 	}
 
 	/**
@@ -139,6 +162,8 @@ public class SetBrowser extends JPanel  {
 			return Color.YELLOW;
 		}
 	}
+
+
 }
 
 

@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public class GuiConstants {
 
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 500;
+	public static final int WIDTH = 900;
+	public static final int HEIGHT = 400;
 
 	public static final String IMPORT_PANEL_NAME = "import panel";
 	public static final String EXPORT_PANEL_NAME = "export panel";

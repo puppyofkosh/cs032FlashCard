@@ -131,5 +131,18 @@ public class DatabaseSet implements FlashCardSet{
 			throw new IOException(e.getMessage());
 		}
 	}
+	
+	@Override
+	public int getInterval()
+	{
+		// FIXME: Implement
+		return 9;
+	}
+	
+	@Override
+	public String getAuthor()
+	{
+		return "ian";
+	}
 
 }

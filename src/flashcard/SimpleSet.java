@@ -61,5 +61,16 @@ public class SimpleSet implements FlashCardSet{
 	@Override
 	public void addCard(FlashCard f) throws IOException {
 		cards.add(f);
+
+	}
+	public String getAuthor() {
+		// TODO Auto-generated method stub
+		return "SAM!";
+	}
+
+	@Override
+	public int getInterval() {
+		// TODO Auto-generated method stub
+		return 8;
 	}
 }

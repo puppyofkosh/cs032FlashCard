@@ -13,6 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.explodingpixels.macwidgets.MacWidgetFactory;
+
 import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;

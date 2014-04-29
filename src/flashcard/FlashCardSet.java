@@ -36,6 +36,7 @@ public interface FlashCardSet {
 	
 		
 	
+	String getAuthor();
 	
 	
 	
@@ -54,4 +55,6 @@ public interface FlashCardSet {
 	 * @return - a list of the strings in question.
 	 */
 	Collection<String> getTags();
+
+	public int getInterval();
 }

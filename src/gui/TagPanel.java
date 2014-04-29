@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,35 +24,28 @@ public class TagPanel extends JPanel implements MouseListener {
 	private JTextField _inputField;
 	List<TagLabel> _tags;
 	private FlashCard _card;
-	
+
 	private String inputHint = "Input Tags";
 	private JLabel emptyLabel;
 
+	TagPanel(String text) {
+		this(null, text);
+	}
 	TagPanel() {
-		this(new LinkedList<String>());
+		this(null, null);
 	}
 
-	TagPanel(List<String> tags) {
-		super(new WrapLayout(WrapLayout.LEADING, 1, 1));
+	TagPanel(List<String> tags, String text) {
+		super(new WrapLayout(WrapLayout.CENTER, 1, 1));
+
+		if (text == null) text = "No Tags";
+		if (tags == null) tags = new LinkedList<>();
+
+		setBorder(BorderFactory.createEmptyBorder());
 		addMouseListener(this);
 		setOpaque(false);
-		_tags = new LinkedList<>();
-		for(String tag :  tags) 
-			addTag(tag);
-		
-		setEmptyText("No Tags");
-
-		initInputField();
-		update();
-	}
-
-	TagPanel(FlashCard card) {
-		super(new WrapLayout(WrapLayout.LEADING, 1, 1));
-		addMouseListener(this);
-		setOpaque(false);
-		_card = card;
-		for(String tag : _card.getTags())
-			addTag(tag);
+		setEmptyText(text);
+		setTags(tags);
 	}
 
 	private void initInputField() {
@@ -90,8 +84,9 @@ public class TagPanel extends JPanel implements MouseListener {
 		});
 
 		add(_inputField);
-		_inputField.setVisible(_inputField.requestFocusInWindow());
+		_inputField.setVisible(false);
 	}
+
 
 	public void addTag(String tag) {
 		if (!_tags.contains(tag) && Controller.verifyInput(tag) && !tag.equals(inputHint)) {
@@ -107,15 +102,14 @@ public class TagPanel extends JPanel implements MouseListener {
 			Controller.guiMessage(String.format("Your input: \"%s\" is an invalid tag", tag), true);
 		}
 	}
-	
+
 	public void setEmptyText(String text) {
 		if (emptyLabel != null)
 			remove(emptyLabel);
-		
+
 		emptyLabel = new JLabel(text);
 		emptyLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	}
-
 
 	private void update() {
 		if (_tags.isEmpty()) {
@@ -139,6 +133,17 @@ public class TagPanel extends JPanel implements MouseListener {
 		return strings;
 	}
 
+	public void setTags(Collection<String> newTags) {
+		removeAll();
+		_tags = new LinkedList<>();
+		for(String tag :  newTags) {
+			addTag(tag);
+		}
+
+		initInputField();
+		update();
+	}
+
 	public void clear() {
 		_tags = new LinkedList<>();
 		update();
@@ -156,17 +161,11 @@ public class TagPanel extends JPanel implements MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
+	public void mouseClicked(MouseEvent e) {}
 	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
+	public void mousePressed(MouseEvent e) {}
 	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-
+	public void mouseReleased(MouseEvent e) {}
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		_inputField.setVisible(true);
