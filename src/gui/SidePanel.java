@@ -62,7 +62,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	private void initMenuItem(JLabel button) {
 		button.setForeground(Color.WHITE);
 		button.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
-		button.setBorder(BorderFactory.createEmptyBorder(10,0,10,10));
+		button.setBorder(BorderFactory.createEmptyBorder(10,4,10,10));
 		button.addMouseListener(this);
 	}
 
