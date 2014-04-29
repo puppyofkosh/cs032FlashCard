@@ -52,7 +52,7 @@ public class FlashCardPanel extends JPanel {
 
 	private TagPanel _tagPanel;
 
-	
+
 	/**
 	 * Constructs a FlashCardPanel from a given card.
 	 * @param card
@@ -61,7 +61,7 @@ public class FlashCardPanel extends JPanel {
 		setPreferredSize(new Dimension(225, 150));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
-		setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		setBorder(BorderFactory.createMatteBorder(0, 0, 2, 2, Color.WHITE));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
@@ -152,7 +152,7 @@ public class FlashCardPanel extends JPanel {
 		//as bubbles in a scroll window. When you mouse over it, it will display
 		//a text field where you can add more tags.
 		_tagPanel = new TagPanel();
-		
+
 		//A ControlScrollPane allows us to responsively scroll through cards as
 		//well as tags.
 		JScrollPane js = new ControlScrollPane(_tagPanel);
@@ -170,8 +170,7 @@ public class FlashCardPanel extends JPanel {
 	 * As yet unimplemented
 	 * @param sets
 	 */
-	private void populateSets(Collection<FlashCardSet> sets) {
-	}
+	private void populateSets(Collection<FlashCardSet> sets) {}
 
 	/**
 	 * Adds all the tags on the card to the panel's _tagPanel.
