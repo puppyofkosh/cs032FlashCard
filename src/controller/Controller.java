@@ -111,12 +111,10 @@ public class Controller {
 	 * Create a flashcard from the given data and save it to file
 	 * @param data
 	 */
-	public static FlashCard createCard(SerializableFlashCard.Data data)
-	{
+	public static void createCard(SerializableFlashCard.Data data) {
 		FlashCard card = new SerializableFlashCard(data);
-		card = DatabaseFactory.writeCard(card);
-
-		return card;
+		DatabaseFactory.writeCard(card);
+		gui.updateAll();
 	}
 
 	/***
@@ -125,8 +123,7 @@ public class Controller {
 	 * @param allTags
 	 * @return
 	 */
-	public static List<String> parseTags(String allTags)
-	{
+	public static List<String> parseTags(String allTags) {
 		// FIXME: This sucks. Split on spaces/commas/tabs whatever
 		if (allTags.equals(""))
 			return Arrays.asList();
@@ -226,7 +223,6 @@ public class Controller {
 	}
 
 	public static void launchGUI() {
-		// TODO Auto-generated method stub
 		gui = new MainFrame();
 	}
 }

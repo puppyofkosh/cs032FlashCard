@@ -26,10 +26,6 @@ public class ImportSettingsPanel extends GenericPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField txtSetName;
-	private JTextField txtDefaultAuthor;
-	private JTextField textField;
-	private JLabel lblGlobalTags;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JSpinner intervalSpinner;

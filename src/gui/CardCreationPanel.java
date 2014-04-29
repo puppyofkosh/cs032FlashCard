@@ -18,9 +18,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 import audio.AudioFile;
-import audio.DiscRecorder;
-import audio.Recorder;
-import audio.TextToSpeechReader;
 import controller.Controller;
 import flashcard.SerializableFlashCard;
 

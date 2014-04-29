@@ -1,15 +1,13 @@
 package gui;
 
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-public class ImageToggleButton extends JButton implements ActionListener{
+public class ImageToggleButton extends ImageButton implements ActionListener{
 
 	private static final long serialVersionUID = -3150533535670093580L;
 	ImageIcon _onImage, _offImage;
@@ -27,12 +25,6 @@ public class ImageToggleButton extends JButton implements ActionListener{
 		addActionListener(this);
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setVerticalAlignment(SwingConstants.CENTER);
-		setMargin(new Insets(0, 0, 0, 0));		
-		setContentAreaFilled(false);
-		
-		setBorderPainted(false);
-		setBorder(null);
-		setFocusable(false);
 		setIcon(getImage());
 		setText(getString());
 	}

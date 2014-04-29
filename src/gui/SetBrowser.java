@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.Collection;
@@ -82,7 +83,7 @@ public class SetBrowser extends JPanel  {
 		}
 		sourceList.setExpanded(setsCategory, true);
 		sourceList.setFocusable(true);
-		sourceList.setColorScheme(new SourceListDarkColorScheme());
+		sourceList.setColorScheme(new CustomColorScheme());
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
 		revalidate();
@@ -110,4 +111,34 @@ public class SetBrowser extends JPanel  {
 		}
 		return set;
 	}
+
+	/**
+	 * A custom implementation of a color scheme for sourceList.
+	 * Not really done yet.
+	 * @author samkortchmar
+	 *
+	 */
+	private class CustomColorScheme extends SourceListDarkColorScheme {
+
+		CustomColorScheme() {
+			super();
+		}
+
+		@Override
+		public Color getActiveBackgroundColor() {
+			return Color.BLACK;
+		}
+
+		@Override
+		public Color getInactiveBackgroundColor() {
+			return Color.BLACK;
+		}
+
+		@Override
+		public Color getSelectedBadgeColor() {
+			return Color.YELLOW;
+		}
+	}
 }
+
+
