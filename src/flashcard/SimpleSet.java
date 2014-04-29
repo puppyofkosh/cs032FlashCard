@@ -57,4 +57,16 @@ public class SimpleSet implements FlashCardSet{
 	public String toString() {
 		return getName();
 	}
+
+	@Override
+	public String getAuthor() {
+		// TODO Auto-generated method stub
+		return "SAM!";
+	}
+
+	@Override
+	public int getInterval() {
+		// TODO Auto-generated method stub
+		return 8;
+	}
 }
