@@ -3,7 +3,6 @@ package audio;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.junit.Test;
