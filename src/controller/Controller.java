@@ -114,7 +114,12 @@ public class Controller {
 	 */
 	public static FlashCard createCard(SerializableFlashCard.Data data) {
 		FlashCard card = new SerializableFlashCard(data);
-		DatabaseFactory.writeCard(card);
+
+		// Don't do this (for now). When we add the card to the set, it will write it to disk for us.
+		// I can change that if that seems like a bad way of doing things
+		// card = DatabaseFactory.writeCard(card);
+		
+		
 		gui.updateAll();
 		return card;
 	}
@@ -233,7 +238,7 @@ public class Controller {
 				Controller.guiMessage("Could not write tag: " + tag, true);
 			}
 		}
-		DatabaseFactory.writeSet(set);
+		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
 

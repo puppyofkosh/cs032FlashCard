@@ -198,6 +198,7 @@ public class FlashCardDatabase implements Resources {
 	}
 
 	public void addCardToSet(int cardId, int setId) throws SQLException {
+		System.out.println("Adding card" + cardId + " to set " + setId);
 		// avoid inserting duplicate, so use MERGE not insert
 		String query = "MERGE INTO SETS_FLASHCARDS KEY(SET_ID, FLASHCARD_ID) VALUES ("
 				+ setId + ", " + cardId + ")";

@@ -123,7 +123,11 @@ public class DatabaseSet implements FlashCardSet{
 		try
 		{
 			DatabaseFlashCard card = database.writeCard(f);
-			database.addCardToSet(card.getId(), id);
+			
+			if (card != null)
+			{
+				database.addCardToSet(card.getId(), id);
+			}
 		}
 		catch (SQLException e)
 		{
@@ -153,6 +157,18 @@ public class DatabaseSet implements FlashCardSet{
 
 	@Override
 	public void setTags(List<String> tags) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAuthor(String author) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setInterval(int interval) {
 		// TODO Auto-generated method stub
 		
 	}

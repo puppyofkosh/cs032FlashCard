@@ -21,6 +21,8 @@ public class SimpleSet implements FlashCardSet{
 	
 	private List<String> globalTags = new ArrayList<>();
 	
+	private String author;
+	private int interval;
 	
 	public SimpleSet(String name)
 	{
@@ -65,24 +67,32 @@ public class SimpleSet implements FlashCardSet{
 	}
 	public String getAuthor() {
 		// TODO Auto-generated method stub
-		return "SAM!";
+		return author;
 	}
 
 	@Override
 	public int getInterval() {
 		// TODO Auto-generated method stub
-		return 8;
+		return interval;
+	}
+	
+	@Override
+	public void setTags(List<String> tags) throws IOException {
+		this.globalTags = new ArrayList<>(tags);
 	}
 
 	@Override
 	public void addAuthor() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setTags(List<String> tags) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	@Override
+	public void setInterval(int interval) {
+		this.interval = interval;
 	}
 }
