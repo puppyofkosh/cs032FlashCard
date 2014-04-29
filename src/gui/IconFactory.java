@@ -1,16 +1,10 @@
 package gui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import controller.Controller;
@@ -24,13 +18,17 @@ public class IconFactory {
 		DELETE,
 		SET,
 		CARD,
+		FLASHBOARD,
+		EXPORT,
+		IMPORT,
+		CREATE
 	}
-	
+
 	private static String imgFolder = "./res/img/";
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
-	private static Icon createImageIcon(String path) {
-		File file = new File(path);
+	private static ImageIcon createImageIcon(String path) {
+		File file = new File(imgFolder + path);
 		if(file.exists()) {
 			try {
 				return new ImageIcon(ImageIO.read(file));
@@ -41,74 +39,44 @@ public class IconFactory {
 		return loadMissingIcon();
 	}
 
-	public static Icon loadIcon(IconType type) {
+	public static ImageIcon loadIcon(IconType type) {
 		switch (type) {
 		case CARD:
-			return createImageIcon(imgFolder + "Card Icon Inverted.png");
+			return createImageIcon("Card Icon Inverted.png");
 		case DELETE:
-			return createImageIcon(imgFolder + "delete x.png");
+			return createImageIcon("delete x.png");
 		case PLAY:
-			return createImageIcon(imgFolder + "Play Button.png");
+			return createImageIcon("Play Button.png");
 		case RECORD:
-			return createImageIcon(imgFolder + "Record Button.png");
+			return createImageIcon("Record Button.png");
 		case SET:
-			return createImageIcon(imgFolder + "Set Icon Inverted.png");
+			return createImageIcon("Set Icon Inverted.png");
 		case STOP:
-			return createImageIcon(imgFolder + "Stop Button.png");
+			return createImageIcon("Stop Button.png");
+		case CREATE:
+			return createImageIcon("Create Icon Inverted.png");
+		case EXPORT:
+			return createImageIcon("Export Icon Inverted.png");
+		case FLASHBOARD:
+			return createImageIcon("Flash Logo Inverted.png");
+		case IMPORT:
+			return createImageIcon("Import Icon Inverted.png");
 		default:
 			Controller.guiMessage("Not a valid icon type", true);
 			return loadMissingIcon();
 		}
 	}
 
-	public static Icon loadIcon(IconType type, int size) {
-		Icon current = loadIcon(type);
-		if (current instanceof ImageIcon) {
-			Image img = ((ImageIcon) current).getImage();
-			Image newimg = img.getScaledInstance(size, size,  java.awt.Image.SCALE_SMOOTH ) ;  
-			current = new ImageIcon(newimg);
-		} else {
-			Controller.guiMessage("Could not resize icon", true);
-		}
+	public static ImageIcon loadIcon(IconType type, int size) {
+		ImageIcon current = loadIcon(type);
+		Image img = ((ImageIcon) current).getImage();
+		Image newimg = img.getScaledInstance(size, size,  java.awt.Image.SCALE_SMOOTH ) ;  
+		current = new ImageIcon(newimg);
 		return current;
 	}
 
-	private static Icon loadMissingIcon() {
-		try {
-			return IconFactory.MissingIcon.class.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			return null;
-		}
+	private static ImageIcon loadMissingIcon() {
+		return createImageIcon("Missing Icon.png");
 	}
 
-	public class MissingIcon implements Icon{
-
-		private int width = 32;
-		private int height = 32;
-
-		private BasicStroke stroke = new BasicStroke(4);
-
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			Graphics2D g2d = (Graphics2D) g.create();
-
-			g2d.setColor(Color.WHITE);
-			g2d.fillRect(x +1 ,y + 1,width -2 ,height -2);
-
-			g2d.setColor(Color.RED);
-
-			g2d.setStroke(stroke);
-			g2d.drawLine(x +10, y + 10, x + width -10, y + height -10);
-			g2d.drawLine(x +10, y + height -10, x + width -10, y + 10);
-
-			g2d.dispose();
-		}
-
-		public int getIconWidth() {
-			return width;
-		}
-
-		public int getIconHeight() {
-			return height;
-		}
-	}
 }
