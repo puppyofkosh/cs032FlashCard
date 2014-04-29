@@ -5,11 +5,11 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import database.DatabaseFactory;
@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
 	private JPanel contentPane;
 	private ImportPanel importPanel;
 	private ExportPanel exportPanel;
-	private SetCreationPanel createPanel;
+	private SetCreationPanel setCreationPanel;
 	private FlashboardPanel flashboardPanel;
 	private CardLayout mainPanelLayout;
 
@@ -47,7 +47,6 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(GuiConstants.WIDTH, GuiConstants.HEIGHT));
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 
@@ -55,10 +54,10 @@ public class MainFrame extends JFrame {
 		mainPanelLayout = new CardLayout(0,0);
 
 		JPanel sidePanelContainer = new JPanel();
-		sidePanelContainer.setPreferredSize(new Dimension(GuiConstants.WIDTH/5, GuiConstants.HEIGHT));
 		contentPane.add(sidePanelContainer);
 		sidePanelContainer.setLayout(new GridLayout(0, 1, 0, 0));
 		SidePanel sidePanel = new SidePanel(this);
+		sidePanel.setBorder(BorderFactory.createEmptyBorder());
 		sidePanelContainer.add(sidePanel);
 
 		JPanel mainPanelContainer = new JPanel();
@@ -79,10 +78,10 @@ public class MainFrame extends JFrame {
 		exportPanel.update(DatabaseFactory.getResources().getAllCards());
 		mainPanelContainer.add(exportPanel, GuiConstants.EXPORT_PANEL_NAME);
 
-		createPanel = new SetCreationPanel();
-		createPanel.setControlledLayout(mainPanelLayout);
-		createPanel.setControlledPanel(mainPanelContainer);
-		mainPanelContainer.add(createPanel, GuiConstants.CREATE_PANEL_NAME);
+		setCreationPanel = new SetCreationPanel();
+		setCreationPanel.setControlledLayout(mainPanelLayout);
+		setCreationPanel.setControlledPanel(mainPanelContainer);
+		mainPanelContainer.add(setCreationPanel, GuiConstants.CREATE_PANEL_NAME);
 
 		flashboardPanel = new FlashboardPanel();
 		JScrollPane scroller = new JScrollPane(flashboardPanel,
@@ -98,7 +97,8 @@ public class MainFrame extends JFrame {
 
 	public void updateAll() {
 		exportPanel.update();
-		flashboardPanel.updateFlashboard();;
+		flashboardPanel.updateFlashboard();
+		setCreationPanel.update();
 	}
 
 }
