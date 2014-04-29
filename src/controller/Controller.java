@@ -238,6 +238,8 @@ public class Controller {
 				Controller.guiMessage("Could not write tag: " + tag, true);
 			}
 		}
+		set.setAuthor(author);
+		set.setInterval(interval);
 		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
