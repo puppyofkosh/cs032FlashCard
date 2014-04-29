@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.CardLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -21,7 +22,7 @@ public abstract class GenericPanel extends JPanel{
 	protected JPanel controlledPanel;
 	
 	GenericPanel() {
-		super();
+		super(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		setBorder(BorderFactory.createEmptyBorder());
 	}
 	

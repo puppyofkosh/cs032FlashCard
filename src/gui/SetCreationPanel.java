@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -62,22 +63,21 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		setBorder(BorderFactory.createEmptyBorder());
 		setLayout(new BorderLayout(0, 0));
 		setOpaque(false);
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		mainPanel.setBorder(BorderFactory.createEmptyBorder());
+		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
 		mainPanel.setOpaque(false);
+		Box box = new Box(BoxLayout.Y_AXIS);
+		mainPanel.add(box, BorderLayout.CENTER);
 
-		
 		JLabel lblAssignSet = new JLabel("Create a new set or select one from the list on the right", SwingConstants.LEADING);
 		lblAssignSet.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-		JPanel pane = new JPanel();
+		JPanel pane = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		pane.setOpaque(false);
 		pane.add(lblAssignSet);
-		mainPanel.add(pane);
+		box.add(pane);
 
-		JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		headerPanel.setOpaque(false);
-		mainPanel.add(headerPanel);
+		box.add(headerPanel);
 
 		JLabel lblNewLabel = new JLabel("Set Name");
 		headerPanel.add(lblNewLabel);
@@ -85,22 +85,21 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		setNameField = new JTextField(10);
 		setNameField.addActionListener(this);
 		headerPanel.add(setNameField);
-		
+
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
 		headerPanel.add(spinnerInterval);
-		
+
 		JLabel lblAuthor = new JLabel("Author");
 		headerPanel.add(lblAuthor);
-		
 
 
 		authorTextField = new JTextField(10);
 		authorTextField.addActionListener(this);
 		headerPanel.add(authorTextField);
 
-		JPanel tagPanel = new JPanel(new BorderLayout());
+		JPanel tagPanel = new JPanel(new BorderLayout(0,0));
 		tagPanel.setOpaque(false);
-		mainPanel.add(tagPanel);
+		box.add(tagPanel);
 
 		tags = new TagPanel("Add Global Tags Here");
 		JScrollPane scroller = new JScrollPane(tags);
@@ -114,18 +113,18 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		btnContinue = new ImageButton("Continue to Card Creation", IconFactory.loadIcon(IconType.CARD, 36));
 		btnContinue.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 		btnContinue.addActionListener(this);
-		btnContinue.setBorder(BorderFactory.createEmptyBorder());
-		
+
 		continuePanel.add(btnContinue);
+
 		mainPanel.add(continuePanel, BorderLayout.SOUTH);
 
 		recordPanel = new CardCreationPanel();
 		add(mainPanel, BorderLayout.CENTER);
-		
+
 		setBrowser = new SetBrowser(this);
 		add(setBrowser, BorderLayout.EAST);
 	}
-	
+
 	private void populateFields(FlashCardSet set) {
 		setNameField.setText(set.getName());
 		spinnerInterval.setValue(set.getInterval());
@@ -133,12 +132,12 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		Collection<String> setTags = set.getTags();
 		if (setTags == null)
 			setTags = new LinkedList<>();
-			
-		tags.setTags(setTags);
-		revalidate();
-		repaint();
+
+			tags.setTags(setTags);
+			revalidate();
+			repaint();
 	}
-	
+
 	public void update() {
 		setBrowser.updateSourceList();
 	}

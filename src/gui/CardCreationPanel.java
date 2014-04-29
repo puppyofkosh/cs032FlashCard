@@ -61,7 +61,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	private TagPanel tagPanel;
 
 	private JButton btnFlash;
-	private JPanel panel_1;
 
 
 	/**
@@ -75,7 +74,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 	private void initPanelComponents() {
 		setLayout(new BorderLayout(0,0));
-		setBackground(GuiConstants.CARD_BACKGROUND);
+		setOpaque(false);
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));

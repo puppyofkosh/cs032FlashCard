@@ -1,8 +1,11 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -46,9 +49,8 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(GuiConstants.WIDTH, GuiConstants.HEIGHT));
-		contentPane = new JPanel();
+		contentPane = new JPanel(new BorderLayout(0,0));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		contentPane.setBackground(GuiConstants.CARD_BACKGROUND);
 		contentPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -56,16 +58,15 @@ public class MainFrame extends JFrame {
 		mainPanelLayout = new CardLayout(0,0);
 
 		JPanel sidePanelContainer = new JPanel();
-		contentPane.add(sidePanelContainer);
+		contentPane.add(sidePanelContainer, BorderLayout.WEST);
 		sidePanelContainer.setLayout(new GridLayout(0, 1, 0, 0));
 		SidePanel sidePanel = new SidePanel(this);
 		sidePanel.setBorder(BorderFactory.createEmptyBorder());
 		sidePanelContainer.add(sidePanel);
 
-		JPanel mainPanelContainer = new JPanel();
-		mainPanelContainer.setPreferredSize(new Dimension(4*GuiConstants.WIDTH/5, GuiConstants.HEIGHT));
+		JPanel mainPanelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		mainPanelContainer.setOpaque(false);
 		mainPanelContainer.setLayout(mainPanelLayout);
-		mainPanelContainer.setBackground(GuiConstants.CARD_BACKGROUND);
 
 
 		// set up the side panel so pressing the "home" button will bring us home and such
@@ -95,7 +96,7 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(scroller, GuiConstants.FLASHBOARD_PANEL_NAME);
 
 		mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
-		contentPane.add(mainPanelContainer);
+		contentPane.add(mainPanelContainer, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 	}

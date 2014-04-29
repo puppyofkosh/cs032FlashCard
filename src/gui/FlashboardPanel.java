@@ -28,9 +28,10 @@ public class FlashboardPanel extends JPanel{
 
 	public FlashboardPanel() {
 		super();
-		setBorder(BorderFactory.createEmptyBorder());
 		// Initialize using the factory that reads from resources.ian
-		updateFlashboard(DatabaseFactory.getResources().getAllCards());
+		updateFlashboard();
+		setOpaque(true);
+		setBackground(GuiConstants.CARD_BACKGROUND);
 	}
 	
 	public void updateFlashboard() {
@@ -46,6 +47,7 @@ public class FlashboardPanel extends JPanel{
 		removeAll();
 		NUM_ROWS = cardPanels.size() / NUM_COLS + (cardPanels.size() % NUM_COLS == 0 ? 0 : 1);
 		setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
+		setBorder(BorderFactory.createEmptyBorder());
 		for(int i = 0; i < cardPanels.size(); i++) {
 			add(cardPanels.get(i));
 		}

@@ -1,8 +1,11 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Main {
 
@@ -12,7 +15,7 @@ public class Main {
 				try {
 					JFrame frame = new JFrame();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					frame.add(new SetBrowser());
+					frame.add(new FlashboardPanel());
 					frame.pack();
 					frame.setVisible(true);
 				} catch (Exception e) {
