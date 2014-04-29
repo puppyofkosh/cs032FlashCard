@@ -69,7 +69,7 @@ public class IconFactory {
 
 	public static ImageIcon loadIcon(IconType type, int size) {
 		ImageIcon current = loadIcon(type);
-		Image img = ((ImageIcon) current).getImage();
+		Image img = (current).getImage();
 		Image newimg = img.getScaledInstance(size, size,  java.awt.Image.SCALE_SMOOTH ) ;  
 		current = new ImageIcon(newimg);
 		return current;
