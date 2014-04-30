@@ -225,6 +225,7 @@ public class Controller {
 	}
 	
 	public static FlashCardSet createSet(String name, String author, List<String> tags, int interval) {
+		//TODO Should check if the set exists already.
 		FlashCardSet set = new SimpleSet(name);
 		for(String tag : tags) {
 			try {
