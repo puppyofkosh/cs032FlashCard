@@ -127,6 +127,9 @@ public class DatabaseTest {
 		SimpleSet set = new SimpleSet("state capitals");
 		set.addTag("Tag A");
 		set.addCard(testCard);
+		set.setAuthor("Ian");
+		set.setInterval(5);
+		
 		
 		FlashCardSet dbSet = db.writeSet(set);
 
@@ -137,13 +140,17 @@ public class DatabaseTest {
 		assertTrue(dbSet.getName().equals("state capitals"));		
 		assertTrue(dbSet.getTags().contains("Tag A"));
 		assertTrue(dbSet.getAll().size() == 1);
+		assertTrue(dbSet.getAuthor().equals("Ian"));
+		assertTrue(dbSet.getInterval() == 5);
 		
+		// Test adding tags
 		dbSet.addTag("Tag B");
 		assertTrue(dbSet.getTags().contains("Tag B"));
 		
 		dbSet.removeTag("Tag A");
 		assertTrue(!dbSet.getTags().contains("Tag A"));
 		
+		// Make sure the set contains the right cards
 		for (FlashCard card : dbSet.getAll())
 		{
 			assertTrue(card.getName().equals("test-card"));
@@ -153,6 +160,18 @@ public class DatabaseTest {
 		
 		assertTrue(dbSet.getAll().size() == 1);
 				
+		// Test the getters/setters
+		dbSet.setAuthor("bob");
+		assertTrue(dbSet.getAuthor().equals("bob"));
+		
+		dbSet.setInterval(11);
+		assertTrue(dbSet.getInterval() == 11);
+		
+		dbSet.setTags(Arrays.asList("Tag C", "Tag D"));
+		assertTrue(dbSet.getTags().size() == 2);
+		assertTrue(dbSet.getTags().contains("Tag C") && dbSet.getTags().contains("Tag D"));
+		
+		// Try to delete the set
 		db.deleteSet(dbSet);
 		
 		assertTrue(db.getAllSets().size() == 0);

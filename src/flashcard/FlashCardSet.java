@@ -48,8 +48,10 @@ public interface FlashCardSet {
 	
 	String getAuthor();
 	
+	// FIXME: Wtf?
 	void addAuthor();
 
+	void setAuthor(String author);
 	
 	/**
 	 * Displays all the tags for the specific FlashCard set. Draws information
@@ -59,4 +61,6 @@ public interface FlashCardSet {
 	Collection<String> getTags();
 
 	public int getInterval();
+	
+	public void setInterval(int interval);
 }

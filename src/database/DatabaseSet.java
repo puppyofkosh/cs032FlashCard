@@ -3,6 +3,7 @@ package database;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,8 +30,8 @@ public class DatabaseSet implements FlashCardSet{
 	
 	@Override
 	public String getName() {
-		try {
-			ResultSet rs = database.getStatement().executeQuery(
+		try (Statement statement = database.getStatement()){
+			ResultSet rs = statement.executeQuery(
 					"SELECT NAME FROM SETS WHERE ID=" + id);
 			if (rs.next() == false) {
 				System.out.println("BAD SET ID!");
@@ -48,9 +49,9 @@ public class DatabaseSet implements FlashCardSet{
 	public Collection<FlashCard> getAll() throws IOException {
 		List<FlashCard> cards = new ArrayList<FlashCard>();
 
-		try {
+		try (Statement statement = database.getStatement()){
 			String query = "SELECT FLASHCARD_ID FROM SETS_FLASHCARDS WHERE SET_ID=" + id;
-			ResultSet rs = database.getStatement().executeQuery(query);
+			ResultSet rs = statement.executeQuery(query);
 			
 			while (rs.next())
 			{
@@ -103,11 +104,11 @@ public class DatabaseSet implements FlashCardSet{
 	@Override
 	public Collection<String> getTags() {
 		List<String> tags = new ArrayList<>();
-		try {
+		try (Statement statement = database.getStatement()){
 			String query = "SELECT NAME FROM "
 					+ "(SELECT TAG_ID FROM SETS_TAGS WHERE SET_ID="
 					+ id + ")" + "INNER JOIN TAGS ON TAGS.ID=TAG_ID";
-			ResultSet rs = database.getStatement().executeQuery(query);
+			ResultSet rs = statement.executeQuery(query);
 			
 			while (rs.next())
 				tags.add(rs.getString("NAME"));
@@ -123,7 +124,11 @@ public class DatabaseSet implements FlashCardSet{
 		try
 		{
 			DatabaseFlashCard card = database.writeCard(f);
-			database.addCardToSet(card.getId(), id);
+			
+			if (card != null)
+			{
+				database.addCardToSet(card.getId(), id);
+			}
 		}
 		catch (SQLException e)
 		{
@@ -135,26 +140,93 @@ public class DatabaseSet implements FlashCardSet{
 	@Override
 	public int getInterval()
 	{
-		// FIXME: Implement
-		return 9;
+		try (Statement statement = database.getStatement()){
+			String query = "SELECT INTERVAL FROM SETS WHERE ID=" + id;
+			ResultSet rs = statement.executeQuery(query);
+			
+			if (!rs.next())
+			{
+				System.out.println("BAD SET ID "+  id);
+			}
+			
+			return rs.getInt("INTERVAL");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	@Override
 	public String getAuthor()
 	{
-		return "ian";
+		try (Statement statement = database.getStatement()){
+			String query = "SELECT AUTHOR FROM SETS WHERE ID=" + id;
+			ResultSet rs = statement.executeQuery(query);
+			
+			if (!rs.next())
+			{
+				System.out.println("BAD SET ID "+  id);
+			}
+			
+			return rs.getString("AUTHOR");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	@Override
 	public void addAuthor() {
 		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("What is this method supposed to do?");
 	}
 
 	@Override
 	public void setTags(List<String> tags) throws IOException {
-		// TODO Auto-generated method stub
+		try (Statement statement = database.getStatement()){
+			
+			// Remove all current tags
+			String deleteQuery = "DELETE FROM SETS_TAGS WHERE SET_ID=" + id;
+			statement.execute(deleteQuery);	
+			
+			// Add the new tags
+			for (String tag : tags)
+				addTag(tag);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+	}
+
+	@Override
+	public void setAuthor(String author) {
+		try (Statement statement = database.getStatement()){
+			String query = "UPDATE SETS\n" +
+							"SET AUTHOR='" + author + "'\n" +
+							"WHERE ID=" + id;
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void setInterval(int interval) {
+		try (Statement statement = database.getStatement()){
+			String query = "UPDATE SETS\n" +
+							"SET INTERVAL=" + interval + "\n" +
+							"WHERE ID=" + id;
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 }
