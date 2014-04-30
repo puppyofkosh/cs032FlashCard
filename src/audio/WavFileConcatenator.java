@@ -1,7 +1,5 @@
 package audio;
 
-
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -24,34 +22,45 @@ import javax.sound.sampled.AudioSystem;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
-//FIXME: There's a bug in here. When we run something like:
-// WavFileConcatenator("myfile")
-// The file produced after calling concatenate is "myfilemyfile.wav"
-
+/**
+ * A class for concatenating together AudioFiles
+ * @author Peter
+ */
 public class WavFileConcatenator {
 
+	// the AudioFile that holds the blank interval audio for concatenation
 	private static DiscAudioFile intervalAudio = setupIntervalAudio();
-	private static String destination = getOutputLocation();
 	
-	private static String getOutputLocation() {
+	// the path to the destination folder where generated wav files will be placed
+	private static String destination = setupOutputLocation();
+	
+	/**
+	 * attempts to set the output location to the user's chosen location
+	 * from previous runs of the program. If this cannot be done for whatever reason,
+	 * it defaults to 'output'
+	 * @return The user's chosen output location from previous runs of the program,
+	 * or 'output' if that cannot be found
+	 */
+	private static String setupOutputLocation() {
 		File locationFile = new File("output_location.set");
 		if (locationFile.exists()) {
 			try (BufferedReader read = new BufferedReader(new FileReader(locationFile))) {
 				return read.readLine(); 
 			} catch (Throwable e) {}
 		}
-		
-		File defaultOutput = new File("output");
-		
-		if (!defaultOutput.exists())
-			defaultOutput.mkdir();
-		
+		new File("output").mkdir();
 		return "output";
 	}
 	
+	/**
+	 * Changes the output destination for created wav files
+	 * @param destination The path of the new output folder
+	 */
 	public static void changeDestination(String destination) {
 
 		WavFileConcatenator.destination = destination;
+		new File(destination).mkdirs();
+		
 		File locationFile = new File("output_location.set");
 		locationFile.delete();
 		
@@ -60,6 +69,10 @@ public class WavFileConcatenator {
 		} catch (Throwable e) {}
 	}
 	
+	/**
+	 * Sets up and returns an AudioFile containing 1 second of silent audio 
+	 * @return An AudioFile containing 1 second of silent audio
+	 */
 	private static DiscAudioFile setupIntervalAudio() {
 		intervalAudio = new DiscAudioFile("intervalaudio.wav");
 		AudioFormat format = utils.FlashcardConstants.standardizedFormat;
@@ -67,11 +80,13 @@ public class WavFileConcatenator {
 		int size = (format.getFrameSize() * frames);
 		byte[] bytes = new byte[size];
 		Arrays.fill(bytes, (byte) 0);
+		
 		try {
 		AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(bytes), format, frames), Type.WAVE, intervalAudio);
 		} catch (IOException e) {
 			System.err.println("Could not create interval audio");
 		}
+		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -82,7 +97,14 @@ public class WavFileConcatenator {
 		return intervalAudio;
 	}
 	
-	private static File getNewFile(String fileName) {
+	/**
+	 * returns a uniquely named wav file starting with the input filename
+	 * @param fileName The base for the file name
+	 * @return A uniquely named wav file, in the destination folder,
+	 * starting with the input file name, and followed by numbers if
+	 * necessary to avoid an overlap
+	 */
+	private static File getUniqueWavFile(String fileName) {
 		File output = new File(destination + "/"+ fileName + ".wav");
 		int collisionPreventer = 0;
 		while (output.exists()) {
@@ -92,21 +114,41 @@ public class WavFileConcatenator {
 		return output;
 	}
 	
+	/**
+	 * Concatenates the AudioInputStreams into a single wav file
+	 * that is in the destination folder, with a name beginning
+	 * with the input name
+	 * @param streams The streams to concatenate
+	 * @param name The name of the generated audio file (although
+	 * numbers may be added to the end to avoid overlaps)
+	 * @return The generated File
+	 * @throws IOException If an error in I/O occurs
+	 */
 	public static File concatenate(List<AudioInputStream> streams, String name) throws IOException  {
 		long frameLength = 0;
 		AudioFormat format = utils.FlashcardConstants.standardizedFormat;
+		
 		for (AudioInputStream stream : streams) {
 			frameLength += stream.getFrameLength();
 		}
+		
 		AudioInputStream output = new AudioInputStream(new SequenceInputStream(Collections.enumeration(streams)), format, frameLength);
-		File file = getNewFile(name);
+		
+		File file = getUniqueWavFile(name);
 		AudioSystem.write(output, Type.WAVE, file);
 		return file;
 	}
 	
+	/**
+	 * Generates the wav file corresponding to a FlashCard
+	 * @param card the card to create a wav file from
+	 * @return The File that was created
+	 * @throws IOException If an error in I/O occurs
+	 */
 	public static File concatenate(FlashCard card) throws IOException {
 		List<AudioInputStream> streams = new ArrayList<>();
 		streams.add(card.getQuestionAudio().getStream());
+		
 		for (int i = 0; i < card.getInterval(); i++) {
 			streams.add(intervalAudio.getStream());
 		}
@@ -115,13 +157,31 @@ public class WavFileConcatenator {
 		return concatenate(streams, card.getName());
 	}
 	
+	/**
+	 * creates a wav file from all of the FlashCards in a collection
+	 * @param cards The cards to generate wav files from
+	 * @throws IOException if an error in I/O occurs.
+	 */
 	public static void concatenate(Collection<FlashCard> cards) throws IOException {
 		for (FlashCard card : cards) {
 			concatenate(card);
 		}
 	}
 	
+	/**
+	 * creates a wav file from all the FlashCards in a FlashCardSet
+	 * @param set The set to generate wav files from
+	 * @throws IOException if an error in I/O occurs.
+	 */
 	public static void concatenate(FlashCardSet set) throws IOException {
 		concatenate(set.getAll());
+	}
+	
+	/**
+	 * Gets the output destination of wav files
+	 * @return the output destination of wav files
+	 */
+	public static String getDestination() {
+		return destination;
 	}
 }
