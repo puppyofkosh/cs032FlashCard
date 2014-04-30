@@ -25,7 +25,6 @@ public class MainFrame extends JFrame {
 	private FlashboardPanel flashboardPanel;
 	private CardLayout mainPanelLayout;
 
-
 	/**
 	 * Launch the application.
 	 */
@@ -104,5 +103,4 @@ public class MainFrame extends JFrame {
 		flashboardPanel.updateFlashboard();
 		setCreationPanel.update();
 	}
-
 }
