@@ -127,7 +127,8 @@ public class TagPanel extends JPanel implements MouseListener {
 	public void addTag(String tag, boolean global) {
 		if (!_tags.contains(tag) && Controller.verifyInput(tag) && !tag.equals(inputHint)) {
 			try {
-				Controller.addTag(_card, tag);
+				if (!global)
+					Controller.addTag(_card, tag);
 			} catch (IOException e) {
 				Controller.guiMessage("Could not add tag to card", true);
 				return;
