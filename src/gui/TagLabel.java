@@ -22,12 +22,17 @@ public class TagLabel extends JPanel implements MouseListener{
 	int _size, _roundedness;
 	TagPanel _tagPanel;
 	String _tagText;
-	
+	boolean _global;
+
 	TagLabel(String s, TagPanel tagPanel) {
-		this(s, 15, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel);
+		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, false);
 	}
-	
-	TagLabel(String s, int size, int roundedness, TagPanel tagPanel) {
+
+	TagLabel(String s, TagPanel tagPanel, boolean global) {
+		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, global);
+	}
+
+	TagLabel(String s, int size, int roundedness, TagPanel tagPanel, boolean global) {
 		super();
 		_tagText = s;
 		_size = size;
@@ -36,7 +41,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		_tag = new JLabel(shortenText(_tagText));
 		_tag.setBorder(BorderFactory.createEmptyBorder(1, 1, 3, 1));
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
-		
+
 		ImageIcon current = new ImageIcon("./res/img/delete x.png");
 		Image img = current.getImage();
 		Image newimg = img.getScaledInstance(_size, _size,  java.awt.Image.SCALE_SMOOTH ) ;  
@@ -44,20 +49,20 @@ public class TagLabel extends JPanel implements MouseListener{
 		_delete = new JLabel(current);
 		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		_delete.addMouseListener(this);
-		
+
 		add(_delete);
 		add(_tag);
-		setBackground(Color.YELLOW);
+		setBackground(global ? GuiConstants.SET_TAG_COLOR : GuiConstants.CARD_TAG_COLOR);
 		setOpaque(false);
-		
+
 		_tagPanel._tags.add(this);
 		_tagPanel.add(this);
 	}
-	
+
 	public String getText() {
 		return _tagText;
 	}
-	
+
 	private String shortenText(String text) {
 		if (text.length() > GuiConstants.MAX_TAG_LENGTH) {
 			return text.substring(0, GuiConstants.MAX_TAG_LENGTH) + "...";
@@ -81,7 +86,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		graphics.setColor(getForeground());
 		graphics.drawRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height);//paint border
 	}
-	
+
 	@Override
 	public void addMouseListener(MouseListener ml) {
 		_tag.addMouseListener(ml);
