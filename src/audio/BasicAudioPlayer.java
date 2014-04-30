@@ -5,6 +5,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 
+import flashcard.FlashCard;
+
 /**
  * AudioPlayer that plays a single AudioFile at a time. 
  * @author Peter
@@ -27,6 +29,11 @@ public class BasicAudioPlayer implements AudioPlayer {
 			// TODO Auto-generated catch block
 			throw new IOException("Line Unavailable Exception");
 		}
+	}
+	
+	@Override
+	public void play(FlashCard card) throws IOException {
+		throw new IOException("dont use this");
 	}
 
 	@Override

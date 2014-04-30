@@ -36,7 +36,7 @@ import database.DatabaseFactory;
  */
 public class Controller {
 
-	private static AudioPlayer player;
+	private static AudioPlayer player = new ByteArrayAudioPlayer();
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
@@ -83,14 +83,6 @@ public class Controller {
 	 * of audio is playing at a time
 	 */
 	public static void playAudio(AudioFile file) throws IOException {	
-		// FIXME: This is due to a bug in audioplayer (it is not re-usable)
-		// We want to store only 1 player, and use that all the time to
-		// make sure we dont play 2 things at once
-		if (player == null)
-			player = new ByteArrayAudioPlayer();
-
-		if (player.isPlaying())
-			player.stop();
 
 		player.play(file);
 	}
@@ -169,7 +161,7 @@ public class Controller {
 
 	public static void playFlashCard(FlashCard card) throws IOException {
 		//FIXME implement for real
-		playAudio(card.getQuestionAudio());
+		player.play(card);
 	}
 
 	public static boolean verifyInput(String input) {
