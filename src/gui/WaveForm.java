@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,44 +19,63 @@ public class WaveForm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private byte[] bytes;
+	private int[] data;
 	
 	public WaveForm(AudioFile file) throws IOException {
 		super();
-		this.bytes = file.getRawBytes();
+		this.data = byteToInt(file.getRawBytes());
 	}
 	
 	public WaveForm() {
 		super();
 	}
 	
+	private static int[] byteToInt(byte[] bytes) {
+		int[] output = new int[bytes.length/2];
+		ByteBuffer b = ByteBuffer.allocate(2);
+		b.order(ByteOrder.LITTLE_ENDIAN);
+		int j = 0;
+		for (int i = 0; i < bytes.length; i++) {
+			b.put(bytes[i]);
+			i++;
+			b.put(bytes[i]);
+			System.out.println(b.position());
+			output[j] = b.getShort(0);
+			j++;
+			b.clear();
+			System.out.println("line");
+		}
+		
+		return output;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (bytes == null)
+		if (data == null)
 			return;
 		synchronized (this) {
-			double xScale = ((double) this.getWidth()) / ((double) bytes.length);
-			double yScale = (double) this.getHeight() / 260;
-			for (int i = 0; i < bytes.length - 1; i++) {
+			double xScale = ((double) this.getWidth()) / ((double) data.length);
+			double yScale = (double) this.getHeight() / 65536;
+			for (int i = 0; i < data.length - 1; i++) {
 				g.drawLine((int) (i * xScale),
-						(int) ((bytes[i] + 130) * yScale),
+						(int) ((data[i] + 32768) * yScale),
 						(int) ((i + 1) * xScale),
-						(int) ((bytes[i + 1] + 130) * yScale));
+						(int) ((data[i + 1] + 32768) * yScale));
 			}
 		}
 	}
 	
 	public void changeAudio(AudioFile newFile) throws IOException {
 		synchronized (this) {
-			this.bytes = newFile.getRawBytes();
+			this.data = byteToInt(newFile.getRawBytes());
 		}
 		repaint();
 	}
 	
 	public void clearAudio() {
 		synchronized (this) {
-			bytes = null;
+			data = null;
 		}
 			repaint();
 	}
