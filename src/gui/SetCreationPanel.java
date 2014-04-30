@@ -104,7 +104,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		tagPanel.setOpaque(false);
 		box.add(tagPanel);
 
-		tags = new TagPanel("Add Global Tags Here");
+		tags = new TagPanel("Add Global Tags Here", true);
 		JScrollPane scroller = new JScrollPane(tags);
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
@@ -129,6 +129,9 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	}
 
 	private void populateFields(FlashCardSet set) {
+		if (set == null)
+			return;
+
 		setNameField.setText(set.getName());
 		spinnerInterval.setValue(set.getInterval());
 		authorTextField.setText(set.getAuthor());
