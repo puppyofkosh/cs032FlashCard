@@ -154,8 +154,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		removeEmptySpace(aPanel);
 
 		//This panel has an input field and a space for tags to be added.
-		tagPanel = new TagPanel();
-		tagPanel.setEmptyText("Add Tags:");
+		tagPanel = new TagPanel("Add Tags:", false);
 		JScrollPane scroller = new JScrollPane(tagPanel);
 		scroller.setBorder(BorderFactory.createEmptyBorder());
 		scroller.setOpaque(false);
