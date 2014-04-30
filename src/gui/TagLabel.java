@@ -1,11 +1,12 @@
 package gui;
 
+import gui.IconFactory.IconType;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,34 +24,39 @@ public class TagLabel extends JPanel implements MouseListener{
 	TagPanel _tagPanel;
 	String _tagText;
 	boolean _global;
+	boolean _deleteable;
 
 	TagLabel(String s, TagPanel tagPanel) {
-		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, false);
+		this(s, tagPanel, false);
 	}
 
 	TagLabel(String s, TagPanel tagPanel, boolean global) {
-		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, global);
+		this(s, tagPanel, global, true);
 	}
 
-	TagLabel(String s, int size, int roundedness, TagPanel tagPanel, boolean global) {
+	TagLabel(String s, TagPanel tagPanel, boolean global, boolean deleteable) {
+		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, global, deleteable);
+	}
+
+	TagLabel(String s, int size, int roundedness, TagPanel tagPanel, boolean global, boolean deleteable) {
 		super();
 		_tagText = s;
 		_size = size;
 		_roundedness = roundedness;
 		_tagPanel = tagPanel;
+		_global = global;
+		_deleteable = deleteable;
 		_tag = new JLabel(shortenText(_tagText));
 		_tag.setBorder(BorderFactory.createEmptyBorder(1, 1, 3, 1));
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 
-		ImageIcon current = new ImageIcon("./res/img/delete x.png");
-		Image img = current.getImage();
-		Image newimg = img.getScaledInstance(_size, _size,  java.awt.Image.SCALE_SMOOTH ) ;  
-		current = new ImageIcon(newimg);
-		_delete = new JLabel(current);
-		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		_delete.addMouseListener(this);
-
-		add(_delete);
+		if (_deleteable) {
+			ImageIcon current = IconFactory.loadIcon(IconType.DELETE, _size);
+			_delete = new JLabel(current);
+			_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+			_delete.addMouseListener(this);
+			add(_delete);
+		}
 		add(_tag);
 		setBackground(global ? GuiConstants.SET_TAG_COLOR : GuiConstants.CARD_TAG_COLOR);
 		setOpaque(false);
@@ -90,32 +96,38 @@ public class TagLabel extends JPanel implements MouseListener{
 	@Override
 	public void addMouseListener(MouseListener ml) {
 		_tag.addMouseListener(ml);
-		_delete.addMouseListener(ml);
+		if (_deleteable)
+			_delete.addMouseListener(ml);
 		_tagPanel.addMouseListener(ml);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		if (_deleteable)
+			_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		if (_deleteable)
+			_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		_tagPanel.deleteTag(this);
+		if (_deleteable)
+			_tagPanel.deleteTag(this);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		if (_deleteable)
+			_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		if (_deleteable)
+			_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 	}
 }
