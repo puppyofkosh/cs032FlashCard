@@ -155,7 +155,8 @@ public class TagPanel extends JPanel implements MouseListener {
 
 	private void update() {
 		if (_tags.isEmpty()) {
-			remove(_inputField);
+			if (_inputField !=null)
+				remove(_inputField);
 			if (emptyLabel != null)
 				add(emptyLabel);
 			add(_inputField);
@@ -176,19 +177,24 @@ public class TagPanel extends JPanel implements MouseListener {
 		return strings;
 	}
 
-	public void setTags(Collection<String> newTags, boolean global) {
+	public void setTags(Collection<String> newTags, boolean global, boolean deletable) {
 		removeAll();
 		_tags = new LinkedList<>();
-		for(String tag :  newTags) {
-			addTag(tag, global);
-		}
 		initInputField();
+		for(String tag :  newTags) {
+			addTag(tag, global, deletable);
+		}
 		update();
 	}
 
 	public void setTags(Collection<String> newTags) {
-		setTags(newTags, false);
+		setTags(newTags, false, true);
 	}
+
+	public void setTags(Collection<String> newTags, boolean global) {
+		setTags(newTags, global, false);
+	}
+
 
 	public void clear() {
 		_tags = new LinkedList<>();

@@ -24,7 +24,7 @@ public class TagLabel extends JPanel implements MouseListener{
 	TagPanel _tagPanel;
 	String _tagText;
 	boolean _global;
-	boolean _deleteable;
+	boolean _deletable;
 
 	TagLabel(String s, TagPanel tagPanel) {
 		this(s, tagPanel, false);
@@ -34,23 +34,23 @@ public class TagLabel extends JPanel implements MouseListener{
 		this(s, tagPanel, global, true);
 	}
 
-	TagLabel(String s, TagPanel tagPanel, boolean global, boolean deleteable) {
-		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, global, deleteable);
+	TagLabel(String s, TagPanel tagPanel, boolean global, boolean deletable) {
+		this(s, GuiConstants.DEFAULT_BUTTON_SIZE, GuiConstants.DEFAULT_TAG_LABEL_ROUNDEDNESS, tagPanel, global, deletable);
 	}
 
-	TagLabel(String s, int size, int roundedness, TagPanel tagPanel, boolean global, boolean deleteable) {
+	TagLabel(String s, int size, int roundedness, TagPanel tagPanel, boolean global, boolean deletable) {
 		super();
 		_tagText = s;
 		_size = size;
 		_roundedness = roundedness;
 		_tagPanel = tagPanel;
 		_global = global;
-		_deleteable = deleteable;
+		_deletable = deletable;
 		_tag = new JLabel(shortenText(_tagText));
 		_tag.setBorder(BorderFactory.createEmptyBorder(1, 1, 3, 1));
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 
-		if (_deleteable) {
+		if (_deletable) {
 			ImageIcon current = IconFactory.loadIcon(IconType.DELETE, _size);
 			_delete = new JLabel(current);
 			_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -96,38 +96,38 @@ public class TagLabel extends JPanel implements MouseListener{
 	@Override
 	public void addMouseListener(MouseListener ml) {
 		_tag.addMouseListener(ml);
-		if (_deleteable)
+		if (_deletable)
 			_delete.addMouseListener(ml);
 		_tagPanel.addMouseListener(ml);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (_deleteable)
+		if (_deletable)
 			_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (_deleteable)
+		if (_deletable)
 			_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (_deleteable)
+		if (_deletable)
 			_tagPanel.deleteTag(this);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (_deleteable)
+		if (_deletable)
 			_delete.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if (_deleteable)
+		if (_deletable)
 			_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 	}
 }

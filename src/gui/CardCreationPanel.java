@@ -346,6 +346,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	public void assignWorkingSet(FlashCardSet currentSet) {
 		workingSet = currentSet;
 		spinnerInterval.setValue(workingSet.getInterval());
+		tagPanel.setTags(workingSet.getTags(), true, false);
 		//IF WE ADD A SETBROWSER HERE, SELECT IT.
 	}
 }
