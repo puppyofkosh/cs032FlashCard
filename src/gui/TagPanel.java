@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import controller.Controller;
 import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 
 public class TagPanel extends JPanel implements MouseListener {
 
@@ -27,19 +28,51 @@ public class TagPanel extends JPanel implements MouseListener {
 
 	private String inputHint = "Input Tags";
 	private JLabel emptyLabel;
+	private boolean global;
+
+	TagPanel(FlashCard card, String text) {
+		this(text);
+		_card = card;
+		for(String tag : _card.getTags()) {
+			addTag(tag, false);
+		}
+		for(FlashCardSet set : _card.getSets()) {
+			for(String setTag : set.getTags()) {
+				addTag(setTag, true);
+			}
+		}
+	}
+
+	TagPanel(FlashCard card) {
+		this();
+		_card = card;
+		for(String tag : _card.getTags()) {
+			addTag(tag, false);
+		}
+		for(FlashCardSet set : _card.getSets()) {
+			for(String setTag : set.getTags()) {
+				addTag(setTag, true);
+			}
+		}
+	}
 
 	TagPanel(String text) {
-		this(null, text);
+		this(null, text, false);
 	}
 	TagPanel() {
-		this(null, null);
+		this(null, null, false);
 	}
 
-	TagPanel(List<String> tags, String text) {
+	TagPanel(String text, boolean global) {
+		this(null, text, global);
+	}
+
+	TagPanel(List<String> tags, String text, boolean global) {
 		super(new WrapLayout(WrapLayout.CENTER, 1, 1));
 
 		if (text == null) text = "No Tags";
 		if (tags == null) tags = new LinkedList<>();
+		this.global = global;
 
 		setBorder(BorderFactory.createEmptyBorder());
 		addMouseListener(this);
@@ -60,7 +93,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == _inputField) {
-					addTag(_inputField.getText());
+					addTag(_inputField.getText(), global);
 					_inputField.setText("");
 				}
 			}
@@ -87,8 +120,11 @@ public class TagPanel extends JPanel implements MouseListener {
 		_inputField.setVisible(false);
 	}
 
+	public void setPanelType(boolean global) {
+		this.global = global;
+	}
 
-	public void addTag(String tag) {
+	public void addTag(String tag, boolean global) {
 		if (!_tags.contains(tag) && Controller.verifyInput(tag) && !tag.equals(inputHint)) {
 			try {
 				Controller.addTag(_card, tag);
@@ -96,7 +132,7 @@ public class TagPanel extends JPanel implements MouseListener {
 				Controller.guiMessage("Could not add tag to card", true);
 				return;
 			}
-			new TagLabel(tag, this).addMouseListener(this);
+			new TagLabel(tag, this, global).addMouseListener(this);
 			update();
 		} else {
 			Controller.guiMessage(String.format("Your input: \"%s\" is an invalid tag", tag), true);
@@ -114,7 +150,8 @@ public class TagPanel extends JPanel implements MouseListener {
 	private void update() {
 		if (_tags.isEmpty()) {
 			remove(_inputField);
-			add(emptyLabel);
+			if (emptyLabel != null)
+				add(emptyLabel);
 			add(_inputField);
 		} else {
 			if (emptyLabel != null)
@@ -133,15 +170,18 @@ public class TagPanel extends JPanel implements MouseListener {
 		return strings;
 	}
 
-	public void setTags(Collection<String> newTags) {
+	public void setTags(Collection<String> newTags, boolean global) {
 		removeAll();
 		_tags = new LinkedList<>();
 		for(String tag :  newTags) {
-			addTag(tag);
+			addTag(tag, global);
 		}
-
 		initInputField();
 		update();
+	}
+
+	public void setTags(Collection<String> newTags) {
+		setTags(newTags, false);
 	}
 
 	public void clear() {

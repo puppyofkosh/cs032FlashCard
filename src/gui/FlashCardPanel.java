@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,7 +30,6 @@ import utils.Writer;
 import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
-import java.awt.BorderLayout;
 
 /**
  * This class is used by the GUI to represent flashCards, as
@@ -151,7 +151,7 @@ public class FlashCardPanel extends JPanel {
 		//This panel maintains all information about the tags and displays them
 		//as bubbles in a scroll window. When you mouse over it, it will display
 		//a text field where you can add more tags.
-		_tagPanel = new TagPanel();
+		_tagPanel = new TagPanel(_card);
 
 		//A ControlScrollPane allows us to responsively scroll through cards as
 		//well as tags.
@@ -160,9 +160,9 @@ public class FlashCardPanel extends JPanel {
 		js.getViewport().setOpaque(false);
 		js.setBorder(BorderFactory.createEmptyBorder());
 		add(js);
-
+		
 		populateSets(_card.getSets());
-		populateTags(_card.getTags());
+
 		revalidate();
 	}
 
@@ -172,20 +172,6 @@ public class FlashCardPanel extends JPanel {
 	 */
 	private void populateSets(Collection<FlashCardSet> sets) {}
 
-	/**
-	 * Adds all the tags on the card to the panel's _tagPanel.
-	 * @param tags - the tags to be added.
-	 */
-	private void populateTags(Collection<String> tags) {
-		//TODO we probably shouldn't be handling this here.
-		for(String tag : tags) {
-			if (tag.equalsIgnoreCase("null") || (tag.equals("")))
-				continue;
-			else {
-				_tagPanel.addTag(tag);
-			}
-		}
-	}
 
 	/**
 	 * A special action listener for play/pause buttons.
