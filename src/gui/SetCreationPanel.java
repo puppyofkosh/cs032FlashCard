@@ -161,17 +161,16 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 			String nameInput = setNameField.getText();
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
-					
+
 			FlashCardSet currentSet = Controller.createSet(nameInput, authorTextField.getText(), tags.getTags(), interval);
 			recordPanel.assignWorkingSet(currentSet);
-			
+
 			if (recordPanel.hasWorkingSet())
 				controlledLayout.show(controlledPanel, "record panel");
 			else {
 				Controller.guiMessage("Must create a set or choose an existing one", true);
 				return;
 			}
-				
 		}
 	}
 
