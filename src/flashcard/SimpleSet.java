@@ -19,7 +19,7 @@ public class SimpleSet implements FlashCardSet{
 	private String name;
 	private Set<FlashCard> cards;
 	
-	private List<String> globalTags = new ArrayList<>();
+	private Set<String> globalTags = new HashSet<>();
 	
 	private String author;
 	private int interval;
@@ -78,7 +78,7 @@ public class SimpleSet implements FlashCardSet{
 	
 	@Override
 	public void setTags(List<String> tags) throws IOException {
-		this.globalTags = new ArrayList<>(tags);
+		this.globalTags = new HashSet<>(tags);
 	}
 
 	@Override
@@ -94,5 +94,14 @@ public class SimpleSet implements FlashCardSet{
 	@Override
 	public void setInterval(int interval) {
 		this.interval = interval;
+	}
+	
+	@Override
+	public boolean sameMetaData(FlashCardSet s)
+	{	
+		// Make sure both sets have the same tags
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
+
+		return (tagEquality && s.getAuthor().equals(getAuthor()) && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 }

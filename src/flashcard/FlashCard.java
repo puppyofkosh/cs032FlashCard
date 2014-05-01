@@ -90,4 +90,6 @@ public interface FlashCard {
 	AudioFile getQuestionAudio();
 	
 	AudioFile getAnswerAudio();
+	
+	public boolean sameMetaData(FlashCard f);
 }

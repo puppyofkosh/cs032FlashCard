@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import utils.FlashcardConstants;
@@ -235,6 +236,15 @@ public class DatabaseFlashCard implements FlashCard {
 	public String toString()
 	{
 		return "DB Flashcard with table id " + id;
+	}
+	
+	@Override
+	public boolean sameMetaData(FlashCard s)
+	{	
+		// Make sure both sets have the same tags
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
+
+		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 
 }

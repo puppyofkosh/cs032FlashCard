@@ -63,4 +63,7 @@ public interface FlashCardSet {
 	public int getInterval();
 	
 	public void setInterval(int interval);
+	
+	// Check if the interval, author, tags, etc are same for two sets
+	public boolean sameMetaData(FlashCardSet o);
 }
