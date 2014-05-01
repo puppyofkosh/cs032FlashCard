@@ -2,18 +2,23 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.DropMode;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.TransferHandler;
 import javax.swing.table.DefaultTableModel;
-
-import com.explodingpixels.macwidgets.MacWidgetFactory;
 
 import utils.FlashcardConstants;
 import utils.Writer;
@@ -41,7 +46,15 @@ public class CardTablePanel extends JPanel {
 				return false;
 			}
 		};
+
 		searchTable = new JTable(searchTableModel);
+		/////TESTING////
+		searchTable.setDragEnabled(true);
+		searchTable.setDropMode(DropMode.INSERT_ROWS);
+		searchTable.setTransferHandler(new SearchTableTransferHandler()); 
+
+		searchTable.setFillsViewportHeight(true);
+		///////////////
 		searchTable.getTableHeader().setReorderingAllowed(false);
 		searchTable.setGridColor(Color.BLACK);
 		searchTable.setEnabled(true);
@@ -61,7 +74,7 @@ public class CardTablePanel extends JPanel {
 
 
 	public void updateSelectedCards() {
-		selectedCards = new LinkedList<>();
+		selectedCards = new ArrayList<>();
 		for(int index : searchTable.getSelectedRows()) {
 			selectedCards.add(cards.get(index));
 		}
@@ -95,7 +108,83 @@ public class CardTablePanel extends JPanel {
 		populateTableModel(data.toArray(new String[data.size()][]), FlashcardConstants.DEFAULT_TABLE_COLUMNS);
 	}
 
-	public void populateTableModel(String[][] data, String[] columns) {
+	private void populateTableModel(String[][] data, String[] columns) {
 		searchTableModel.setDataVector(data, columns);
+	}
+
+	/**
+	 * Handles all drop operations into the table.
+	 * @author samkortchmar
+	 *
+	 */
+	private class SearchTableTransferHandler extends TransferHandler {
+
+		private final DataFlavor acceptedDF = 
+				new DataFlavor(TransferableFlashCards.class, "FlashCard");
+
+		/**
+		 * Checks if this is a type of import we support. Currently
+		 * only accepts dropping TransferableFlashCards.
+		 */
+		public boolean canImport(TransferSupport support) {
+			// we'll only support drops (not clipboard paste)
+			if (support.isDrop()) {
+
+				for(DataFlavor df: support.getDataFlavors()) {
+					return df.equals(acceptedDF);
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Handles actually importing the data.
+		 */
+		public boolean importData(TransferSupport support) {
+			// if we can't handle the import, say so
+			if (!canImport(support)) {
+				return false;
+			}
+
+			// fetch the drop location
+			JTable.DropLocation dl = (JTable.DropLocation) support.getDropLocation();
+
+			int row = dl.getRow();
+
+			// fetch the data and bail if this fails
+			TransferableFlashCards tfc;
+			try {
+				tfc = (TransferableFlashCards) support.getTransferable().getTransferData(acceptedDF);
+			} catch (UnsupportedFlavorException e) {
+				return false;
+			} catch (IOException e) {
+				return false;
+			}
+
+			Collection<FlashCard> newCards = tfc.getFlashCards();
+			//Used for handling the row placement of the cards.
+			int i = 0;
+			
+			//We iterate through the collection.
+			Iterator<FlashCard> itr = newCards.iterator();
+			while(itr.hasNext()) {
+				FlashCard newCard = itr.next();
+				if (!cards.contains(newCard)) {
+					cards.add(row + i, newCard);
+					String[] rowData = new String[] {newCard.getName(), 
+							Integer.toString(newCard.getInterval()),
+							Writer.condenseCollection(newCard.getTags()),
+							Writer.condenseCollection(newCard.getSets())};
+					searchTableModel.insertRow(row + i, rowData);
+					i++;
+				}
+			}
+
+			Rectangle rect = searchTable.getCellRect(row + i, 0, false);
+			if (rect != null) {
+				searchTable.scrollRectToVisible(rect);
+			}
+			return true;
+		}
 	}
 }

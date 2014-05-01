@@ -3,13 +3,16 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.TransferHandler;
 
 import com.explodingpixels.macwidgets.SourceList;
 import com.explodingpixels.macwidgets.SourceListCategory;
@@ -51,7 +54,7 @@ public class SetBrowser extends JPanel  {
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
 		updateSourceList();
 	}
-	
+
 	SetBrowser(SourceListSelectionListener parentComponent) {
 		this();
 		_parentComponent = parentComponent;
@@ -71,6 +74,10 @@ public class SetBrowser extends JPanel  {
 		sourceList = new SourceList(model);	
 		SourceListCategory setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
+		//A very complicated looking loop that basically just iterates through
+		//All sets and their cards and adds them to the sourceListModel.
+		//Should really be implemented where sets are Categories and not items
+		//but we wanted to use the custom icons we made.
 		for(FlashCardSet set : Controller.getAllSets()) {
 			SourceListItem setFolder = new SourceListItem(set.getName(), IconFactory.loadIcon(IconType.SET, 14));
 			try {
@@ -90,8 +97,13 @@ public class SetBrowser extends JPanel  {
 			}
 		}
 		sourceList.setExpanded(setsCategory, true);
+		//Allows keyboard interaction with setbrowser.
+		//Potentially want to add another keyboard interaction for 
+		//expanding/collapsing items.
 		sourceList.setFocusable(true);
 		sourceList.setColorScheme(new CustomColorScheme());
+
+		//Passes the selection event to the parentComponent
 		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
 			@Override
 			public void sourceListItemSelected(SourceListItem arg0) {
@@ -100,12 +112,16 @@ public class SetBrowser extends JPanel  {
 			}
 		});
 
+		//This handles dragging from the sourceList into another component.
+		sourceList.setTransferHandler(new SourceListTransferHandler());
+
+
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
 		revalidate();
 		repaint();
 	}
-	
+
 	public SourceList getSourceList() {
 		return sourceList;
 	}
@@ -160,7 +176,36 @@ public class SetBrowser extends JPanel  {
 		}
 	}
 
+	/**
+	 * A custom transfer handler for dragging and dropping cards
+	 * from the sourcelist. Note that it unpacks sets and drops
+	 * their cards.
+	 * @author samkortchmar
+	 *
+	 */
+	private class SourceListTransferHandler extends TransferHandler {
 
+		private static final long serialVersionUID = 1L;
+
+		public int getSourceActions(JComponent c) {
+			return COPY;
+		}
+
+		protected Transferable createTransferable(JComponent c) {
+			//Attempt to get the currently selected card.
+			Collection<FlashCard> cards = new LinkedList<>();
+			FlashCard card = getSelectedCard();
+			if (card != null) {//then a card is selected, so let's add it
+				cards.add(card);
+			} else { //a set is currently selected, so let's get its cards.
+				FlashCardSet set = getSelectedSet();
+				try {
+					cards = set.getAll();
+				} catch (IOException e) {
+					Controller.guiMessage("Could not get cards in the set", true);
+				}
+			}
+			return new TransferableFlashCards(cards);
+		}
+	}
 }
-
-
