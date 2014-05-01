@@ -16,8 +16,8 @@ import java.util.List;
 import utils.Writer;
 import audio.AudioFile;
 import audio.AudioPlayer;
+import audio.BufferRecorder;
 import audio.ByteArrayAudioPlayer;
-import audio.DiscRecorder;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
@@ -163,7 +163,7 @@ public class Controller {
 				fixedText.append(currentCharacter);
 		}
 		
-		if (fixedText.length() < 1);
+		if (fixedText.length() == 0)
 			fixedText.append("untitled");
 		int overlapPreventer = 0;
 		String prefix = "files/" + fixedText;
@@ -219,7 +219,7 @@ public class Controller {
 	}
 
 	public static void startRecord() {
-		recorder = new DiscRecorder();
+		recorder = new BufferRecorder();
 		recorder.startRecord();
 	}
 

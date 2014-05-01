@@ -12,7 +12,8 @@ import javax.sound.sampled.TargetDataLine;
 import utils.FlashcardConstants;
 
 /**
- * Recorder that creates a TempAudioFile
+ * Recorder that writes audio to a file as it records, then
+ * converts it into a MemoryAudioFile once recording is over
  * @author Peter
  *
  */
