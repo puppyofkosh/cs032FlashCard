@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private ImportPanel importPanel;
+	private QuizletPanel quizletPanel;
 	private ExportPanel exportPanel;
 	private SetCreationPanel setCreationPanel;
 	private FlashboardPanel flashboardPanel;
@@ -73,6 +74,9 @@ public class MainFrame extends JFrame {
 		importPanel = new ImportPanel();
 		importPanel.setControlledLayout(mainPanelLayout);
 		importPanel.setControlledPanel(mainPanelContainer);
+		
+		quizletPanel = new QuizletPanel();
+		mainPanelContainer.add(quizletPanel, GuiConstants.QUIZLET_PANEL_NAME);
 
 		mainPanelContainer.add(importPanel, GuiConstants.IMPORT_PANEL_NAME);
 

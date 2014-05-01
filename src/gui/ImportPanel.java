@@ -33,6 +33,14 @@ public class ImportPanel extends GenericPanel {
 		
 		JButton btnNewButton = new JButton("From Quizlet");
 		panel.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controlledLayout.show(controlledPanel, GuiConstants.QUIZLET_PANEL_NAME);
+			}
+			
+		});
 		
 		JPanel panel_1 = new JPanel();
 		add(panel_1);

@@ -8,6 +8,7 @@ public class GuiConstants {
 	public static final int HEIGHT = 400;
 
 	public static final String IMPORT_PANEL_NAME = "import panel";
+	public static final String QUIZLET_PANEL_NAME = "quizlet panel";
 	public static final String EXPORT_PANEL_NAME = "export panel";
 	public static final String CREATE_PANEL_NAME = "create panel";
 	public static final String SET_CREATION_PANEL_NAME = "set creation panel";
