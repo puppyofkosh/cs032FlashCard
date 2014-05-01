@@ -323,7 +323,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			}
 			data.interval = (int) spinnerInterval.getValue();
 
-			data.tags = tagPanel.getTags();
+			data.tags = tagPanel.getTags(false);
 			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 			try {
@@ -335,6 +335,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 			clear();
 			// Move user to the next pane
+			Controller.updateGUI();
 			controlledLayout.show(controlledPanel, "create panel");
 		}
 	}

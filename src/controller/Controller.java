@@ -243,6 +243,10 @@ public class Controller {
 		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
+	
+	public static void updateGUI() {
+		gui.updateAll();
+	}
 
 	public static void launchGUI() {
 		gui = new MainFrame();

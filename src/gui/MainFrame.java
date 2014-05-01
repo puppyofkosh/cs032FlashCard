@@ -77,7 +77,6 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(importPanel, GuiConstants.IMPORT_PANEL_NAME);
 
 		exportPanel = new ExportPanel();
-		exportPanel.update(DatabaseFactory.getResources().getAllCards());
 		mainPanelContainer.add(exportPanel, GuiConstants.EXPORT_PANEL_NAME);
 
 		setCreationPanel = new SetCreationPanel();
@@ -99,7 +98,6 @@ public class MainFrame extends JFrame {
 	}
 
 	public void updateAll() {
-		exportPanel.update();
 		flashboardPanel.updateFlashboard();
 		setCreationPanel.update();
 	}

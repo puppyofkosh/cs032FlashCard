@@ -90,6 +90,7 @@ public class QuizletPanel extends JPanel {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("test");
 		frame.add(new QuizletPanel());
+		frame.pack();
 		frame.setVisible(true);
 	}
 

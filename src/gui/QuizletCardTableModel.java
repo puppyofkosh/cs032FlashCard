@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import quizlet.QuizletCard;
-import quizlet.QuizletSet;
 
 public class QuizletCardTableModel extends AbstractTableModel {
 

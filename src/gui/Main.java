@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -16,22 +17,28 @@ public class Main {
 
 	
 	/**
-	 * Currently demos drag n drop.
+	 * Currently demos export
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				//Should really have started doing this earlier.
-				dragAndDropDemo();
+				JFrame frame = new JFrame();
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.add(exportDemo());
+				frame.pack();
+				frame.setVisible(true);
+
 			}
 		});
 	}
 	
-	public static void dragAndDropDemo() {
+	public static JComponent exportDemo() {
+		return new ExportPanel();
+	}
+	
+	public static JComponent dragAndDropDemo() {
 		try {
-			JFrame frame = new JFrame();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			JPanel p = new JPanel();
 			p.add(new SetBrowser());
 			CardTablePanel ctp = new CardTablePanel();
@@ -45,11 +52,10 @@ public class Main {
 			JTextField area = new JTextField(10);
 			area.setDragEnabled(true);
 			p.add(area);
-			frame.add(p);
-			frame.pack();
-			frame.setVisible(true);
+			return p;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 
 	}

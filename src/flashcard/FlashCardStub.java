@@ -157,6 +157,12 @@ public class FlashCardStub implements FlashCard, Serializable {
 		
 	}
 
+	@Override
+	public boolean sameMetaData(FlashCard f) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 
 

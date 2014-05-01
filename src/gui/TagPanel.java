@@ -169,13 +169,32 @@ public class TagPanel extends JPanel implements MouseListener {
 		repaint();
 	}
 
+	/**
+	 * This gets all the tags, regardless of their global status.
+	 * @return
+	 */
 	public List<String> getTags() {
 		LinkedList<String> strings = new LinkedList<>();
 		for(TagLabel tag : _tags) {
-			strings.add(tag.getText());
+				strings.add(tag.getText());
 		}
 		return strings;
 	}
+	
+	/**
+	 * This gets all global tags or all card-specific tags, depending on the
+	 * @param global - what kind of tags we want.
+	 * @return
+	 */
+	public List<String> getTags(boolean global) {
+		LinkedList<String> strings = new LinkedList<>();
+		for(TagLabel tag : _tags) {
+			if (tag._global == global)
+				strings.add(tag.getText());
+		}
+		return strings;
+	}
+	
 
 	public void setTags(Collection<String> newTags, boolean global, boolean deletable) {
 		removeAll();

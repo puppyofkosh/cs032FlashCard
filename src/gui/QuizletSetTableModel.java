@@ -81,7 +81,6 @@ public class QuizletSetTableModel extends AbstractTableModel {
 		
 		case 2:
 			return "number of terms";
-			
 		case 3:
 			return "preview";
 			

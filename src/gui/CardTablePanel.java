@@ -33,12 +33,16 @@ public class CardTablePanel extends JPanel {
 
 	private List<FlashCard> selectedCards = new LinkedList<>();
 
-
+	CardTablePanel(String title) {
+		this();
+		setTitle(title);
+	}
 	/**
 	 * Create the panel.
 	 */
 	public CardTablePanel() {
-		setLayout(new BorderLayout(5, 5));
+		setLayout(new BorderLayout(0,0));
+		cards = new ArrayList<>();
 		searchTableModel = new DefaultTableModel() {
 
 			@Override
@@ -48,22 +52,24 @@ public class CardTablePanel extends JPanel {
 		};
 
 		searchTable = new JTable(searchTableModel);
-		/////TESTING////
 		searchTable.setDragEnabled(true);
 		searchTable.setDropMode(DropMode.INSERT_ROWS);
 		searchTable.setTransferHandler(new SearchTableTransferHandler()); 
 
 		searchTable.setFillsViewportHeight(true);
-		///////////////
 		searchTable.getTableHeader().setReorderingAllowed(false);
 		searchTable.setGridColor(Color.BLACK);
 		searchTable.setEnabled(true);
 		searchTable.setAutoscrolls(true);
 		JScrollPane scrollPane = new JScrollPane(searchTable);
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		add(scrollPane, BorderLayout.CENTER);
-		setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		updateTable();
+	}
+	
+	public void setTitle(String title) {
+		setBorder(BorderFactory.createTitledBorder(title));
 	}
 
 	public CardTablePanel(List<FlashCard> cards) {
@@ -146,11 +152,11 @@ public class CardTablePanel extends JPanel {
 				return false;
 			}
 
+
 			// fetch the drop location
 			JTable.DropLocation dl = (JTable.DropLocation) support.getDropLocation();
 
 			int row = dl.getRow();
-
 			// fetch the data and bail if this fails
 			TransferableFlashCards tfc;
 			try {
@@ -164,7 +170,7 @@ public class CardTablePanel extends JPanel {
 			Collection<FlashCard> newCards = tfc.getFlashCards();
 			//Used for handling the row placement of the cards.
 			int i = 0;
-			
+
 			//We iterate through the collection.
 			Iterator<FlashCard> itr = newCards.iterator();
 			while(itr.hasNext()) {
@@ -173,12 +179,13 @@ public class CardTablePanel extends JPanel {
 					cards.add(row + i, newCard);
 					String[] rowData = new String[] {newCard.getName(), 
 							Integer.toString(newCard.getInterval()),
-							Writer.condenseCollection(newCard.getTags()),
-							Writer.condenseCollection(newCard.getSets())};
+							Writer.condenseCollection(newCard.getSets()),
+							Writer.condenseCollection(newCard.getTags())};
 					searchTableModel.insertRow(row + i, rowData);
 					i++;
 				}
 			}
+
 
 			Rectangle rect = searchTable.getCellRect(row + i, 0, false);
 			if (rect != null) {

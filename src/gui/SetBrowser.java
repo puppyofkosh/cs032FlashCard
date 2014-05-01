@@ -115,7 +115,6 @@ public class SetBrowser extends JPanel  {
 		//This handles dragging from the sourceList into another component.
 		sourceList.setTransferHandler(new SourceListTransferHandler());
 
-
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
 		revalidate();

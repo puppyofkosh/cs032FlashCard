@@ -1,6 +1,9 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -24,8 +27,9 @@ import backend.ItunesExporter;
 import client.Client;
 import database.DatabaseFactory;
 import flashcard.FlashCard;
+import gui.IconFactory.IconType;
 
-public class ExportPanel extends JPanel implements ClientFrontend {
+public class ExportPanel extends JPanel implements ClientFrontend, ActionListener {
 	/**
 	 * 
 	 */
@@ -36,19 +40,27 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	private JRadioButton rdbtnItunes;
 	private Exporter itunesExporter;
 	private JPanel panel;
-	private JButton btnChangeDestination;
+	private JButton btnExport;
 	private Client _client;
+	private SetBrowser _setBrowser;
 	/**
 	 * Create the panel.
 	 * @throws IOException 
 	 */
 	public ExportPanel()  {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		super(new BorderLayout(0,0));
+
+		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
+		add(mainPanel);
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+		mainPanel.add(headerPanel, BorderLayout.NORTH);
+
 
 		JPanel chooseMethodPanel = new JPanel();
-		add(chooseMethodPanel);
+		headerPanel.add(chooseMethodPanel);
 
-		JTextField searchBox = new JTextField(30);
+		JTextField searchBox = new JTextField(20);
 		searchBox.setForeground(Color.LIGHT_GRAY);
 		searchBox.setText("Search Here");
 		searchBox.setForeground(Color.BLACK);
@@ -68,81 +80,24 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 		group.add(rdbtnNetwork);
 		group.add(rdbtnItunes);
 
+		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-		JButton btnExport = new JButton("Export!");
-		//				Controller.exportCard(f, destFolder);
-		btnExport.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				_cardTable.updateSelectedCards();
-				List<FlashCard> cards = _cardTable.getSelectedCards();
+		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		continuePanel.setBackground(Color.BLACK);
+		btnExport = new ImageButton("Export", IconFactory.loadIcon(IconType.EXPORT, 36));
+		btnExport.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+		btnExport.addActionListener(this);
+		continuePanel.add(btnExport);
+		mainPanel.add(continuePanel, BorderLayout.SOUTH);
 
-				if (cards.isEmpty()) {
-					JOptionPane.showMessageDialog(panel, "You must pick which cards to export!");
-					return;
-				}
+		_cardTable = new CardTablePanel("Cards for Export");
+		mainPanel.add(_cardTable, BorderLayout.CENTER);
 
-				if (rdbtnWav.isSelected()) {
-					try {
-						WavFileConcatenator.concatenate(cards);
-						JOptionPane.showMessageDialog(panel, "Audio has been created");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+		_setBrowser = new SetBrowser();
+		add(_setBrowser, BorderLayout.EAST);
 
-				else if (rdbtnItunes.isSelected()) {
-					try {
-						String playlist = JOptionPane.showInputDialog(panel, "Choose name of playlist");
-						if (playlist == null || playlist.equals("")) {
-							JOptionPane.showMessageDialog(panel, "Playlist not created because no name was selected");
-							return;
-						}
-						itunesExporter = new ItunesExporter(new File(playlist + ".m3u"));
 
-						itunesExporter.export(cards);
-						JOptionPane.showMessageDialog(panel, "Playlist has been created! To use this playlist, open Itunes and click Import Playlist, and choose the file \'"
-								+ playlist + ".m3u\' in the directory this program is located in.");
-					} catch (Throwable e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				else if(rdbtnNetwork.isSelected()) {
-					connectAndExport();
-				}
-
-				else
-					JOptionPane.showMessageDialog(panel, "You must choose what kind of export to perform!");
-			}
-
-		});
-		chooseMethodPanel.add(btnExport);
-
-		panel = new JPanel();
-		add(panel);
-
-		btnChangeDestination = new JButton("Change Audio Destination");
-		panel.add(btnChangeDestination);
-		btnChangeDestination.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int returnedValue = fileChooser.showDialog(panel, "Select");
-				if (returnedValue == JFileChooser.APPROVE_OPTION)
-					WavFileConcatenator.changeDestination(fileChooser.getSelectedFile().getPath());
-
-			}
-
-		});
-
-		_cardTable = new CardTablePanel();
-		add(_cardTable);
 	}
 
 	public void connectAndExport() {
@@ -150,10 +105,6 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 		Writer.out("Starting client");
 		_client.start();
 		_client.uploadCards(_cardTable.getSelectedCards());
-	}
-
-	public void update() {
-		_cardTable.updateCards(DatabaseFactory.getResources().getAllCards());
 	}
 
 	public void update(List<FlashCard> cards) {
@@ -187,6 +138,60 @@ public class ExportPanel extends JPanel implements ClientFrontend {
 	public void displayConnectionStatus(boolean connected) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnExport) {
+			_cardTable.updateSelectedCards();
+			List<FlashCard> cards = _cardTable.getSelectedCards();
+
+			if (cards.isEmpty()) {
+				JOptionPane.showMessageDialog(panel, "You must pick which cards to export!");
+				return;
+			}
+
+			if (rdbtnWav.isSelected()) {
+				try {
+					JFileChooser fileChooser = new JFileChooser();
+					fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					int returnedValue = fileChooser.showDialog(panel, "Select");
+					if (returnedValue == JFileChooser.APPROVE_OPTION) {
+						WavFileConcatenator.changeDestination(fileChooser.getSelectedFile().getPath());
+						WavFileConcatenator.concatenate(cards);
+						JOptionPane.showMessageDialog(panel, "Audio has been created");
+					}
+				} catch (IOException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+
+			else if (rdbtnItunes.isSelected()) {
+				try {
+					String playlist = JOptionPane.showInputDialog(panel, "Choose name of playlist");
+					if (playlist == null || playlist.equals("")) {
+						JOptionPane.showMessageDialog(panel, "Playlist not created because no name was selected");
+						return;
+					}
+					itunesExporter = new ItunesExporter(new File(playlist + ".m3u"));
+
+					itunesExporter.export(cards);
+					JOptionPane.showMessageDialog(panel, "Playlist has been created! To use this playlist, open Itunes and click Import Playlist, and choose the file \'"
+							+ playlist + ".m3u\' in the directory this program is located in.");
+				} catch (Throwable ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+
+			else if(rdbtnNetwork.isSelected()) {
+				connectAndExport();
+			}
+
+			else
+				JOptionPane.showMessageDialog(panel, "You must choose what kind of export to perform!");
+		} 
 	}
 
 }
