@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import utils.Writer;
@@ -212,5 +213,14 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	public String toString()
 	{
 		return "Flashcard at " + data.pathToFile;
+	}
+	
+	@Override
+	public boolean sameMetaData(FlashCard s)
+	{	
+		// Make sure both sets have the same tags
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
+
+		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 }

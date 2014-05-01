@@ -6,7 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
@@ -103,7 +106,7 @@ public class DatabaseSet implements FlashCardSet{
 
 	@Override
 	public Collection<String> getTags() {
-		List<String> tags = new ArrayList<>();
+		Set<String> tags = new HashSet<>();
 		try (Statement statement = database.getStatement()){
 			String query = "SELECT NAME FROM "
 					+ "(SELECT TAG_ID FROM SETS_TAGS WHERE SET_ID="
@@ -227,6 +230,15 @@ public class DatabaseSet implements FlashCardSet{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
+	}
+	
+	@Override
+	public boolean sameMetaData(FlashCardSet s)
+	{	
+		// Make sure both sets have the same tags
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
+
+		return (tagEquality && s.getAuthor().equals(getAuthor()) && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 
 }

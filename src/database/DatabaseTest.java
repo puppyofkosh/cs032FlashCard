@@ -67,7 +67,11 @@ public class DatabaseTest {
 		assertTrue(dbCard.getPath().equals("files/test-card/"));
 		assertTrue(dbCard.getTags().equals(testCard.getTags()));
 		assertTrue(dbCard.getInterval() == testCard.getInterval());
-
+		
+		// Check equals operators
+		assertTrue(dbCard.sameMetaData(testCard));
+		assertTrue(testCard.sameMetaData(dbCard));
+		
 		// Now screw around with the card, try changing some things
 		dbCard.setInterval(6);
 		assertTrue(dbCard.getInterval() == 6);
@@ -132,10 +136,15 @@ public class DatabaseTest {
 		
 		
 		FlashCardSet dbSet = db.writeSet(set);
-
+		
+		// Check to make sure the card was written properly
 		assertTrue(db.getAllCards().size() == 1);
 		assertTrue(db.getAllSets().size() == 1);
 		
+		// Check the equals operator between a simple set and a db set
+		System.out.println("Comparing");
+		assertTrue(dbSet.sameMetaData(set));
+		assertTrue(set.sameMetaData(dbSet));
 		
 		assertTrue(dbSet.getName().equals("state capitals"));		
 		assertTrue(dbSet.getTags().contains("Tag A"));

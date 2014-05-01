@@ -222,6 +222,7 @@ public class Controller {
 	
 	public static FlashCardSet createSet(String name, String author, List<String> tags, int interval) {
 		//TODO Should check if the set exists already.
+		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(name);
 		FlashCardSet set = new SimpleSet(name);
 		for(String tag : tags) {
 			try {
@@ -232,6 +233,13 @@ public class Controller {
 		}
 		set.setAuthor(author);
 		set.setInterval(interval);
+		
+		if (existingSet != null && existingSet.sameMetaData(set))
+		{
+			return existingSet;
+		}
+		
+		
 		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
