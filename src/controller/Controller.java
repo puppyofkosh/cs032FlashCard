@@ -155,8 +155,24 @@ public class Controller {
 	}
 
 	public static String parseCardName(String text) {
-		//FIXME implement for real
-		return text;
+		StringBuilder fixedText = new StringBuilder();
+		char currentCharacter;
+		for (int i = 0; i < text.length(); i++) {
+			currentCharacter = text.charAt(i);
+			if (Character.isJavaIdentifierPart(currentCharacter))
+				fixedText.append(currentCharacter);
+		}
+		
+		if (fixedText.length() < 1);
+			fixedText.append("untitled");
+		int overlapPreventer = 0;
+		String prefix = "files/" + fixedText;
+		File file = new File(prefix);
+		while (file.exists()) {
+			overlapPreventer++;
+			file = new File(prefix + overlapPreventer);
+		}
+		return fixedText.toString() + (overlapPreventer == 0 ? "" : overlapPreventer);
 	}
 
 	public static void playFlashCard(FlashCard card) throws IOException {
@@ -165,7 +181,7 @@ public class Controller {
 
 	public static boolean verifyInput(String input) {
 		//FIXME implement for real
-		return input.length() > 0;
+		return parseCardName(input).equals(input);
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {
