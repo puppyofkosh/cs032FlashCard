@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,6 +70,7 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
 		_headerPanel.setLayout(new BorderLayout(0, 0));
+		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
 		//Add the card's name to the header panel.
 		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);

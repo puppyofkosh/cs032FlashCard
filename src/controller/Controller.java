@@ -160,7 +160,6 @@ public class Controller {
 	}
 
 	public static void playFlashCard(FlashCard card) throws IOException {
-		//FIXME implement for real
 		player.play(card);
 	}
 

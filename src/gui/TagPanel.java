@@ -51,7 +51,7 @@ public class TagPanel extends JPanel implements MouseListener {
 		}
 		for(FlashCardSet set : _card.getSets()) {
 			for(String setTag : set.getTags()) {
-				addTag(setTag, true);
+				addTag(setTag, true, false);
 			}
 		}
 	}
@@ -124,19 +124,25 @@ public class TagPanel extends JPanel implements MouseListener {
 		this.global = global;
 	}
 
-	public void addTag(String tag, boolean global) {
+	public void addTag(String tag, boolean global, boolean deleteable) {
 		if (!_tags.contains(tag) && Controller.verifyInput(tag) && !tag.equals(inputHint)) {
 			try {
-				Controller.addTag(_card, tag);
+				if (!global)
+					Controller.addTag(_card, tag);
 			} catch (IOException e) {
 				Controller.guiMessage("Could not add tag to card", true);
 				return;
 			}
-			new TagLabel(tag, this, global).addMouseListener(this);
+			new TagLabel(tag, this, global, deleteable).addMouseListener(this);
 			update();
 		} else {
 			Controller.guiMessage(String.format("Your input: \"%s\" is an invalid tag", tag), true);
 		}
+	}
+
+
+	public void addTag(String tag, boolean global) {
+		addTag(tag, global, true);
 	}
 
 	public void setEmptyText(String text) {
@@ -149,7 +155,8 @@ public class TagPanel extends JPanel implements MouseListener {
 
 	private void update() {
 		if (_tags.isEmpty()) {
-			remove(_inputField);
+			if (_inputField !=null)
+				remove(_inputField);
 			if (emptyLabel != null)
 				add(emptyLabel);
 			add(_inputField);
@@ -170,19 +177,24 @@ public class TagPanel extends JPanel implements MouseListener {
 		return strings;
 	}
 
-	public void setTags(Collection<String> newTags, boolean global) {
+	public void setTags(Collection<String> newTags, boolean global, boolean deletable) {
 		removeAll();
 		_tags = new LinkedList<>();
-		for(String tag :  newTags) {
-			addTag(tag, global);
-		}
 		initInputField();
+		for(String tag :  newTags) {
+			addTag(tag, global, deletable);
+		}
 		update();
 	}
 
 	public void setTags(Collection<String> newTags) {
-		setTags(newTags, false);
+		setTags(newTags, false, true);
 	}
+
+	public void setTags(Collection<String> newTags, boolean global) {
+		setTags(newTags, global, false);
+	}
+
 
 	public void clear() {
 		_tags = new LinkedList<>();

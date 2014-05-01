@@ -104,6 +104,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 		textQuestion = new JTextField();
 		textQuestion.setColumns(10);
+		setInputHint(textQuestion);
+
 		textQuestion.addActionListener(this);
 
 		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
@@ -126,6 +128,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		intervalPanel.add(lblInterval);
 
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+		if (workingSet != null)
+			spinnerInterval.setValue(workingSet.getInterval());
 		intervalPanel.add(spinnerInterval);
 
 		intervalPanel.setOpaque(false);
@@ -143,6 +147,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 		textAnswer = new JTextField();
 		textAnswer.setColumns(10);
+		setInputHint(textAnswer);
 		textAnswer.addActionListener(this);
 		aPanel.add(textAnswer);
 
@@ -190,6 +195,13 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 	private void removeEmptySpace(JPanel panel) {
 		panel.setMaximumSize(panel.getPreferredSize());
+	}
+
+	private void setInputHint(JTextField text) {
+		String inputHint = "Use Text To Speech";
+		text.setForeground(Color.GRAY);
+		text.setText(inputHint);
+		text.setForeground(Color.BLACK);
 	}
 
 	private void recordToggle(boolean isQuestion) {
@@ -324,16 +336,17 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			clear();
 			// Move user to the next pane
 			controlledLayout.show(controlledPanel, "create panel");
-
 		}
 	}
-	
+
 	public boolean hasWorkingSet() {
 		return workingSet != null;
 	}
 
 	public void assignWorkingSet(FlashCardSet currentSet) {
 		workingSet = currentSet;
+		spinnerInterval.setValue(workingSet.getInterval());
+		tagPanel.setTags(workingSet.getTags(), true, false);
 		//IF WE ADD A SETBROWSER HERE, SELECT IT.
 	}
 }

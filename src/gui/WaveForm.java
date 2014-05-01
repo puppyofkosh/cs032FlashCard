@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ public class WaveForm extends JPanel {
 	public WaveForm(AudioFile file) throws IOException {
 		super();
 		this.data = byteToInt(file.getRawBytes());
+		setBackground(Color.BLACK);
 	}
 	
 	public WaveForm() {
@@ -52,6 +54,7 @@ public class WaveForm extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setColor(Color.GREEN);
 		if (data == null)
 			return;
 		synchronized (this) {
