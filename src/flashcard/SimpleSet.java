@@ -16,13 +16,13 @@ import java.util.Set;
  */
 public class SimpleSet implements FlashCardSet{
 
-	private String name;
-	private Set<FlashCard> cards;
+	private String name = "";
+	private Set<FlashCard> cards = new HashSet<>();
 	
 	private Set<String> globalTags = new HashSet<>();
 	
-	private String author;
-	private int interval;
+	private String author = "";
+	private int interval = 0;
 	
 	public SimpleSet(String name)
 	{

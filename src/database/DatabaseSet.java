@@ -237,7 +237,7 @@ public class DatabaseSet implements FlashCardSet{
 	{	
 		// Make sure both sets have the same tags
 		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
-
+		
 		return (tagEquality && s.getAuthor().equals(getAuthor()) && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 

@@ -71,6 +71,11 @@ public class QuizletPanel extends JPanel {
 		
 		setTable.setDefaultRenderer(Long.class, new PreviewRenderer());
 		setTable.setDefaultEditor(Long.class, new PreviewEditor(new JCheckBox()) {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			
 		});
 		
@@ -103,6 +108,10 @@ public class QuizletPanel extends JPanel {
 	}
 
 	class PreviewEditor extends DefaultCellEditor {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		protected JButton button;
 
 		public PreviewEditor(JCheckBox checkBox) {

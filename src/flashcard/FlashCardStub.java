@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -158,12 +159,11 @@ public class FlashCardStub implements FlashCard, Serializable {
 	}
 
 	@Override
-	public boolean sameMetaData(FlashCard f) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean sameMetaData(FlashCard s)
+	{	
+		// Make sure both sets have the same tags
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
+
+		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
-
-
-
-
 }

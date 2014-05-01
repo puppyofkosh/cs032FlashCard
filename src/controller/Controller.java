@@ -26,13 +26,14 @@ import backend.FileImporter;
 import database.DatabaseFactory;
 
 /**
- * Provide methods that mess with backend stuff for the GUI to call
- * This class should also handle launching tasks in a new thread and all that
+ * Provide methods that mess with backend stuff for the GUI to call This class
+ * should also handle launching tasks in a new thread and all that
  * 
- * FIXME: Pretty much all of these helper methods should launch a new thread to do their work
+ * FIXME: Pretty much all of these helper methods should launch a new thread to
+ * do their work
  * 
  * @author puppyofkosh
- *
+ * 
  */
 public class Controller {
 
@@ -43,6 +44,7 @@ public class Controller {
 
 	/**
 	 * Import a tsv or similar
+	 * 
 	 * @param filename
 	 */
 	public static void importCardsToLibrary(String filename) {
@@ -51,38 +53,41 @@ public class Controller {
 		try {
 			ttsReader = new FreeTTSReader();
 
-			FileImporter importer = new FileImporter(new File(filename), ttsReader);
+			FileImporter importer = new FileImporter(new File(filename),
+					ttsReader);
 			importer.importCards();
 
-			System.out.println("Imported " + importer.getCardList().size() + " cards");
+			System.out.println("Imported " + importer.getCardList().size()
+					+ " cards");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	/**
 	 * Export a card to flat wav
+	 * 
 	 * @param f
 	 * @param destination
 	 */
 	public static void exportCard(FlashCard f, String destinationFolder) {
 		if (!destinationFolder.endsWith("/"))
-			guiMessage("WARNING: destinationFolder should end with a slash(/)", true);
+			guiMessage("WARNING: destinationFolder should end with a slash(/)",
+					true);
 		try {
-			WavFileConcatenator.concatenate(f);						
+			WavFileConcatenator.concatenate(f);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
 
-
 	/**
-	 * Play a chunk of audio. This method should ensure that only one piece
-	 * of audio is playing at a time
+	 * Play a chunk of audio. This method should ensure that only one piece of
+	 * audio is playing at a time
 	 */
-	public static void playAudio(AudioFile file) throws IOException {	
+	public static void playAudio(AudioFile file) throws IOException {
 
 		player.play(file);
 	}
@@ -92,7 +97,7 @@ public class Controller {
 	}
 
 	public static boolean hasPlayer() {
-		//FIXME: implement for real.
+		// FIXME: implement for real.
 		return true;
 	}
 
@@ -102,23 +107,24 @@ public class Controller {
 
 	/**
 	 * Create a flashcard from the given data and save it to file
+	 * 
 	 * @param data
 	 */
 	public static FlashCard createCard(SerializableFlashCard.Data data) {
 		FlashCard card = new SerializableFlashCard(data);
 
-		// Don't do this (for now). When we add the card to the set, it will write it to disk for us.
+		// Don't do this (for now). When we add the card to the set, it will
+		// write it to disk for us.
 		// I can change that if that seems like a bad way of doing things
 		// card = DatabaseFactory.writeCard(card);
-		
-		
+
 		gui.updateAll();
 		return card;
 	}
 
 	/***
-	 * Turn a string like "tag1, tag2 tag3..." into
-	 * [tag1, tag2, tag3]
+	 * Turn a string like "tag1, tag2 tag3..." into [tag1, tag2, tag3]
+	 * 
 	 * @param allTags
 	 * @return
 	 */
@@ -135,7 +141,7 @@ public class Controller {
 	}
 
 	public static void guiMessage(String text, int duration, boolean error) {
-		//FIXME - do for real
+		// FIXME - do for real
 		if (error)
 			Writer.err(text);
 		else
@@ -162,8 +168,8 @@ public class Controller {
 			if (Character.isJavaIdentifierPart(currentCharacter))
 				fixedText.append(currentCharacter);
 		}
-		
-		if (fixedText.length() < 1);
+
+		if (fixedText.length() < 1)
 			fixedText.append("untitled");
 		int overlapPreventer = 0;
 		String prefix = "files/" + fixedText;
@@ -172,7 +178,8 @@ public class Controller {
 			overlapPreventer++;
 			file = new File(prefix + overlapPreventer);
 		}
-		return fixedText.toString() + (overlapPreventer == 0 ? "" : overlapPreventer);
+		return fixedText.toString()
+				+ (overlapPreventer == 0 ? "" : overlapPreventer);
 	}
 
 	public static void playFlashCard(FlashCard card) throws IOException {
@@ -180,7 +187,7 @@ public class Controller {
 	}
 
 	public static boolean verifyInput(String input) {
-		//FIXME implement for real
+		// FIXME implement for real
 		return parseCardName(input).equals(input);
 	}
 
@@ -205,7 +212,7 @@ public class Controller {
 			return reader;
 		else {
 			try {
-				reader =  new FreeTTSReader();
+				reader = new FreeTTSReader();
 				return reader;
 			} catch (Throwable e) {
 				guiMessage("Could not load reader", true);
@@ -235,12 +242,14 @@ public class Controller {
 	public static Collection<FlashCardSet> getAllSets() {
 		return DatabaseFactory.getResources().getAllSets();
 	}
-	
-	public static FlashCardSet createSet(String name, String author, List<String> tags, int interval) {
-		//TODO Should check if the set exists already.
-		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(name);
+
+	public static FlashCardSet createSet(String name, String author,
+			List<String> tags, int interval) {
+		// TODO Should check if the set exists already.
+		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(
+				name);
 		FlashCardSet set = new SimpleSet(name);
-		for(String tag : tags) {
+		for (String tag : tags) {
 			try {
 				set.addTag(tag);
 			} catch (IOException e) {
@@ -249,17 +258,15 @@ public class Controller {
 		}
 		set.setAuthor(author);
 		set.setInterval(interval);
-		
-		if (existingSet != null && existingSet.sameMetaData(set))
-		{
+
+		if (existingSet != null && existingSet.sameMetaData(set)) {
 			return existingSet;
 		}
-		
-		
+
 		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
-	
+
 	public static void updateGUI() {
 		gui.updateAll();
 	}

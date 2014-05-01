@@ -116,13 +116,15 @@ public class FlashCardDatabase implements Resources {
 	 */
 	public static void main(String[] args) throws IOException {
 		FlashCardSet set = new SimpleSet("presidents");
+		set.setAuthor("Ian");
+		set.setTags(Arrays.asList("presidents"));
 
 		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
 		data.question = new MemoryAudioFile(new DiscAudioFile(
 				"data/flashcard-test/hi-there.wav"));
 		data.answer = new MemoryAudioFile(new DiscAudioFile(
 				"data/flashcard-test/acronym.wav"));
-		data.tags = Arrays.asList("Tag A", "Weird people");
+		data.tags = Arrays.asList("tag_a", "weird_people");
 		data.interval = 5;
 		data.pathToFile = "files/george-washington/";
 		data.name = "george washington";
@@ -145,6 +147,10 @@ public class FlashCardDatabase implements Resources {
 
 		// Create another set just for fun
 		set = new SimpleSet("state capitals");
+		set.setAuthor("Ian!");
+		set.setInterval(5);
+		set.setTags(Arrays.asList("states", "capitals"));
+		
 		data.pathToFile = "files/vermont/";
 		data.name = "vermont";
 
