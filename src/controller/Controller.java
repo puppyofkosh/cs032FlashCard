@@ -88,7 +88,6 @@ public class Controller {
 	 * audio is playing at a time
 	 */
 	public static void playAudio(AudioFile file) throws IOException {
-
 		player.play(file);
 	}
 
