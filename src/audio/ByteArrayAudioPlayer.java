@@ -18,7 +18,6 @@ import flashcard.FlashCard;
  */
 public class ByteArrayAudioPlayer implements AudioPlayer {
 
-	private boolean playing;
 	private SourceDataLine line;
 	private Thread playThread;
 	
