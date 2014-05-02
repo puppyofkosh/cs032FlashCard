@@ -208,9 +208,9 @@ public class QuizletPanel extends JPanel {
 							continue;
 						data = new SerializableFlashCard.Data();
 						data.name = Controller.parseCardName(card.term);
-						data.question = Controller.readTTS(card.term);
+						data.setQuestion(Controller.readTTS(card.term));
 						data.questionText = card.definition;
-						data.answer = Controller.readTTS(card.definition);
+						data.setAnswer(Controller.readTTS(card.definition));
 						data.answerText = card.definition;
 						data.interval = interval;
 						data.tags = new ArrayList<>();

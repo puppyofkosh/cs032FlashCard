@@ -120,10 +120,10 @@ public class FlashCardDatabase implements Resources {
 		set.setTags(Arrays.asList("presidents"));
 
 		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-		data.question = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/hi-there.wav"));
-		data.answer = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/acronym.wav"));
+		data.setQuestion(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/hi-there.wav")));
+		data.setAnswer(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/acronym.wav")));
 		data.tags = Arrays.asList("tag_a", "weird_people");
 		data.interval = 5;
 		data.pathToFile = "files/george-washington/";
