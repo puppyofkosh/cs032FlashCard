@@ -36,10 +36,10 @@ public class DatabaseTest {
 
 		// Set up a test card
 		testData = new SerializableFlashCard.Data();
-		testData.question = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/hi-there.wav"));
-		testData.answer = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/acronym.wav"));
+		testData.setQuestion(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/hi-there.wav")));
+		testData.setAnswer(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/acronym.wav")));
 		testData.tags = Arrays.asList("Tag A", "Tag B");
 		testData.interval = 5;
 		testData.pathToFile = "files/test-card/";
@@ -127,7 +127,6 @@ public class DatabaseTest {
 	@Test
 	public void testSets() throws IOException
 	{
-		System.out.println("Set test");
 		SimpleSet set = new SimpleSet("state capitals");
 		set.addTag("Tag A");
 		set.addCard(testCard);
@@ -187,6 +186,20 @@ public class DatabaseTest {
 		
 		// PUT THIS AT THE END OF EVERY TEST
 		db.close();
+	}
+	
+	@Test
+	public void testSearching() throws IOException
+	{
+		SimpleSet set = new SimpleSet("state capitals");
+		set.addTag("global-tag");
+		set.addCard(testCard);
+		set.setAuthor("Ian");
+		set.setInterval(5);
+		
+		FlashCardSet dbSet = db.writeSet(set);
+		
+		assertTrue(db.getFlashCardsWithTag("global-tag").size() == 1);
 	}
 /*
 	@Test

@@ -66,8 +66,8 @@ public class FileImporter implements Importer{
 
 					//FlashCard f = factory.create(entry.get("answer"), question, answer, 5, Arrays.asList("nags"), "set");
 					SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-					data.answer = answer;
-					data.question = question;
+					data.setAnswer(answer);
+					data.setQuestion(question);
 					
 					// FIXME: For now use question as the name
 					data.name = "imported" + lineNumber;

@@ -17,21 +17,6 @@ import audio.AudioFile;
  * 
  */
 public interface FlashCard {
-
-/*FlashCards will be created only after all the information in the constructors
- * below has been collected by our FlashCardFactory class - this way we avoid
- * problems with cards that are in intermediate states. When a FlashCard is created
- * in this way it creates a FlashCard on the filesystem.*/
-		/*FlashCard(String name, AudioFile question, AudioFile answer,
-		 *  int interval, List<String> tags, String set);*/	
-		/*FlashCard(String name, AudioFile question, String questionText,
-		 *  AudioFile answer, String answerText, int interval, List<String> tags,  String set);*/
-	
-/*This constructor builds a FlashCard object form the filePath to the FlashCard on the filesystem.
-		/*FlashCard(String filePath)*/
-	
-	// FIXME: Should flashcards throw io exceptions for all of these methods? Seeing as they're stored on disk, I think yes.
-	
 	/**
 	 * Returns the name of the current FlashCard as a string.
 	 * @return

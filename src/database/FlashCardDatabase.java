@@ -9,7 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import utils.FlashcardConstants;
 import utils.Writer;
@@ -120,10 +124,10 @@ public class FlashCardDatabase implements Resources {
 		set.setTags(Arrays.asList("presidents"));
 
 		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-		data.question = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/hi-there.wav"));
-		data.answer = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/acronym.wav"));
+		data.setQuestion(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/hi-there.wav")));
+		data.setAnswer(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/acronym.wav")));
 		data.tags = Arrays.asList("tag_a", "weird_people");
 		data.interval = 5;
 		data.pathToFile = "files/george-washington/";
@@ -327,6 +331,8 @@ public class FlashCardDatabase implements Resources {
 			// 3) Remove entries from FLASHCARDS_SETS table
 			deleteQuery = "DELETE FROM FLASHCARDS_SETS WHERE SET_ID=" + setId;
 
+			// FIXME: Find all flashcards in this set with only that set and remove them too
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -445,6 +451,29 @@ public class FlashCardDatabase implements Resources {
 	}
 
 	/**
+	 * Search for a card in the db with the given path
+	 * @param path
+	 * @return
+	 */
+	@Override
+	public List<FlashCard> getFlashCardsByPath(String path) {
+		List<FlashCard> cards = new ArrayList<>();
+
+		try (Statement statement = getStatement()) {
+			ResultSet rs = statement
+					.executeQuery("SELECT ID FROM FLASHCARDS WHERE file_path='"
+							+ path + "'");
+
+			while (rs.next()) {
+				cards.add(new DatabaseFlashCard(rs.getInt("ID"), this));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cards;
+	}
+	
+	/**
 	 * Get all of the flashcards with the given name
 	 */
 	@Override
@@ -468,8 +497,9 @@ public class FlashCardDatabase implements Resources {
 	@Override
 	public List<FlashCard> getFlashCardsWithTag(String tag) {
 
-		List<FlashCard> cards = new ArrayList<>();
+		Set<FlashCard> cards = new HashSet<>();
 		try (Statement statement = getStatement()) {
+			// Add all CARDS that have the tag
 			Integer tagId = getTagId(tag);
 
 			if (tagId == null)
@@ -484,10 +514,29 @@ public class FlashCardDatabase implements Resources {
 			while (rs.next()) {
 				cards.add(new DatabaseFlashCard(rs.getInt("ID"), this));
 			}
+			
+			// Go through all sets that might have this tag as a global tag
+			query = "SELECT ID FROM SETS INNER JOIN "
+					+ "(SELECT SET_ID FROM SETS_TAGS WHERE TAG_ID = "
+					+ tagId + ")" + "ON SETS.ID = SET_ID";
+			
+			rs = statement.executeQuery(query);
+			while (rs.next())
+			{
+				FlashCardSet dbSet = new DatabaseSet(rs.getInt("ID"), this);
+				System.out.println("Set found " + dbSet);
+
+				cards.addAll(dbSet.getAll());
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return cards;
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return new ArrayList<>(cards);
 	}
 
 	@Override

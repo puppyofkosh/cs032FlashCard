@@ -6,6 +6,7 @@ import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
 import gui.MainFrame;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+
+import utils.FlashcardConstants;
 import utils.Writer;
 import audio.AudioFile;
 import audio.AudioPlayer;
@@ -70,33 +75,13 @@ public class Controller {
 		}
 	}
 
-	public static void loadAutoCorrectTree() {
-		autocorrectEngine = new Engine(AutoCorrectConstants.defaultGenerator, AutoCorrectConstants.defaultRanker, new RadixTree());
-		FlashCardDatabase resources = DatabaseFactory.getResources();
-		for(String cardName : resources.getAllCardNames()) {
-			autocorrectEngine.insert(cardName, "");
-		}
-		for(String setName : resources.getAllSetNames()) {
-			autocorrectEngine.insert(setName, "");
-		}
-		for(String tags : resources.getAllTags()) {
-			autocorrectEngine.insert(tags, "");
-		}
-	}
-
-	public static List<String> getAutocorrections(String input) {
-		Writer.out("inp ", input);
-		
-		return autocorrectEngine.suggest(input);
-	}
-
-	/**
+	/*
 	 * Export a card to flat wav
 	 * 
 	 * @param f
 	 * @param destination
 	 */
-	public static void exportCard(FlashCard f, String destinationFolder) {
+	/*public static void exportCard(FlashCard f, String destinationFolder) {
 		if (!destinationFolder.endsWith("/"))
 			guiMessage("WARNING: destinationFolder should end with a slash(/)",
 					true);
@@ -106,7 +91,7 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Play a chunk of audio. This method should ensure that only one piece of
@@ -166,6 +151,31 @@ public class Controller {
 			Writer.err(text);
 		else
 			Writer.out(text);
+		
+		if (gui == null)
+			return;
+		
+		JLabel label = new JLabel(text);
+		final int time = duration;
+		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
+		dialog.add(label);
+		Rectangle bounds = gui.getBounds();
+		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
+		
+		dialog.setVisible(true);
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(time * 1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				dialog.dispose();
+			}
+		}).start();
 	}
 
 	public static void guiMessage(String text, boolean error) {
@@ -204,29 +214,17 @@ public class Controller {
 		return fixedText.toString().trim();
 	}
 
-	public static String parseCardName(String text) {
-		//		StringBuilder fixedText = new StringBuilder();
-		//		char currentCharacter;
-		//		for (int i = 0; i < text.length(); i++) {
-		//			currentCharacter = text.charAt(i);
-		//			if (Character.isJavaIdentifierPart(currentCharacter))
-		//				fixedText.append(currentCharacter);
-		//			else if (Character.isWhitespace(currentCharacter))
-		//				fixedText.append(" ");
-		//		}
-		//
-		//		if (fixedText.length() == 0)
-		//			fixedText.append("untitled");
-		//		int overlapPreventer = 0;
-		//		String prefix = "files/" + fixedText;
-		//		File file = new File(prefix);
-		//		while (file.exists()) {
-		//			overlapPreventer++;
-		//			file = new File(prefix + overlapPreventer);
-		//		}
-		//		return fixedText.toString()
-		//				+ (overlapPreventer == 0 ? "" : overlapPreventer);
-		return text;
+		if (fixedText.length() == 0)
+			fixedText.append("untitled");
+		int overlapPreventer = 0;
+		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
+		File file = new File(prefix);
+		while (file.exists()) {
+			overlapPreventer++;
+			file = new File(prefix + overlapPreventer);
+		}
+		return fixedText.toString()
+				+ (overlapPreventer == 0 ? "" : overlapPreventer);
 	}
 
 	public static void playFlashCard(FlashCard card) throws IOException {
@@ -240,7 +238,7 @@ public class Controller {
 
 	public static boolean verifyInput(String input) {
 		// FIXME implement for real
-		return parseCardName(input).equals(input);
+		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {

@@ -1,21 +1,22 @@
 package protocol;
 
+import protocol.Request.RequestType;
 import search.Search;
 
-public class ParametrizedCardRequest implements Request {
+public class MetaDataCardRequest implements Request{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Search _params;
 	
-	public ParametrizedCardRequest(Search params) {
+	public MetaDataCardRequest(Search params) {
 		_params = params;
 	}
 
 	@Override
 	public RequestType getType() {
-		return RequestType.CARD_LIST;
+		return RequestType.PARAMATERIZED_META_DATA;
 	}
 	
 	

@@ -22,7 +22,6 @@ public class Server extends Thread {
 	private ServerSocket _socket;
 	private ClientPool _clients;
 	private boolean _running;
-	private volatile Map<String, FlashCard> _cardLibrary;
 
 	/**
 	 * Initialize a server on the given port. This server will not listen until
@@ -32,7 +31,6 @@ public class Server extends Thread {
 	 * @throws IOException
 	 */
 	public Server(int port) throws IOException {
-		initCardLibrary();
 		if (port <= 1024) {
 			throw new IllegalArgumentException("Ports under 1024 are reserved!");
 		}
@@ -40,39 +38,6 @@ public class Server extends Thread {
 		_port = port;
 		_clients = new ClientPool();
 		_socket = new ServerSocket(_port);
-	}
-
-	/**
-	 * Initializes the card library with cards from file. Will probably be changed
-	 * once the SQL database is up and running.
-	 */
-	private void initCardLibrary() {
-		
-		File dir = new File(FlashcardConstants.CARDS_FOLDER);
-		if (_cardLibrary == null) {
-			_cardLibrary = new HashMap<>();
-		}
-		
-		for (FlashCard f : DatabaseFactory.getResources().getAllCards())
-		{
-			_cardLibrary.put(f.getName(), f);
-		}
-		
-		System.out.println(_cardLibrary);
-		
-		/*
-		String[] cardPaths = dir.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File current, String name) {
-				return new File(current, name).isDirectory();
-			}
-		});
-		
-		for(int i = 0; i < cardPaths.length; i++) {
-			FlashCard card = SimpleFactory.readCard(FlashcardConstants.CARDS_FOLDER + cardPaths[i] + "/");
-			_cardLibrary.put(card.getName(), card);
-		}
-		*/
 	}
 
 	/**
@@ -85,7 +50,7 @@ public class Server extends Thread {
 			try {
 				Socket clientConn = _socket.accept();
 				Writer.out("-- New client connection --");
-				new ClientHandler(_clients, clientConn, _cardLibrary).start();
+				new ClientHandler(_clients, clientConn).start();
 			} catch (IOException e) {
 				if(e instanceof SocketException && _running == false) {
 					Writer.out("The server socket has been closed.");

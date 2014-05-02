@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -15,6 +16,8 @@ import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import protocol.NetworkedFlashCard;
 
 import client.Client;
 import database.DatabaseFactory;
@@ -32,6 +35,9 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	private JPanel searchPanel;
 	private JTextField searchField;
 	private JButton btnImportSelectedCards;
+	
+	// A CardTablePanel can only store cards, and we need to store NetworkedCards, so we keep track of the cards here.
+	private List<NetworkedFlashCard> availableCards = new ArrayList<>();
 
 	ServerConnectionPanel() {
 		super();
@@ -112,12 +118,17 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	private void attemptConnection(String hostname, int port) {
 		guiMessage("Attempting connection", 1);
 		_client = new Client(hostname, port, this);
-		_client.start();
+		_client.execute();
 	}
 
 	@Override
-	public void update(List<FlashCard> cards) {
-		_cards.updateCards(cards);
+	public void updateLocallyStoredCards(List<FlashCard> cards) {
+		//_cards.updateCards(cards);
+		System.out.println("Downloaded " + cards);
+		for (FlashCard f : cards)
+		{
+			DatabaseFactory.writeCard(f);
+		}
 	}
 
 	@Override
@@ -137,13 +148,23 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 		} else if (e.getSource() == btnImportSelectedCards) {
 			for(FlashCard f : _cards.getSelectedCards())
 			{
-				System.out.println(f.getName());
-				DatabaseFactory.writeCard(f);
+				if (availableCards.contains(f))
+				{
+					NetworkedFlashCard nc = (NetworkedFlashCard)f;
+					
+					_client.requestFullCard(nc);
+				}
 			}
 		} else if (e.getSource() == searchField) {
 			if (_client != null) {
 				_client.requestCard(searchField.getText());
 			}
 		}
+	}
+
+	@Override
+	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
+		_cards.updateCards(new ArrayList<FlashCard>(flashcards));
+		availableCards = flashcards;
 	}
 }

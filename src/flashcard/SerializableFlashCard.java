@@ -28,24 +28,24 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static class Data implements Serializable
+	public static class MetaData implements Serializable
 	{
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
+		
 		public String name = "", pathToFile = "";
 		public String questionText = "", answerText = "";
 		public List<String> tags = new ArrayList<>();
-		public AudioFile question, answer;
 		public int interval = 0;
-	
-		public Data()
+		
+		public MetaData()
 		{
 			
 		}
 		
-		public Data(Data d)
+		public MetaData(MetaData d)
 		{
 			name = d.name;
 			pathToFile = d.pathToFile;
@@ -53,13 +53,11 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 			answerText = d.answerText;
 			
 			tags = new ArrayList<>(d.tags);
-			question = d.question;
-			answer = d.answer;
 			
 			interval = d.interval;
 		}
 		
-		public Data(FlashCard f)
+		public MetaData(FlashCard f)
 		{
 			name = f.getName();
 			// FIXME: Sets!
@@ -67,16 +65,23 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 				pathToFile = f.getPath();
 				tags = new ArrayList<>(f.getTags());
 				
-				question = f.getQuestionAudio();
-				answer = f.getAnswerAudio();
 				interval = f.getInterval();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
 		}
+	}
+	
+	public static class AudioData implements Serializable
+	{
+		public AudioFile question, answer;
+
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		
 		/**
 		 * Override so that we convert question and answer to memory audio files
@@ -87,18 +92,12 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 		 */
 		private void writeObject(java.io.ObjectOutputStream stream)
 	            throws IOException {
-			stream.writeObject(name);
-			stream.writeObject(pathToFile);
-			stream.writeObject(questionText);
-			stream.writeObject(answerText);
-			stream.writeObject(tags);
 			
 			MemoryAudioFile q = new MemoryAudioFile(question.getRawBytes());
 			MemoryAudioFile a = new MemoryAudioFile(answer.getRawBytes());
 			
 			stream.writeObject(q);
 			stream.writeObject(a);
-			stream.writeInt(interval);
 	    }
 
 		/**
@@ -108,30 +107,57 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 		 * @throws ClassNotFoundException
 		 */
 	    private void readObject(java.io.ObjectInputStream stream)
-	            throws IOException, ClassNotFoundException {
-	    	name = (String)stream.readObject();
-			pathToFile = (String)stream.readObject();
-			questionText = (String)stream.readObject();
-			answerText = (String)stream.readObject();
-			tags = new ArrayList<>();
-			
-			Object o = stream.readObject();
-			if ((o instanceof List<?>))
-			{
-				List<?> vals = (List<?>)o;
-				for (Object v : vals)
-				{
-					if (v instanceof String)
-					{
-						tags.add((String)v);
-					}
-				}
-			}
-			
+	            throws IOException, ClassNotFoundException {			
 			question = (AudioFile)stream.readObject();
 			answer = (AudioFile)stream.readObject();
-			interval = stream.readInt();
 	    }
+		
+	}
+	
+	public static class Data extends MetaData implements Serializable
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		private AudioData audioData = new AudioData();
+	
+		public Data()
+		{
+			super();
+		}
+		
+		public Data(Data d)
+		{
+			super(d);
+			setQuestion(d.getQuestion());
+			setAnswer(d.getAnswer());
+		}
+		
+		public Data(FlashCard f)
+		{
+			super(f);
+			// FIXME: Sets!
+			setQuestion(f.getQuestionAudio());
+			setAnswer(f.getAnswerAudio());
+		}
+
+		public AudioFile getQuestion() {
+			return audioData.question;
+		}
+
+		public void setQuestion(AudioFile question) {
+			audioData.question = question;
+		}
+
+		public AudioFile getAnswer() {
+			return audioData.answer;
+		}
+
+		public void setAnswer(AudioFile answer) {
+			audioData.answer = answer;
+		}
 	}
 	
 	/**
@@ -201,12 +227,12 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 
 	@Override
 	public AudioFile getQuestionAudio() {
-		return data.question;
+		return data.getQuestion();
 	}
 
 	@Override
 	public AudioFile getAnswerAudio() {
-		return data.answer;
+		return data.getAnswer();
 	}
 	
 	@Override
@@ -222,5 +248,11 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
 
 		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getPath().hashCode();
 	}
 }
