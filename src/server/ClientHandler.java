@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import protocol.CardListResponse;
+import protocol.MetaDataCardRequest;
 import protocol.MetaDataResponse;
 import protocol.NetworkedFlashCard;
 import protocol.ParametrizedCardRequest;
@@ -98,11 +99,13 @@ public class ClientHandler extends Thread {
 		Writer.out("Processing Request...\n");
 		switch (req.getType()) {
 		case CARD_LIST:
+		{
 			ParametrizedCardRequest clR = (ParametrizedCardRequest) req;
 			List<FlashCard> cards = clR.getSearchParameters().search(DatabaseFactory.getResources());
 			System.out.println(cards + " matched search");
 			respond(new CardListResponse(cards));
 			return;
+		}
 		case ALL:
 			Writer.out("Returning all cards");
 			respond(new CardListResponse(DatabaseFactory.getResources().getAllCards()));
@@ -122,8 +125,8 @@ public class ClientHandler extends Thread {
 			Writer.out("Done");
 			respond(new UploadCardsResponse(true));
 			return;
-		case META_DATA:
-			Writer.out("Meta data request");
+		case ALL_META_DATA:
+			Writer.out("ALL Meta data request");
 			List<NetworkedFlashCard> cardData = new ArrayList<>();
 			for (FlashCard f: DatabaseFactory.getResources().getAllCards())
 			{
@@ -136,6 +139,25 @@ public class ClientHandler extends Thread {
 			System.out.println(cardData.size());
 			respond(new MetaDataResponse(cardData));
 			return;
+		case PARAMATERIZED_META_DATA:
+		{
+			Writer.out("ALL Meta data request");
+			MetaDataCardRequest clR = (MetaDataCardRequest) req;
+			List<FlashCard> cards = clR.getSearchParameters().search(DatabaseFactory.getResources());
+			List<NetworkedFlashCard> networkedCards = new ArrayList<>();
+			for (FlashCard f : cards)
+			{
+				try {
+					networkedCards.add(new NetworkedFlashCard(f, f.getPath()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println(cards + " matched search");
+			respond(new MetaDataResponse(networkedCards));
+			return;
+		}
 		default:
 			//not much we can do with an invalid request
 			throw new IllegalArgumentException("Unsupported request type");

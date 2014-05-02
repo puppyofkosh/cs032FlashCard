@@ -53,7 +53,7 @@ public class MetaDataResponse implements Response {
 		@Override
 		public RequestType getType() {
 			// TODO Auto-generated method stub
-			return RequestType.META_DATA;
+			return RequestType.ALL_META_DATA;
 		}
 		
 	}

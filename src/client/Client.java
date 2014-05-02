@@ -19,6 +19,7 @@ import javax.swing.SwingWorker;
 import protocol.AllCardsRequest;
 import protocol.CardListResponse;
 import protocol.ConnectionSuccessfulResponse;
+import protocol.MetaDataCardRequest;
 import protocol.MetaDataResponse;
 import protocol.NetworkedFlashCard;
 import protocol.ParametrizedCardRequest;
@@ -180,7 +181,8 @@ public class Client extends SwingWorker<Response, Response> {
 			requestAllMetaData();
 		// requestAllCards();
 		else
-			request(new ParametrizedCardRequest(new SearchParameters(input)));
+			request(new MetaDataCardRequest(new SearchParameters(input)));
+			//request(new ParametrizedCardRequest(new SearchParameters(input)));
 	}
 
 	public void requestFullCard(NetworkedFlashCard c) {
