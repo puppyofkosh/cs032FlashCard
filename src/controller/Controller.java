@@ -22,8 +22,12 @@ import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
+import autocorrect.AutoCorrectConstants;
+import autocorrect.Engine;
+import autocorrect.RadixTree;
 import backend.FileImporter;
 import database.DatabaseFactory;
+import database.FlashCardDatabase;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call This class
@@ -41,6 +45,7 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
+	private static Engine autocorrectEngine;
 
 	/**
 	 * Import a tsv or similar
@@ -63,6 +68,26 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static void loadAutoCorrectTree() {
+		autocorrectEngine = new Engine(AutoCorrectConstants.defaultGenerator, AutoCorrectConstants.defaultRanker, new RadixTree());
+		FlashCardDatabase resources = DatabaseFactory.getResources();
+		for(String cardName : resources.getAllCardNames()) {
+			autocorrectEngine.insert(cardName, "");
+		}
+		for(String setName : resources.getAllSetNames()) {
+			autocorrectEngine.insert(setName, "");
+		}
+		for(String tags : resources.getAllTags()) {
+			autocorrectEngine.insert(tags, "");
+		}
+	}
+
+	public static List<String> getAutocorrections(String input) {
+		Writer.out("inp ", input);
+		
+		return autocorrectEngine.suggest(input);
 	}
 
 	/**
@@ -135,10 +160,6 @@ public class Controller {
 		return new ArrayList<>(Arrays.asList(allTags.split(", ")));
 	}
 
-	public void requestAutocorrections(String text, int boxNo) {
-		// TODO Auto-generated method stub
-	}
-
 	public static void guiMessage(String text, int duration, boolean error) {
 		// FIXME - do for real
 		if (error)
@@ -158,7 +179,11 @@ public class Controller {
 	public static void guiMessage(String text) {
 		guiMessage(text, 3);
 	}
-	
+
+
+	/**
+	 * Appropriately capitalizes and removes non-identifier characters and spacing.
+	 */
 	public static String parseInput(String text) {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
@@ -176,8 +201,7 @@ public class Controller {
 				capitalize = true;
 			}
 		}
-		return fixedText.toString();
-
+		return fixedText.toString().trim();
 	}
 
 	public static String parseCardName(String text) {
