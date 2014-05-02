@@ -14,7 +14,8 @@ public interface Request extends Serializable {
 		CARD_LIST,
 		SET_LIST,
 		ALL,
-		UPLOAD
+		UPLOAD,
+		META_DATA
 	}
 	
 	RequestType getType();		

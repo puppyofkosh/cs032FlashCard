@@ -249,4 +249,10 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 
 		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getPath().hashCode();
+	}
 }

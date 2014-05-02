@@ -1,12 +1,27 @@
 package flashcard;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 
-public abstract class AbstractFlashCard implements FlashCard{
+public abstract class AbstractFlashCard implements FlashCard, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected SerializableFlashCard.MetaData data = new SerializableFlashCard.MetaData();
+	
+	public AbstractFlashCard(SerializableFlashCard.MetaData d)
+	{
+		data = new SerializableFlashCard.MetaData(d);
+	}
+	
+	public AbstractFlashCard(FlashCard f)
+	{
+		data = new SerializableFlashCard.MetaData(f);
+	}
 	
 	@Override
 	public String getName() {
@@ -53,6 +68,12 @@ public abstract class AbstractFlashCard implements FlashCard{
 		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
 
 		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "Flashcard " + data.name;
 	}
 
 }
