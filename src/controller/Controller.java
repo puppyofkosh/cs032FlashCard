@@ -6,12 +6,16 @@ import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
 import gui.MainFrame;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 import utils.FlashcardConstants;
 import utils.Writer;
@@ -146,6 +150,31 @@ public class Controller {
 			Writer.err(text);
 		else
 			Writer.out(text);
+		
+		if (gui == null)
+			return;
+		
+		JLabel label = new JLabel(text);
+		final int time = duration;
+		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
+		dialog.add(label);
+		Rectangle bounds = gui.getBounds();
+		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
+		
+		dialog.setVisible(true);
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(time * 1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				dialog.dispose();
+			}
+		}).start();
 	}
 
 	public static void guiMessage(String text, boolean error) {
