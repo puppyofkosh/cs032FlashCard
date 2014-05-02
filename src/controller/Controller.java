@@ -70,13 +70,13 @@ public class Controller {
 		}
 	}
 
-	/**
+	/*
 	 * Export a card to flat wav
 	 * 
 	 * @param f
 	 * @param destination
 	 */
-	public static void exportCard(FlashCard f, String destinationFolder) {
+	/*public static void exportCard(FlashCard f, String destinationFolder) {
 		if (!destinationFolder.endsWith("/"))
 			guiMessage("WARNING: destinationFolder should end with a slash(/)",
 					true);
@@ -86,7 +86,7 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Play a chunk of audio. This method should ensure that only one piece of
@@ -217,7 +217,7 @@ public class Controller {
 
 	public static boolean verifyInput(String input) {
 		// FIXME implement for real
-		return parseCardName(input).equals(input);
+		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {
