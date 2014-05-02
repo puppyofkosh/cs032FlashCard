@@ -110,6 +110,10 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	public void update(List<FlashCard> cards) {
 		_cardTable.updateCards(cards);
 	}
+	
+	public void update() {
+		_setBrowser.updateSourceList();
+	}
 
 
 	@Override

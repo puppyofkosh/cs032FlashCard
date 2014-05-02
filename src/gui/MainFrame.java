@@ -102,5 +102,6 @@ public class MainFrame extends JFrame {
 	public void updateAll() {
 		flashboardPanel.updateFlashboard();
 		setCreationPanel.update();
+		exportPanel.update();
 	}
 }
