@@ -159,31 +159,60 @@ public class Controller {
 	public static void guiMessage(String text) {
 		guiMessage(text, 3);
 	}
-
-	public static String parseCardName(String text) {
+	
+	public static String parseInput(String text) {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
+		boolean capitalize = true;
 		for (int i = 0; i < text.length(); i++) {
-			currentCharacter = text.charAt(i);
-			if (Character.isJavaIdentifierPart(currentCharacter))
+			currentCharacter = Character.toLowerCase(text.charAt(i));
+			if (Character.isJavaIdentifierPart(currentCharacter)) {
+				if (capitalize) {
+					currentCharacter = Character.toUpperCase(currentCharacter);
+					capitalize = false;
+				}
 				fixedText.append(currentCharacter);
+			} else if (Character.isWhitespace(currentCharacter) && !capitalize) {
+				fixedText.append(" ");
+				capitalize = true;
+			}
 		}
+		return fixedText.toString();
 
-		if (fixedText.length() == 0)
-			fixedText.append("untitled");
-		int overlapPreventer = 0;
-		String prefix = "files/" + fixedText;
-		File file = new File(prefix);
-		while (file.exists()) {
-			overlapPreventer++;
-			file = new File(prefix + overlapPreventer);
-		}
-		return fixedText.toString()
-				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+	}
+
+	public static String parseCardName(String text) {
+		//		StringBuilder fixedText = new StringBuilder();
+		//		char currentCharacter;
+		//		for (int i = 0; i < text.length(); i++) {
+		//			currentCharacter = text.charAt(i);
+		//			if (Character.isJavaIdentifierPart(currentCharacter))
+		//				fixedText.append(currentCharacter);
+		//			else if (Character.isWhitespace(currentCharacter))
+		//				fixedText.append(" ");
+		//		}
+		//
+		//		if (fixedText.length() == 0)
+		//			fixedText.append("untitled");
+		//		int overlapPreventer = 0;
+		//		String prefix = "files/" + fixedText;
+		//		File file = new File(prefix);
+		//		while (file.exists()) {
+		//			overlapPreventer++;
+		//			file = new File(prefix + overlapPreventer);
+		//		}
+		//		return fixedText.toString()
+		//				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+		return text;
 	}
 
 	public static void playFlashCard(FlashCard card) throws IOException {
 		player.play(card);
+	}
+
+	public static boolean verifyTag(String tag) {
+		//FIXME Implement for real.
+		return true;
 	}
 
 	public static boolean verifyInput(String input) {
