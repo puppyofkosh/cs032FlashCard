@@ -331,6 +331,8 @@ public class FlashCardDatabase implements Resources {
 			// 3) Remove entries from FLASHCARDS_SETS table
 			deleteQuery = "DELETE FROM FLASHCARDS_SETS WHERE SET_ID=" + setId;
 
+			// FIXME: Find all flashcards in this set with only that set and remove them too
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

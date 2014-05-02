@@ -25,12 +25,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import protocol.NetworkedFlashCard;
+import search.SearchParameters;
 import utils.FlashcardConstants;
 import utils.Writer;
 import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
 import client.Client;
+import database.DatabaseFactory;
 
 public class ExportPanel extends JPanel implements ClientFrontend, ActionListener {
 	/**
@@ -46,11 +48,12 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	private JButton btnExport;
 	private Client _client;
 	private SetBrowser _setBrowser;
+	private JTextField searchBox;
 	/**
 	 * Create the panel.
 	 * @throws IOException 
 	 */
-	public ExportPanel()  {
+	public ExportPanel() {
 		super(new BorderLayout(0,0));
 
 		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
@@ -63,10 +66,11 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		JPanel chooseMethodPanel = new JPanel();
 		headerPanel.add(chooseMethodPanel);
 
-		JTextField searchBox = new JTextField(20);
+		searchBox = new JTextField(20);
 		searchBox.setForeground(Color.LIGHT_GRAY);
 		searchBox.setText("Search Here");
 		searchBox.setForeground(Color.BLACK);
+		searchBox.addActionListener(this);
 		chooseMethodPanel.add(searchBox);
 
 		rdbtnWav = new JRadioButton("Wav");
@@ -163,7 +167,12 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnExport) {
+		if (e.getSource() == this.searchBox) {
+			SearchParameters search = new SearchParameters(searchBox.getText());
+			List<FlashCard> results = search.search(DatabaseFactory.getResources());
+			updateLocallyStoredCards(results);
+		}
+		else if (e.getSource() == btnExport) {
 			_cardTable.updateSelectedCards();
 			List<FlashCard> cards = _cardTable.getSelectedCards();
 
@@ -219,5 +228,5 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
 		throw new UnsupportedOperationException();
 	}
-
+	
 }
