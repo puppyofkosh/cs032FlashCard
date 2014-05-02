@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +21,7 @@ public class IconFactory {
 		FLASHBOARD,
 		EXPORT,
 		IMPORT,
-		CREATE,
-		QUIZLET,
-		DATABASE
+		CREATE
 	}
 
 	private static String imgFolder = "./res/img/";
@@ -64,20 +61,10 @@ public class IconFactory {
 			return createImageIcon("Flash Logo Inverted.png");
 		case IMPORT:
 			return createImageIcon("Import Icon Inverted.png");
-		case QUIZLET:
-			return createImageIcon("Quizlet Icon Inverted.png");
-		case DATABASE:
-			return createImageIcon("Database Icon Inverted.png");
 		default:
 			Controller.guiMessage("Not a valid icon type", true);
 			return loadMissingIcon();
 		}
-	}
-
-	public static ImageButton createImageButton(String text, IconType type, int size) {
-		ImageButton b = new ImageButton(text, loadIcon(type, size));
-		b.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size));
-		return b;
 	}
 
 	public static ImageIcon loadIcon(IconType type, int size) {

@@ -1,14 +1,10 @@
 package gui;
 
-import gui.IconFactory.IconType;
-
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -30,15 +26,12 @@ public class ImportPanel extends GenericPanel {
 	 */
 	public ImportPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setOpaque(false);
+		
 		JPanel panel = new JPanel();
 		add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
-		panel.setOpaque(false);
-		panel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
 		
-		JButton btnNewButton = IconFactory.createImageButton("From Quizlet", IconType.QUIZLET, 64);
-		btnNewButton.setOpaque(false);
+		JButton btnNewButton = new JButton("From Quizlet");
 		panel.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 
@@ -52,14 +45,8 @@ public class ImportPanel extends GenericPanel {
 		JPanel panel_1 = new JPanel();
 		add(panel_1);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
-		panel_1.setOpaque(false);
-		panel_1.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
-
 		
-		
-		
-		JButton btnNewButton_1 = IconFactory.createImageButton("From Database", IconType.DATABASE, 64);
-		btnNewButton_1.setOpaque(false);
+		JButton btnNewButton_1 = new JButton("From DB");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, DATABASE_PANEL_NAME);
@@ -70,12 +57,10 @@ public class ImportPanel extends GenericPanel {
 		
 		
 		JPanel panel_2 = new JPanel();
-		add(panel_2);		
+		add(panel_2);
 		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
-		panel_2.setOpaque(false);
 		
-		JButton btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64);
-		btnNewButton_2.setOpaque(false);
+		JButton btnNewButton_2 = new JButton("From File");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fileChooser = new JFileChooser();

@@ -16,8 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.Controller;
-
 public class TagLabel extends JPanel implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +40,6 @@ public class TagLabel extends JPanel implements MouseListener{
 
 	TagLabel(String s, int size, int roundedness, TagPanel tagPanel, boolean global, boolean deletable) {
 		super();
-		s = Controller.parseInput(s);
 		_tagText = s;
 		_size = size;
 		_roundedness = roundedness;

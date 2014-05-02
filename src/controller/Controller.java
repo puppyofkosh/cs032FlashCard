@@ -27,12 +27,8 @@ import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
 import audio.WavFileConcatenator;
-import autocorrect.AutoCorrectConstants;
-import autocorrect.Engine;
-import autocorrect.RadixTree;
 import backend.FileImporter;
 import database.DatabaseFactory;
-import database.FlashCardDatabase;
 
 /**
  * Provide methods that mess with backend stuff for the GUI to call This class
@@ -50,7 +46,6 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
-	private static Engine autocorrectEngine;
 
 	/**
 	 * Import a tsv or similar
@@ -145,6 +140,10 @@ public class Controller {
 		return new ArrayList<>(Arrays.asList(allTags.split(", ")));
 	}
 
+	public void requestAutocorrections(String text, int boxNo) {
+		// TODO Auto-generated method stub
+	}
+
 	public static void guiMessage(String text, int duration, boolean error) {
 		// FIXME - do for real
 		if (error)
@@ -190,29 +189,14 @@ public class Controller {
 		guiMessage(text, 3);
 	}
 
-
-	/**
-	 * Appropriately capitalizes and removes non-identifier characters and spacing.
-	 */
-	public static String parseInput(String text) {
+	public static String parseCardName(String text) {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
-		boolean capitalize = true;
 		for (int i = 0; i < text.length(); i++) {
-			currentCharacter = Character.toLowerCase(text.charAt(i));
-			if (Character.isJavaIdentifierPart(currentCharacter)) {
-				if (capitalize) {
-					currentCharacter = Character.toUpperCase(currentCharacter);
-					capitalize = false;
-				}
+			currentCharacter = text.charAt(i);
+			if (Character.isJavaIdentifierPart(currentCharacter))
 				fixedText.append(currentCharacter);
-			} else if (Character.isWhitespace(currentCharacter) && !capitalize) {
-				fixedText.append(" ");
-				capitalize = true;
-			}
 		}
-		return fixedText.toString().trim();
-	}
 
 		if (fixedText.length() == 0)
 			fixedText.append("untitled");
@@ -229,11 +213,6 @@ public class Controller {
 
 	public static void playFlashCard(FlashCard card) throws IOException {
 		player.play(card);
-	}
-
-	public static boolean verifyTag(String tag) {
-		//FIXME Implement for real.
-		return true;
 	}
 
 	public static boolean verifyInput(String input) {

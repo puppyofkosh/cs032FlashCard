@@ -23,13 +23,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
-import utils.Writer;
 import controller.Controller;;
 
 @SuppressWarnings("serial")
 public class AutoFillField extends JTextField {
 
 	private JPopupMenu _popup;
+	private Controller _controller;
 	private JTable searchTable;
 	private DefaultTableModel searchTableModel;
 	private String initialText;
@@ -38,15 +38,16 @@ public class AutoFillField extends JTextField {
 	//Suppress prevents the autocorrections from revealing after the document change listener
 	//detects a change due to an accepted suggestion
 	private boolean popped, suppress = false;
-
+	
 	/**
 	 * This class is the autofillfield for the GUI - we have four
 	 * @param client
 	 * @param startField
 	 * @param boxNo
 	 */
-	public AutoFillField(String startField, int boxNo) {
+	public AutoFillField(Controller controller, String startField, int boxNo) {
 		super(10);
+		_controller = controller;
 		initialText = startField;
 		this.boxNo = boxNo;
 		setForeground(Color.DARK_GRAY);
@@ -108,12 +109,12 @@ public class AutoFillField extends JTextField {
 					requestAutocorrections();
 			}
 		});
-
+		
 		this.addMouseListener(new MouseListener() {
 			@Override public void mousePressed(MouseEvent e) {
 				selectAll();
 			}
-
+			
 			//Dont need these methods...
 			@Override public void mouseClicked(MouseEvent e) {
 				selectAll();
@@ -219,8 +220,6 @@ public class AutoFillField extends JTextField {
 	/** A request will be sent from the client to the server, 
 	 * and when it gets a response it will call this method.
 	 * 
-	 * - suppress occurs if we want to programmatically change
-	 * the text but not generate a popup in response to the change event
 	 * @param suggestions
 	 */
 	public void setSuggestions(List<String> suggestions) {
@@ -228,7 +227,7 @@ public class AutoFillField extends JTextField {
 		if (suppress) {
 			suppress = false;
 		} else {
-			showPopup();
+		showPopup();
 		}
 	}
 
@@ -241,7 +240,7 @@ public class AutoFillField extends JTextField {
 		//We need to juggle focus a little to select the appropriate row.
 		requestFocusInWindow();
 	}
-
+	
 	public void populateField(String s, boolean suppressPopup) {
 		suppress = suppressPopup;
 		setForeground(Color.BLACK);
@@ -274,16 +273,10 @@ public class AutoFillField extends JTextField {
 	}
 
 	private void requestAutocorrections() {
-		
-		Writer.out("Requesting");
-		if (!this.getText().equals(initialText)) {
-			//note this is a corruption of the initial code which supported multithreading
-			List<String> sugs = Controller.getAutocorrections(this.getText());
-			Writer.out(sugs);
-			setSuggestions(sugs);
-		}
+			if (!this.getText().equals(initialText))
+				_controller.requestAutocorrections(this.getText(), boxNo);
 	}
-
+	
 	/**
 	 * Resets the autofillfield to its initial value
 	 */

@@ -25,18 +25,12 @@ public class Main {
 			public void run() {
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.add(autocorrectDemo());
+				frame.add(exportDemo());
 				frame.pack();
 				frame.setVisible(true);
+
 			}
 		});
-	}
-	
-	public static JComponent autocorrectDemo() {
-		JPanel p = new JPanel();
-		Controller.loadAutoCorrectTree();
-		p.add(new AutoFillField("TYPE HERE", 1));
-		return p;
 	}
 	
 	public static JComponent exportDemo() {

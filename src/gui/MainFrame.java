@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import controller.Controller;
+import database.DatabaseFactory;
 
 public class MainFrame extends JFrame {
 
@@ -65,6 +66,7 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.setOpaque(false);
 		mainPanelContainer.setLayout(mainPanelLayout);
 
+
 		// set up the side panel so pressing the "home" button will bring us home and such
 		sidePanel.setControlledLayout(mainPanelLayout);
 		sidePanel.setControlledPanel(mainPanelContainer);		
@@ -102,6 +104,5 @@ public class MainFrame extends JFrame {
 	public void updateAll() {
 		flashboardPanel.updateFlashboard();
 		setCreationPanel.update();
-		exportPanel.update();
 	}
 }
