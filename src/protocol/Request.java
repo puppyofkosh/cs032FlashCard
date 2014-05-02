@@ -1,10 +1,6 @@
 package protocol;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.ArrayList;
-
-import flashcard.SerializableFlashCard;
 
 public interface Request extends Serializable {
 	
@@ -15,7 +11,8 @@ public interface Request extends Serializable {
 		SET_LIST,
 		ALL,
 		UPLOAD,
-		META_DATA
+		ALL_META_DATA,
+		PARAMATERIZED_META_DATA
 	}
 	
 	RequestType getType();		
