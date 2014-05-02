@@ -1,5 +1,8 @@
 package gui;
 
+import flashcard.FlashCard;
+import gui.IconFactory.IconType;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -25,9 +28,6 @@ import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
 import client.Client;
-import database.DatabaseFactory;
-import flashcard.FlashCard;
-import gui.IconFactory.IconType;
 
 public class ExportPanel extends JPanel implements ClientFrontend, ActionListener {
 	/**
