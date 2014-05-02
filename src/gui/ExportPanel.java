@@ -1,5 +1,8 @@
 package gui;
 
+import flashcard.FlashCard;
+import gui.IconFactory.IconType;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -19,15 +22,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import protocol.NetworkedFlashCard;
+
 import utils.FlashcardConstants;
 import utils.Writer;
 import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
 import client.Client;
-import database.DatabaseFactory;
-import flashcard.FlashCard;
-import gui.IconFactory.IconType;
 
 public class ExportPanel extends JPanel implements ClientFrontend, ActionListener {
 	/**
@@ -103,10 +105,11 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	public void connectAndExport() {
 		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
 		Writer.out("Starting client");
-		_client.start();
+		_client.execute();
 		_client.uploadCards(_cardTable.getSelectedCards());
 	}
 
+	@Override
 	public void update(List<FlashCard> cards) {
 		_cardTable.updateCards(cards);
 	}
@@ -192,6 +195,11 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 			else
 				JOptionPane.showMessageDialog(panel, "You must choose what kind of export to perform!");
 		} 
+	}
+
+	@Override
+	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
+		throw new UnsupportedOperationException();
 	}
 
 }

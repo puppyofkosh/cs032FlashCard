@@ -7,7 +7,8 @@ public interface Response extends Serializable {
 	public enum ResponseType {
 		SORTED_CARDS,
 		SORTED_SETS,
-		UPLOAD
+		UPLOAD,
+		META_DATA
 	}
 	
 	ResponseType getType();

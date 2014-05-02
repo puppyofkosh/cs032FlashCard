@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -15,6 +16,8 @@ import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import protocol.NetworkedFlashCard;
 
 import client.Client;
 import database.DatabaseFactory;
@@ -112,7 +115,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	private void attemptConnection(String hostname, int port) {
 		guiMessage("Attempting connection", 1);
 		_client = new Client(hostname, port, this);
-		_client.start();
+		_client.execute();
 	}
 
 	@Override
@@ -145,5 +148,10 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 				_client.requestCard(searchField.getText());
 			}
 		}
+	}
+
+	@Override
+	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
+		_cards.updateCards(new ArrayList<FlashCard>(flashcards));
 	}
 }

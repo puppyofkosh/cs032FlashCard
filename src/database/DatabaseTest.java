@@ -127,7 +127,6 @@ public class DatabaseTest {
 	@Test
 	public void testSets() throws IOException
 	{
-		System.out.println("Set test");
 		SimpleSet set = new SimpleSet("state capitals");
 		set.addTag("Tag A");
 		set.addCard(testCard);
@@ -187,6 +186,20 @@ public class DatabaseTest {
 		
 		// PUT THIS AT THE END OF EVERY TEST
 		db.close();
+	}
+	
+	@Test
+	public void testSearching() throws IOException
+	{
+		SimpleSet set = new SimpleSet("state capitals");
+		set.addTag("global-tag");
+		set.addCard(testCard);
+		set.setAuthor("Ian");
+		set.setInterval(5);
+		
+		FlashCardSet dbSet = db.writeSet(set);
+		
+		assertTrue(db.getFlashCardsWithTag("global-tag").size() == 1);
 	}
 /*
 	@Test

@@ -9,26 +9,26 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.swing.UIManager;
+import javax.swing.SwingWorker;
 
 import protocol.AllCardsRequest;
 import protocol.CardListResponse;
+import protocol.MetaDataResponse;
 import protocol.ParametrizedCardRequest;
 import protocol.Request;
 import protocol.Response;
 import protocol.UploadCardsRequest;
 import protocol.UploadCardsResponse;
+import search.FilePathSearch;
 import search.SearchParameters;
 import utils.Writer;
 
-/**
- * A Client Class that sends and receives messages from and to the server.
- */
-public class Client extends Thread {
+public class Client extends SwingWorker<Response, Response>{
 	
 
 	private Socket _socket;
@@ -59,8 +59,7 @@ public class Client extends Thread {
 	 * It will set up all the necessary requirements, 
 	 * and then launch the GUI.
 	 */
-	public void connect(int maxAttempts) {
-		UIManager.put("swing.boldMetal", Boolean.FALSE);
+	private void connect(int maxAttempts) {
 		int num_attempts = 0;
 		while(!_running) {
 			
@@ -101,9 +100,13 @@ public class Client extends Thread {
 		}
 	}
 
-	public void run() {
+	@Override
+	public Response doInBackground() {
 		connect(0);
-		_frontend.displayConnectionStatus(true);
+		
+		// Hack: After connecting return an empty response to show the frontened we're connected
+		publish(new CardListResponse(new ArrayList<FlashCard>()));
+		
 		while (_running && !_socket.isClosed()) {
 			if (!_requests.isEmpty() && _hasServer) {
 				try {
@@ -119,6 +122,7 @@ public class Client extends Thread {
 			}
 		}
 		kill();
+		return null;
 	}
 
 	/**
@@ -169,9 +173,24 @@ public class Client extends Thread {
 	
 	public void requestCard(String input) {
 		if (input.length() == 0)
-			requestAllCards();
+			requestAllMetaData();
+			//requestAllCards();
 		else
-			request(new ParametrizedCardRequest(new SearchParameters(input, 1)));
+			request(new ParametrizedCardRequest(new SearchParameters(input)));
+	}
+	
+	/**
+	 * Ask the server for a card based on a unique "id" (AKA path)
+	 * @param id
+	 */
+	public void requestCardByIdentifier(String id)
+	{
+		request(new ParametrizedCardRequest(new FilePathSearch(id)));
+	}
+	
+	public void requestAllMetaData()
+	{
+		request(new MetaDataResponse.MetaDataRequest());
 	}
 	
 	/**
@@ -182,14 +201,14 @@ public class Client extends Thread {
 		public void run() {
 			while(_running) {
 				try {
-					Response received = (Response) _input.readObject();
+					Object o = _input.readObject();
+					System.out.println(o);
+					Response received = (Response) o;
 					Writer.out("Response received");
-					processResponse(received);
+					publish(received);
 				} catch (IOException e) {
-					e.printStackTrace();
 					if (_running == false || e instanceof EOFException) {
 						Writer.out("Server has closed.");
-						_frontend.guiMessage("WARNING: Server unavailable", 7);
 						return;
 					} else if (e instanceof SocketException) {
 						Writer.err("Server unavailable. Please try again later");
@@ -208,7 +227,10 @@ public class Client extends Thread {
 	 * is and then acts accordingly.
 	 * @param resp - the response to be processed
 	 */
-	public void processResponse(Response resp) {
+	private void processResponse(Response resp) {
+		_frontend.displayConnectionStatus(true);
+		
+		
 		switch (resp.getType()) {
 		case SORTED_CARDS:
 			Writer.out("Received sorted cards response");
@@ -221,9 +243,23 @@ public class Client extends Thread {
 			UploadCardsResponse ucR = (UploadCardsResponse) resp;
 			_frontend.guiMessage("Upload " + (ucR.confirmed() ? "Successful" : "Failed"));
 			return;
+		case META_DATA:
+			MetaDataResponse mdR = (MetaDataResponse)resp;
+			System.out.println(mdR.getSortedCards().size());
+	
+			_frontend.updateCardsForImport(mdR.getSortedCards());
+			//_frontend.update(mdR.getSortedCards());
+			return;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	protected void process(List<Response> chunks)
+	{
+		for (Response r : chunks)
+			processResponse(r);
 	}
 
 }

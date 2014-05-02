@@ -247,4 +247,25 @@ public class DatabaseFlashCard implements FlashCard {
 		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 
+	@Override
+	public int hashCode()
+	{
+		try {
+			return getPath().hashCode();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof DatabaseFlashCard))
+			return false;
+		
+		DatabaseFlashCard card = (DatabaseFlashCard)o;
+		return card.id == id;
+	}
 }

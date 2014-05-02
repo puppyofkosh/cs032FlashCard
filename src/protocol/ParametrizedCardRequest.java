@@ -1,15 +1,15 @@
 package protocol;
 
-import search.SearchParameters;
+import search.Search;
 
 public class ParametrizedCardRequest implements Request {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SearchParameters _params;
+	private Search _params;
 	
-	public ParametrizedCardRequest(SearchParameters params) {
+	public ParametrizedCardRequest(Search params) {
 		_params = params;
 	}
 
@@ -19,7 +19,7 @@ public class ParametrizedCardRequest implements Request {
 	}
 	
 	
-	public SearchParameters getSearchParameters() {
+	public Search getSearchParameters() {
 		return _params;
 	}
 }

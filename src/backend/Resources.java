@@ -20,6 +20,8 @@ import flashcard.FlashCardSet;
 public interface Resources {
 	List<FlashCard> getFlashCardsWithTag(String tag);
 	
+	List<FlashCard> getFlashCardsByPath(String path);
+	
 	/**
 	 * Used by search function
 	 * @param name

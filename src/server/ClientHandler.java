@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import protocol.CardListResponse;
+import protocol.MetaDataResponse;
+import protocol.NetworkedFlashCard;
 import protocol.ParametrizedCardRequest;
 import protocol.Request;
 import protocol.Response;
@@ -20,6 +22,7 @@ import search.SearchParameters;
 import utils.Writer;
 import database.DatabaseFactory;
 import flashcard.FlashCard;
+import flashcard.SerializableFlashCard;
 /**
  * A thread for handling client connections to the server.
  * @author skortchm
@@ -30,7 +33,6 @@ public class ClientHandler extends Thread {
 	private ObjectOutputStream _output;
 	private ClientPool _pool;
 	private boolean _running = false;
-	private volatile Map<String, FlashCard> _serverCardLibrary;
 	private PushThread _pushThread;
 	ConcurrentLinkedQueue<Response> _responseQueue;
 
@@ -44,13 +46,12 @@ public class ClientHandler extends Thread {
 	 * @param backend - the backend which will compute and return the results of the requests sent from the client.
 	 * @throws IOException if the client connection is unable to open an input or output stream.
 	 */
-	public ClientHandler(ClientPool pool, Socket clientSocket, Map<String, FlashCard> cardLibrary) throws IOException {
+	public ClientHandler(ClientPool pool, Socket clientSocket) throws IOException {
 		if (pool == null || clientSocket == null)
 			throw new IllegalArgumentException("Cannot accept null arguments.");
 
 		_client = clientSocket;
 		_pool = pool;
-		_serverCardLibrary = cardLibrary;
 		
 		_responseQueue = new ConcurrentLinkedQueue<>();
 
@@ -99,15 +100,17 @@ public class ClientHandler extends Thread {
 		case CARD_LIST:
 			ParametrizedCardRequest clR = (ParametrizedCardRequest) req;
 			//Obviously will be different once we've implemented an actual database
-			SearchParameters params = clR.getSearchParameters();
-			String input = params.get_input();
-			List<FlashCard> cards = new LinkedList<>();
-			cards.add(_serverCardLibrary.get(input));
+			//SearchParameters params = clR.getSearchParameters();
+			//String input = params.get_input();
+			//List<FlashCard> cards = new LinkedList<>();
+			//cards.add(_serverCardLibrary.get(input));
+			List<FlashCard> cards = clR.getSearchParameters().search(DatabaseFactory.getResources());
+			System.out.println(cards + " matched search");
 			respond(new CardListResponse(cards));
 			return;
 		case ALL:
 			Writer.out("Returning all cards");
-			respond(new CardListResponse(new ArrayList<FlashCard>(_serverCardLibrary.values())));
+			respond(new CardListResponse(DatabaseFactory.getResources().getAllCards()));
 			return;
 		case SET_LIST:
 			break;
@@ -120,10 +123,24 @@ public class ClientHandler extends Thread {
 				card = DatabaseFactory.writeCard(card);
 				
 				Writer.out("Adding card to library " +  card.getName());
-				_serverCardLibrary.put(card.getName(), card);
 			}
 			Writer.out("Done");
 			respond(new UploadCardsResponse(true));
+			return;
+		case META_DATA:
+			Writer.out("Meta data request");
+			List<NetworkedFlashCard> cardData = new ArrayList<>();
+			for (FlashCard f: DatabaseFactory.getResources().getAllCards())
+			{
+				SerializableFlashCard.MetaData data = new SerializableFlashCard.MetaData(f);
+				try {
+					cardData.add(new NetworkedFlashCard(data, f.getPath()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println(cardData.size());
+			respond(new MetaDataResponse(cardData));
 			return;
 		default:
 			//not much we can do with an invalid request
