@@ -110,7 +110,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	}
 
 	@Override
-	public void update(List<FlashCard> cards) {
+	public void updateLocallyStoredCards(List<FlashCard> cards) {
 		_cardTable.updateCards(cards);
 	}
 

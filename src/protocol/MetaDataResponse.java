@@ -1,6 +1,7 @@
 package protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class MetaDataResponse implements Response {
 	}
 
 	public List<NetworkedFlashCard> getSortedCards() {
-		return _cards;
+		return Collections.unmodifiableList(_cards);
 	}
 
 	@Override

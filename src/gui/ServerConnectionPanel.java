@@ -35,6 +35,9 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	private JPanel searchPanel;
 	private JTextField searchField;
 	private JButton btnImportSelectedCards;
+	
+	// A CardTablePanel can only store cards, and we need to store NetworkedCards, so we keep track of the cards here.
+	private List<NetworkedFlashCard> availableCards = new ArrayList<>();
 
 	ServerConnectionPanel() {
 		super();
@@ -119,8 +122,13 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	}
 
 	@Override
-	public void update(List<FlashCard> cards) {
-		_cards.updateCards(cards);
+	public void updateLocallyStoredCards(List<FlashCard> cards) {
+		//_cards.updateCards(cards);
+		System.out.println("Downloaded " + cards);
+		for (FlashCard f : cards)
+		{
+			DatabaseFactory.writeCard(f);
+		}
 	}
 
 	@Override
@@ -140,8 +148,12 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 		} else if (e.getSource() == btnImportSelectedCards) {
 			for(FlashCard f : _cards.getSelectedCards())
 			{
-				System.out.println(f.getName());
-				DatabaseFactory.writeCard(f);
+				if (availableCards.contains(f))
+				{
+					NetworkedFlashCard nc = (NetworkedFlashCard)f;
+					
+					_client.requestFullCard(nc);
+				}
 			}
 		} else if (e.getSource() == searchField) {
 			if (_client != null) {
@@ -153,5 +165,6 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	@Override
 	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
 		_cards.updateCards(new ArrayList<FlashCard>(flashcards));
+		availableCards = flashcards;
 	}
 }

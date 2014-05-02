@@ -18,6 +18,11 @@ public abstract class AbstractFlashCard implements FlashCard, Serializable {
 		data = new SerializableFlashCard.MetaData(d);
 	}
 	
+	public AbstractFlashCard(FlashCard f)
+	{
+		data = new SerializableFlashCard.MetaData(f);
+	}
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub

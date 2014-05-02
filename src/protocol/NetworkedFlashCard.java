@@ -9,6 +9,7 @@ import audio.AudioFile;
 import client.Client;
 
 import flashcard.AbstractFlashCard;
+import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 
@@ -26,12 +27,23 @@ public class NetworkedFlashCard extends AbstractFlashCard implements Serializabl
 	private static final long serialVersionUID = 1L;
 		
 	// Some identifier the server uses to identify this card
-	private String serverIdentifer;
+	private String serverIdentifier;
 
 	public NetworkedFlashCard(SerializableFlashCard.MetaData data, String id)
 	{
 		super(data);
-		this.serverIdentifer = id;
+		this.serverIdentifier = id;
+	}
+	
+	public NetworkedFlashCard(FlashCard f, String id)
+	{
+		super(f);
+		this.serverIdentifier = id;
+	}
+	
+	public String getIdentifier()
+	{
+		return serverIdentifier;
 	}
 	
 	@Override

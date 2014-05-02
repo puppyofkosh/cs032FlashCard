@@ -99,11 +99,6 @@ public class ClientHandler extends Thread {
 		switch (req.getType()) {
 		case CARD_LIST:
 			ParametrizedCardRequest clR = (ParametrizedCardRequest) req;
-			//Obviously will be different once we've implemented an actual database
-			//SearchParameters params = clR.getSearchParameters();
-			//String input = params.get_input();
-			//List<FlashCard> cards = new LinkedList<>();
-			//cards.add(_serverCardLibrary.get(input));
 			List<FlashCard> cards = clR.getSearchParameters().search(DatabaseFactory.getResources());
 			System.out.println(cards + " matched search");
 			respond(new CardListResponse(cards));
@@ -132,9 +127,8 @@ public class ClientHandler extends Thread {
 			List<NetworkedFlashCard> cardData = new ArrayList<>();
 			for (FlashCard f: DatabaseFactory.getResources().getAllCards())
 			{
-				SerializableFlashCard.MetaData data = new SerializableFlashCard.MetaData(f);
 				try {
-					cardData.add(new NetworkedFlashCard(data, f.getPath()));
+					cardData.add(new NetworkedFlashCard(f, f.getPath()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
