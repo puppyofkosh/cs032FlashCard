@@ -36,10 +36,10 @@ public class DatabaseTest {
 
 		// Set up a test card
 		testData = new SerializableFlashCard.Data();
-		testData.question = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/hi-there.wav"));
-		testData.answer = new MemoryAudioFile(new DiscAudioFile(
-				"data/flashcard-test/acronym.wav"));
+		testData.setQuestion(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/hi-there.wav")));
+		testData.setAnswer(new MemoryAudioFile(new DiscAudioFile(
+				"data/flashcard-test/acronym.wav")));
 		testData.tags = Arrays.asList("Tag A", "Tag B");
 		testData.interval = 5;
 		testData.pathToFile = "files/test-card/";

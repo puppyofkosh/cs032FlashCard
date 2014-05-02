@@ -312,8 +312,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			SerializableFlashCard.Data data = new SerializableFlashCard.Data();
 			data.name = Controller.parseCardName(textFieldName.getText());
 
-			data.question = question;
-			data.answer = answer;
+			data.setQuestion(question);
+			data.setAnswer(answer);
 
 			try {
 				spinnerInterval.commitEdit();

@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import utils.FlashcardConstants;
 import utils.Writer;
 import audio.AudioFile;
 import audio.AudioPlayer;
@@ -171,7 +172,7 @@ public class Controller {
 		if (fixedText.length() == 0)
 			fixedText.append("untitled");
 		int overlapPreventer = 0;
-		String prefix = "files/" + fixedText;
+		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
 		File file = new File(prefix);
 		while (file.exists()) {
 			overlapPreventer++;
