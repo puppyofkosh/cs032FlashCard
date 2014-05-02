@@ -6,12 +6,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -22,12 +20,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.SwingWorker;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import controller.Controller;
 import flashcard.FlashCardSet;
@@ -51,7 +48,7 @@ public class QuizletPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new SearchThread().start();
+				new SearchThread().execute();
 			}
 		});
 		
@@ -154,21 +151,30 @@ public class QuizletPanel extends JPanel {
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int row, int column) {
 			  
-			new PreviewThread(value.toString()).start();
+			new PreviewThread(value.toString()).execute();
 			  
 			return button;
 		}
 	}
 	
-	private class SearchThread extends Thread {
+	private class SearchThread extends SwingWorker<TableModel, Void> {
 		private String searchText;
 		SearchThread() {
 			this.searchText = searchTextField.getText();
 		}
 		
 		@Override
-		public void run() {
-			setTable.setModel(new QuizletSetTableModel(QuizletRequest.search(searchText)));
+		public TableModel doInBackground() {
+			return new QuizletSetTableModel(QuizletRequest.search(searchText));
+		}
+		
+		@Override
+		public void done() {
+			try {
+				setTable.setModel(get());
+			} catch (Throwable e) {
+				Controller.guiMessage("Quizlet did not respond", true);
+			}
 		}
 	}
 	
@@ -223,12 +229,12 @@ public class QuizletPanel extends JPanel {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}	
+				}
 			}
 		}
 	}
 	
-	private class PreviewThread extends Thread {
+	private class PreviewThread extends SwingWorker<TableModel, Void> {
 		
 		private String id;
 		
@@ -237,12 +243,20 @@ public class QuizletPanel extends JPanel {
 		}
 		
 		@Override
-		public void run() {
+		public TableModel doInBackground() {
 			try {
-				cardTable.setModel(new QuizletCardTableModel(QuizletRequest.getSet(id)));
+				return new QuizletCardTableModel(QuizletRequest.getSet(id));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		@Override
+		public void done() {
+			try {
+				cardTable.setModel(get());
+			} catch (Throwable e) {
+				Controller.guiMessage("Quizlet did not respond", true);
 			}
 		}
 	}
