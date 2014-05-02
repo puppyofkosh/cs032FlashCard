@@ -9,6 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +25,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import protocol.NetworkedFlashCard;
-
 import utils.FlashcardConstants;
 import utils.Writer;
 import audio.WavFileConcatenator;
@@ -98,6 +99,23 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 		_setBrowser = new SetBrowser();
 		add(_setBrowser, BorderLayout.EAST);
+		
+		addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentHidden(ComponentEvent arg0) {}
+
+			@Override
+			public void componentMoved(ComponentEvent arg0) {}
+
+			@Override
+			public void componentResized(ComponentEvent arg0) {}
+
+			@Override
+			public void componentShown(ComponentEvent arg0) {
+				_setBrowser.updateSourceList();
+			}
+		});
 
 
 	}
