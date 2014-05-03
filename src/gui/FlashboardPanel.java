@@ -55,7 +55,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 
 	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
 	public Queue<FlashCardPanel> freePanels = new LinkedList<>();
-	
+
 	/**
 	 * Creates a new Flashboard Panel with nothing selected and 
 	 * nothing displayed.
@@ -81,23 +81,23 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		emptyLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 25));
 		emptyPanel.add(emptyLabel);
 
-		JButton emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25);
+		JButton emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25, true);
 		emptyButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		emptyButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
-			
+
 		});
-		
+
 		// Start us off with 50 panels
 		for (int i = 0; i < 50; i++)
 		{
 			freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
 		}
-		
+
 		emptyPanel.add(emptyButton);
 
 		//Contains the grid of cards to be laid out.
@@ -137,9 +137,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 * Should be called when we want to refresh the browser and the panel.
 	 */
 	public void onView() {
-		SourceListItem currentItem = browser.getSourceList().getSelectedItem();
-		browser.updateSourceList();
-		browser.getSourceList().setSelectedItem(currentItem);
+		
 	}
 
 	/**
@@ -172,27 +170,25 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		freePanels.addAll(cardPanels);
 		cardPanels = new ArrayList<>();		
 		for(FlashCard card : cards) {
-			
+
 			// Try to use a recycled panel if any are available. If not, we must create a new panel ourselves.
 			FlashCardPanel cardPanel = null;
-			if (freePanels.size() > 0)
-			{
+			if (freePanels.size() > 0) {
 				cardPanel = freePanels.poll();
 				cardPanel.reinitialize(card);
 			}
-			else
-			{
+			else {
 				cardPanel = new FlashCardPanel(card);
 			}
 
 			cardPanels.add(cardPanel);
 		}
 	}
-	
+
 	public void update() {
 		browser.updateSourceList();
 	}
-	
+
 	/**
 	 * When a different item is selected in the set browser, we display the
 	 * cards form that particular set.

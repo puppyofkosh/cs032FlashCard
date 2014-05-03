@@ -41,21 +41,21 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.BLACK);
 		
-		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32), JLabel.LEFT);
+		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32, true), JLabel.LEFT);
 		initMenuItem(btnFlashboard);
 		add(btnFlashboard);
 		
-		btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32), JLabel.LEFT);
+		btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32, true), JLabel.LEFT);
 		initMenuItem(btnExport);
 		add(btnExport);
 
 		add(Box.createVerticalStrut(10));
-		btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32), JLabel.LEFT);
+		btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32, true), JLabel.LEFT);
 		initMenuItem(btnImport);
 		add(btnImport);
 
 		add(Box.createVerticalStrut(10));
-		btnCreate = new JLabel("Create    ", IconFactory.loadIcon(IconType.CREATE, 32), JLabel.LEFT);
+		btnCreate = new JLabel("Create    ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
 		initMenuItem(btnCreate);
 		add(btnCreate);
 		
