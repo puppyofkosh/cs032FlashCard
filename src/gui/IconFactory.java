@@ -26,9 +26,9 @@ public class IconFactory {
 		DATABASE,
 		QUIZLET
 	}
-	
+
 	private static String imgFolder = "./res/img/";
-	
+
 	private static ImageIcon STOP_ICON = createImageIcon("Stop Button.png");
 	private static ImageIcon PLAY_ICON = createImageIcon("Play Button.png");
 	private static ImageIcon RECORD_ICON = createImageIcon("Record Button.png");
@@ -52,15 +52,15 @@ public class IconFactory {
 
 	private static ImageIcon IMPORT_ICON = createImageIcon("Import Icon.png");
 	private static ImageIcon IMPORT_ICON_INVERTED = createImageIcon("Import Icon Inverted.png");
-	
+
 	private static ImageIcon DATABASE_ICON = createImageIcon("Database Icon.png");
 	private static ImageIcon DATABASE_ICON_INVERTED = createImageIcon("Database Icon Inverted.png");
-	
+
 	private static ImageIcon QUIZLET_ICON = createImageIcon("Quizlet Icon.png");
 	private static ImageIcon QUIZLET_ICON_INVERTED = createImageIcon("Quizlet Icon Inverted.png");
 
-	
-	
+
+
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private static ImageIcon createImageIcon(String path) {
@@ -90,17 +90,17 @@ public class IconFactory {
 		case SET:
 			return inverted ? SET_ICON_INVERTED : SET_ICON;
 		case CREATE:
-			return inverted ? CREATE_ICON : CREATE_ICON_INVERTED;
+			return inverted ? CREATE_ICON_INVERTED : CREATE_ICON;
 		case EXPORT:
-			return inverted ? EXPORT_ICON : EXPORT_ICON_INVERTED;
+			return inverted ? EXPORT_ICON_INVERTED : EXPORT_ICON;
 		case FLASHBOARD:
-			return inverted ? FLASHBOARD_ICON : FLASHBOARD_ICON_INVERTED;
+			return inverted ? FLASHBOARD_ICON_INVERTED : FLASHBOARD_ICON;
 		case IMPORT:
-			return inverted ? IMPORT_ICON : IMPORT_ICON_INVERTED;
+			return inverted ? IMPORT_ICON_INVERTED : IMPORT_ICON;
 		case DATABASE:
-			return inverted ? DATABASE_ICON : DATABASE_ICON_INVERTED;
+			return inverted ? DATABASE_ICON_INVERTED : DATABASE_ICON;
 		case QUIZLET:
-			return inverted ? QUIZLET_ICON : QUIZLET_ICON_INVERTED;
+			return inverted ? QUIZLET_ICON_INVERTED : QUIZLET_ICON;
 		default:
 			Controller.guiMessage("Not a valid icon type", true);
 			return loadMissingIcon();
