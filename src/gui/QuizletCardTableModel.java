@@ -1,10 +1,16 @@
 package gui;
 
+import java.io.IOException;
+import java.util.Collection;
+
 import javax.swing.table.AbstractTableModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import audio.AudioFile;
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 import quizlet.QuizletCard;
 
 public class QuizletCardTableModel extends AbstractTableModel {
@@ -20,7 +26,7 @@ public class QuizletCardTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -40,9 +46,17 @@ public class QuizletCardTableModel extends AbstractTableModel {
 		case 1:
 			return card.definition;
 			
+		case 2:
+			return card;
+			
 		default :
 			throw new IndexOutOfBoundsException();
 		}
+	}
+	
+	@Override
+	public Class<?> getColumnClass(int c) {
+		return getValueAt(0, c).getClass();
 	}
 	
 	@Override
@@ -53,9 +67,22 @@ public class QuizletCardTableModel extends AbstractTableModel {
 			
 		case 1:
 			return "definition";
+			
+		case 2:
+			return "preview";
 		
 		default :
 			throw new IndexOutOfBoundsException();
 		}
 	}
+	
+	@Override
+	public boolean isCellEditable(int row, int col) {
+		return col == 2;
+	}
+	
+	@Override
+	public void setValueAt(Object value, int row, int col) {
+	}
+	
 }

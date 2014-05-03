@@ -104,6 +104,9 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		JScrollPane cardScrollPane = new JScrollPane(cardTable);
 		tablePanel.add(cardScrollPane);
 		
+		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer());
+		cardTable.setDefaultEditor(QuizletCard.class, new PreviewEditor(new JCheckBox()));
+		
 		JPanel bottomPanel = new JPanel();
 		add(bottomPanel);
 		
@@ -179,8 +182,14 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int row, int column) {
 			  
-			new PreviewThread(value.toString()).execute();
-			  
+			if (column == 3)  
+				new PreviewThread(value.toString()).execute();
+			else  
+				try {
+					Controller.playFlashcardThenRun(((QuizletCard) value).getFlashCard((int) spinner.getValue()));
+				} catch (IOException e) {
+					Controller.guiMessage("Cannot preview card", true);
+				} 
 			return button;
 		}
 	}
