@@ -166,7 +166,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 				Controller.guiMessage("Could not parse new spinner value", true);
 			}
 			int interval = (int) spinnerInterval.getValue();
-			String nameInput = setNameField.getText();
+			String nameInput = Controller.parseInput(setNameField.getText());
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
 
