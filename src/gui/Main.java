@@ -2,6 +2,10 @@ package gui;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +24,7 @@ import flashcard.FlashCardSet;
 
 public class Main {
 
-	
+
 	/**
 	 * Currently demos export
 	 * @param args
@@ -30,38 +34,36 @@ public class Main {
 			public void run() {
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.add(flashboardDemo());
+				frame.add(setManagementButton());
 				frame.pack();
 				frame.setVisible(true);
 			}
 		});
 	}
-	
-	public static  JComponent setManagementButton() {
-		final JPopupMenu menu = new JPopupMenu();
-		menu.add(new JCheckBoxMenuItem("Other Court"));
-		menu.add(new JCheckBoxMenuItem("Tribunal Court"));
-		menu.add(new JCheckBoxMenuItem("High Court"));
-		menu.add(new JCheckBoxMenuItem("Supreme Court"));
 
-		final JButton button = new JButton();
-		button.setAction(new AbstractAction("Court") {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        menu.show(button, 0, button.getHeight());
-		    }
-		});
+	public static JComponent setManagementButton() {
+		for (FlashCardSet set : Controller.getAllSets()) {
+			try {
+				for(FlashCard card : set.getAll()) {
+					return new SetSelectionButton("EXAMPLE", card);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return null;
 	}
 
-	
+
 	public static JComponent flashboardDemo() {
 		return new FlashboardPanel();
 	}
-	
+
 	public static JComponent exportDemo() {
 		return new ExportPanel();
 	}
-	
+
 	public static JComponent dragAndDropDemo() {
 		try {
 			JPanel p = new JPanel();
@@ -73,7 +75,7 @@ public class Main {
 			}
 			ctp.updateCards(cards);
 			p.add(ctp);
-			
+
 			JTextField area = new JTextField(10);
 			area.setDragEnabled(true);
 			p.add(area);
