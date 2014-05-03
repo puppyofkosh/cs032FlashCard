@@ -58,7 +58,6 @@ public class DatabaseTest {
 	@Test
 	public void testWritingToDb() throws IOException, InterruptedException {
 
-		System.out.println("First tes");
 		// Write the card to DB, make sure everything came out okay
 		FlashCard dbCard = db.writeCard(testCard);
 
@@ -97,7 +96,7 @@ public class DatabaseTest {
 	@Test
 	public void testMultipleContainment() throws IOException
 	{
-		FlashCardSet set = new SimpleSet("presidents");		
+		FlashCardSet presidents = new SimpleSet("presidents");		
 		
 		// Now, if we change set the changes will go in the DB
 		
@@ -105,15 +104,15 @@ public class DatabaseTest {
 		testData.pathToFile = "files/abraham/";
 		testData.name = "abroham";
 		FlashCard abrahamCard = new SerializableFlashCard(testData);
-		set.addCard(abrahamCard);
+		presidents.addCard(abrahamCard);
 		
 		// Write the set we just described up there and replace our reference to it with a set that will reflect what's in the database
-		set = db.writeSet(set);
+		presidents = db.writeSet(presidents);
 		
 		// Now add the same abraham card to a different set
-		set = new SimpleSet("state capitals");
-		set.addCard(abrahamCard);
-		db.writeSet(set);
+		FlashCardSet capitals = new SimpleSet("state capitals");
+		capitals.addCard(abrahamCard);
+		capitals = db.writeSet(capitals);
 		
 		// Make sure the abraham card has 2 sets according to the database
 		List<FlashCard> abrohamCards = db.getFlashCardsByName("abroham");
@@ -122,11 +121,30 @@ public class DatabaseTest {
 		
 		assertTrue(dbCard.getSets().size() == 2);
 		
+		// Try deleting one of the sets. The card that's contained in both sets should remain.
+		
+
+		db.deleteSet(capitals);
+		
+		assertTrue(dbCard.getSets().size() == 1);
+		
+		
+		assertTrue(db.getAllSets().size() == 1);
+		assertTrue(db.getAllCards().size() == 1);
+		
+		// DElete the second set. The abroham card should now not belong to any set, so it should be gone
+		db.deleteSet(presidents);
+		assertTrue(db.getAllSets().size() == 0);
+		assertTrue(db.getAllCards().size() == 0);
+			
+		db.close();
 	}
 	
 	@Test
 	public void testSets() throws IOException
 	{
+		
+
 		SimpleSet set = new SimpleSet("state capitals");
 		set.addTag("Tag A");
 		set.addCard(testCard);
@@ -141,7 +159,6 @@ public class DatabaseTest {
 		assertTrue(db.getAllSets().size() == 1);
 		
 		// Check the equals operator between a simple set and a db set
-		System.out.println("Comparing");
 		assertTrue(dbSet.sameMetaData(set));
 		assertTrue(set.sameMetaData(dbSet));
 		
@@ -179,10 +196,16 @@ public class DatabaseTest {
 		assertTrue(dbSet.getTags().size() == 2);
 		assertTrue(dbSet.getTags().contains("Tag C") && dbSet.getTags().contains("Tag D"));
 		
+		
+		
+		
 		// Try to delete the set
 		db.deleteSet(dbSet);
 		
 		assertTrue(db.getAllSets().size() == 0);
+		
+		// After deleting a set, all of the "lonely" cards (cards without sets) should be deleted as well
+		assertTrue(db.getAllCards().size() == 0);
 		
 		// PUT THIS AT THE END OF EVERY TEST
 		db.close();
@@ -191,6 +214,8 @@ public class DatabaseTest {
 	@Test
 	public void testSearching() throws IOException
 	{
+
+		
 		SimpleSet set = new SimpleSet("state capitals");
 		set.addTag("global-tag");
 		set.addCard(testCard);
@@ -200,34 +225,8 @@ public class DatabaseTest {
 		FlashCardSet dbSet = db.writeSet(set);
 		
 		assertTrue(db.getFlashCardsWithTag("global-tag").size() == 1);
-	}
-/*
-	@Test
-	public void testWritingToDisk() throws IOException {
-		// Write the card to DB, make sure everything came out okay
-		FlashCard dbCard = DatabaseFactory.writeCard(testCard);
-
-		assertTrue(dbCard.getQuestionAudio().getRawBytes().length == questionLength);
-		assertTrue(dbCard.getAnswerAudio().getRawBytes().length == answerLength);
-		assertTrue(dbCard.getPath().equals("files/test-card/"));
-		assertTrue(dbCard.getTags().equals(testCard.getTags()));
-		assertTrue(dbCard.getInterval() == testCard.getInterval());
-
-		// Now screw around with the card, try changing some things
-		dbCard.setInterval(6);
-		assertTrue(dbCard.getInterval() == 6);
-
-		dbCard.addTag("Tag C");
-		assertTrue(dbCard.getTags().size() == 3);
-
-		dbCard.removeTag("Tag C");
-		assertTrue(dbCard.getTags().size() == 2);
-
-		DatabaseFactory.deleteCard(testCard);
-
-		assertTrue(db.getAllCards().size() == 0);
-
+		
 		db.close();
 	}
-	*/
+
 }

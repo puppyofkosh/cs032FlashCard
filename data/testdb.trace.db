@@ -108,3 +108,9 @@ org.h2.message.DbException: The connection was not closed by the application and
 Caused by: org.h2.jdbc.JdbcSQLException: The connection was not closed by the application and is garbage collected [90018-176]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:344)
 	... 50 more
+05-03 01:06:18 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "FLASHCARDS_SETS" not found; SQL statement:
+DELETE FROM FLASHCARDS_SETS WHERE SET_ID=1 [42102-176]
+05-03 01:06:18 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Table "FLASHCARDS_SETS" not found; SQL statement:
+DELETE FROM FLASHCARDS_SETS WHERE SET_ID=2 [42102-176]

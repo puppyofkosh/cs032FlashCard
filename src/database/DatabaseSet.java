@@ -28,7 +28,7 @@ public class DatabaseSet implements FlashCardSet{
 	@Override
 	public String toString()
 	{
-		return "DB Set id " + id;
+		return getName();
 	}
 	
 	@Override

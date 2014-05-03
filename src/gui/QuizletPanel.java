@@ -3,10 +3,13 @@ package gui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -19,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import javax.swing.ProgressMonitor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableCellRenderer;
@@ -27,6 +31,7 @@ import javax.swing.table.TableModel;
 import org.json.JSONException;
 
 import controller.Controller;
+import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import quizlet.QuizletCard;
@@ -34,7 +39,12 @@ import quizlet.QuizletRequest;
 
 import javax.swing.JSpinner;
 
-public class QuizletPanel extends JPanel {
+public class QuizletPanel extends JPanel implements PropertyChangeListener {
+	
+	private ProgressMonitor progressMonitor;
+	private ImportThread importThread;
+	private Task task;
+	
 	public QuizletPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -105,7 +115,23 @@ public class QuizletPanel extends JPanel {
 					JOptionPane.showMessageDialog(btnImport, "You must select some sets to import");
 					return;
 				}
-				new ImportThread().start();
+				
+				System.out.println("Creating monitor");
+				progressMonitor = new ProgressMonitor(QuizletPanel.this,
+                        "Running a Long Task",
+                        "", 0, 100);
+				progressMonitor.setProgress(0);
+				progressMonitor.setNote("Hello there");
+				
+				//if (importThread != null)
+				//	importThread.cancel(true);
+				
+				importThread = new ImportThread();
+				importThread.addPropertyChangeListener(QuizletPanel.this);
+				importThread.execute();
+				/*task = new Task();
+				task.addPropertyChangeListener(QuizletPanel.this);
+				task.execute();*/
 			}
 			
 		});
@@ -178,12 +204,13 @@ public class QuizletPanel extends JPanel {
 		}
 	}
 	
-	private class ImportThread extends Thread {
+	private class ImportThread extends SwingWorker<Void, Void> {
 		
 		private int interval;
 		private String setName;
 		private List<String> tags;
 		private List<String> ids;
+		
 		
 		ImportThread() {
 			ids = new ArrayList<>();
@@ -200,18 +227,27 @@ public class QuizletPanel extends JPanel {
 				e1.printStackTrace();
 			}
 			interval = (int) spinner.getValue();
+			
 		}
-		
+	
 		@Override
-		public void run() {
+		protected Void doInBackground() throws Exception {
+			
+			setProgress(0);
+			List<FlashCard> producedCards = new ArrayList<>();
+
 			SerializableFlashCard.Data data;
-			FlashCardSet set = Controller.createSet(setName, "quizlet", tags, interval);
+			int cardsDone = 0;
 			for (String id : ids) {
-				
 				try {
-					for (QuizletCard card: QuizletCard.getCards(QuizletRequest.getSet(id))) {
+					QuizletCard[] cards = QuizletCard.getCards(QuizletRequest.getSet(id));
+					for (QuizletCard card: cards) {
+						if (isCancelled())
+							return null;
+						
 						if (card.term.length() == 0 || card.definition.length() == 0)
 							continue;
+						
 						data = new SerializableFlashCard.Data();
 						data.name = Controller.parseCardName(card.term);
 						data.setQuestion(Controller.readTTS(card.term));
@@ -221,16 +257,27 @@ public class QuizletPanel extends JPanel {
 						data.interval = interval;
 						data.tags = new ArrayList<>();
 						data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
-						set.addCard(Controller.createCard(data));
+						
+						// add the cards to a temporary place before writing them. If the user cancels, we don't want a half-full set in our db
+						producedCards.add(Controller.createCard(data));
+						
+						cardsDone++;
+						int progress = cardsDone * 100 /(cards.length * ids.size());
+						System.out.println("progress is " + progress);
+						setProgress(progress);
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
+			
+			// Download is complete, write the cards.			
+			FlashCardSet set = Controller.createSet(setName, "quizlet", tags, interval);
+			for (FlashCard f : producedCards)
+				set.addCard(f);
+			
+			return null;
 		}
 	}
 	
@@ -259,6 +306,49 @@ public class QuizletPanel extends JPanel {
 				Controller.guiMessage("Quizlet did not respond", true);
 			}
 		}
+	}
+	
+	class Task extends SwingWorker<Void, Void> {
+        @Override
+        public Void doInBackground() {
+            Random random = new Random();
+            int progress = 0;
+            setProgress(0);
+            try {
+                Thread.sleep(1000);
+                while (progress < 100 && !isCancelled()) {
+                    //Sleep for up to one second.
+                    Thread.sleep(random.nextInt(1000));
+                    //Make random progress.
+                    progress += random.nextInt(10);
+                    setProgress(Math.min(progress, 100));
+                }
+            } catch (InterruptedException ignore) {}
+            return null;
+        }
+
+        @Override
+        public void done() {
+            progressMonitor.setProgress(0);
+        }
+    }
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("event");
+		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
+			System.out.println("Setting progress");
+            int progress = (Integer) evt.getNewValue();
+            progressMonitor.setProgress(progress);
+            String message =
+                String.format("Completed %d%%.\n", progress);
+            progressMonitor.setNote(message);
+            if (progressMonitor.isCanceled() || importThread.isDone()) {
+                if (progressMonitor.isCanceled()) {
+                	importThread.cancel(true);
+                }
+            }
+        }	
 	}
 	
 }

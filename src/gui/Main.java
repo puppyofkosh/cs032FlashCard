@@ -1,12 +1,17 @@
 package gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import controller.Controller;
@@ -31,6 +36,23 @@ public class Main {
 			}
 		});
 	}
+	
+	public static  JComponent setManagementButton() {
+		final JPopupMenu menu = new JPopupMenu();
+		menu.add(new JCheckBoxMenuItem("Other Court"));
+		menu.add(new JCheckBoxMenuItem("Tribunal Court"));
+		menu.add(new JCheckBoxMenuItem("High Court"));
+		menu.add(new JCheckBoxMenuItem("Supreme Court"));
+
+		final JButton button = new JButton();
+		button.setAction(new AbstractAction("Court") {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        menu.show(button, 0, button.getHeight());
+		    }
+		});
+	}
+
 	
 	public static JComponent flashboardDemo() {
 		return new FlashboardPanel();
