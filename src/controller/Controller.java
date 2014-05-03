@@ -297,6 +297,14 @@ public class Controller {
 	}
 
 	public static void deleteCard(FlashCard card) {
+		for(FlashCardSet set : card.getSets()) {
+			try {
+				set.removeCard(card);
+			} catch (IOException e) {
+				Controller.guiMessage("LOL WUT", true);
+				e.printStackTrace();
+			}
+		}
 		DatabaseFactory.deleteCard(card);
 		updateAll();
 	}
@@ -345,5 +353,10 @@ public class Controller {
 
 	public static void switchTabs(TabType tab) {
 		gui.showTab(tab);
+	}
+
+	public static void deleteSet(FlashCardSet set) {
+		// TODO Auto-generated method stub
+		
 	}
 }
