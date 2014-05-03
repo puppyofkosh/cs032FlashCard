@@ -82,10 +82,10 @@ public class SetBrowser extends JPanel  {
 		sourceList = new SourceList(model);	
 		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
-		
+
 		ImageIcon setIcon = IconFactory.loadIcon(IconType.SET, 14, true);
 		ImageIcon cardIcon = IconFactory.loadIcon(IconType.CARD, 14, true);
-		
+
 		//A very complicated looking loop that basically just iterates through
 		//All sets and their cards and adds them to the sourceListModel.
 		//Should really be implemented where sets are Categories and not items
@@ -108,7 +108,7 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-		
+
 		sourceList.setExpanded(setsCategory, true);
 		//Allows keyboard interaction with setbrowser.
 		//Potentially want to add another keyboard interaction for 
@@ -163,7 +163,7 @@ public class SetBrowser extends JPanel  {
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
-		
+
 		revalidate();
 		repaint();
 	}
@@ -245,10 +245,12 @@ public class SetBrowser extends JPanel  {
 				cards.add(card);
 			} else { //a set is currently selected, so let's get its cards.
 				FlashCardSet set = getSelectedSet();
-				try {
-					cards = set.getAll();
-				} catch (IOException e) {
-					Controller.guiMessage("Could not get cards in the set", true);
+				if (set != null) {
+					try {
+						cards = set.getAll();
+					} catch (IOException e) {
+						Controller.guiMessage("Could not get cards in the set", true);
+					}
 				}
 			}
 			return new TransferableFlashCards(cards);

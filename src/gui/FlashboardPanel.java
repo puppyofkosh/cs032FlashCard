@@ -3,9 +3,11 @@ package gui;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
+import gui.GuiConstants.TabType;
 import gui.IconFactory.IconType;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -82,14 +84,12 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		emptyPanel.add(emptyLabel);
 
 		JButton emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25, true);
-		emptyButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		emptyButton.setBorderPainted(true);
 		emptyButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				Controller.switchTabs(TabType.CREATE);
 			}
-
 		});
 
 		// Start us off with 50 panels
@@ -137,7 +137,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 * Should be called when we want to refresh the browser and the panel.
 	 */
 	public void onView() {
-		
+
 	}
 
 	/**

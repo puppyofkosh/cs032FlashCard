@@ -11,6 +11,12 @@ import javax.swing.JTextField;
 
 import flashcard.FlashCard;
 
+/**
+ * Don't think we use this - gonna throw it in deprecated and see if
+ * anyone notices.
+ * @author samkortchmar
+ *
+ */
 public class CardSelectionPanel extends GenericPanel {
 	/**
 	 * 
