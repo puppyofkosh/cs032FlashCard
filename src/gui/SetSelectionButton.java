@@ -30,7 +30,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 		for(FlashCardSet set : cardSets) {
 			setNames.add(set.getName());
 		}
-		
+
 		for(FlashCardSet set : Controller.getAllSets()) {
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem(set.getName(), setNames.contains(set.getName()));
 			menu.add(item);
