@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -72,7 +73,7 @@ public class SetBrowser extends JPanel  {
 	 * Updates the source list with all the cards from the library.
 	 * Probably not a great way to do it, but the easiest for now.
 	 */
-	public void updateSourceList() {
+	public void updateSourceList() {	
 		removeAll();
 		_cards = new HashMap<>();
 		_sets = new HashMap<>();
@@ -81,19 +82,23 @@ public class SetBrowser extends JPanel  {
 		sourceList = new SourceList(model);	
 		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
+		
+		ImageIcon setIcon = IconFactory.loadIcon(IconType.SET, 14, true);
+		ImageIcon cardIcon = IconFactory.loadIcon(IconType.CARD, 14, true);
+		
 		//A very complicated looking loop that basically just iterates through
 		//All sets and their cards and adds them to the sourceListModel.
 		//Should really be implemented where sets are Categories and not items
 		//but we wanted to use the custom icons we made.
 		for(FlashCardSet set : Controller.getAllSets()) {
-			SourceListItem setFolder = new SourceListItem(set.getName(), IconFactory.loadIcon(IconType.SET, 14, true));
+			SourceListItem setFolder = new SourceListItem(set.getName(), setIcon);
 			try {
 				_sets.put(setFolder, set);
 				model.addItemToCategory(setFolder, setsCategory);
 				Collection<FlashCard> setCards = set.getAll();
 				setFolder.setCounterValue(setCards.size());
 				for(FlashCard card : setCards) {
-					SourceListItem currentItem = new SourceListItem(card.getName(), IconFactory.loadIcon(IconType.CARD, 14, true));
+					SourceListItem currentItem = new SourceListItem(card.getName(), cardIcon);
 					_cards.put(currentItem, card);
 					_parents.put(currentItem, setFolder);
 					model.addItemToItem(currentItem, setFolder);
@@ -103,9 +108,7 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-
-
-
+		
 		sourceList.setExpanded(setsCategory, true);
 		//Allows keyboard interaction with setbrowser.
 		//Potentially want to add another keyboard interaction for 
@@ -160,6 +163,7 @@ public class SetBrowser extends JPanel  {
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
+		
 		revalidate();
 		repaint();
 	}
