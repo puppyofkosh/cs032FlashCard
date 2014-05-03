@@ -96,9 +96,9 @@ public class Controller {
 	 * audio is playing at a time
 	 */
 	//public static void playAudio(AudioFile file) throws IOException {
-		//player.play(file);
+	//player.play(file);
 	//}
-	
+
 	public static void playAudioThenRun(AudioFile file, Runnable...runnables) throws IOException {
 		player.playThenRun(file, runnables);
 	}
@@ -157,19 +157,19 @@ public class Controller {
 			Writer.err(text);
 		else
 			Writer.out(text);
-		
+
 		if (gui == null)
 			return;
-		
+
 		JLabel label = new JLabel(text);
 		final int time = duration;
 		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
 		dialog.add(label);
 		Rectangle bounds = gui.getBounds();
 		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
-		
+
 		dialog.setVisible(true);
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -197,38 +197,61 @@ public class Controller {
 	}
 
 	public static String parseCardName(String text) {
-		StringBuilder fixedText = new StringBuilder();
-		char currentCharacter;
-		for (int i = 0; i < text.length(); i++) {
-			currentCharacter = text.charAt(i);
-			if (Character.isJavaIdentifierPart(currentCharacter))
-				fixedText.append(currentCharacter);
-		}
-
-		if (fixedText.length() == 0)
-			fixedText.append("untitled");
-		int overlapPreventer = 0;
-		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
-		File file = new File(prefix);
-		while (file.exists()) {
-			overlapPreventer++;
-			file = new File(prefix + overlapPreventer);
-		}
-		return fixedText.toString()
-				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+		//		StringBuilder fixedText = new StringBuilder();
+		//		char currentCharacter;
+		//		for (int i = 0; i < text.length(); i++) {
+		//			currentCharacter = text.charAt(i);
+		//			if (Character.isJavaIdentifierPart(currentCharacter))
+		//				fixedText.append(currentCharacter);
+		//		}
+		//
+		//		if (fixedText.length() == 0)
+		//			fixedText.append("untitled");
+		//		int overlapPreventer = 0;
+		//		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
+		//		File file = new File(prefix);
+		//		while (file.exists()) {
+		//			overlapPreventer++;
+		//			file = new File(prefix + overlapPreventer);
+		//		}
+		//		return fixedText.toString()
+		//				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+		return text;
 	}
 
+	public static String parseInput(String text) {
+		StringBuilder fixedText = new StringBuilder();
+		char currentCharacter;
+		boolean capitalize = true;
+		for (int i = 0; i < text.length(); i++) {
+			currentCharacter = Character.toLowerCase(text.charAt(i));
+			if (Character.isJavaIdentifierPart(currentCharacter)) {
+				if (capitalize) {
+					currentCharacter = Character.toUpperCase(currentCharacter);
+					capitalize = false;
+				}
+				fixedText.append(currentCharacter);
+			} else if (Character.isWhitespace(currentCharacter) && !capitalize) {
+				fixedText.append(" ");
+				capitalize = true;
+			}
+		}
+		return fixedText.toString().trim();
+	}
+
+
 	//public static void playFlashCard(FlashCard card, ImageToggleButton _button) throws IOException {
-		//player.play(card);
-//	}
-	
+	//player.play(card);
+	//	}
+
 	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
 		player.playThenRun(card, runnables);
 	}
 
 	public static boolean verifyInput(String input) {
 		// FIXME implement for real
-		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
+		//		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
+		return true;
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {
@@ -310,7 +333,7 @@ public class Controller {
 	public static void updateAll() {
 		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT, TabType.CREATE);
 	}
-	
+
 	public static void updateGUI(TabType...types) {
 		for(TabType type : types) {
 			gui.update(type);
@@ -320,7 +343,7 @@ public class Controller {
 	public static void launchGUI() {
 		gui = new MainFrame();
 	}
-	
+
 	public static void switchTabs(TabType tab) {
 		gui.showTab(tab);
 	}
