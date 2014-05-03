@@ -36,7 +36,7 @@ public class ImportPanel extends GenericPanel {
 		panel.setOpaque(false);
 		panel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
 
-		JButton btnNewButton = IconFactory.createImageButton("From Quizlet", IconType.QUIZLET, 64);
+		JButton btnNewButton = IconFactory.createImageButton("From Quizlet", IconType.QUIZLET, 64, true);
 		btnNewButton.setOpaque(false);
 		panel.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
@@ -57,7 +57,7 @@ public class ImportPanel extends GenericPanel {
 
 
 
-		JButton btnNewButton_1 = IconFactory.createImageButton("From Database", IconType.DATABASE, 64);
+		JButton btnNewButton_1 = IconFactory.createImageButton("From Database", IconType.DATABASE, 64, true);
 		btnNewButton_1.setOpaque(false);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -73,7 +73,7 @@ public class ImportPanel extends GenericPanel {
 		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
 		panel_2.setOpaque(false);
 
-		JButton btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64);
+		JButton btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64, true);
 		btnNewButton_2.setOpaque(false);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
