@@ -24,6 +24,8 @@ public interface FlashCardSet {
 	 * Add a card to the set
 	 */
 	public void addCard(FlashCard f) throws IOException;
+	public void removeCard(FlashCard f) throws IOException;
+
 	
 	/**
 	 * Adds a "global" tag to the FlashCardSet - i.e. a tag that applies for
@@ -50,6 +52,7 @@ public interface FlashCardSet {
 	
 	// FIXME: Wtf?
 	void addAuthor();
+	
 
 	void setAuthor(String author);
 	
