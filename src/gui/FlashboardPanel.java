@@ -91,13 +91,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			}
 			
 		});
-		
-		// Start us off with 50 panels
-		for (int i = 0; i < 50; i++)
-		{
-			freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
-		}
-		
+				
 		emptyPanel.add(emptyButton);
 
 		//Contains the grid of cards to be laid out.

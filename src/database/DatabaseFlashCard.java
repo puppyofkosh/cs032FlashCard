@@ -269,13 +269,15 @@ public class DatabaseFlashCard implements FlashCard {
 	@Override
 	public int hashCode()
 	{
-		try {
-			return getPath().hashCode();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		UUID uid = getUniqueId();
+		if (uid != null)
+		{
+			return uid.hashCode();
 		}
-		return 0;
+		else
+		{
+			throw new IllegalStateException("ERROR dbflashcard hashcode");
+		}
 	}
 	
 	@Override

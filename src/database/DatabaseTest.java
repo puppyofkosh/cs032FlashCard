@@ -63,7 +63,6 @@ public class DatabaseTest {
 
 		assertTrue(dbCard.getQuestionAudio().getRawBytes().length == questionLength);
 		assertTrue(dbCard.getAnswerAudio().getRawBytes().length == answerLength);
-		assertTrue(dbCard.getPath().equals("files/test-card/"));
 		assertTrue(dbCard.getTags().equals(testCard.getTags()));
 		assertTrue(dbCard.getInterval() == testCard.getInterval());
 		

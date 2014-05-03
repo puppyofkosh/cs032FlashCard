@@ -53,7 +53,9 @@ public class FlashCardDatabase implements Resources {
 	}
 
 	/***
-	 * Remove a cards files from disk (that is the q and a files as well as the folder containing them.)
+	 * Remove a cards files from disk (that is the q and a files as well as the
+	 * folder containing them.)
+	 * 
 	 * @param card
 	 * @throws IOException
 	 */
@@ -155,7 +157,7 @@ public class FlashCardDatabase implements Resources {
 		set.setAuthor("Ian!");
 		set.setInterval(5);
 		set.setTags(Arrays.asList("states", "capitals"));
-		
+
 		data.pathToFile = "files/vermont/";
 		data.name = "vermont";
 
@@ -174,14 +176,30 @@ public class FlashCardDatabase implements Resources {
 		}
 	}
 
+	public static String findValidPath(FlashCard f) {
+
+		String fixedText = f.getName();
+		int overlapPreventer = 0;
+		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
+		File file = new File(prefix);
+		while (file.exists()) {
+			overlapPreventer++;
+			file = new File(prefix + overlapPreventer);
+		}
+		return prefix + (overlapPreventer == 0 ? "" : overlapPreventer) + "/";
+	}
+
 	/**
-	 * Write all of the cards info to disk based on the path it gives
+	 * Write all of the card's info to disk
+	 * 
+	 * Does not necessarily write it to the path that the card requests, returns the path that it used
 	 * 
 	 * @param card
 	 * @throws IOException
 	 */
-	private static void writeCardToDisk(FlashCard card) throws IOException {
-		String path = card.getPath();
+	private static String writeCardToDisk(FlashCard card) throws IOException {
+		String path = findValidPath(card);
+		System.out.println("Writing card to path " + path);
 
 		if (path == null || path.isEmpty()) {
 			throw new IOException("Invalid path");
@@ -191,8 +209,12 @@ public class FlashCardDatabase implements Resources {
 		if (!dir.exists())
 			dir.mkdir();
 
+		System.out.println("Writing audio for card" + card);
+		
 		Writer.writeAudioFile(path, card.getQuestionAudio().getStream(), true);
 		Writer.writeAudioFile(path, card.getAnswerAudio().getStream(), false);
+		
+		return path;
 	}
 
 	private Connection connection;
@@ -315,7 +337,7 @@ public class FlashCardDatabase implements Resources {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		try (Statement statement = getStatement()) {
 			String query = "SELECT ID FROM SETS WHERE NAME='" + s.getName()
 					+ "'";
@@ -341,16 +363,14 @@ public class FlashCardDatabase implements Resources {
 			deleteQuery = "DELETE FROM SETS_FLASHCARDS WHERE SET_ID=" + setId;
 			statement.execute(deleteQuery);
 
-			// Check if any of the cards this set contained now no longer belong to a set
-			for (FlashCard f : cards)
-			{
-				if (f.getSets().size() == 0)
-				{
+			// Check if any of the cards this set contained now no longer belong
+			// to a set
+			for (FlashCard f : cards) {
+				if (f.getSets().size() == 0) {
 					deleteCard(f);
 				}
 			}
-			
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -470,6 +490,7 @@ public class FlashCardDatabase implements Resources {
 
 	/**
 	 * Search for a card in the db with the given path
+	 * 
 	 * @param path
 	 * @return
 	 */
@@ -490,7 +511,7 @@ public class FlashCardDatabase implements Resources {
 		}
 		return cards;
 	}
-	
+
 	/**
 	 * Get all of the flashcards with the given name
 	 */
@@ -532,26 +553,23 @@ public class FlashCardDatabase implements Resources {
 			while (rs.next()) {
 				cards.add(new DatabaseFlashCard(rs.getInt("ID"), this));
 			}
-			
+
 			// Go through all sets that might have this tag as a global tag
 			query = "SELECT ID FROM SETS INNER JOIN "
-					+ "(SELECT SET_ID FROM SETS_TAGS WHERE TAG_ID = "
-					+ tagId + ")" + "ON SETS.ID = SET_ID";
-			
+					+ "(SELECT SET_ID FROM SETS_TAGS WHERE TAG_ID = " + tagId
+					+ ")" + "ON SETS.ID = SET_ID";
+
 			rs = statement.executeQuery(query);
-			while (rs.next())
-			{
+			while (rs.next()) {
 				FlashCardSet dbSet = new DatabaseSet(rs.getInt("ID"), this);
 				System.out.println("Set found " + dbSet);
 
 				cards.addAll(dbSet.getAll());
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return new ArrayList<>(cards);
@@ -667,8 +685,6 @@ public class FlashCardDatabase implements Resources {
 		System.out.println(Thread.currentThread().getName());
 		try (Statement statement = getStatement()) {
 
-			writeCardToDisk(flashcard);
-
 			// 1) Check if this card exists already:
 			String idQuery = "SELECT ID FROM FLASHCARDS WHERE name='"
 					+ flashcard.getName() + "' AND UUID='"
@@ -682,13 +698,18 @@ public class FlashCardDatabase implements Resources {
 				return new DatabaseFlashCard(rs.getInt("ID"), this);
 			}
 
+			String writtenPath = writeCardToDisk(flashcard);
+
 			// 2) Insert to flashcards table
 			String query = "INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('"
 					+ flashcard.getName()
 					+ "', '"
-					+ flashcard.getPath()
-					+ "', " + flashcard.getInterval() + ","
-					+ "'" + flashcard.getUniqueId().toString() + "'" + ")";
+					+ writtenPath
+					+ "', "
+					+ flashcard.getInterval()
+					+ ","
+					+ "'"
+					+ flashcard.getUniqueId().toString() + "'" + ")";
 
 			statement.execute(query);
 
@@ -740,12 +761,17 @@ public class FlashCardDatabase implements Resources {
 			// unused set name.
 			String name = findUniqueName(s.getName());
 			System.out.println("Using unique name" + name);
-			
+
 			String idQuery = "SELECT ID FROM SETS WHERE name='" + name + "'";
 
 			// 2) Insert to sets table
-			String query = "INSERT INTO SETS (name, interval, author) VALUES ('" + name + "', "
-					+ s.getInterval() + ", '" + s.getAuthor() + "'" + ")";
+			String query = "INSERT INTO SETS (name, interval, author) VALUES ('"
+					+ name
+					+ "', "
+					+ s.getInterval()
+					+ ", '"
+					+ s.getAuthor()
+					+ "'" + ")";
 
 			statement.execute(query);
 

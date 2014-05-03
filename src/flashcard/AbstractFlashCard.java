@@ -19,6 +19,12 @@ public abstract class AbstractFlashCard implements FlashCard, Serializable {
 		data = new SerializableFlashCard.MetaData(d);
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return data.getId().hashCode();
+	}
+	
 	public AbstractFlashCard(FlashCard f)
 	{
 		data = new SerializableFlashCard.MetaData(f);

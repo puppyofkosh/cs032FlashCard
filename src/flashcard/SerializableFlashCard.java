@@ -271,7 +271,7 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	@Override
 	public int hashCode()
 	{
-		return getPath().hashCode();
+		return getUniqueId().hashCode();
 	}
 
 	@Override

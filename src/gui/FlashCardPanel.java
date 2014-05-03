@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
@@ -12,9 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -53,6 +50,10 @@ public class FlashCardPanel extends JPanel {
 	private TagPanel _tagPanel;
 
 
+	/**
+	 * This method is called so we can reuse FlashCardPanel.
+	 * @param card
+	 */
 	public void reinitialize(FlashCard card)
 	{
 		_card = card;
@@ -70,6 +71,7 @@ public class FlashCardPanel extends JPanel {
 	 * @param card
 	 */
 	public FlashCardPanel(FlashCard card) {
+		
 		String defaultName = card.getName();
 		int defaultInterval = card.getInterval();
 		Collection<FlashCardSet> defaultSets = card.getSets();
