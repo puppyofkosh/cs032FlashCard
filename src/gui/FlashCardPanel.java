@@ -69,9 +69,9 @@ public class FlashCardPanel extends JPanel {
 	 * @param card
 	 */
 	public FlashCardPanel(FlashCard card) {
-		String Mname = card.getName();
-		int Minterval = card.getInterval();
-		Collection<FlashCardSet> Msets = card.getSets();
+		String defaultName = card.getName();
+		int defaultInterval = card.getInterval();
+		Collection<FlashCardSet> defaultSets = card.getSets();
 		
 		setPreferredSize(new Dimension(225, 150));
 		_card = card;
@@ -87,7 +87,7 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
 		//Add the card's name to the header panel.
-		_cardName = new JLabel(Mname, SwingConstants.CENTER);
+		_cardName = new JLabel(defaultName, SwingConstants.CENTER);
 		_cardName.setPreferredSize(new Dimension(255, _cardName.getMaximumSize().height));
 		_headerPanel.add(_cardName, BorderLayout.CENTER);
 		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -142,7 +142,7 @@ public class FlashCardPanel extends JPanel {
 
 		JLabel lblInterval = new JLabel("Interval");
 		_interactionPanel.add(lblInterval);
-		_spinner = new JSpinner(new SpinnerNumberModel(Minterval, 0, 10, 1));
+		_spinner = new JSpinner(new SpinnerNumberModel(defaultInterval, 0, 10, 1));
 		_interactionPanel.add(_spinner);
 		_playAndStop = ImageToggleButton.playStopButton();
 		_interactionPanel.add(_playAndStop);
@@ -183,7 +183,7 @@ public class FlashCardPanel extends JPanel {
 		js.setBorder(BorderFactory.createEmptyBorder());
 		add(js);
 		
-		populateSets(Msets);
+		populateSets(defaultSets);
 
 		revalidate();
 	}
