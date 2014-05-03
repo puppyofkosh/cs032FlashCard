@@ -104,4 +104,10 @@ public class SimpleSet implements FlashCardSet{
 
 		return (tagEquality && s.getAuthor().equals(getAuthor()) && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
+
+	@Override
+	public void removeCard(FlashCard f) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 }

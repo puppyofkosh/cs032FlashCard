@@ -67,7 +67,6 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.setOpaque(false);
 		mainPanelContainer.setLayout(mainPanelLayout);
 
-
 		// set up the side panel so pressing the "home" button will bring us home and such
 		sidePanel.setControlledLayout(mainPanelLayout);
 		sidePanel.setControlledPanel(mainPanelContainer);		

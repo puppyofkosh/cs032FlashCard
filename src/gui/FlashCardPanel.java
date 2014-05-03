@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -83,14 +84,12 @@ public class FlashCardPanel extends JPanel {
 		//The header will contain the given card's name and a delete button.
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
-		_headerPanel.setLayout(new BorderLayout(0, 0));
+		_headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0,0));
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		//Add the card's name to the header panel.
-		_cardName = new JLabel(defaultName, SwingConstants.CENTER);
-		_cardName.setPreferredSize(new Dimension(255, _cardName.getMaximumSize().height));
-		_headerPanel.add(_cardName, BorderLayout.CENTER);
-		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
+		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
+		_headerPanel.add(_cardName);
+		_headerPanel.add(new SetSelectionButton("Modify Sets", _card));
 
 		//Initialize the delete card button.
 		ImageIcon current = new ImageIcon("./res/img/delete x.png");
@@ -187,6 +186,7 @@ public class FlashCardPanel extends JPanel {
 
 		revalidate();
 	}
+	
 
 	/**
 	 * As yet unimplemented
