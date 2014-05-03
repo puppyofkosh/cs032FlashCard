@@ -1,5 +1,7 @@
 package gui;
 
+import gui.GuiConstants.TabType;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -10,10 +12,8 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import controller.Controller;
-import database.DatabaseFactory;
 
 public class MainFrame extends JFrame {
 
@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
 	private SetCreationPanel setCreationPanel;
 	private FlashboardPanel flashboardPanel;
 	private CardLayout mainPanelLayout;
+	private JPanel mainPanelContainer;
 
 	/**
 	 * Launch the application.
@@ -62,10 +63,9 @@ public class MainFrame extends JFrame {
 		sidePanel.setBorder(BorderFactory.createEmptyBorder());
 		sidePanelContainer.add(sidePanel);
 
-		JPanel mainPanelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		mainPanelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		mainPanelContainer.setOpaque(false);
 		mainPanelContainer.setLayout(mainPanelLayout);
-
 
 		// set up the side panel so pressing the "home" button will bring us home and such
 		sidePanel.setControlledLayout(mainPanelLayout);
@@ -89,20 +89,49 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(setCreationPanel, GuiConstants.CREATE_PANEL_NAME);
 
 		flashboardPanel = new FlashboardPanel();
-		JScrollPane scroller = new JScrollPane(flashboardPanel,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroller.setBorder(BorderFactory.createEmptyBorder());
-		mainPanelContainer.add(scroller, GuiConstants.FLASHBOARD_PANEL_NAME);
-
-		mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
+		mainPanelContainer.add(flashboardPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
+		
+		showTab(TabType.FLASHBOARD);
 		contentPane.add(mainPanelContainer, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 	}
-
-	public void updateAll() {
-		flashboardPanel.updateFlashboard();
-		setCreationPanel.update();
+	
+	public void update(TabType tab) {
+		switch (tab) {
+		case CREATE:
+			setCreationPanel.update();
+			break;
+		case EXPORT:
+			break;
+		case FLASHBOARD:
+			flashboardPanel.update();
+			break;
+		case IMPORT:
+			break;
+		default:
+			break;
+			
+		}
+	}
+	
+	public void showTab(TabType tab) {
+		switch (tab) {
+		case CREATE:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.CREATE_PANEL_NAME);
+			break;
+		case EXPORT:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.EXPORT_PANEL_NAME);
+			break;
+		case FLASHBOARD:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
+			break;
+		case IMPORT:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.IMPORT_PANEL_NAME);
+			break;
+		default:
+			break;
+		}
+		update(tab);
 	}
 }

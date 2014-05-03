@@ -90,6 +90,11 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		headerPanel.add(setNameField);
 
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+		spinnerInterval.setValue(0);
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+
 		headerPanel.add(spinnerInterval);
 
 		JLabel lblAuthor = new JLabel("Author");
@@ -161,7 +166,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 				Controller.guiMessage("Could not parse new spinner value", true);
 			}
 			int interval = (int) spinnerInterval.getValue();
-			String nameInput = setNameField.getText();
+			String nameInput = Controller.parseInput(setNameField.getText());
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
 

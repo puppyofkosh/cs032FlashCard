@@ -39,6 +39,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
 	private String stopText = "Stop";
 	private FlashCardSet workingSet;
+	private String inputHint = "Use Text To Speech";
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
@@ -88,8 +89,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		JLabel lblName = new JLabel("Name");
 		namePanel.add(lblName);
 
-		textFieldName = new JTextField();
-		textFieldName.setColumns(10);
+		textFieldName = new JTextField(10);
 		textFieldName.addActionListener(this);
 		namePanel.add(textFieldName);
 
@@ -102,10 +102,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 		JLabel lblQuestion = new JLabel("Q:");
 
-		textQuestion = new JTextField();
-		textQuestion.setColumns(10);
-		setInputHint(textQuestion);
-
+		textQuestion = new JTextField(10);
 		textQuestion.addActionListener(this);
 
 		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
@@ -130,6 +127,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
 		if (workingSet != null)
 			spinnerInterval.setValue(workingSet.getInterval());
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+
+
 		intervalPanel.add(spinnerInterval);
 
 		intervalPanel.setOpaque(false);
@@ -145,9 +147,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		btnAnswerRecord.addActionListener(this);
 		aPanel.add(btnAnswerRecord);
 
-		textAnswer = new JTextField();
-		textAnswer.setColumns(10);
-		setInputHint(textAnswer);
+		textAnswer = new JTextField(10);		
 		textAnswer.addActionListener(this);
 		aPanel.add(textAnswer);
 
@@ -181,6 +181,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		flashPanel.add(btnFlash);
 		flashPanel.setMaximumSize(flashPanel.getPreferredSize());
 		add(flashPanel, BorderLayout.SOUTH);
+		textFieldName.requestFocusInWindow();
 	}
 
 	private void initFunctionality() {
@@ -195,13 +196,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 
 	private void removeEmptySpace(JPanel panel) {
 		panel.setMaximumSize(panel.getPreferredSize());
-	}
-
-	private void setInputHint(JTextField text) {
-		String inputHint = "Use Text To Speech";
-		text.setForeground(Color.GRAY);
-		text.setText(inputHint);
-		text.setForeground(Color.BLACK);
 	}
 
 	private void recordToggle(boolean isQuestion) {
@@ -259,9 +253,14 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	 */
 	private void enableTTS(boolean enabled) {
 		String disableText = "TTS unavailable.";
-		textAnswer.setText(enabled ? "" : disableText);
+		textAnswer.setForeground(Color.GRAY);
+		textAnswer.setText(enabled ? inputHint : disableText);
+		textAnswer.setForeground(Color.BLACK);
 		textAnswer.setEnabled(enabled);
-		textQuestion.setText(enabled ? "" : disableText);
+
+		textQuestion.setForeground(Color.GRAY);
+		textQuestion.setText(enabled ? inputHint : disableText);
+		textQuestion.setForeground(Color.BLACK);
 		textQuestion.setEnabled(enabled);
 	}
 
@@ -310,7 +309,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			}
 
 			SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-			data.name = Controller.parseCardName(textFieldName.getText());
+			data.name = Controller.parseCardName(Controller.parseInput(textFieldName.getText()));
 
 			data.setQuestion(question);
 			data.setAnswer(answer);

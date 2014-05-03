@@ -24,7 +24,6 @@ public class ImportPanel extends GenericPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	ServerConnectionPanel dbPanel;
-	public static final String DATABASE_PANEL_NAME = "database panel";
 
 	/**
 	 * Create the panel.
@@ -37,7 +36,7 @@ public class ImportPanel extends GenericPanel {
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		panel.setOpaque(false);
 		panel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
-		
+
 		JButton btnNewButton = IconFactory.createImageButton("From Quizlet", IconType.QUIZLET, 64);
 		btnNewButton.setOpaque(false);
 		panel.add(btnNewButton);
@@ -47,34 +46,34 @@ public class ImportPanel extends GenericPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, GuiConstants.QUIZLET_PANEL_NAME);
 			}
-			
+
 		});
-		
+
 		JPanel panel_1 = new JPanel();
 		add(panel_1);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
 		panel_1.setOpaque(false);
 		panel_1.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
 
-		
-		
-		
+
+
+
 		JButton btnNewButton_1 = IconFactory.createImageButton("From Database", IconType.DATABASE, 64);
 		btnNewButton_1.setOpaque(false);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controlledLayout.show(controlledPanel, DATABASE_PANEL_NAME);
+				controlledLayout.show(controlledPanel, GuiConstants.DATABASE_PANEL_NAME);
 			}
 		});
 
 		panel_1.add(btnNewButton_1);
-		
-		
+
+
 		JPanel panel_2 = new JPanel();
 		add(panel_2);		
 		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
 		panel_2.setOpaque(false);
-		
+
 		JButton btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64);
 		btnNewButton_2.setOpaque(false);
 		btnNewButton_2.addActionListener(new ActionListener() {
@@ -92,19 +91,18 @@ public class ImportPanel extends GenericPanel {
 		});
 		panel_2.add(btnNewButton_2);
 	}
-	
+
 	@Override
 	public void setControlledPanel(JPanel panel)
 	{
 		super.setControlledPanel(panel);
 		dbPanel = new ServerConnectionPanel();
-		panel.add(dbPanel, DATABASE_PANEL_NAME);
-		
+		panel.add(dbPanel, GuiConstants.DATABASE_PANEL_NAME);
+
 	}
-	
+
 	@Override
 	public void setControlledLayout(CardLayout layout) {
 		super.setControlledLayout(layout);
-//		dbPanel.setControlledLayout(layout);
 	}
 }

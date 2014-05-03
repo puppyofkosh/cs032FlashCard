@@ -4,9 +4,11 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
+import gui.GuiConstants.TabType;
 import gui.ImageToggleButton;
 import gui.MainFrame;
 
+import java.awt.CardLayout;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +29,6 @@ import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
-import audio.WavFileConcatenator;
 import backend.FileImporter;
 import database.DatabaseFactory;
 
@@ -47,6 +48,7 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
+	private static CardLayout tabs;
 
 	/**
 	 * Import a tsv or similar
@@ -75,27 +77,29 @@ public class Controller {
 	 * Export a card to flat wav
 	 * 
 	 * @param f
-	 * 
 	 * @param destination
 	 */
-	/*
-	 * public static void exportCard(FlashCard f, String destinationFolder) { if
-	 * (!destinationFolder.endsWith("/"))
-	 * guiMessage("WARNING: destinationFolder should end with a slash(/)",
-	 * true); try { WavFileConcatenator.concatenate(f); } catch (IOException e1)
-	 * { // TODO Auto-generated catch block e1.printStackTrace(); } }
-	 */
+	/*public static void exportCard(FlashCard f, String destinationFolder) {
+		if (!destinationFolder.endsWith("/"))
+			guiMessage("WARNING: destinationFolder should end with a slash(/)",
+					true);
+		try {
+			WavFileConcatenator.concatenate(f);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}*/
 
 	/**
 	 * Play a chunk of audio. This method should ensure that only one piece of
 	 * audio is playing at a time
 	 */
-	// public static void playAudio(AudioFile file) throws IOException {
-	// player.play(file);
-	// }
+	//public static void playAudio(AudioFile file) throws IOException {
+	//player.play(file);
+	//}
 
-	public static void playAudioThenRun(AudioFile file, Runnable... runnables)
-			throws IOException {
+	public static void playAudioThenRun(AudioFile file, Runnable...runnables) throws IOException {
 		player.playThenRun(file, runnables);
 	}
 
@@ -118,15 +122,13 @@ public class Controller {
 	 * @param data
 	 */
 	public static FlashCard createCard(SerializableFlashCard.Data data) {
-		data.pathToFile = Controller.getValidPath(data.name);
 		FlashCard card = new SerializableFlashCard(data);
 
 		// Don't do this (for now). When we add the card to the set, it will
 		// write it to disk for us.
 		// I can change that if that seems like a bad way of doing things
 		// card = DatabaseFactory.writeCard(card);
-
-		gui.updateAll();
+		
 		return card;
 	}
 
@@ -160,12 +162,10 @@ public class Controller {
 
 		JLabel label = new JLabel(text);
 		final int time = duration;
-		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),
-				false);
+		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
 		dialog.add(label);
 		Rectangle bounds = gui.getBounds();
-		dialog.setBounds(bounds.x + (bounds.width / 3),
-				Math.max(bounds.y - 120, 0), text.length() * 7, 100);
+		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
 
 		dialog.setVisible(true);
 
@@ -195,46 +195,62 @@ public class Controller {
 		guiMessage(text, 3);
 	}
 
-	public static String getValidPath(String cardName) {
-		int overlapPreventer = 0;
-		String prefix = FlashcardConstants.CARDS_FOLDER + cardName;
-		File file = new File(prefix);
-		while (file.exists()) {
-			overlapPreventer++;
-			file = new File(prefix + overlapPreventer);
-		}
-		return prefix + (overlapPreventer == 0 ? "" : overlapPreventer) + "/";
+	public static String parseCardName(String text) {
+		//		StringBuilder fixedText = new StringBuilder();
+		//		char currentCharacter;
+		//		for (int i = 0; i < text.length(); i++) {
+		//			currentCharacter = text.charAt(i);
+		//			if (Character.isJavaIdentifierPart(currentCharacter))
+		//				fixedText.append(currentCharacter);
+		//		}
+		//
+		//		if (fixedText.length() == 0)
+		//			fixedText.append("untitled");
+		//		int overlapPreventer = 0;
+		//		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
+		//		File file = new File(prefix);
+		//		while (file.exists()) {
+		//			overlapPreventer++;
+		//			file = new File(prefix + overlapPreventer);
+		//		}
+		//		return fixedText.toString()
+		//				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+		return text;
 	}
 
-	public static String parseCardName(String text) {
+	public static String parseInput(String text) {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
+		boolean capitalize = true;
 		for (int i = 0; i < text.length(); i++) {
-			currentCharacter = text.charAt(i);
-			if (Character.isJavaIdentifierPart(currentCharacter))
+			currentCharacter = Character.toLowerCase(text.charAt(i));
+			if (Character.isJavaIdentifierPart(currentCharacter)) {
+				if (capitalize) {
+					currentCharacter = Character.toUpperCase(currentCharacter);
+					capitalize = false;
+				}
 				fixedText.append(currentCharacter);
+			} else if (Character.isWhitespace(currentCharacter) && !capitalize) {
+				fixedText.append(" ");
+				capitalize = true;
+			}
 		}
-
-		if (fixedText.length() == 0)
-			fixedText.append("untitled");
-
-		return fixedText.toString();
+		return fixedText.toString().trim();
 	}
 
-	// public static void playFlashCard(FlashCard card, ImageToggleButton
-	// _button) throws IOException {
-	// player.play(card);
-	// }
 
-	public static void playFlashcardThenRun(FlashCard card,
-			Runnable... runnables) throws IOException {
+	//public static void playFlashCard(FlashCard card, ImageToggleButton _button) throws IOException {
+	//player.play(card);
+	//	}
+
+	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
 		player.playThenRun(card, runnables);
 	}
 
 	public static boolean verifyInput(String input) {
 		// FIXME implement for real
-		return parseCardName(input).replaceAll("[\\d]", "").equals(
-				input.replaceAll("[\\s\\d]", ""));
+		//		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
+		return true;
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {
@@ -282,7 +298,7 @@ public class Controller {
 
 	public static void deleteCard(FlashCard card) {
 		DatabaseFactory.deleteCard(card);
-		gui.updateAll();
+		updateAll();
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {
@@ -313,11 +329,21 @@ public class Controller {
 		return set;
 	}
 
-	public static void updateGUI() {
-		gui.updateAll();
+	public static void updateAll() {
+		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT, TabType.CREATE);
+	}
+
+	public static void updateGUI(TabType...types) {
+		for(TabType type : types) {
+			gui.update(type);
+		}
 	}
 
 	public static void launchGUI() {
 		gui = new MainFrame();
+	}
+
+	public static void switchTabs(TabType tab) {
+		gui.showTab(tab);
 	}
 }

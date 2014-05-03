@@ -125,8 +125,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
                         "", 0, 100);
 				progressMonitor.setProgress(0);
 				progressMonitor.setNote("Hello there");
-				progressMonitor.setMillisToDecideToPopup(0);
-				progressMonitor.setMillisToPopup(progressMonitor.getMillisToDecideToPopup()/4);
+				progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
 				
 				//if (importThread != null)
 				//	importThread.cancel(true);
@@ -134,6 +133,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				importThread = new ImportThread();
 				importThread.addPropertyChangeListener(QuizletPanel.this);
 				importThread.execute();
+
 			}
 			
 		});
@@ -251,10 +251,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 					QuizletCard[] cards = QuizletCard.getCards(QuizletRequest.getSet(id));
 					for (QuizletCard card: cards) {
 						if (isCancelled())
-						{
-							System.out.println("Cancelled");
 							return null;
-						}
+						
 						if (card.term.length() == 0 || card.definition.length() == 0)
 							continue;
 						
@@ -273,6 +271,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						
 						cardsDone++;
 						int progress = cardsDone * 100 /(cards.length * ids.size());
+						System.out.println("progress is " + progress);
 						setProgress(progress);
 					}
 				} catch (JSONException e) {
@@ -316,43 +315,32 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			}
 		}
 	}
-	
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		
-		System.out.println("event: " + evt);
+		System.out.println("event");
 		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
+			System.out.println("Setting progress");
             int progress = (Integer) evt.getNewValue();
             progressMonitor.setProgress(progress);
             String message =
                 String.format("Completed %d%%.\n", progress);
             progressMonitor.setNote(message);
-            if (progressMonitor.isCanceled()) {
-            	importThread.cancel(true);
-            }
-            if (importThread.isDone())
-            {
-            	progressMonitor.close();
+            if (progressMonitor.isCanceled() || importThread.isDone()) {
+               	importThread.cancel(true);
+               	progressMonitor.close();
             }
         }	
 	}
 
-
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
 		if (progressMonitor != null)
-		{
 			progressMonitor.close();
-		}
 		if (importThread != null)
-		{
 			importThread.cancel(true);
-		}
 		
-		System.out.println("Hidden!");
 	}
-
 
 	@Override
 	public void componentMoved(ComponentEvent arg0) {
@@ -360,17 +348,16 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		
 	}
 
-
 	@Override
 	public void componentResized(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
 	@Override
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}	
+	}
+	
 }

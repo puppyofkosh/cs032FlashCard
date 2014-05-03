@@ -7,14 +7,14 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-public class ImageToggleButton extends ImageButton implements ActionListener, Runnable{
+public class ImageToggleButton extends ImageButton implements ActionListener, Runnable {
 
 	private static final long serialVersionUID = -3150533535670093580L;
 	ImageIcon _onImage, _offImage;
 	String _onString, _offString;
 	boolean _on;
 	int _size = 32;
-	
+
 	ImageToggleButton(ImageIcon onImage, ImageIcon offImage, String onString, String offString) {
 		super();
 		_onImage = onImage;
@@ -33,12 +33,12 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 		this(onImage, offImage, onString, offString);
 		setSize(size);
 	}
-	
+
 	public static ImageToggleButton playStopButton(String playText, String stopText) {
 		return new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
 				new ImageIcon("./res/img/Stop Button.png"), playText, stopText);
 	}
-	
+
 	public static ImageToggleButton playStopButton() {
 		return playStopButton("","");
 	}
@@ -54,7 +54,7 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 		current = new ImageIcon(newimg);
 		return current;
 	}
-	
+
 	public String getString() {
 		return _on ? _onString : _offString;
 	}
@@ -64,7 +64,7 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 		setIcon(getImage());
 		setText(getString());
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this)

@@ -11,19 +11,19 @@ import flashcard.FlashCard;
  * 
  */
 public interface AudioPlayer {
-	
+
 	/**
 	 * Plays an AudioFile, stopping the playback of any other AudioFiles currently playing.
 	 * @param a The AudioFile to play
 	 */
 	void play(AudioFile a) throws IOException;
-	
+
 	void play(FlashCard card) throws IOException;
-	
+
 	/**
 	 * Stops the playback of any AudioFiles currently playing.
 	 */
-	
+
 	boolean isPlaying();
 	void stop();
 

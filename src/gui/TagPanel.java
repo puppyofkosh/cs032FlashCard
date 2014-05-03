@@ -42,7 +42,21 @@ public class TagPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-
+	
+	public void reinitialize(FlashCard card)
+	{
+		_card = card;
+		_tags = new LinkedList<>();
+		for(String tag : _card.getTags()) {
+			addTag(tag, false);
+		}
+		for(FlashCardSet set : _card.getSets()) {
+			for(String setTag : set.getTags()) {
+				addTag(setTag, true, false);
+			}
+		}
+	}
+	
 	TagPanel(FlashCard card) {
 		this();
 		_card = card;

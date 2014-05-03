@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +12,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,17 +49,31 @@ public class FlashCardPanel extends JPanel {
 
 	private JPanel _interactionPanel;
 	ImageToggleButton _playAndStop;
-	JComboBox<Integer> _incrementInterval;
 	private JSpinner _spinner;
-
 	private TagPanel _tagPanel;
 
+
+	public void reinitialize(FlashCard card)
+	{
+		_card = card;
+		_cardName.setText(card.getName());
+		_spinner.setValue(card.getInterval());
+		populateSets(card.getSets());
+		_tagPanel.reinitialize(card);
+
+		revalidate();
+	}
+	
 
 	/**
 	 * Constructs a FlashCardPanel from a given card.
 	 * @param card
 	 */
-	FlashCardPanel(FlashCard card) {
+	public FlashCardPanel(FlashCard card) {
+		String defaultName = card.getName();
+		int defaultInterval = card.getInterval();
+		Collection<FlashCardSet> defaultSets = card.getSets();
+		
 		setPreferredSize(new Dimension(225, 150));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
@@ -69,13 +84,12 @@ public class FlashCardPanel extends JPanel {
 		//The header will contain the given card's name and a delete button.
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
-		_headerPanel.setLayout(new BorderLayout(0, 0));
+		_headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0,0));
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		//Add the card's name to the header panel.
 		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
-		_headerPanel.add(_cardName, BorderLayout.CENTER);
-		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
+		_headerPanel.add(_cardName);
+		_headerPanel.add(new SetSelectionButton("Modify Sets", _card));
 
 		//Initialize the delete card button.
 		ImageIcon current = new ImageIcon("./res/img/delete x.png");
@@ -101,6 +115,7 @@ public class FlashCardPanel extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				System.out.println("Deleting " + _card);
 				Controller.deleteCard(_card);
 			}
 
@@ -126,13 +141,17 @@ public class FlashCardPanel extends JPanel {
 
 		JLabel lblInterval = new JLabel("Interval");
 		_interactionPanel.add(lblInterval);
-		_spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
+		_spinner = new JSpinner(new SpinnerNumberModel(defaultInterval, 0, 10, 1));
 		_interactionPanel.add(_spinner);
 		_playAndStop = ImageToggleButton.playStopButton();
 		_interactionPanel.add(_playAndStop);
 		_playAndStop.addActionListener(new PlayStopListener(_playAndStop));
 
-		((JSpinner.DefaultEditor) _spinner.getEditor()).getTextField().setColumns(2);
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) _spinner.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+		
+		
 		_spinner.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -163,10 +182,11 @@ public class FlashCardPanel extends JPanel {
 		js.setBorder(BorderFactory.createEmptyBorder());
 		add(js);
 		
-		populateSets(_card.getSets());
+		populateSets(defaultSets);
 
 		revalidate();
 	}
+	
 
 	/**
 	 * As yet unimplemented
@@ -181,17 +201,14 @@ public class FlashCardPanel extends JPanel {
 	 *
 	 */
 	private class PlayStopListener implements ActionListener {
-		//boolean _play;
 		ImageToggleButton _button;
 
 		PlayStopListener(ImageToggleButton button) {
 			_button = button;
-			//_play = false;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {			
-		//	_play = !_play;
 			try {
 				if (_button.isOn())
 					Controller.playFlashcardThenRun(_card, _button);
