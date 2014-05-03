@@ -26,8 +26,24 @@ public class IconFactory {
 		DATABASE,
 		QUIZLET
 	}
-
+	
 	private static String imgFolder = "./res/img/";
+	
+	private static ImageIcon CARD_ICON = createImageIcon("Card Icon Inverted.png");
+	private static ImageIcon DELETE_ICON = createImageIcon("delete x.png");
+	private static ImageIcon PLAY_ICON = createImageIcon("Play Button.png");
+	private static ImageIcon RECORD_ICON = createImageIcon("Record Button.png");
+	private static ImageIcon SET_ICON = createImageIcon("Set Icon Inverted.png");
+	private static ImageIcon STOP_ICON = createImageIcon("Stop Button.png");
+	private static ImageIcon CREATE_ICON = createImageIcon("Create Icon Inverted.png");
+	private static ImageIcon EXPORT_ICON = createImageIcon("Export Icon Inverted.png");
+	private static ImageIcon FLASHBOARD_ICON = createImageIcon("Flash Logo Inverted.png");
+	private static ImageIcon IMPORT_ICON = createImageIcon("Import Icon Inverted.png");
+	private static ImageIcon DATABASE_ICON = createImageIcon("Database Icon Inverted.png");
+	private static ImageIcon QUIZLET_ICON = createImageIcon("Quizlet Icon Inverted.png");
+
+	
+	
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private static ImageIcon createImageIcon(String path) {
@@ -45,29 +61,29 @@ public class IconFactory {
 	public static ImageIcon loadIcon(IconType type) {
 		switch (type) {
 		case CARD:
-			return createImageIcon("Card Icon Inverted.png");
+			return CARD_ICON;
 		case DELETE:
-			return createImageIcon("delete x.png");
+			return DELETE_ICON;
 		case PLAY:
-			return createImageIcon("Play Button.png");
+			return PLAY_ICON;
 		case RECORD:
-			return createImageIcon("Record Button.png");
+			return RECORD_ICON;
 		case SET:
-			return createImageIcon("Set Icon Inverted.png");
+			return SET_ICON;
 		case STOP:
-			return createImageIcon("Stop Button.png");
+			return STOP_ICON;
 		case CREATE:
-			return createImageIcon("Create Icon Inverted.png");
+			return CREATE_ICON;
 		case EXPORT:
-			return createImageIcon("Export Icon Inverted.png");
+			return EXPORT_ICON;
 		case FLASHBOARD:
-			return createImageIcon("Flash Logo Inverted.png");
+			return FLASHBOARD_ICON;
 		case IMPORT:
-			return createImageIcon("Import Icon Inverted.png");
+			return IMPORT_ICON;
 		case DATABASE:
-			return createImageIcon("Database Icon Inverted.png");
+			return DATABASE_ICON;
 		case QUIZLET:
-			return createImageIcon("Quizlet Icon Inverted.png");
+			return QUIZLET_ICON;
 		default:
 			Controller.guiMessage("Not a valid icon type", true);
 			return loadMissingIcon();
