@@ -114,3 +114,18 @@ DELETE FROM FLASHCARDS_SETS WHERE SET_ID=1 [42102-176]
 05-03 01:06:18 jdbc[7]: exception
 org.h2.jdbc.JdbcSQLException: Table "FLASHCARDS_SETS" not found; SQL statement:
 DELETE FROM FLASHCARDS_SETS WHERE SET_ID=2 [42102-176]
+05-03 09:58:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO FLASHCARDS (NAME, FILE_PATH, INTERVAL, UUID) VALUES ('test-card', 'files/test-card/', 5'770def18-6dd2-4f0d-8893-1b95b935cd23'[*]) "; expected "[, ::, *, /, %, +, -, ||, ~, !~, NOT, LIKE, REGEXP, IS, IN, BETWEEN, AND, OR, ,, )"; SQL statement:
+INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('test-card', 'files/test-card/', 5'770def18-6dd2-4f0d-8893-1b95b935cd23') [42001-176]
+05-03 09:58:25 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO FLASHCARDS (NAME, FILE_PATH, INTERVAL, UUID) VALUES ('test-card', 'files/test-card/', 5'1c1c0f0c-87f5-40ed-9687-3ebdb4750f42'[*]) "; expected "[, ::, *, /, %, +, -, ||, ~, !~, NOT, LIKE, REGEXP, IS, IN, BETWEEN, AND, OR, ,, )"; SQL statement:
+INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('test-card', 'files/test-card/', 5'1c1c0f0c-87f5-40ed-9687-3ebdb4750f42') [42001-176]
+05-03 09:58:25 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO FLASHCARDS (NAME, FILE_PATH, INTERVAL, UUID) VALUES ('abroham', 'files/abraham/', 5'a9f01722-a649-499f-a65a-f38c2f91a346'[*]) "; expected "[, ::, *, /, %, +, -, ||, ~, !~, NOT, LIKE, REGEXP, IS, IN, BETWEEN, AND, OR, ,, )"; SQL statement:
+INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('abroham', 'files/abraham/', 5'a9f01722-a649-499f-a65a-f38c2f91a346') [42001-176]
+05-03 09:58:25 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO FLASHCARDS (NAME, FILE_PATH, INTERVAL, UUID) VALUES ('abroham', 'files/abraham/', 5'a9f01722-a649-499f-a65a-f38c2f91a346'[*]) "; expected "[, ::, *, /, %, +, -, ||, ~, !~, NOT, LIKE, REGEXP, IS, IN, BETWEEN, AND, OR, ,, )"; SQL statement:
+INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('abroham', 'files/abraham/', 5'a9f01722-a649-499f-a65a-f38c2f91a346') [42001-176]
+05-03 09:58:25 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO FLASHCARDS (NAME, FILE_PATH, INTERVAL, UUID) VALUES ('test-card', 'files/test-card/', 5'70d2c8c7-b6a8-4a3f-938d-03a05bb849a4'[*]) "; expected "[, ::, *, /, %, +, -, ||, ~, !~, NOT, LIKE, REGEXP, IS, IN, BETWEEN, AND, OR, ,, )"; SQL statement:
+INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('test-card', 'files/test-card/', 5'70d2c8c7-b6a8-4a3f-938d-03a05bb849a4') [42001-176]

@@ -75,29 +75,27 @@ public class Controller {
 	 * Export a card to flat wav
 	 * 
 	 * @param f
+	 * 
 	 * @param destination
 	 */
-	/*public static void exportCard(FlashCard f, String destinationFolder) {
-		if (!destinationFolder.endsWith("/"))
-			guiMessage("WARNING: destinationFolder should end with a slash(/)",
-					true);
-		try {
-			WavFileConcatenator.concatenate(f);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}*/
+	/*
+	 * public static void exportCard(FlashCard f, String destinationFolder) { if
+	 * (!destinationFolder.endsWith("/"))
+	 * guiMessage("WARNING: destinationFolder should end with a slash(/)",
+	 * true); try { WavFileConcatenator.concatenate(f); } catch (IOException e1)
+	 * { // TODO Auto-generated catch block e1.printStackTrace(); } }
+	 */
 
 	/**
 	 * Play a chunk of audio. This method should ensure that only one piece of
 	 * audio is playing at a time
 	 */
-	//public static void playAudio(AudioFile file) throws IOException {
-		//player.play(file);
-	//}
-	
-	public static void playAudioThenRun(AudioFile file, Runnable...runnables) throws IOException {
+	// public static void playAudio(AudioFile file) throws IOException {
+	// player.play(file);
+	// }
+
+	public static void playAudioThenRun(AudioFile file, Runnable... runnables)
+			throws IOException {
 		player.playThenRun(file, runnables);
 	}
 
@@ -120,6 +118,7 @@ public class Controller {
 	 * @param data
 	 */
 	public static FlashCard createCard(SerializableFlashCard.Data data) {
+		data.pathToFile = Controller.getValidPath(data.name);
 		FlashCard card = new SerializableFlashCard(data);
 
 		// Don't do this (for now). When we add the card to the set, it will
@@ -155,19 +154,21 @@ public class Controller {
 			Writer.err(text);
 		else
 			Writer.out(text);
-		
+
 		if (gui == null)
 			return;
-		
+
 		JLabel label = new JLabel(text);
 		final int time = duration;
-		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
+		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),
+				false);
 		dialog.add(label);
 		Rectangle bounds = gui.getBounds();
-		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
-		
+		dialog.setBounds(bounds.x + (bounds.width / 3),
+				Math.max(bounds.y - 120, 0), text.length() * 7, 100);
+
 		dialog.setVisible(true);
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -194,6 +195,17 @@ public class Controller {
 		guiMessage(text, 3);
 	}
 
+	public static String getValidPath(String cardName) {
+		int overlapPreventer = 0;
+		String prefix = FlashcardConstants.CARDS_FOLDER + cardName;
+		File file = new File(prefix);
+		while (file.exists()) {
+			overlapPreventer++;
+			file = new File(prefix + overlapPreventer);
+		}
+		return prefix + (overlapPreventer == 0 ? "" : overlapPreventer) + "/";
+	}
+
 	public static String parseCardName(String text) {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
@@ -205,28 +217,24 @@ public class Controller {
 
 		if (fixedText.length() == 0)
 			fixedText.append("untitled");
-		int overlapPreventer = 0;
-		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
-		File file = new File(prefix);
-		while (file.exists()) {
-			overlapPreventer++;
-			file = new File(prefix + overlapPreventer);
-		}
-		return fixedText.toString()
-				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+
+		return fixedText.toString();
 	}
 
-	//public static void playFlashCard(FlashCard card, ImageToggleButton _button) throws IOException {
-		//player.play(card);
-//	}
-	
-	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
+	// public static void playFlashCard(FlashCard card, ImageToggleButton
+	// _button) throws IOException {
+	// player.play(card);
+	// }
+
+	public static void playFlashcardThenRun(FlashCard card,
+			Runnable... runnables) throws IOException {
 		player.playThenRun(card, runnables);
 	}
 
 	public static boolean verifyInput(String input) {
 		// FIXME implement for real
-		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
+		return parseCardName(input).replaceAll("[\\d]", "").equals(
+				input.replaceAll("[\\s\\d]", ""));
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {

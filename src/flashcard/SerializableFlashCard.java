@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import utils.Writer;
 import audio.AudioFile;
@@ -40,6 +41,13 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 		public List<String> tags = new ArrayList<>();
 		public int interval = 0;
 		
+		private UUID uuid = UUID.randomUUID();
+		
+		public UUID getId()
+		{
+			return uuid;
+		}
+		
 		public MetaData()
 		{
 			
@@ -55,6 +63,12 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 			tags = new ArrayList<>(d.tags);
 			
 			interval = d.interval;
+			uuid = d.uuid;
+		}
+
+		public void regenerateId()
+		{
+			uuid = UUID.randomUUID();
 		}
 		
 		public MetaData(FlashCard f)
@@ -70,6 +84,7 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			uuid = f.getUniqueId();
 		}
 	}
 	
@@ -254,5 +269,11 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	public int hashCode()
 	{
 		return getPath().hashCode();
+	}
+
+	@Override
+	public UUID getUniqueId() {
+		// TODO Auto-generated method stub
+		return data.getId();
 	}
 }

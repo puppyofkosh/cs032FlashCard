@@ -93,7 +93,7 @@ public class FlashCardDatabase implements Resources {
 
 		Statement stat = conn.createStatement();
 
-		stat.execute("CREATE TABLE IF NOT EXISTS FLASHCARDS (id INTEGER PRIMARY KEY AUTO_INCREMENT, file_path VARCHAR(255), name VARCHAR(255), interval INTEGER)");
+		stat.execute("CREATE TABLE IF NOT EXISTS FLASHCARDS (id INTEGER PRIMARY KEY AUTO_INCREMENT, file_path VARCHAR(255), name VARCHAR(255), interval INTEGER, uuid VARCHAR(255))");
 		// Includes both global tags and regular tags
 		stat.execute("CREATE TABLE IF NOT EXISTS TAGS (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255))");
 		// Maintains track of how cards have tags. If card X has tag Y, then the
@@ -272,8 +272,8 @@ public class FlashCardDatabase implements Resources {
 		try (Statement statement = getStatement()) {
 			deleteCardFromDisk(f);
 
-			String query = "SELECT ID FROM FLASHCARDS WHERE FILE_PATH='"
-					+ f.getPath() + "'";
+			String query = "SELECT ID FROM FLASHCARDS WHERE UUID='"
+					+ f.getUniqueId() + "'";
 
 			ResultSet rs = statement.executeQuery(query);
 
@@ -671,8 +671,8 @@ public class FlashCardDatabase implements Resources {
 
 			// 1) Check if this card exists already:
 			String idQuery = "SELECT ID FROM FLASHCARDS WHERE name='"
-					+ flashcard.getName() + "' AND file_path='"
-					+ flashcard.getPath() + "'";
+					+ flashcard.getName() + "' AND UUID='"
+					+ flashcard.getUniqueId() + "'";
 
 			ResultSet rs = statement.executeQuery(idQuery);
 			if (rs.next()) {
@@ -683,11 +683,12 @@ public class FlashCardDatabase implements Resources {
 			}
 
 			// 2) Insert to flashcards table
-			String query = "INSERT INTO FLASHCARDS (name, file_path, interval) VALUES ('"
+			String query = "INSERT INTO FLASHCARDS (name, file_path, interval, uuid) VALUES ('"
 					+ flashcard.getName()
 					+ "', '"
 					+ flashcard.getPath()
-					+ "', " + flashcard.getInterval() + ")";
+					+ "', " + flashcard.getInterval() + ","
+					+ "'" + flashcard.getUniqueId().toString() + "'" + ")";
 
 			statement.execute(query);
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import utils.FlashcardConstants;
 import audio.AudioFile;
@@ -32,9 +33,27 @@ public class DatabaseFlashCard implements FlashCard {
 		this.database = db;
 	}
 
-	public int getId()
+	public int getLocalId()
 	{
 		return id;
+	}
+	
+	@Override
+	public UUID getUniqueId()
+	{
+		try (Statement statement = database.getStatement()){
+			ResultSet rs = statement.executeQuery(
+					"SELECT UUID FROM FLASHCARDS WHERE ID=" + id);
+			if (rs.next() == false) {
+				System.out.println("BAD FLASHCARD ID!");
+				return null;
+			}
+			return UUID.fromString(rs.getString("UUID"));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	@Override

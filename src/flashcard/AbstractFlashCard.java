@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.UUID;
 
 public abstract class AbstractFlashCard implements FlashCard, Serializable {
 	
@@ -76,4 +77,9 @@ public abstract class AbstractFlashCard implements FlashCard, Serializable {
 		return "Flashcard " + data.name;
 	}
 
+	@Override
+	public UUID getUniqueId()
+	{
+		return data.getId();
+	}
 }

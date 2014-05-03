@@ -3,6 +3,7 @@ package flashcard;
 import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import audio.AudioFile;
 /**
@@ -78,4 +79,6 @@ public interface FlashCard {
 	AudioFile getAnswerAudio();
 	
 	public boolean sameMetaData(FlashCard f);
+	
+	public UUID getUniqueId();
 }

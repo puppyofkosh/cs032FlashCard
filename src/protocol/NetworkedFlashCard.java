@@ -3,6 +3,7 @@ package protocol;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.UUID;
 
 import audio.AudioFile;
 

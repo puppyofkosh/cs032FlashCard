@@ -130,7 +130,7 @@ public class DatabaseSet implements FlashCardSet{
 			
 			if (card != null)
 			{
-				database.addCardToSet(card.getId(), id);
+				database.addCardToSet(card.getLocalId(), id);
 			}
 		}
 		catch (SQLException e)
