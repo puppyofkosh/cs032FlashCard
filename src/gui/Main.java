@@ -37,22 +37,6 @@ public class Main {
 		});
 	}
 	
-	public static  JComponent setManagementButton() {
-		final JPopupMenu menu = new JPopupMenu();
-		menu.add(new JCheckBoxMenuItem("Other Court"));
-		menu.add(new JCheckBoxMenuItem("Tribunal Court"));
-		menu.add(new JCheckBoxMenuItem("High Court"));
-		menu.add(new JCheckBoxMenuItem("Supreme Court"));
-
-		final JButton button = new JButton();
-		button.setAction(new AbstractAction("Court") {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        menu.show(button, 0, button.getHeight());
-		    }
-		});
-	}
-
 	
 	public static JComponent flashboardDemo() {
 		return new FlashboardPanel();

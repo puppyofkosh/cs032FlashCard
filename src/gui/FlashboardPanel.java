@@ -2,6 +2,7 @@ package gui;
 
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import flashcard.SerializableFlashCard;
 import gui.IconFactory.IconType;
 
 import java.awt.BorderLayout;
@@ -12,9 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -43,13 +46,16 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 
 	private static final long serialVersionUID = 1L;
-	List<JPanel> cardPanels;
+	List<FlashCardPanel> cardPanels = new ArrayList<>();
 	SetBrowser browser;
 	JPanel flashboard;
 	JPanel emptyPanel;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
 
+	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
+	public Queue<FlashCardPanel> freePanels = new LinkedList<>();
+	
 	/**
 	 * Creates a new Flashboard Panel with nothing selected and 
 	 * nothing displayed.
@@ -85,6 +91,12 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			}
 			
 		});
+		
+		// Start us off with 50 panels
+		for (int i = 0; i < 50; i++)
+		{
+			freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
+		}
 		
 		emptyPanel.add(emptyButton);
 
@@ -156,9 +168,23 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 * @param cards
 	 */
 	public void updateCards(Collection<FlashCard> cards) {
-		cardPanels = new ArrayList<>();
+		// All the panels being used before are now up for grabs and can be recycled
+		freePanels.addAll(cardPanels);
+		cardPanels = new ArrayList<>();		
 		for(FlashCard card : cards) {
-			JPanel cardPanel = new FlashCardPanel(card);
+			
+			// Try to use a recycled panel if any are available. If not, we must create a new panel ourselves.
+			FlashCardPanel cardPanel = null;
+			if (freePanels.size() > 0)
+			{
+				cardPanel = freePanels.poll();
+				cardPanel.reinitialize(card);
+			}
+			else
+			{
+				cardPanel = new FlashCardPanel(card);
+			}
+
 			cardPanels.add(cardPanel);
 		}
 	}
@@ -177,6 +203,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			FlashCardSet currentSet = browser.getSelectedSet();
 			if (currentSet != null)
 				updateFlashboard(currentSet.getAll());
+
 		} catch (IOException e) {
 			Controller.guiMessage("Could not get all the cards from the current set", true);
 		}

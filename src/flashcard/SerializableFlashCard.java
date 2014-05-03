@@ -22,6 +22,10 @@ import audio.MemoryAudioFile;
 public class SerializableFlashCard implements FlashCard, Serializable{
 
 
+	public static SerializableFlashCard getEmptyCard()
+	{
+		return new SerializableFlashCard(new Data());
+	}
 	
 	/**
 	 * 
@@ -111,7 +115,6 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 			question = (AudioFile)stream.readObject();
 			answer = (AudioFile)stream.readObject();
 	    }
-		
 	}
 	
 	public static class Data extends MetaData implements Serializable

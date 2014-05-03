@@ -128,8 +128,7 @@ public class Controller {
 		// write it to disk for us.
 		// I can change that if that seems like a bad way of doing things
 		// card = DatabaseFactory.writeCard(card);
-
-		updateAll();
+		
 		return card;
 	}
 
