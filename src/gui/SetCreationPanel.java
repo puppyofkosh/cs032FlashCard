@@ -90,6 +90,11 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		headerPanel.add(setNameField);
 
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+		spinnerInterval.setValue(0);
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+
 		headerPanel.add(spinnerInterval);
 
 		JLabel lblAuthor = new JLabel("Author");

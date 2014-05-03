@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +16,6 @@ import java.util.Collection;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,7 +46,6 @@ public class FlashCardPanel extends JPanel {
 
 	private JPanel _interactionPanel;
 	ImageToggleButton _playAndStop;
-	JComboBox<Integer> _incrementInterval;
 	private JSpinner _spinner;
 
 	private TagPanel _tagPanel;
@@ -132,7 +129,11 @@ public class FlashCardPanel extends JPanel {
 		_interactionPanel.add(_playAndStop);
 		_playAndStop.addActionListener(new PlayStopListener(_playAndStop));
 
-		((JSpinner.DefaultEditor) _spinner.getEditor()).getTextField().setColumns(2);
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) _spinner.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+		
+		
 		_spinner.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {

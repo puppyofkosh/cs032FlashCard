@@ -130,6 +130,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
 		if (workingSet != null)
 			spinnerInterval.setValue(workingSet.getInterval());
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+
+		
 		intervalPanel.add(spinnerInterval);
 
 		intervalPanel.setOpaque(false);
