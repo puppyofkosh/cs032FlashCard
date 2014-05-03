@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
@@ -11,7 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -50,11 +53,27 @@ public class FlashCardPanel extends JPanel {
 	private TagPanel _tagPanel;
 
 
+	public void reinitialize(FlashCard card)
+	{
+		_card = card;
+		_cardName.setText(card.getName());
+		_spinner.setValue(card.getInterval());
+		populateSets(card.getSets());
+		_tagPanel.reinitialize(card);
+
+		revalidate();
+	}
+	
+
 	/**
 	 * Constructs a FlashCardPanel from a given card.
 	 * @param card
 	 */
-	FlashCardPanel(FlashCard card) {
+	public FlashCardPanel(FlashCard card) {
+		String Mname = card.getName();
+		int Minterval = card.getInterval();
+		Collection<FlashCardSet> Msets = card.getSets();
+		
 		setPreferredSize(new Dimension(225, 150));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
@@ -97,6 +116,7 @@ public class FlashCardPanel extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				System.out.println("Deleting " + _card);
 				Controller.deleteCard(_card);
 			}
 
@@ -122,7 +142,7 @@ public class FlashCardPanel extends JPanel {
 
 		JLabel lblInterval = new JLabel("Interval");
 		_interactionPanel.add(lblInterval);
-		_spinner = new JSpinner(new SpinnerNumberModel(_card.getInterval(), 0, 10, 1));
+		_spinner = new JSpinner(new SpinnerNumberModel(Minterval, 0, 10, 1));
 		_interactionPanel.add(_spinner);
 		_playAndStop = ImageToggleButton.playStopButton();
 		_interactionPanel.add(_playAndStop);
@@ -163,7 +183,7 @@ public class FlashCardPanel extends JPanel {
 		js.setBorder(BorderFactory.createEmptyBorder());
 		add(js);
 		
-		populateSets(_card.getSets());
+		populateSets(Msets);
 
 		revalidate();
 	}
