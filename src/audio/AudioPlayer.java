@@ -26,4 +26,8 @@ public interface AudioPlayer {
 	
 	boolean isPlaying();
 	void stop();
+
+	void playThenRun(FlashCard card, Runnable... runnables) throws IOException;
+
+	void playThenRun(AudioFile file, Runnable... runnables) throws IOException;
 }

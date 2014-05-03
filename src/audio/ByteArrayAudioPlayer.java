@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.swing.SwingWorker;
 
 import flashcard.FlashCard;
 
@@ -23,26 +24,12 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 		
 	@Override
 	public void play(AudioFile a) throws IOException {
-		if (a == null)
-			throw new IOException("Received null AudioFile");
-		else {
-			stop();
-			playThread = new PlayAudioFileThread(a);
-			playThread.start();
-		}
+		playThenRun(a);
 	}
 
 	@Override
 	public void play(FlashCard card) throws IOException {
-		System.out.println("Starting");
-		if (card == null)
-			throw new IOException("Recieved null FlashCard");
-
-		else {
-			stop();
-			playThread = new PlayCardThread(card);
-			playThread.start();
-		}
+		playThenRun(card);
 	}
 
 	@Override
@@ -58,15 +45,51 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 			playThread = null;
 		}
 	}
-
 	
-	public static abstract class PlayThread extends Thread
+	@Override
+	public void playThenRun(AudioFile file, Runnable...runnables) throws IOException {
+		if (file == null)
+			throw new IOException("Received null AudioFile");
+		else {
+			stop();
+			playThread = new PlayAudioFileThread(file, runnables);
+			playThread.execute();
+		}
+	}
+
+	@Override
+	public void playThenRun(FlashCard card, Runnable...runnables) throws IOException {
+		System.out.println("Starting");
+		if (card == null)
+			throw new IOException("Recieved null FlashCard");
+
+		else {
+			stop();
+			playThread = new PlayCardThread(card, runnables);
+			playThread.execute();
+		}
+	}
+	
+	public static abstract class PlayThread extends SwingWorker<Void, Void>
 	{
 		protected volatile boolean isPlaying = true;
+		protected Runnable[] runnables;
+		
+		public PlayThread(Runnable...runnables) {
+			this.runnables = runnables;
+			
+		}
 		
 		public void stopPlaying()
 		{
 			isPlaying = false;
+		}
+		
+		@Override
+		public void done() {
+			for(Runnable task: runnables) {
+				task.run();
+			}
 		}
 		
 		protected void blockingPlay(AudioFile file) throws InterruptedException {
@@ -116,13 +139,13 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 	
 	private class PlayCardThread extends PlayThread {
 		FlashCard card;
-		
-		PlayCardThread(FlashCard card) {
+		PlayCardThread(FlashCard card, Runnable...runnables) {
+			super(runnables);
 			this.card = card;
 		}
 		
 		@Override
-		public void run() {
+		public Void doInBackground() {
 			try {
 				blockingPlay(card.getQuestionAudio());
 				Thread.sleep(card.getInterval() * 1000);				
@@ -130,8 +153,8 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 
 			} catch (InterruptedException e) {
 				System.out.println("Interrupted");
-				return;
 			}
+			return null;
 		}
 	}
 
@@ -139,18 +162,17 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 
 		AudioFile file;	
 		
-		PlayAudioFileThread(AudioFile file) {
+		PlayAudioFileThread(AudioFile file, Runnable...runnables) {
+			super(runnables);
 			this.file = file;
-
 		}
 
 		@Override
-		public void run() {
+		public Void doInBackground() {
 			try {
 				blockingPlay(file);
-			} catch (InterruptedException e) {
-				return;
-			}
+			} catch (InterruptedException e) {}
+			return null;
 		}
 	}
 

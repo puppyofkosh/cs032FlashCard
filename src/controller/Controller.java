@@ -4,6 +4,7 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
+import gui.ImageToggleButton;
 import gui.MainFrame;
 
 import java.awt.Rectangle;
@@ -92,8 +93,12 @@ public class Controller {
 	 * Play a chunk of audio. This method should ensure that only one piece of
 	 * audio is playing at a time
 	 */
-	public static void playAudio(AudioFile file) throws IOException {
-		player.play(file);
+	//public static void playAudio(AudioFile file) throws IOException {
+		//player.play(file);
+	//}
+	
+	public static void playAudioThenRun(AudioFile file, Runnable...runnables) throws IOException {
+		player.playThenRun(file, runnables);
 	}
 
 	public static void stopAudio() {
@@ -211,8 +216,12 @@ public class Controller {
 				+ (overlapPreventer == 0 ? "" : overlapPreventer);
 	}
 
-	public static void playFlashCard(FlashCard card) throws IOException {
-		player.play(card);
+	//public static void playFlashCard(FlashCard card, ImageToggleButton _button) throws IOException {
+		//player.play(card);
+//	}
+	
+	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
+		player.playThenRun(card, runnables);
 	}
 
 	public static boolean verifyInput(String input) {

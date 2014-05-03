@@ -222,10 +222,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		}
 	}
 
-	private void playToggle(boolean isQuestion, boolean play) {
+	private void playToggle(boolean isQuestion, ImageToggleButton button) {
 		try {
-			if (play)
-				Controller.playAudio(isQuestion ? question : answer);
+			if (button.isOn())
+				Controller.playAudioThenRun(isQuestion ? question : answer, button);
 			else
 				Controller.stopAudio();
 		} catch (IOException e1) {
@@ -293,13 +293,13 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			//question or answer audio file.
 			recordToggle(true);
 		} else if (e.getSource() == btnQuestionPlay) {
-			playToggle(true, btnQuestionPlay.isOn());
+			playToggle(true, btnQuestionPlay);
 		} else if (e.getSource() == textQuestion) {
 			readTTS(true);
 		} else if (e.getSource() == btnAnswerRecord) {
 			recordToggle(false);
 		} else if (e.getSource() == btnAnswerPlay) {
-			playToggle(false, btnAnswerPlay.isOn());
+			playToggle(false, btnAnswerPlay);
 		} else if (e.getSource() == textAnswer) {
 			readTTS(false);
 		} else if (e.getSource() == btnFlash) {

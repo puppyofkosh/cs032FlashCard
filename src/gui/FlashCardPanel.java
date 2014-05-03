@@ -181,20 +181,20 @@ public class FlashCardPanel extends JPanel {
 	 *
 	 */
 	private class PlayStopListener implements ActionListener {
-		boolean _play;
+		//boolean _play;
 		ImageToggleButton _button;
 
 		PlayStopListener(ImageToggleButton button) {
 			_button = button;
-			_play = false;
+			//_play = false;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {			
-			_play = !_play;
+		//	_play = !_play;
 			try {
-				if (_play)
-					Controller.playFlashCard(_card);
+				if (_button.isOn())
+					Controller.playFlashcardThenRun(_card, _button);
 				else
 					Controller.stopAudio();
 			} catch (IOException e1) {

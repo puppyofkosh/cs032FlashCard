@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-public class ImageToggleButton extends ImageButton implements ActionListener{
+public class ImageToggleButton extends ImageButton implements ActionListener, Runnable{
 
 	private static final long serialVersionUID = -3150533535670093580L;
 	ImageIcon _onImage, _offImage;
@@ -73,6 +73,12 @@ public class ImageToggleButton extends ImageButton implements ActionListener{
 
 	public boolean isOn() {
 		return _on;
+	}
+	
+	@Override
+	public void run() {
+		if (!isOn())
+			toggle();
 	}
 }
 
