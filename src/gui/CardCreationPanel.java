@@ -39,7 +39,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
 	private String stopText = "Stop";
 	private FlashCardSet workingSet;
-	private String inputHint = "Use Text To Speech";
+	private String inputHint = "Text To Speech";
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
@@ -171,7 +171,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 		flashPanel.setOpaque(true);
 		flashPanel.setBackground(Color.BLACK);
 
-		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 36));
+		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 36, true));
 		btnFlash.setOpaque(false);
 		btnFlash.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 		btnFlash.setHorizontalAlignment(SwingConstants.CENTER);

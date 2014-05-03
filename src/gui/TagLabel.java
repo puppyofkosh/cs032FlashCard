@@ -53,7 +53,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 
 		if (_deletable) {
-			ImageIcon current = IconFactory.loadIcon(IconType.DELETE, _size);
+			ImageIcon current = IconFactory.loadIcon(IconType.DELETE, _size, false);
 			_delete = new JLabel(current);
 			_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 			_delete.addMouseListener(this);

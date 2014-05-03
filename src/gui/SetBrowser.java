@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,15 +14,20 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.TransferHandler;
 
+import com.explodingpixels.macwidgets.MacIcons;
 import com.explodingpixels.macwidgets.SourceList;
 import com.explodingpixels.macwidgets.SourceListCategory;
+import com.explodingpixels.macwidgets.SourceListControlBar;
 import com.explodingpixels.macwidgets.SourceListDarkColorScheme;
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListModel;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
+import com.explodingpixels.widgets.PopupMenuCustomizer;
 
 import controller.Controller;
 import flashcard.FlashCard;
@@ -44,8 +51,8 @@ public class SetBrowser extends JPanel  {
 	private Map<SourceListItem, FlashCardSet> _sets;
 	private Map<SourceListItem, SourceListItem> _parents;
 	private SourceListSelectionListener _parentComponent;
-
-	SourceList sourceList;
+	private SourceListCategory setsCategory;
+	private SourceList sourceList;
 
 	/**
 	 * Creates a new SetBrowser, preloaded with all the cards from the library.
@@ -73,12 +80,12 @@ public class SetBrowser extends JPanel  {
 		_parents = new HashMap<>();
 		SourceListModel model = new SourceListModel();
 		sourceList = new SourceList(model);	
-		SourceListCategory setsCategory = new SourceListCategory("All Sets");
+		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
-		
-		ImageIcon setIcon = IconFactory.loadIcon(IconType.SET, 14);
-		ImageIcon cardIcon = IconFactory.loadIcon(IconType.CARD, 14);
-		
+
+		ImageIcon setIcon = IconFactory.loadIcon(IconType.SET, 14, true);
+		ImageIcon cardIcon = IconFactory.loadIcon(IconType.CARD, 14, true);
+
 		//A very complicated looking loop that basically just iterates through
 		//All sets and their cards and adds them to the sourceListModel.
 		//Should really be implemented where sets are Categories and not items
@@ -101,13 +108,46 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-		
+
 		sourceList.setExpanded(setsCategory, true);
 		//Allows keyboard interaction with setbrowser.
 		//Potentially want to add another keyboard interaction for 
 		//expanding/collapsing items.
 		sourceList.setFocusable(true);
 		sourceList.setColorScheme(new CustomColorScheme());
+
+
+		//This control bar is on the bottom of the control bar and has an add/delete button on it.
+		SourceListControlBar controlBar = new SourceListControlBar();
+		sourceList.installSourceListControlBar(controlBar);
+		controlBar.createAndAddPopdownButton(MacIcons.PLUS,
+				new PopupMenuCustomizer() {
+			public void customizePopup(JPopupMenu popup) {
+				popup.removeAll();
+				popup.add(new JMenuItem("Create New Card", IconFactory.loadIcon(IconType.CREATE, 20, false)));
+				popup.add(new JMenuItem("Create New Set", IconFactory.loadIcon(IconType.SET, 20, false)));
+			}
+		});
+		controlBar.createAndAddButton(IconFactory.loadIcon(IconType.DELETE, 10, false), new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SourceListItem item = sourceList.getSelectedItem();
+				FlashCard card = getSelectedCard();
+				if (card != null) {
+					Controller.deleteCard(card);
+					sourceList.getModel().removeItemFromItem(item, _parents.get(item));
+					return;
+				}
+
+				FlashCardSet set = getSelectedSet();
+				if (set != null) {
+					Controller.deleteSet(set);
+					sourceList.getModel().removeItemFromCategory(item, setsCategory);
+					//FIXME ARE YOU SURE? 
+				}
+			}
+		});
 
 		//Passes the selection event to the parentComponent
 		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
@@ -123,7 +163,7 @@ public class SetBrowser extends JPanel  {
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
-		
+
 		revalidate();
 		repaint();
 	}
@@ -205,10 +245,12 @@ public class SetBrowser extends JPanel  {
 				cards.add(card);
 			} else { //a set is currently selected, so let's get its cards.
 				FlashCardSet set = getSelectedSet();
-				try {
-					cards = set.getAll();
-				} catch (IOException e) {
-					Controller.guiMessage("Could not get cards in the set", true);
+				if (set != null) {
+					try {
+						cards = set.getAll();
+					} catch (IOException e) {
+						Controller.guiMessage("Could not get cards in the set", true);
+					}
 				}
 			}
 			return new TransferableFlashCards(cards);

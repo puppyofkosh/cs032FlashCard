@@ -17,6 +17,12 @@ import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
+/**
+ * A button that when triggered displays a list of sets. The user can opt to
+ * add/remove card from sets by checking them.
+ * @author samkortchmar
+ *
+ */
 public class SetSelectionButton extends JButton implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -40,7 +46,6 @@ public class SetSelectionButton extends JButton implements ActionListener {
 	}
 
 	class SetListener implements ItemListener {
-
 		JCheckBoxMenuItem _item;
 		FlashCardSet _set;
 		FlashCard _card;

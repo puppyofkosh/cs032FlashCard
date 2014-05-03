@@ -43,10 +43,11 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	private TagPanel tags;
 	private SetBrowser setBrowser;
 	private CardCreationPanel recordPanel;
+	private String authorName = "";
 
 
-	@Override
-	public void setControlledPanel(JPanel panel) {
+		@Override
+		public void setControlledPanel(JPanel panel) {
 		super.setControlledPanel(panel);
 		panel.add(recordPanel, "record panel");
 
@@ -102,6 +103,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 
 		authorTextField = new JTextField(10);
+		authorTextField.setName(authorName);
 		authorTextField.addActionListener(this);
 		headerPanel.add(authorTextField);
 
@@ -118,7 +120,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		continuePanel.setBackground(Color.BLACK);
-		btnContinue = new ImageButton("Continue to Card Creation", IconFactory.loadIcon(IconType.CARD, 36));
+		btnContinue = new ImageButton("Continue to Card Creation", IconFactory.loadIcon(IconType.CARD, 36, true));
 		btnContinue.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 		btnContinue.addActionListener(this);
 
@@ -170,7 +172,10 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
 
-			FlashCardSet currentSet = Controller.createSet(nameInput, authorTextField.getText(), tags.getTags(true), interval);
+			authorName = authorTextField.getText();
+			authorTextField.getText();
+
+			FlashCardSet currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
 			recordPanel.assignWorkingSet(currentSet);
 
 			if (recordPanel.hasWorkingSet())

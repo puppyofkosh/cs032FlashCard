@@ -1,10 +1,12 @@
-/gui
+/audio
+/backend
+/client
 /controller
+/database
+/flashcard
+/gui
 /protocol
 /quizlet
 /search
 /server
-/audio
-/backend
-/database
-/flashcard
+/utils
