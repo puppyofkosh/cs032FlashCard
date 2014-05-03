@@ -44,7 +44,7 @@ public class IconFactory {
 	private static ImageIcon CREATE_ICON = createImageIcon("Create Icon.png");
 	private static ImageIcon CREATE_ICON_INVERTED = createImageIcon("Create Icon Inverted.png");
 
-	private static ImageIcon EXPORT_ICON = createImageIcon("Export Icon");
+	private static ImageIcon EXPORT_ICON = createImageIcon("Export Icon.png");
 	private static ImageIcon EXPORT_ICON_INVERTED = createImageIcon("Export Icon Inverted.png");
 
 	private static ImageIcon FLASHBOARD_ICON = createImageIcon("Flash Logo.png");
