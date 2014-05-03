@@ -3,6 +3,8 @@ package gui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -39,13 +41,14 @@ import quizlet.QuizletRequest;
 
 import javax.swing.JSpinner;
 
-public class QuizletPanel extends JPanel implements PropertyChangeListener {
+public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 	
 	private ProgressMonitor progressMonitor;
 	private ImportThread importThread;
-	private Task task;
 	
 	public QuizletPanel() {
+		addComponentListener(this);
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		JPanel searchPanel = new JPanel();
@@ -122,6 +125,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener {
                         "", 0, 100);
 				progressMonitor.setProgress(0);
 				progressMonitor.setNote("Hello there");
+				progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
 				
 				//if (importThread != null)
 				//	importThread.cancel(true);
@@ -129,9 +133,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener {
 				importThread = new ImportThread();
 				importThread.addPropertyChangeListener(QuizletPanel.this);
 				importThread.execute();
-				/*task = new Task();
-				task.addPropertyChangeListener(QuizletPanel.this);
-				task.execute();*/
+
 			}
 			
 		});
@@ -229,6 +231,12 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener {
 			interval = (int) spinner.getValue();
 			
 		}
+		
+		@Override
+		public void done()
+		{
+			progressMonitor.close();
+		}
 	
 		@Override
 		protected Void doInBackground() throws Exception {
@@ -307,31 +315,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener {
 			}
 		}
 	}
-	
-	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() {
-            Random random = new Random();
-            int progress = 0;
-            setProgress(0);
-            try {
-                Thread.sleep(1000);
-                while (progress < 100 && !isCancelled()) {
-                    //Sleep for up to one second.
-                    Thread.sleep(random.nextInt(1000));
-                    //Make random progress.
-                    progress += random.nextInt(10);
-                    setProgress(Math.min(progress, 100));
-                }
-            } catch (InterruptedException ignore) {}
-            return null;
-        }
-
-        @Override
-        public void done() {
-            progressMonitor.setProgress(0);
-        }
-    }
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -344,11 +327,37 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener {
                 String.format("Completed %d%%.\n", progress);
             progressMonitor.setNote(message);
             if (progressMonitor.isCanceled() || importThread.isDone()) {
-                if (progressMonitor.isCanceled()) {
-                	importThread.cancel(true);
-                }
+               	importThread.cancel(true);
+               	progressMonitor.close();
             }
         }	
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		if (progressMonitor != null)
+			progressMonitor.close();
+		if (importThread != null)
+			importThread.cancel(true);
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
