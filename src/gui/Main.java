@@ -25,12 +25,15 @@ public class Main {
 			public void run() {
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.add(exportDemo());
+				frame.add(flashboardDemo());
 				frame.pack();
 				frame.setVisible(true);
-
 			}
 		});
+	}
+	
+	public static JComponent flashboardDemo() {
+		return new FlashboardPanel();
 	}
 	
 	public static JComponent exportDemo() {

@@ -10,10 +10,8 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import controller.Controller;
-import database.DatabaseFactory;
 
 public class MainFrame extends JFrame {
 
@@ -89,11 +87,7 @@ public class MainFrame extends JFrame {
 		mainPanelContainer.add(setCreationPanel, GuiConstants.CREATE_PANEL_NAME);
 
 		flashboardPanel = new FlashboardPanel();
-		JScrollPane scroller = new JScrollPane(flashboardPanel,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroller.setBorder(BorderFactory.createEmptyBorder());
-		mainPanelContainer.add(scroller, GuiConstants.FLASHBOARD_PANEL_NAME);
+		mainPanelContainer.add(flashboardPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
 
 		mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
 		contentPane.add(mainPanelContainer, BorderLayout.CENTER);
@@ -102,7 +96,6 @@ public class MainFrame extends JFrame {
 	}
 
 	public void updateAll() {
-		flashboardPanel.updateFlashboard();
 		setCreationPanel.update();
 	}
 }
