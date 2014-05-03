@@ -74,7 +74,7 @@ public class MainFrame extends JFrame {
 		importPanel = new ImportPanel();
 		importPanel.setControlledLayout(mainPanelLayout);
 		importPanel.setControlledPanel(mainPanelContainer);
-		
+
 		quizletPanel = new QuizletPanel();
 		mainPanelContainer.add(quizletPanel, GuiConstants.QUIZLET_PANEL_NAME);
 
@@ -90,13 +90,13 @@ public class MainFrame extends JFrame {
 
 		flashboardPanel = new FlashboardPanel();
 		mainPanelContainer.add(flashboardPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
-		
+
 		showTab(TabType.FLASHBOARD);
 		contentPane.add(mainPanelContainer, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 	}
-	
+
 	public void update(TabType tab) {
 		switch (tab) {
 		case CREATE:
@@ -111,10 +111,10 @@ public class MainFrame extends JFrame {
 			break;
 		default:
 			break;
-			
+
 		}
 	}
-	
+
 	public void showTab(TabType tab) {
 		switch (tab) {
 		case CREATE:
