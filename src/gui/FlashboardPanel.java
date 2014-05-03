@@ -163,7 +163,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	public void updateCards(Collection<FlashCard> cards) {
 		// All the panels being used before are now up for grabs and can be recycled
-		freePanels.addAll(cardPanels);
+		//freePanels.addAll(cardPanels);
 		cardPanels = new ArrayList<>();		
 		for(FlashCard card : cards) {
 			
