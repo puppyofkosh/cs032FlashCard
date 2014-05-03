@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -307,6 +308,14 @@ public class FlashCardDatabase implements Resources {
 
 	public void deleteSet(FlashCardSet s) {
 
+		Collection<FlashCard> cards = Arrays.asList();
+		try {
+			cards = s.getAll();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		try (Statement statement = getStatement()) {
 			String query = "SELECT ID FROM SETS WHERE NAME='" + s.getName()
 					+ "'";
@@ -328,10 +337,19 @@ public class FlashCardDatabase implements Resources {
 			deleteQuery = "DELETE FROM SETS_TAGS WHERE SET_ID=" + setId;
 			statement.execute(deleteQuery);
 
-			// 3) Remove entries from FLASHCARDS_SETS table
-			deleteQuery = "DELETE FROM FLASHCARDS_SETS WHERE SET_ID=" + setId;
+			// 3) Remove entries from SETS_FLASHCARDS table
+			deleteQuery = "DELETE FROM SETS_FLASHCARDS WHERE SET_ID=" + setId;
+			statement.execute(deleteQuery);
 
-			// FIXME: Find all flashcards in this set with only that set and remove them too
+			// Check if any of the cards this set contained now no longer belong to a set
+			for (FlashCard f : cards)
+			{
+				if (f.getSets().size() == 0)
+				{
+					deleteCard(f);
+				}
+			}
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -649,7 +667,6 @@ public class FlashCardDatabase implements Resources {
 		System.out.println(Thread.currentThread().getName());
 		try (Statement statement = getStatement()) {
 
-			// Write q/a files to disk
 			writeCardToDisk(flashcard);
 
 			// 1) Check if this card exists already:
