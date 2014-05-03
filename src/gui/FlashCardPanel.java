@@ -32,6 +32,7 @@ import utils.Writer;
 import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import gui.IconFactory.IconType;
 
 /**
  * This class is used by the GUI to represent flashCards, as
@@ -60,10 +61,9 @@ public class FlashCardPanel extends JPanel {
 		_spinner.setValue(card.getInterval());
 		populateSets(card.getSets());
 		_tagPanel.reinitialize(card);
-
 		revalidate();
 	}
-	
+
 
 	/**
 	 * Constructs a FlashCardPanel from a given card.
@@ -73,7 +73,7 @@ public class FlashCardPanel extends JPanel {
 		String Mname = card.getName();
 		int Minterval = card.getInterval();
 		Collection<FlashCardSet> Msets = card.getSets();
-		
+
 		setPreferredSize(new Dimension(225, 150));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
@@ -84,7 +84,7 @@ public class FlashCardPanel extends JPanel {
 		//The header will contain the given card's name and a delete button.
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
-		_headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0,0));
+		_headerPanel.setLayout(new BoxLayout(_headerPanel, BoxLayout.X_AXIS));
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
 		//Add the card's name to the header panel.
@@ -93,12 +93,7 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel.add(new SetSelectionButton("Modify Sets", _card));
 
 		//Initialize the delete card button.
-		ImageIcon current = new ImageIcon("./res/img/delete x.png");
-		Image img = current.getImage() ;  
-		Image newimg = img.getScaledInstance(GuiConstants.DEFAULT_BUTTON_SIZE, 
-				GuiConstants.DEFAULT_BUTTON_SIZE, java.awt.Image.SCALE_SMOOTH);  
-		current = new ImageIcon(newimg);
-		_delete = new JLabel(current);
+		_delete = new JLabel(IconFactory.loadIcon(IconType.DELETE, GuiConstants.DEFAULT_BUTTON_SIZE, false));
 		_delete.setHorizontalAlignment(SwingConstants.TRAILING);
 		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		//This mouse listener adds functionality to the X that appears next to.
@@ -131,7 +126,6 @@ public class FlashCardPanel extends JPanel {
 		});
 
 		_headerPanel.add(_delete, BorderLayout.EAST);
-		_headerPanel.setMaximumSize(_headerPanel.getPreferredSize());
 		add(_headerPanel);
 
 		//This panel displays the interval as well as a play button which plays
@@ -151,8 +145,8 @@ public class FlashCardPanel extends JPanel {
 		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) _spinner.getEditor());
 		editor.getTextField().setColumns(2);
 		editor.getTextField().setEditable(false);
-		
-		
+
+
 		_spinner.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -182,12 +176,11 @@ public class FlashCardPanel extends JPanel {
 		js.getViewport().setOpaque(false);
 		js.setBorder(BorderFactory.createEmptyBorder());
 		add(js);
-		
-		populateSets(Msets);
 
+		populateSets(Msets);
 		revalidate();
 	}
-	
+
 
 	/**
 	 * As yet unimplemented
