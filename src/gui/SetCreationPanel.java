@@ -118,7 +118,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		continuePanel.setBackground(Color.BLACK);
-		btnContinue = new ImageButton("Continue to Card Creation", IconFactory.loadIcon(IconType.CARD, 36));
+		btnContinue = new ImageButton("Continue to Card Creation", IconFactory.loadIcon(IconType.CARD, 36, true));
 		btnContinue.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 		btnContinue.addActionListener(this);
 
