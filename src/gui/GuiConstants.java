@@ -18,6 +18,7 @@ public class GuiConstants {
 	public static final Color CARD_BACKGROUND = Color.CYAN;
 	public static final Color SET_TAG_COLOR = Color.ORANGE;
 	public static final Color CARD_TAG_COLOR = Color.YELLOW;
+	public static final Color PRIMARY_FONT_COLOR = Color.WHITE;
 
 	//Some default settings for tag label.
 	public static final int DEFAULT_TAG_LABEL_ROUNDEDNESS = 10;
@@ -25,6 +26,7 @@ public class GuiConstants {
 	public static final int MAX_TAG_LENGTH = 30;
 	
 	public static final int SOURCELIST_ICON_SIZE = 16;
+	
 	
 
 }

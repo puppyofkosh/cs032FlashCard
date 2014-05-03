@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Insets;
 
 import javax.swing.Icon;
@@ -16,7 +15,7 @@ public class ImageButton extends JButton {
 
 	ImageButton(String text, Icon icon) {		
 		super(text, icon);
-		setForeground(Color.WHITE);
+		setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		setMargin(new Insets(0, 0, 0, 0));		
 		setContentAreaFilled(false);		
 		setBorderPainted(false);

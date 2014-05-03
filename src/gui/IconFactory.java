@@ -74,11 +74,16 @@ public class IconFactory {
 		}
 	}
 	
-	public static ImageButton createImageButton(String text, IconType type, int size) {
-		ImageButton b = new ImageButton(text, loadIcon(type, size));
-		b.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size * 4 / 5));
+	public static ImageButton createImageButton(String text, IconType type, int iconSize, int fontSize) {
+		ImageButton b = new ImageButton(text, loadIcon(type, iconSize));
+		b.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
 		return b;
 	}
+	
+	public static ImageButton createImageButton(String text, IconType type, int size) {
+		return createImageButton(text, type, size, size * 4 / 5);
+	}
+
 
 	public static ImageIcon loadIcon(IconType type, int size) {
 		ImageIcon current = loadIcon(type);
