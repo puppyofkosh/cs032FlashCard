@@ -1,5 +1,6 @@
 package gui;
 
+import gui.GuiConstants.TabType;
 import gui.IconFactory.IconType;
 
 import java.awt.Color;
@@ -12,6 +13,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+
+import controller.Controller;
 
 public class SidePanel extends GenericPanel implements MouseListener {
 
@@ -66,10 +69,6 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		button.addMouseListener(this);
 	}
 
-	private void update() {
-		if (_parent != null) _parent.updateAll();
-	}
-	
 	private void setSelected(JLabel button) {
 		if (btnSelected != null) btnSelected.setOpaque(false);
 		btnSelected = button;
@@ -92,19 +91,18 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource() == btnFlashboard) {
-			controlledLayout.show(controlledPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
+			Controller.switchTabs(TabType.FLASHBOARD);
 			setSelected(btnFlashboard);
 		} else if (e.getSource() == btnExport) {
-			controlledLayout.show(controlledPanel, GuiConstants.EXPORT_PANEL_NAME);
+			Controller.switchTabs(TabType.EXPORT);
 			setSelected(btnExport);
 		} else if (e.getSource() == btnImport) {
-			controlledLayout.show(controlledPanel, GuiConstants.IMPORT_PANEL_NAME);
+			Controller.switchTabs(TabType.IMPORT);
 			setSelected(btnImport);
 		} else if (e.getSource() == btnCreate) {
-			controlledLayout.show(controlledPanel, GuiConstants.CREATE_PANEL_NAME);
+			Controller.switchTabs(TabType.CREATE);
 			setSelected(btnCreate);
 		}
-		update();
 	}
 
 	@Override

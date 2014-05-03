@@ -1,5 +1,7 @@
 package gui;
 
+import gui.GuiConstants.TabType;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -23,6 +25,7 @@ public class MainFrame extends JFrame {
 	private SetCreationPanel setCreationPanel;
 	private FlashboardPanel flashboardPanel;
 	private CardLayout mainPanelLayout;
+	private JPanel mainPanelContainer;
 
 	/**
 	 * Launch the application.
@@ -60,7 +63,7 @@ public class MainFrame extends JFrame {
 		sidePanel.setBorder(BorderFactory.createEmptyBorder());
 		sidePanelContainer.add(sidePanel);
 
-		JPanel mainPanelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		mainPanelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		mainPanelContainer.setOpaque(false);
 		mainPanelContainer.setLayout(mainPanelLayout);
 
@@ -88,14 +91,48 @@ public class MainFrame extends JFrame {
 
 		flashboardPanel = new FlashboardPanel();
 		mainPanelContainer.add(flashboardPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
-
-		mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
+		
+		showTab(TabType.FLASHBOARD);
 		contentPane.add(mainPanelContainer, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 	}
-
-	public void updateAll() {
-		setCreationPanel.update();
+	
+	public void update(TabType tab) {
+		switch (tab) {
+		case CREATE:
+			setCreationPanel.update();
+			break;
+		case EXPORT:
+			break;
+		case FLASHBOARD:
+			flashboardPanel.update();
+			break;
+		case IMPORT:
+			break;
+		default:
+			break;
+			
+		}
+	}
+	
+	public void showTab(TabType tab) {
+		switch (tab) {
+		case CREATE:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.CREATE_PANEL_NAME);
+			break;
+		case EXPORT:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.EXPORT_PANEL_NAME);
+			break;
+		case FLASHBOARD:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.FLASHBOARD_PANEL_NAME);
+			break;
+		case IMPORT:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.IMPORT_PANEL_NAME);
+			break;
+		default:
+			break;
+		}
+		update(tab);
 	}
 }

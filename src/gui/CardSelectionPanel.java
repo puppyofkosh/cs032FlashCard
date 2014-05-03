@@ -56,7 +56,7 @@ public class CardSelectionPanel extends GenericPanel {
 		return continueDestination;
 	}
 
-	public void setContinueDestination(String continueDestination) {
+	private void setContinueDestination(String continueDestination) {
 		this.continueDestination = continueDestination;
 	}
 

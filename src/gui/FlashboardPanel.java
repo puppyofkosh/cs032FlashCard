@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -46,8 +47,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	SetBrowser browser;
 	JPanel flashboard;
 	JPanel emptyPanel;
-	JButton emptyButton;
-	JLabel emptyLabel;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
 
@@ -76,8 +75,17 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		emptyLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 25));
 		emptyPanel.add(emptyLabel);
 
-		emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25);
+		JButton emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25);
 		emptyButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		emptyButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		});
+		
 		emptyPanel.add(emptyButton);
 
 		//Contains the grid of cards to be laid out.
@@ -153,6 +161,10 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			JPanel cardPanel = new FlashCardPanel(card);
 			cardPanels.add(cardPanel);
 		}
+	}
+	
+	public void update() {
+		browser.updateSourceList();
 	}
 	
 	/**

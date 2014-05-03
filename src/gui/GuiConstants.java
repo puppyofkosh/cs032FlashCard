@@ -13,6 +13,8 @@ public class GuiConstants {
 	public static final String CREATE_PANEL_NAME = "create panel";
 	public static final String SET_CREATION_PANEL_NAME = "set creation panel";
 	public static final String FLASHBOARD_PANEL_NAME = "flashboard panel";
+	public static final String DATABASE_PANEL_NAME = "database panel";
+
 	
 	public static final Color BLACK = Color.BLACK;
 	public static final Color CARD_BACKGROUND = Color.CYAN;
@@ -26,6 +28,14 @@ public class GuiConstants {
 	public static final int MAX_TAG_LENGTH = 30;
 	
 	public static final int SOURCELIST_ICON_SIZE = 16;
+	
+	public enum TabType {
+		FLASHBOARD,
+		EXPORT,
+		IMPORT,
+		CREATE
+	}
+
 	
 	
 

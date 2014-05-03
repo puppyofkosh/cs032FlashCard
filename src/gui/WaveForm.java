@@ -19,19 +19,19 @@ import audio.DiscAudioFile;
 public class WaveForm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private int[] data;
-	
+
 	public WaveForm(AudioFile file) throws IOException {
 		super();
 		this.data = byteToInt(file.getRawBytes());
 		setBackground(Color.BLACK);
 	}
-	
+
 	public WaveForm() {
 		super();
 	}
-	
+
 	private static int[] byteToInt(byte[] bytes) {
 		int[] output = new int[bytes.length/2];
 		ByteBuffer b = ByteBuffer.allocate(2);
@@ -47,10 +47,10 @@ public class WaveForm extends JPanel {
 			b.clear();
 			System.out.println("line");
 		}
-		
+
 		return output;
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -68,21 +68,21 @@ public class WaveForm extends JPanel {
 			}
 		}
 	}
-	
+
 	public void changeAudio(AudioFile newFile) throws IOException {
 		synchronized (this) {
 			this.data = byteToInt(newFile.getRawBytes());
 		}
 		repaint();
 	}
-	
+
 	public void clearAudio() {
 		synchronized (this) {
 			data = null;
 		}
-			repaint();
+		repaint();
 	}
-	
+
 	public static void main(String[] args) throws IOException, InterruptedException {
 		final JFrame frame = new JFrame("test");
 		frame.setBounds(100, 100, 1000, 500);
@@ -93,7 +93,7 @@ public class WaveForm extends JPanel {
 		JPanel panel = new JPanel();
 		all.add(panel);
 		all.add(test);
-		
+
 		JButton clear = new JButton("Clear");
 		panel.add(clear);
 		clear.addActionListener(new ActionListener() {
@@ -103,9 +103,9 @@ public class WaveForm extends JPanel {
 				test.clearAudio();
 				System.out.println("clear");
 			}
-			
+
 		});
-		
+
 		JButton a = new JButton("Audio A");
 		panel.add(a);
 		a.addActionListener(new ActionListener() {
@@ -119,9 +119,9 @@ public class WaveForm extends JPanel {
 					e.printStackTrace();
 				}
 			}
-			
+
 		});
-		
+
 		JButton b = new JButton("Audio B");
 		panel.add(b);
 		b.addActionListener(new ActionListener() {
@@ -135,9 +135,9 @@ public class WaveForm extends JPanel {
 					e.printStackTrace();
 				}
 			}
-			
+
 		});
 		frame.setVisible(true);	
 	}
-	
+
 }

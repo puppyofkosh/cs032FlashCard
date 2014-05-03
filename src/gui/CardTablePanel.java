@@ -67,7 +67,7 @@ public class CardTablePanel extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		updateTable();
 	}
-	
+
 	public void setTitle(String title) {
 		setBorder(BorderFactory.createTitledBorder(title));
 	}

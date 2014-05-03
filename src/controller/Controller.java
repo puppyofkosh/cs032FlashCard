@@ -4,8 +4,10 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
+import gui.GuiConstants.TabType;
 import gui.MainFrame;
 
+import java.awt.CardLayout;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,6 @@ import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
-import audio.WavFileConcatenator;
 import backend.FileImporter;
 import database.DatabaseFactory;
 
@@ -46,6 +47,7 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
+	private static CardLayout tabs;
 
 	/**
 	 * Import a tsv or similar
@@ -122,7 +124,7 @@ public class Controller {
 		// I can change that if that seems like a bad way of doing things
 		// card = DatabaseFactory.writeCard(card);
 
-		gui.updateAll();
+		updateAll();
 		return card;
 	}
 
@@ -265,7 +267,7 @@ public class Controller {
 
 	public static void deleteCard(FlashCard card) {
 		DatabaseFactory.deleteCard(card);
-		gui.updateAll();
+		updateAll();
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {
@@ -296,11 +298,21 @@ public class Controller {
 		return set;
 	}
 
-	public static void updateGUI() {
-		gui.updateAll();
+	public static void updateAll() {
+		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT, TabType.CREATE);
+	}
+	
+	public static void updateGUI(TabType...types) {
+		for(TabType type : types) {
+			gui.update(type);
+		}
 	}
 
 	public static void launchGUI() {
 		gui = new MainFrame();
+	}
+	
+	public static void switchTabs(TabType tab) {
+		gui.showTab(tab);
 	}
 }
