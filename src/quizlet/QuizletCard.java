@@ -1,8 +1,18 @@
 package quizlet;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import controller.Controller;
+import audio.AudioFile;
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 
 public class QuizletCard {
 	public String term;
@@ -20,5 +30,104 @@ public class QuizletCard {
 			output[i] = new QuizletCard(cards.getJSONObject(i));
 		}
 		return output;
+	}
+	
+	public FlashCard getFlashCard() {
+		return new QuizletFlashCard();
+	}
+	
+	public FlashCard getFlashCard(int interval) {
+		return new QuizletFlashCard(interval);
+	}
+	
+	private class QuizletFlashCard implements FlashCard {
+		
+		AudioFile question = Controller.readTTS(term);
+		AudioFile answer = Controller.readTTS(definition);
+		int interval;
+		
+		QuizletFlashCard() {
+			AudioFile question = Controller.readTTS(term);
+			AudioFile answer = Controller.readTTS(definition);
+			interval = 0;
+		}
+		
+		QuizletFlashCard(int interval) {
+			this();
+			this.interval = interval;
+		}
+		
+		@Override
+		public String getName() {
+			
+			return term;
+		}
+
+		@Override
+		public Collection<FlashCardSet> getSets() {
+			// TODO Auto-generated method stub
+			return new ArrayList<FlashCardSet>();
+		}
+
+		@Override
+		public Collection<String> getTags() {
+			// TODO Auto-generated method stub
+			return new ArrayList<String>();
+		}
+
+		@Override
+		public void addTag(String tag) throws IOException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeTag(String tag) throws IOException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public int getInterval() {
+			// TODO Auto-generated method stub
+			return interval;
+		}
+
+		@Override
+		public void setInterval(int interval) throws IOException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getPath() throws IOException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public AudioFile getQuestionAudio() {
+			// TODO Auto-generated method stub
+			return question;
+		}
+
+		@Override
+		public AudioFile getAnswerAudio() {
+			// TODO Auto-generated method stub
+			return answer;
+		}
+
+		@Override
+		public boolean sameMetaData(FlashCard f) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public UUID getUniqueId() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }

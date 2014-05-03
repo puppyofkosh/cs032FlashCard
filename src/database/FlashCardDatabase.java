@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import utils.FlashcardConstants;
 import utils.Writer;
@@ -189,6 +190,27 @@ public class FlashCardDatabase implements Resources {
 		return prefix + (overlapPreventer == 0 ? "" : overlapPreventer) + "/";
 	}
 
+	public DatabaseFlashCard getCardByUniqueId(UUID id)
+	{
+		try (Statement statement = getStatement())
+		{
+			String query = "SELECT ID FROM FLASHCARDS WHERE UUID='"
+					+ id + "'";
+
+			ResultSet rs = statement.executeQuery(query);
+			
+			if (!rs.next())
+				return null;
+			
+			return new DatabaseFlashCard(rs.getInt("ID"), this);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
 	/**
 	 * Write all of the card's info to disk
 	 * 

@@ -244,7 +244,18 @@ public class DatabaseSet implements FlashCardSet{
 	@Override
 	public void removeCard(FlashCard f) throws IOException {
 		// TODO Auto-generated method stub
-		//FIXME IAN
+		try (Statement statement = database.getStatement()){
+			
+			DatabaseFlashCard card = database.getCardByUniqueId(f.getUniqueId());
+			if (card == null)
+				return;
+			
+			String query = "DELETE FROM SETS_FLASHCARDS WHERE SET_ID=" + id + " AND FLASHCARD_ID=" + card.getLocalId();
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 }
