@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 
@@ -69,6 +70,9 @@ public class DatabaseTest {
 		// Check equals operators
 		assertTrue(dbCard.sameMetaData(testCard));
 		assertTrue(testCard.sameMetaData(dbCard));
+		
+		assertTrue(db.getCardByUniqueId(testCard.getUniqueId()) != null);
+		assertTrue(db.getCardByUniqueId(UUID.randomUUID()) == null);
 		
 		// Now screw around with the card, try changing some things
 		dbCard.setInterval(6);
@@ -196,7 +200,13 @@ public class DatabaseTest {
 		assertTrue(dbSet.getTags().contains("Tag C") && dbSet.getTags().contains("Tag D"));
 		
 		
+		dbSet.removeCard(testCard);
 		
+		assertTrue(dbSet.getAll().size() == 0);
+		
+		dbSet.addCard(testCard);
+		
+		assertTrue(dbSet.getAll().size() == 1);
 		
 		// Try to delete the set
 		db.deleteSet(dbSet);
