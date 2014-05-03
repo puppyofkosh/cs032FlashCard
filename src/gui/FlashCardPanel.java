@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -71,7 +70,7 @@ public class FlashCardPanel extends JPanel {
 		//Add the card's name to the header panel.
 		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
 		_headerPanel.add(_cardName, BorderLayout.CENTER);
-		_cardName.setAlignmentX(Component.CENTER_ALIGNMENT);
+		_headerPanel.add(new SetSelectionButton("Modify Sets", _card));
 
 		//Initialize the delete card button.
 		ImageIcon current = new ImageIcon("./res/img/delete x.png");
@@ -167,6 +166,7 @@ public class FlashCardPanel extends JPanel {
 
 		revalidate();
 	}
+	
 
 	/**
 	 * As yet unimplemented
