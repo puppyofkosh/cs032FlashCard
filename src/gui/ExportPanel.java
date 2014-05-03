@@ -92,7 +92,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		continuePanel.setBackground(Color.BLACK);
-		btnExport = new ImageButton("Export", IconFactory.loadIcon(IconType.EXPORT, 36));
+		btnExport = new ImageButton("Export", IconFactory.loadIcon(IconType.EXPORT, 36, true));
 		btnExport.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 		btnExport.addActionListener(this);
 		continuePanel.add(btnExport);
