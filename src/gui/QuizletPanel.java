@@ -121,10 +121,10 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				
 				System.out.println("Creating monitor");
 				progressMonitor = new ProgressMonitor(QuizletPanel.this,
-                        "Running a Long Task",
+                        "Importing from Quizlet",
                         "", 0, 100);
 				progressMonitor.setProgress(0);
-				progressMonitor.setNote("Hello there");
+				progressMonitor.setNote("Quizletting");
 				progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
 				
 				//if (importThread != null)
@@ -318,7 +318,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		System.out.println("event");
 		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
 			System.out.println("Setting progress");
             int progress = (Integer) evt.getNewValue();

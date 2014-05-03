@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 
 import protocol.NetworkedFlashCard;
 import search.SearchParameters;
@@ -34,7 +38,7 @@ import backend.ItunesExporter;
 import client.Client;
 import database.DatabaseFactory;
 
-public class ExportPanel extends JPanel implements ClientFrontend, ActionListener {
+public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener {
 	/**
 	 * 
 	 */
@@ -49,6 +53,9 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	private Client _client;
 	private SetBrowser _setBrowser;
 	private JTextField searchBox;
+	
+	private ProgressMonitor progressMonitor;
+
 	/**
 	 * Create the panel.
 	 * @throws IOException 
@@ -127,6 +134,15 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	public void connectAndExport() {
 		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
 		Writer.out("Starting client");
+		
+		progressMonitor = new ProgressMonitor(ExportPanel.this,
+                "Uploading",
+                "", 0, 100);
+		progressMonitor.setProgress(0);
+		progressMonitor.setNote("Uploading");
+		progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
+				
+		_client.addPropertyChangeListener(this);
 		_client.execute();
 		_client.uploadCards(_cardTable.getSelectedCards());
 	}
@@ -140,9 +156,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	@Override
 	public void guiMessage(String msg, int duration) {
 		if (msg.contains("Successful")) {
-			JOptionPane.showMessageDialog(panel, msg + "Shutting down Client");
+			JOptionPane.showMessageDialog(panel, msg + " Shutting down Client");
 			if (_client != null) {
-				JOptionPane.showMessageDialog(panel, msg + "Shutting down Client");
 				_client.kill();
 			}
 		} else {
@@ -227,6 +242,29 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	@Override
 	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Handles events from the client worker
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (_client.getState() == SwingWorker.StateValue.DONE)
+		{
+			progressMonitor.close();
+		}
+		
+		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
+            int progress = (Integer) evt.getNewValue();
+            progressMonitor.setProgress(progress);
+            String message =
+                String.format("Completed %d%%.\n", progress);
+            progressMonitor.setNote(message);
+            if (progressMonitor.isCanceled() || _client.isDone()) {
+               	_client.cancel(true);
+               	progressMonitor.close();
+            }
+        }
 	}
 	
 }

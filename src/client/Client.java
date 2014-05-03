@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
 import protocol.AllCardsRequest;
@@ -43,7 +44,22 @@ public class Client extends SwingWorker<Response, Response> {
 	private Queue<Request> _requests;
 	private ClientFrontend _frontend;
 	private int numRequests;
-
+	
+	private volatile String _guiMessage = "";
+	private volatile boolean _guiMessageChanged = false;
+	
+	private void setGuiMessage(String s)
+	{
+		_guiMessage = s;
+		_guiMessageChanged = true;
+	}
+	private String processGuiMessage()
+	{
+		_guiMessageChanged = false;
+		return _guiMessage;
+	}
+	
+	
 	/**
 	 * Constructs a Client with the given port.
 	 * 
@@ -61,6 +77,7 @@ public class Client extends SwingWorker<Response, Response> {
 	/**
 	 * Starts the Client, so it connects to the sever. It will set up all the
 	 * necessary requirements, and then launch the GUI.
+	 * THIS IS CALLED IN a separate thread. It should not be modifying GUI stuff
 	 */
 	private void connect(int maxAttempts) {
 		int num_attempts = 0;
@@ -87,11 +104,11 @@ public class Client extends SwingWorker<Response, Response> {
 
 			} catch (IOException ex) {
 				Writer.out("ERROR: Can't connect to server");
-				_frontend.guiMessage("Server unavailable!");
+				setGuiMessage("Server unavailable!");
 				_hasServer = false;
 				try {
 					Thread.sleep(2500);
-					_frontend.guiMessage("Attempting to reconnect...");
+					setGuiMessage("Attempting to reconnect...");
 					Thread.sleep(2500);
 				} catch (InterruptedException e) {
 					Writer.err("ERROR trying to reconnect to server");
@@ -105,22 +122,27 @@ public class Client extends SwingWorker<Response, Response> {
 	@Override
 	public Response doInBackground() {
 		connect(0);
-
 		// Hack: After connecting return an empty response to show the frontened
 		// we're connected
 		publish(new ConnectionSuccessfulResponse());
 
 		while (_running && !_socket.isClosed()) {
+			setProgress(33);
 			if (!_requests.isEmpty() && _hasServer) {
 				try {
+					Thread.sleep(1000);
+					setProgress(40);
 					Writer.out("Sending Request");
+					setProgress(50);
 					_output.writeObject(_requests.poll());
 					_output.flush();
+					setProgress(75);
 					Writer.out("Sent Request", numRequests);
 					numRequests++;
 				} catch (IOException e) {
 					e.printStackTrace();
 					Writer.out("??Server closed");
+				} catch (InterruptedException e) {
 				}
 			}
 		}
@@ -132,7 +154,6 @@ public class Client extends SwingWorker<Response, Response> {
 	 * Shuts down the client closing all the connections.
 	 */
 	public void kill() {
-		Writer.out("Attempting to kill client.");
 		_running = false;
 		_frontend.displayConnectionStatus(false);
 		try {
@@ -245,6 +266,7 @@ public class Client extends SwingWorker<Response, Response> {
 			UploadCardsResponse ucR = (UploadCardsResponse) resp;
 			_frontend.guiMessage("Upload "
 					+ (ucR.confirmed() ? "Successful" : "Failed"));
+			System.out.println("RECEIVED");
 			return;
 		case META_DATA:
 			MetaDataResponse mdR = (MetaDataResponse) resp;
@@ -261,7 +283,11 @@ public class Client extends SwingWorker<Response, Response> {
 	@Override
 	protected void process(List<Response> chunks) {
 		for (Response r : chunks)
+		{
 			processResponse(r);
+		}
+		if (_guiMessage.length() > 0)
+			_frontend.guiMessage(_guiMessage);
 	}
 
 }
