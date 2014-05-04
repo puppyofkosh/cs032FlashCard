@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,6 +24,7 @@ import javax.swing.SwingConstants;
 
 import audio.AudioFile;
 import controller.Controller;
+import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import gui.IconFactory.IconType;
@@ -40,6 +43,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String stopText = "Stop";
 	private FlashCardSet workingSet;
 	private String inputHint = "Text To Speech";
+	
+	Set<FlashCardSet> setSet;
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
@@ -69,7 +74,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	 * Create the panel.
 	 */
 	public CardCreationPanel() {
-		Controller.guiMessage("Initializing", false);
 		initPanelComponents();
 		initFunctionality();
 	}
@@ -93,6 +97,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		textFieldName.addActionListener(this);
 		namePanel.add(textFieldName);
 
+		setSet = new HashSet<>();
+		SetSelectionButton setSelectionButton = new SetSelectionButton("Select Sets", setSet);
+		namePanel.add(setSelectionButton);
+
 		namePanel.setOpaque(false);
 		removeEmptySpace(namePanel);
 
@@ -102,7 +110,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 		JLabel lblQuestion = new JLabel("Q:");
 
-		textQuestion = new JTextField(40);
+		textQuestion = new JTextField(20);
 		textQuestion.addActionListener(this);
 
 		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
@@ -147,7 +155,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		btnAnswerRecord.addActionListener(this);
 		aPanel.add(btnAnswerRecord);
 
-		textAnswer = new JTextField(40);		
+		textAnswer = new JTextField(20);		
 		textAnswer.addActionListener(this);
 		aPanel.add(textAnswer);
 
@@ -169,7 +177,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 		JPanel flashPanel= new JPanel(new BorderLayout(0, 0));
 		flashPanel.setOpaque(true);
-		flashPanel.setBackground(Color.BLACK);
+		flashPanel.setBackground(GuiConstants.CARD_TAG_COLOR);
 
 		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 36, true));
 		btnFlash.setOpaque(false);
@@ -320,7 +328,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 					Controller.guiMessage("Invalid card name");
 					return;
 				}
-				
+
 			}
 			data.setQuestion(question);
 			data.setAnswer(answer);
@@ -336,12 +344,16 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			data.tags = tagPanel.getTags(false);
 			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
-			try {
-				workingSet.addCard(Controller.createCard(data));
-			} catch (IOException e1) {
-				Controller.guiMessage("Could not write card into set", true);
-				e1.printStackTrace();
+			FlashCard newCard = Controller.createCard(data);
+			
+			for(FlashCardSet set : setSet) {
+				try {
+					set.addCard(newCard);
+				} catch (IOException e1) {
+					Controller.guiMessage("Could not add card to Set " + set.getName(), true);
+				}
 			}
+			
 			clear();
 			// Move user to the next pane
 			Controller.updateAll();
