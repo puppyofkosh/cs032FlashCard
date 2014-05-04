@@ -5,7 +5,6 @@ import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
 import gui.GuiConstants.TabType;
-import gui.ImageToggleButton;
 import gui.MainFrame;
 
 import java.awt.CardLayout;
@@ -20,7 +19,6 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
-import utils.FlashcardConstants;
 import utils.Writer;
 import audio.AudioFile;
 import audio.AudioPlayer;
@@ -128,7 +126,7 @@ public class Controller {
 		// write it to disk for us.
 		// I can change that if that seems like a bad way of doing things
 		// card = DatabaseFactory.writeCard(card);
-		
+
 		return card;
 	}
 
@@ -218,7 +216,7 @@ public class Controller {
 		return text;
 	}
 
-	public static String parseInput(String text) {
+	public static String parseInput(String text) throws IOException {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
 		boolean capitalize = true;
@@ -235,7 +233,12 @@ public class Controller {
 				capitalize = true;
 			}
 		}
-		return fixedText.toString().trim();
+		String newText = fixedText.toString().trim();
+		if (newText.length() == 0) {
+			throw new IOException("No valid cards");
+		} else {
+			return newText;
+		}
 	}
 
 
@@ -315,7 +318,6 @@ public class Controller {
 
 	public static FlashCardSet createSet(String name, String author,
 			List<String> tags, int interval) {
-		// TODO Should check if the set exists already.
 		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(
 				name);
 		FlashCardSet set = new SimpleSet(name);
