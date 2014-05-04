@@ -15,7 +15,9 @@ import audio.MemoryAudioFile;
 import audio.TextToSpeechReader;
 import database.DatabaseFactory;
 import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
+import flashcard.SimpleSet;
 
 /**
  * Turn a file, with some known formatting into a list of flsahcards
@@ -34,8 +36,13 @@ public class FileImporter implements Importer{
 	
 	List<FlashCard> cards = new ArrayList<>();
 		
-	public FileImporter(File file, TextToSpeechReader ttsReader)
+	public FileImporter(File file, TextToSpeechReader ttsReader) throws IOException
 	{
+		if (!file.getName().endsWith(".tsv"))
+		{
+			throw new IOException("Bad file");
+		}
+		
 		this.file = file;
 		this.ttsReader = ttsReader;
 	}
@@ -46,6 +53,8 @@ public class FileImporter implements Importer{
 	 */
 	public void importCards() throws IOException
 	{
+		
+		FlashCardSet set = new SimpleSet(file.getName());
 		try (Scanner reader = new Scanner(new FileReader(file)))
 		{
 			TSVLineParser parser = new TSVLineParser(new String[]{"question", "answer"});
@@ -80,22 +89,20 @@ public class FileImporter implements Importer{
 					
 					// Save the card
 					FlashCard f = new SerializableFlashCard(data);
-					f = DatabaseFactory.writeCard(f);
+					set.addCard(f);
+					//		f = DatabaseFactory.writeCard(f);
 					
 					this.cards.add(f);
 				}
 				lineNumber++;
 			}
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		
+		DatabaseFactory.writeSet(set);
 	}
 
 	@Override
 	public List<FlashCard> getCardList() throws IOException {
-		// TODO Auto-generated method stub
 		return cards;
 	}
 

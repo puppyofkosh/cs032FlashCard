@@ -253,11 +253,7 @@ public class FlashCardDatabase implements Resources {
 
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection("jdbc:h2:" + dir + db);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		} catch (Throwable e) {}
 	}
 
 	public void addCardToSet(int cardId, int setId) throws SQLException {

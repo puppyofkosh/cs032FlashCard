@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -44,22 +45,22 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	private JButton btnContinue;
 	private TagPanel tags;
 	private SetBrowser _setBrowser;
-	private CardCreationPanel recordPanel;
+	private CardCreationPanel cardCreationPanel;
 	private String authorName = "";
 
 
-		@Override
-		public void setControlledPanel(JPanel panel) {
+	@Override
+	public void setControlledPanel(JPanel panel) {
 		super.setControlledPanel(panel);
-		panel.add(recordPanel, "record panel");
+		panel.add(cardCreationPanel, "record panel");
 
-		recordPanel.setControlledPanel(panel);
+		cardCreationPanel.setControlledPanel(panel);
 	}
 
 	@Override
 	public void setControlledLayout(CardLayout layout)	{
 		super.setControlledLayout(layout);
-		recordPanel.setControlledLayout(layout);
+		cardCreationPanel.setControlledLayout(layout);
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 		mainPanel.add(continuePanel, BorderLayout.SOUTH);
 
-		recordPanel = new CardCreationPanel();
+		cardCreationPanel = new CardCreationPanel();
 		add(mainPanel, BorderLayout.CENTER);
 
 	}
@@ -173,17 +174,29 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 				Controller.guiMessage("Could not parse new spinner value", true);
 			}
 			int interval = (int) spinnerInterval.getValue();
-			String nameInput = Controller.parseInput(setNameField.getText());
+			String nameInput;
+			try {
+				nameInput = Controller.parseInput(setNameField.getText());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				return;
+			}
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
 
 			authorName = authorTextField.getText();
 			authorTextField.getText();
 
-			FlashCardSet currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
-			recordPanel.assignWorkingSet(currentSet);
 
-			if (recordPanel.hasWorkingSet())
+			// If a set is selected us that as the set for us to add new cards to
+			FlashCardSet currentSet = _setBrowser.getSelectedSet();
+
+			if (currentSet == null)
+				currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
+
+			cardCreationPanel.assignWorkingSet(currentSet);
+
+			if (cardCreationPanel.hasWorkingSet())
 				controlledLayout.show(controlledPanel, "record panel");
 			else {
 				Controller.guiMessage("Must create a set or choose an existing one", true);

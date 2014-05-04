@@ -26,7 +26,7 @@ import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import gui.IconFactory.IconType;
 
-public class CardCreationPanel extends GenericPanel implements ActionListener {
+public class CardCreationPanel extends GenericPanel implements ActionListener, Runnable {
 
 	//Instance variables that are not gui components or are used multiple times
 	private static final long serialVersionUID = 1L;
@@ -211,8 +211,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			}
 			recording = false;
 		} else {
-			Controller.startRecord();
 			recording = true;
+			Controller.startRecord(btnQuestionRecord, btnAnswerRecord, this);
 		}
 	}
 
@@ -309,8 +309,14 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			}
 
 			SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-			data.name = Controller.parseCardName(Controller.parseInput(textFieldName.getText()));
-
+			String parsedName;
+			try {
+				parsedName = Controller.parseInput(textFieldName.getText());
+				data.name = Controller.parseCardName(parsedName);
+			} catch (IOException iox) {
+				Controller.guiMessage("This card name is invalid", true);
+				return;
+			}
 			data.setQuestion(question);
 			data.setAnswer(answer);
 
@@ -331,12 +337,15 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 				Controller.guiMessage("Could not write card into set", true);
 				e1.printStackTrace();
 			}
-
 			clear();
 			// Move user to the next pane
 			Controller.updateGUI();
 			controlledLayout.show(controlledPanel, "create panel");
 		}
+	}
+	@Override
+	public void run() {
+		recording = false;
 	}
 
 	public boolean hasWorkingSet() {

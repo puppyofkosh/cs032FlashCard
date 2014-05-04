@@ -42,9 +42,10 @@ public class TagPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-	
-	public void reinitialize(FlashCard card)
-	{
+
+	public void reinitialize(FlashCard card) {
+		removeAll();
+		initInputField();
 		_card = card;
 		_tags = new LinkedList<>();
 		for(String tag : _card.getTags()) {
@@ -56,7 +57,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-	
+
 	TagPanel(FlashCard card) {
 		this();
 		_card = card;
@@ -139,6 +140,13 @@ public class TagPanel extends JPanel implements MouseListener {
 	}
 
 	public void addTag(String tag, boolean global, boolean deleteable) {
+		try {
+			tag = Controller.parseInput(tag);
+		} catch (IOException e1) {
+			Controller.guiMessage("Invalid tag", true);
+			return;
+		}
+		
 		if (!_tags.contains(tag) && Controller.verifyInput(tag) && !tag.equals(inputHint)) {
 			try {
 				if (!global)
@@ -190,11 +198,11 @@ public class TagPanel extends JPanel implements MouseListener {
 	public List<String> getTags() {
 		LinkedList<String> strings = new LinkedList<>();
 		for(TagLabel tag : _tags) {
-				strings.add(tag.getText());
+			strings.add(tag.getText());
 		}
 		return strings;
 	}
-	
+
 	/**
 	 * This gets all global tags or all card-specific tags, depending on the
 	 * @param global - what kind of tags we want.
@@ -208,7 +216,7 @@ public class TagPanel extends JPanel implements MouseListener {
 		}
 		return strings;
 	}
-	
+
 
 	public void setTags(Collection<String> newTags, boolean global, boolean deletable) {
 		removeAll();

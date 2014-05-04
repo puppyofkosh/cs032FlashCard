@@ -92,12 +92,10 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			}
 		});
 
-		// Start us off with 50 panels
-		for (int i = 0; i < 50; i++)
-		{
-		//	freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
-		}
-
+		//		// Start us off with 50 panels
+		//		for (int i = 0; i < 50; i++) {
+		//				freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
+		//		}
 
 		emptyPanel.add(emptyButton);
 
@@ -168,7 +166,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	public void updateCards(Collection<FlashCard> cards) {
 		// All the panels being used before are now up for grabs and can be recycled
-		//freePanels.addAll(cardPanels);
+		freePanels.addAll(cardPanels);
 		cardPanels = new ArrayList<>();		
 		for(FlashCard card : cards) {
 
@@ -181,7 +179,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			else {
 				cardPanel = new FlashCardPanel(card);
 			}
-
 			cardPanels.add(cardPanel);
 		}
 	}

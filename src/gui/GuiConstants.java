@@ -18,8 +18,8 @@ public class GuiConstants {
 	
 	public static final Color BLACK = Color.BLACK;
 	public static final Color CARD_BACKGROUND = Color.CYAN;
-	public static final Color SET_TAG_COLOR = Color.ORANGE;
-	public static final Color CARD_TAG_COLOR = Color.YELLOW;
+	public static final Color SET_TAG_COLOR = CARD_BACKGROUND.darker();
+	public static final Color CARD_TAG_COLOR = SET_TAG_COLOR.darker();
 	public static final Color PRIMARY_FONT_COLOR = Color.WHITE;
 
 	//Some default settings for tag label.
