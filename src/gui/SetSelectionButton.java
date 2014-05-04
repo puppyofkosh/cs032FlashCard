@@ -28,6 +28,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	JPopupMenu _menu;
 	FlashCard _card;
+	Collection<FlashCardSet> _sets;
 
 	SetSelectionButton(String text, FlashCard card) {
 		super(text);
@@ -36,23 +37,35 @@ public class SetSelectionButton extends JButton implements ActionListener {
 		addActionListener(this);
 	}
 
-	class SetListener implements ItemListener {
+	SetSelectionButton(String text, Collection<FlashCardSet> sets) {
+		super(text);
+		_menu = new JPopupMenu();
+		_sets = sets;
+		addActionListener(this);
+	}
+
+	class ModifySetListener implements ItemListener {
 		JCheckBoxMenuItem _item;
 		FlashCardSet _set;
-		FlashCard _card;
-		SetListener(JCheckBoxMenuItem item, FlashCardSet set, FlashCard card) {
+		ModifySetListener(JCheckBoxMenuItem item, FlashCardSet set) {
 			_item = item;
 			_set = set;
-			_card = card;
 		}
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			try {
-				if (_item.isSelected())
-					_set.addCard(_card);
-				else
-					_set.removeCard(_card);
+				if (_item.isSelected()) {
+					if (_card != null)
+						_set.addCard(_card);
+					else if (_sets != null)
+						_sets.add(_set);
+				} else {
+					if (_card != null)
+						_set.removeCard(_card);
+					else if (_sets != null)
+						_sets.remove(_set);
+				}
 			} catch (IOException ioe) {
 				Controller.guiMessage("Could not modify flashcard set", true);
 				_item.doClick();
@@ -63,15 +76,19 @@ public class SetSelectionButton extends JButton implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		_menu = new JPopupMenu();
-		Collection<FlashCardSet> cardSets = _card.getSets();
 		Set<String> setNames = new HashSet<>();
-		for(FlashCardSet set : cardSets) {
-			setNames.add(set.getName());
-		}
+		if (_card != null) {
+			Collection<FlashCardSet> cardSets = _card.getSets();
+			for(FlashCardSet set : cardSets) {
+				setNames.add(set.getName());
+			}
+		} 
 		for(FlashCardSet set : Controller.getAllSets()) {
-			JCheckBoxMenuItem item = new JCheckBoxMenuItem(set.getName(), setNames.contains(set.getName()));
+			boolean checked = false;
+			checked = checked || setNames.contains(set.getName()) || (_sets != null && _sets.contains(set));
+			JCheckBoxMenuItem item = new JCheckBoxMenuItem(set.getName(), checked);
 			_menu.add(item);
-			item.addItemListener(new SetListener(item, set, _card));
+			item.addItemListener(new ModifySetListener(item, set));
 		}
 		_menu.show(this, 0, this.getHeight());
 	}
