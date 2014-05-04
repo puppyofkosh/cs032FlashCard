@@ -32,7 +32,7 @@ import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 
-public class FlashboardPanel extends JPanel implements SourceListSelectionListener, ComponentListener {
+public class FlashboardPanel extends JPanel implements SourceListSelectionListener, Browsable {
 
 	/**
 	 * FIXME:
@@ -53,7 +53,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	JPanel emptyPanel;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
-	SourceListItem last_item;
 
 	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
 	public Queue<FlashCardPanel> freePanels = new LinkedList<>();
@@ -66,7 +65,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		super(new BorderLayout(0,0));
 		setOpaque(false);
 
-		addComponentListener(this);
+		addComponentListener(new SetBrowserComponentListener(this));
 
 		//EMPTY PANEL
 		//This panel is displayed when there are 1.) No cards in selected set
@@ -89,6 +88,12 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 				Controller.switchTabs(TabType.CREATE);
 			}
 		});
+
+		//		// Start us off with 50 panels
+		//		for (int i = 0; i < 50; i++) {
+		//				freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
+		//		}
+
 		emptyPanel.add(emptyButton);
 
 		//Contains the grid of cards to be laid out.
@@ -159,8 +164,9 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	public void updateCards(Collection<FlashCard> cards) {
 		// All the panels being used before are now up for grabs and can be recycled
 		freePanels.addAll(cardPanels);
-		cardPanels = new ArrayList<>();
+		cardPanels = new ArrayList<>();		
 		for(FlashCard card : cards) {
+
 			// Try to use a recycled panel if any are available. If not, we must create a new panel ourselves.
 			FlashCardPanel cardPanel = null;
 			if (freePanels.size() > 0) {
@@ -175,16 +181,8 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	}
 
 	public void update() {
-		if (_setBrowser != null) {
-			FlashCardSet currentSet = _setBrowser.getSelectedSet();
+		if (_setBrowser != null)
 			_setBrowser.updateSourceList();
-			try {
-				updateCards(currentSet.getAll());
-			} catch (IOException e) {
-				Controller.guiMessage("Could not read cards from set", true);
-			}
-
-		}
 	}
 
 	/**
@@ -193,6 +191,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
+		System.out.println("event");
 		if (_setBrowser == null)
 			return;
 		try {
@@ -204,29 +203,21 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		}
 	}
 
+
+	/**
+	 * Called every time this panel is shown
+	 */
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		_setBrowser = null;
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		_setBrowser = Controller.requestSetBrowser(this);
-		_setBrowser.getSourceList().addSourceListSelectionListener(this);
+	public void showSetBrowser(SetBrowser browser) {
+		// Only add the listener if we've never added it before
+		_setBrowser = browser;
+		_setBrowser.addParentComponent(this);
 		add(_setBrowser, BorderLayout.EAST);
 		revalidate();
-		repaint();
+		repaint();		
+	}
+
+	@Override
+	public void removeSetBrowser() {		
 	}
 }

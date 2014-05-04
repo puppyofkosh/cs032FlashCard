@@ -102,7 +102,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 		JLabel lblQuestion = new JLabel("Q:");
 
-		textQuestion = new JTextField(10);
+		textQuestion = new JTextField(40);
 		textQuestion.addActionListener(this);
 
 		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
@@ -147,7 +147,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		btnAnswerRecord.addActionListener(this);
 		aPanel.add(btnAnswerRecord);
 
-		textAnswer = new JTextField(10);		
+		textAnswer = new JTextField(40);		
 		textAnswer.addActionListener(this);
 		aPanel.add(textAnswer);
 
@@ -177,7 +177,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		btnFlash.setHorizontalAlignment(SwingConstants.CENTER);
 		btnFlash.addActionListener(this);
 		btnFlash.setBorder(BorderFactory.createEmptyBorder());
-		btnFlash.addActionListener(this);
 		flashPanel.add(btnFlash);
 		flashPanel.setMaximumSize(flashPanel.getPreferredSize());
 		add(flashPanel, BorderLayout.SOUTH);
@@ -284,6 +283,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(e.paramString());
 		if (e.getSource() == textFieldName) {
 			//Do nothing - we only want to hold on to this value for later.
 		} else if (e.getSource() == btnQuestionRecord) {
@@ -314,8 +314,13 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 				parsedName = Controller.parseInput(textFieldName.getText());
 				data.name = Controller.parseCardName(parsedName);
 			} catch (IOException iox) {
-				Controller.guiMessage("This card name is invalid", true);
-				return;
+				try {
+					data.name = Controller.parseInput(textQuestion.getText());
+				} catch (IOException e1) {
+					Controller.guiMessage("Invalid card name");
+					return;
+				}
+				
 			}
 			data.setQuestion(question);
 			data.setAnswer(answer);
@@ -339,7 +344,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			}
 			clear();
 			// Move user to the next pane
-			Controller.updateGUI();
+			Controller.updateAll();
 			controlledLayout.show(controlledPanel, "create panel");
 		}
 	}

@@ -41,7 +41,7 @@ import backend.ItunesExporter;
 import client.Client;
 import database.DatabaseFactory;
 
-public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener {
+public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener, Browsable {
 	/**
 	 * 
 	 */
@@ -72,6 +72,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
+		// Will call addSetBrowser whenever this panel is shown
+		addComponentListener(new SetBrowserComponentListener(this));
 
 		JPanel chooseMethodPanel = new JPanel();
 		headerPanel.add(chooseMethodPanel);
@@ -116,17 +118,14 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 			@Override
 			public void componentHidden(ComponentEvent arg0) {
-				_setBrowser = null;
 			}
 
 			@Override
 			public void componentShown(ComponentEvent arg0) {
-				_setBrowser = Controller.requestSetBrowser(ExportPanel.this);
-				add(_setBrowser, BorderLayout.EAST);
-				revalidate();
-				repaint();
 			}
 		});
+
+
 	}
 
 	public void connectAndExport() {
@@ -134,12 +133,12 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		Writer.out("Starting client");
 
 		progressMonitor = new ProgressMonitor(ExportPanel.this,
-				"Uploading",
-				"", 0, 100);
+                "Uploading",
+                "", 0, 100);
 		progressMonitor.setProgress(0);
 		progressMonitor.setNote("Uploading");
 		progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
-
+				
 		_client.addPropertyChangeListener(this);
 		_client.execute();
 		_client.uploadCards(_cardTable.getSelectedCards());
@@ -253,16 +252,28 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		}
 
 		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
-			int progress = (Integer) evt.getNewValue();
-			progressMonitor.setProgress(progress);
-			String message =
-					String.format("Completed %d%%.\n", progress);
-			progressMonitor.setNote(message);
-			if (progressMonitor.isCanceled() || _client.isDone()) {
-				_client.cancel(true);
-				progressMonitor.close();
-			}
-		}
+            int progress = (Integer) evt.getNewValue();
+            progressMonitor.setProgress(progress);
+            String message =
+                String.format("Completed %d%%.\n", progress);
+            progressMonitor.setNote(message);
+            if (progressMonitor.isCanceled() || _client.isDone()) {
+               	_client.cancel(true);
+               	progressMonitor.close();
+            }
+        }
 	}
 
+	@Override
+	public void showSetBrowser(SetBrowser browser) {
+		_setBrowser = browser;
+		add(_setBrowser, BorderLayout.EAST);
+		revalidate();
+		repaint();
+	}
+
+	@Override
+	public void removeSetBrowser() {
+	}
+	
 }

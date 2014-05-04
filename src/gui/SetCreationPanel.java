@@ -29,12 +29,14 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import settings.Settings;
+
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 
-public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener, ComponentListener {
+public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener, Browsable {
 
 	/**
 	 * 
@@ -67,8 +69,8 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	 * Create the panel.
 	 */
 	public SetCreationPanel() {
-		addComponentListener(this);
-
+		addComponentListener(new SetBrowserComponentListener(this));
+		
 		setBorder(BorderFactory.createEmptyBorder());
 		setLayout(new BorderLayout(0, 0));
 		setOpaque(false);
@@ -111,6 +113,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		authorTextField.setName(authorName);
 		authorTextField.addActionListener(this);
 		headerPanel.add(authorTextField);
+		authorTextField.setText(Settings.getDefaultAuthor());
 
 		JPanel tagPanel = new JPanel(new BorderLayout(0,0));
 		tagPanel.setOpaque(false);
@@ -178,8 +181,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 			try {
 				nameInput = Controller.parseInput(setNameField.getText());
 			} catch (IOException e1) {
-				e1.printStackTrace();
-				return;
+				nameInput = "Set";
 			}
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
@@ -213,29 +215,20 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		// To prevent us from messing around with the setbrowser 
-		_setBrowser = null;
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		_setBrowser = Controller.requestSetBrowser(this);
-		_setBrowser.getSourceList().addSourceListSelectionListener(this);
+	public void showSetBrowser(SetBrowser browser) {
+		_setBrowser = browser;
+		_setBrowser.addParentComponent(this);
 		add(_setBrowser, BorderLayout.EAST);
 		revalidate();
-		repaint();
+		repaint();		
 	}
+
+	/**
+	 * When the window is no longer shown, don't subscribe to updates from the set browser
+	 */
+	@Override
+	public void removeSetBrowser() {
+		_setBrowser.removeParentComponent(this);
+	}
+	
 }

@@ -8,11 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 
 import controller.Controller;
 
@@ -85,8 +87,16 @@ public class ImportPanel extends GenericPanel implements MouseListener {
 				JFileChooser fileChooser = new JFileChooser();
 				String tsvPath;
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				FileFilter filter = new TSVFilter();
+				fileChooser.setFileFilter(filter);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 				int returnedValue = fileChooser.showDialog(null, "Select TSV");
 				if (returnedValue == JFileChooser.APPROVE_OPTION) {
+					if (!fileChooser.accept(fileChooser.getSelectedFile())) {
+						Controller.guiMessage("That is not a valid File to import!", true);
+						return;
+					}
+						
 					tsvPath = fileChooser.getSelectedFile().getPath();
 					Controller.importCardsToLibrary(tsvPath);
 				}
@@ -154,5 +164,25 @@ public class ImportPanel extends GenericPanel implements MouseListener {
 			panel_2.setOpaque(false);
 			panel_2.repaint();
 		}
+	}
+	
+	private class TSVFilter extends FileFilter {
+
+		@Override
+		public boolean accept(File pathname) {
+			// TODO Auto-generated method stub
+			String path = pathname.getPath();
+			if (pathname.isDirectory())
+				return true;
+			
+			return path.substring(path.lastIndexOf(".") + 1).equals("tsv");
+		}
+
+		@Override
+		public String getDescription() {
+			// TODO Auto-generated method stub
+			return "tsv files";
+		}
+		
 	}
 }
