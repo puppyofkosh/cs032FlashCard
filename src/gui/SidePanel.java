@@ -39,7 +39,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	public void initialize() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.BLACK);
-		int struts = 5;
+		int struts = 0;
 
 		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32, true), JLabel.LEFT);
 		initMenuItem(btnFlashboard);
