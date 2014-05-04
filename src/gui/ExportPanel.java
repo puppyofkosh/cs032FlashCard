@@ -9,6 +9,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
@@ -29,6 +30,7 @@ import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
 import controller.Controller;
+
 import protocol.NetworkedFlashCard;
 import search.SearchParameters;
 import utils.FlashcardConstants;
@@ -109,23 +111,20 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		_cardTable = new CardTablePanel("Cards for Export");
 		mainPanel.add(_cardTable, BorderLayout.CENTER);
 
-		_setBrowser = new SetBrowser();
-		add(_setBrowser, BorderLayout.EAST);
-
-		addComponentListener(new ComponentListener() {
+		
+		addComponentListener(new ComponentAdapter() {
 
 			@Override
-			public void componentHidden(ComponentEvent arg0) {}
-
-			@Override
-			public void componentMoved(ComponentEvent arg0) {}
-
-			@Override
-			public void componentResized(ComponentEvent arg0) {}
+			public void componentHidden(ComponentEvent arg0) {
+				_setBrowser = null;
+			}
 
 			@Override
 			public void componentShown(ComponentEvent arg0) {
-				_setBrowser.updateSourceList();
+				_setBrowser = Controller.requestSetBrowser(ExportPanel.this);
+				add(_setBrowser, BorderLayout.EAST);
+				revalidate();
+				repaint();
 			}
 		});
 	}

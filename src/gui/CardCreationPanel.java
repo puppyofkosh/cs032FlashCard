@@ -26,7 +26,7 @@ import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import gui.IconFactory.IconType;
 
-public class CardCreationPanel extends GenericPanel implements ActionListener {
+public class CardCreationPanel extends GenericPanel implements ActionListener, Runnable {
 
 	//Instance variables that are not gui components or are used multiple times
 	private static final long serialVersionUID = 1L;
@@ -211,8 +211,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			}
 			recording = false;
 		} else {
-			Controller.startRecord();
 			recording = true;
+			Controller.startRecord(btnQuestionRecord, btnAnswerRecord, this);
 		}
 	}
 
@@ -342,6 +342,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			Controller.updateGUI();
 			controlledLayout.show(controlledPanel, "create panel");
 		}
+	}
+	@Override
+	public void run() {
+		recording = false;
 	}
 
 	public boolean hasWorkingSet() {

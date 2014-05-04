@@ -92,7 +92,7 @@ public class FlashCardPanel extends JPanel {
 		_delete = new JLabel(IconFactory.loadIcon(IconType.DELETE, GuiConstants.DEFAULT_BUTTON_SIZE, false));
 		_delete.setHorizontalAlignment(SwingConstants.TRAILING);
 		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		
+
 		//This mouse listener adds functionality to the X that appears next to.
 		//the Card's name.
 		_delete.addMouseListener(new MouseListener() {

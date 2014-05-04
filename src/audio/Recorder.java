@@ -1,4 +1,5 @@
 package audio;
+
 /**
  * An interface for Objects that can record audio from a microphone.
  * Peter
@@ -9,7 +10,7 @@ public interface Recorder {
 	 * Starts recording audio from the microphone.
 	 * This will only work once per object.
 	 */
-	void startRecord();
+	void startRecord(Runnable... runnables);
 	
 	/**
 	 * Stops recording audio from the microphone,

@@ -1,11 +1,18 @@
 package gui;
 
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
+import gui.GuiConstants.TabType;
+import gui.IconFactory.IconType;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,18 +27,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import utils.Writer;
-
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
-import flashcard.FlashCard;
-import flashcard.FlashCardSet;
-import gui.GuiConstants.TabType;
-import gui.IconFactory.IconType;
 
-public class FlashboardPanel extends JPanel implements SourceListSelectionListener {
+public class FlashboardPanel extends JPanel implements SourceListSelectionListener, ComponentListener {
 
 	/**
 	 * FIXME:
@@ -47,13 +48,12 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 
 	private static final long serialVersionUID = 1L;
 	List<FlashCardPanel> cardPanels = new ArrayList<>();
-	SetBrowser browser;
+	SetBrowser _setBrowser;
 	JPanel flashboard;
 	JPanel emptyPanel;
-	FlashCardSet displayedSet;
-	SourceListItem lastItem;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
+	SourceListItem last_item;
 
 	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
 	public Queue<FlashCardPanel> freePanels = new LinkedList<>();
@@ -66,9 +66,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		super(new BorderLayout(0,0));
 		setOpaque(false);
 
-		//We pass a reference to this so we can know when things are selected
-		browser = new SetBrowser(this);
-		add(browser, BorderLayout.EAST);
+		addComponentListener(this);
 
 		//EMPTY PANEL
 		//This panel is displayed when there are 1.) No cards in selected set
@@ -91,7 +89,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 				Controller.switchTabs(TabType.CREATE);
 			}
 		});
-
 		emptyPanel.add(emptyButton);
 
 		//Contains the grid of cards to be laid out.
@@ -178,21 +175,16 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	}
 
 	public void update() {
-		browser.updateSourceList();
-		displayedSet = browser.getSelectedSet(lastItem);
-		if (displayedSet != null) {
+		if (_setBrowser != null) {
+			FlashCardSet currentSet = _setBrowser.getSelectedSet();
+			_setBrowser.updateSourceList();
 			try {
-				Writer.out(displayedSet.getAll().size());
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			try {
-				updateCards(displayedSet.getAll());
+				updateCards(currentSet.getAll());
 			} catch (IOException e) {
-				Controller.guiMessage("Could not get all cards in set", true);
+				Controller.guiMessage("Could not read cards from set", true);
 			}
+
 		}
-		Writer.out("DISPLAYED SET IS NULL");
 	}
 
 	/**
@@ -201,14 +193,40 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
+		if (_setBrowser == null)
+			return;
 		try {
-			lastItem = arg0;
-			displayedSet = browser.getSelectedSet();
-			if (displayedSet != null)
-				updateFlashboard(displayedSet.getAll());
-
+			FlashCardSet currentSet = _setBrowser.getSelectedSet();
+			if (currentSet != null)
+				updateFlashboard(currentSet.getAll());
 		} catch (IOException e) {
 			Controller.guiMessage("Could not get all the cards from the current set", true);
 		}
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		_setBrowser = null;
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		_setBrowser = Controller.requestSetBrowser(this);
+		_setBrowser.getSourceList().addSourceListSelectionListener(this);
+		add(_setBrowser, BorderLayout.EAST);
+		revalidate();
+		repaint();
 	}
 }

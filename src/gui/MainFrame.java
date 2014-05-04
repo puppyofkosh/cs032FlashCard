@@ -35,8 +35,8 @@ public class MainFrame extends JFrame {
 			public void run() {
 				try {
 					Controller.launchGUI();
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Throwable e) {
+					System.out.println("unable to open FlashBoard");
 				}
 			}
 		});

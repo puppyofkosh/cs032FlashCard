@@ -67,8 +67,11 @@ public class SetBrowser extends JPanel  {
 		this();
 		_parentComponent = parentComponent;
 	}
-
-
+	
+	public void addParentComponent(SourceListSelectionListener parentComponent) {
+		_parentComponent = parentComponent;
+	}
+	
 	/**
 	 * Updates the source list with all the cards from the library.
 	 * Probably not a great way to do it, but the easiest for now.

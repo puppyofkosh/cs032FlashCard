@@ -10,6 +10,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
@@ -32,7 +34,7 @@ import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 
-public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener {
+public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener, ComponentListener {
 
 	/**
 	 * 
@@ -42,7 +44,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	private JSpinner spinnerInterval;
 	private JButton btnContinue;
 	private TagPanel tags;
-	private SetBrowser setBrowser;
+	private SetBrowser _setBrowser;
 	private CardCreationPanel cardCreationPanel;
 	private String authorName = "";
 
@@ -65,6 +67,8 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	 * Create the panel.
 	 */
 	public SetCreationPanel() {
+		addComponentListener(this);
+
 		setBorder(BorderFactory.createEmptyBorder());
 		setLayout(new BorderLayout(0, 0));
 		setOpaque(false);
@@ -132,8 +136,6 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		cardCreationPanel = new CardCreationPanel();
 		add(mainPanel, BorderLayout.CENTER);
 
-		setBrowser = new SetBrowser(this);
-		add(setBrowser, BorderLayout.EAST);
 	}
 
 	private void populateFields(FlashCardSet set) {
@@ -153,7 +155,10 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	}
 
 	public void update() {
-		setBrowser.updateSourceList();
+		if (_setBrowser != null)
+		{
+			_setBrowser.updateSourceList();
+		}
 	}
 
 	@Override
@@ -184,7 +189,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 
 			// If a set is selected us that as the set for us to add new cards to
-			FlashCardSet currentSet = setBrowser.getSelectedSet();
+			FlashCardSet currentSet = _setBrowser.getSelectedSet();
 
 			if (currentSet == null)
 				currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
@@ -202,6 +207,35 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
-		populateFields(setBrowser.getSelectedSet());
+		if (_setBrowser != null) {
+			populateFields(_setBrowser.getSelectedSet());
+		}
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		// To prevent us from messing around with the setbrowser 
+		_setBrowser = null;
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		_setBrowser = Controller.requestSetBrowser(this);
+		_setBrowser.getSourceList().addSourceListSelectionListener(this);
+		add(_setBrowser, BorderLayout.EAST);
+		revalidate();
+		repaint();
 	}
 }

@@ -6,6 +6,7 @@ import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
 import gui.GuiConstants.TabType;
 import gui.MainFrame;
+import gui.SetBrowser;
 
 import java.awt.Rectangle;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
@@ -45,6 +47,11 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
+	public static SetBrowser setBrowser = new SetBrowser();
+
+	public static SetBrowser requestSetBrowser(JComponent c) {
+		return setBrowser;
+	}
 
 	/**
 	 * Import a tsv or similar
@@ -64,8 +71,7 @@ public class Controller {
 			System.out.println("Imported " + importer.getCardList().size()
 					+ " cards");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			guiMessage("Invalid file", true);
 		}
 	}
 
@@ -162,9 +168,7 @@ public class Controller {
 		dialog.add(label);
 		Rectangle bounds = gui.getBounds();
 		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
-
 		dialog.setVisible(true);
-
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -288,9 +292,9 @@ public class Controller {
 		return reader.read(text);
 	}
 
-	public static void startRecord() {
+	public static void startRecord(Runnable...runnables) {
 		recorder = new BufferRecorder();
-		recorder.startRecord();
+		recorder.startRecord(runnables);
 	}
 
 	public static AudioFile finishRecording() {
