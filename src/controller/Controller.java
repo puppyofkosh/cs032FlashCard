@@ -356,7 +356,6 @@ public class Controller {
 	}
 
 	public static void deleteSet(FlashCardSet set) {
-		// TODO Auto-generated method stub
-		
+		DatabaseFactory.deleteSet(set);
 	}
 }
