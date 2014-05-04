@@ -289,9 +289,9 @@ public class Controller {
 		return reader.read(text);
 	}
 
-	public static void startRecord() {
+	public static void startRecord(Runnable...runnables) {
 		recorder = new BufferRecorder();
-		recorder.startRecord();
+		recorder.startRecord(runnables);
 	}
 
 	public static AudioFile finishRecording() {
