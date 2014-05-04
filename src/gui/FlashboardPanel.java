@@ -1,13 +1,6 @@
 package gui;
 
-import flashcard.FlashCard;
-import flashcard.FlashCardSet;
-import flashcard.SerializableFlashCard;
-import gui.GuiConstants.TabType;
-import gui.IconFactory.IconType;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -15,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,10 +20,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import utils.Writer;
+
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
+import gui.GuiConstants.TabType;
+import gui.IconFactory.IconType;
 
 public class FlashboardPanel extends JPanel implements SourceListSelectionListener {
 
@@ -52,6 +50,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	SetBrowser browser;
 	JPanel flashboard;
 	JPanel emptyPanel;
+	FlashCardSet displayedSet;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
 
@@ -185,6 +184,14 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 
 	public void update() {
 		browser.updateSourceList();
+		if (displayedSet != null) {
+			try {
+				Writer.out(displayedSet.getAll().size());
+				updateCards(displayedSet.getAll());
+			} catch (IOException e) {
+				Controller.guiMessage("Could not get all cards in set", true);
+			}
+		}
 	}
 
 	/**
@@ -194,9 +201,9 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
 		try {
-			FlashCardSet currentSet = browser.getSelectedSet();
-			if (currentSet != null)
-				updateFlashboard(currentSet.getAll());
+			displayedSet = browser.getSelectedSet();
+			if (displayedSet != null)
+				updateFlashboard(displayedSet.getAll());
 
 		} catch (IOException e) {
 			Controller.guiMessage("Could not get all the cards from the current set", true);

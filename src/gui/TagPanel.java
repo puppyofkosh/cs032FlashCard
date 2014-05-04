@@ -143,10 +143,10 @@ public class TagPanel extends JPanel implements MouseListener {
 		try {
 			tag = Controller.parseInput(tag);
 		} catch (IOException e1) {
-			Controller.guiMessage("Invalid tag", true);
+			Controller.guiMessage("Invalid tag: " + tag, true);
 			return;
 		}
-		
+
 		if (!_tags.contains(tag) && Controller.verifyInput(tag) && !tag.equals(inputHint)) {
 			try {
 				if (!global)

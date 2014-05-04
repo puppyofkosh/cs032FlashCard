@@ -50,7 +50,6 @@ public class FlashCardPanel extends JPanel {
 	private JSpinner _spinner;
 	private TagPanel _tagPanel;
 
-
 	/**
 	 * This method is called so we can reuse FlashCardPanel.
 	 * @param card
@@ -70,7 +69,7 @@ public class FlashCardPanel extends JPanel {
 	 * @param card
 	 */
 	public FlashCardPanel(FlashCard card) {
-		
+
 		String defaultName = card.getName();
 		int defaultInterval = card.getInterval();
 		Collection<FlashCardSet> defaultSets = card.getSets();
@@ -111,7 +110,6 @@ public class FlashCardPanel extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				System.out.println("Deleting " + _card);
 				Controller.deleteCard(_card);
 			}
 

@@ -111,7 +111,6 @@ public class MainFrame extends JFrame {
 			break;
 		default:
 			break;
-
 		}
 	}
 
