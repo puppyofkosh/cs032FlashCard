@@ -8,6 +8,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,20 +38,24 @@ public class CardTablePanel extends JPanel {
 		this();
 		setTitle(title);
 	}
+	
 	/**
 	 * Create the panel.
 	 */
 	public CardTablePanel() {
 		setLayout(new BorderLayout(0,0));
 		cards = new ArrayList<>();
+		
+		
 		searchTableModel = new DefaultTableModel() {
-
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
 
+		
+		
 		searchTable = new JTable(searchTableModel);
 		searchTable.setDragEnabled(true);
 		searchTable.setDropMode(DropMode.INSERT_ROWS);
@@ -77,6 +82,17 @@ public class CardTablePanel extends JPanel {
 		updateCards(cards);
 		updateTable();
 	}
+	
+	public void removeCard(FlashCard f)
+	{
+		cards.remove(f);
+		updateTable();
+	}
+	
+	public List<FlashCard> getAllCards()
+	{
+		return Collections.unmodifiableList(cards);
+	}
 
 
 	public void updateSelectedCards() {
@@ -88,6 +104,12 @@ public class CardTablePanel extends JPanel {
 
 	public void updateCards(List<FlashCard> cards) {
 		this.cards = cards;
+		updateTable();
+	}
+	
+	public void addCard(FlashCard newCard)
+	{
+		cards.add(newCard);
 		updateTable();
 	}
 
