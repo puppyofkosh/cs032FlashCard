@@ -24,7 +24,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, btnSelected, btnHovered;
+	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, btnSelected;
 
 	/**
 	 * Create the panel.
@@ -39,23 +39,28 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	public void initialize() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.BLACK);
+		int struts = 5;
 
 		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32, true), JLabel.LEFT);
 		initMenuItem(btnFlashboard);
 		add(btnFlashboard);
 
+		add(Box.createVerticalStrut(struts));
 		btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32, true), JLabel.LEFT);
 		initMenuItem(btnExport);
 		add(btnExport);
 
+		add(Box.createVerticalStrut(struts));
 		btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32, true), JLabel.LEFT);
 		initMenuItem(btnImport);
 		add(btnImport);
 
+		add(Box.createVerticalStrut(struts));
 		btnCreate = new JLabel("Cards     ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
 		initMenuItem(btnCreate);
 		add(btnCreate);
 
+		add(Box.createVerticalStrut(struts));
 		btnSets = new JLabel("Sets      ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
 		initMenuItem(btnSets);
 		add(btnSets);
