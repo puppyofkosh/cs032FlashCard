@@ -32,8 +32,9 @@ public class IconFactory {
 	private static ImageIcon STOP_ICON = createImageIcon("Stop Button.png");
 	private static ImageIcon PLAY_ICON = createImageIcon("Play Button.png");
 	private static ImageIcon RECORD_ICON = createImageIcon("Record Button.png");
-	private static ImageIcon DELETE_ICON = createImageIcon("delete x.png");
 
+	private static ImageIcon DELETE_ICON = createImageIcon("Delete Icon.png");
+	private static ImageIcon DELETE_ICON_INVERTED = createImageIcon("Delete Icon Inverted.png");
 
 	private static ImageIcon CARD_ICON = createImageIcon("Card Icon.png");
 	private static ImageIcon CARD_ICON_INVERTED = createImageIcon("Card Icon Inverted.png");
@@ -84,7 +85,7 @@ public class IconFactory {
 		case RECORD:
 			return RECORD_ICON;
 		case DELETE:
-			return DELETE_ICON;
+			return inverted ? DELETE_ICON_INVERTED : DELETE_ICON;
 		case CARD:
 			return inverted ? CARD_ICON_INVERTED : CARD_ICON;
 		case SET:
