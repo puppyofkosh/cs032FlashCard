@@ -102,7 +102,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 		JLabel lblQuestion = new JLabel("Q:");
 
-		textQuestion = new JTextField(10);
+		textQuestion = new JTextField(40);
 		textQuestion.addActionListener(this);
 
 		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
@@ -147,7 +147,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		btnAnswerRecord.addActionListener(this);
 		aPanel.add(btnAnswerRecord);
 
-		textAnswer = new JTextField(10);		
+		textAnswer = new JTextField(40);		
 		textAnswer.addActionListener(this);
 		aPanel.add(textAnswer);
 

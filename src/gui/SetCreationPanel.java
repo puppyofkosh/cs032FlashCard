@@ -181,8 +181,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 			try {
 				nameInput = Controller.parseInput(setNameField.getText());
 			} catch (IOException e1) {
-				e1.printStackTrace();
-				return;
+				nameInput = "Set";
 			}
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
