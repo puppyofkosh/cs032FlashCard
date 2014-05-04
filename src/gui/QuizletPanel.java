@@ -231,6 +231,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			tags = tagPanel.getTags();
 			setName = Controller.parseCardName(setNameTextField.getText());
 			
+			if (setName.equals(""))
+				setName = Controller.parseInput((String) setTable.getValueAt(setTable.getSelectedRow(), 0)); 
 			try {
 				spinner.commitEdit();
 			} catch (ParseException e1) {
