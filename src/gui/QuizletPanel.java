@@ -229,10 +229,14 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				ids.add(setTable.getValueAt(row, 3).toString());
 			}
 			tags = tagPanel.getTags();
-			setName = Controller.parseCardName(setNameTextField.getText());
-			
+			setName = "";
+			try {
+			setName = Controller.parseInput(setNameTextField.getText());
+			} catch (Throwable e){};
 			if (setName.equals(""))
+				try {
 				setName = Controller.parseInput((String) setTable.getValueAt(setTable.getSelectedRow(), 0)); 
+				} catch (Exception e) {setName = "quizlet";}
 			try {
 				spinner.commitEdit();
 			} catch (ParseException e1) {
