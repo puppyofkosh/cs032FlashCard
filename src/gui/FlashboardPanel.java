@@ -194,6 +194,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
+		System.out.println("event");
 		if (_setBrowser == null)
 			return;
 		
@@ -213,9 +214,10 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	@Override
 	public void showSetBrowser(SetBrowser browser) {
+		// Only add the listener if we've never added it before
 		_setBrowser = browser;
-		add(_setBrowser, BorderLayout.EAST);
 		_setBrowser.addParentComponent(this);
+		add(_setBrowser, BorderLayout.EAST);
 		revalidate();
 		repaint();		
 	}
