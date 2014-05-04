@@ -194,9 +194,12 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
 		try {
-			currentSet = _setBrowser.getSelectedSet();
-			if (currentSet != null)
-				updateFlashboard(currentSet.getAll());
+			if (_setBrowser != null)
+			{
+				currentSet = _setBrowser.getSelectedSet();
+				if (currentSet != null)
+					updateFlashboard(currentSet.getAll());
+			}
 		} catch (IOException e) {
 			Controller.guiMessage("Could not get all the cards from the current set", true);
 		}

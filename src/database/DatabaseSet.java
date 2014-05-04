@@ -258,4 +258,17 @@ public class DatabaseSet implements FlashCardSet{
 		}	
 	}
 
+	@Override
+	public void setName(String name) {
+		try (Statement statement = database.getStatement()){
+			String query = "UPDATE SETS\n" +
+							"SET NAME='" + name + "'\n" +
+							"WHERE ID=" + id;
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+
 }
