@@ -14,7 +14,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-
 import controller.Controller;
 
 public class SidePanel extends GenericPanel implements MouseListener {
@@ -24,7 +23,8 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, btnSelected;
+	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, 
+	btnSettings, btnSelected;
 
 	/**
 	 * Create the panel.
@@ -64,6 +64,12 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		btnSets = new JLabel("Sets      ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
 		initMenuItem(btnSets);
 		add(btnSets);
+		
+		add(Box.createVerticalStrut(struts));
+		//TODO make a real icon.
+		btnSettings = new JLabel("Settings  ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
+		initMenuItem(btnSettings);
+		add(btnSettings);
 
 		setSelected(btnFlashboard);
 	}
@@ -99,6 +105,9 @@ public class SidePanel extends GenericPanel implements MouseListener {
 			break;
 		case SET:
 			setSelected(btnSets);
+			break;
+		case SETTINGS:
+			setSelected(btnSettings);
 			break;
 		default:
 			break;
@@ -141,6 +150,8 @@ public class SidePanel extends GenericPanel implements MouseListener {
 			Controller.switchTabs(TabType.CARD);
 		}  else if (e.getSource() == btnSets) {
 			Controller.switchTabs(TabType.SET);
+		} else if (e.getSource() == btnSettings) {
+			Controller.switchTabs(TabType.SETTINGS);
 		}
 	}
 

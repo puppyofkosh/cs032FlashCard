@@ -4,18 +4,16 @@ import flashcard.FlashCardSet;
 import gui.IconFactory.IconType;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -47,30 +45,15 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	private JButton btnContinue;
 	private TagPanel tags;
 	private SetBrowser _setBrowser;
-	private CardCreationPanel cardCreationPanel;
 	private String authorName = "";
-
-
-	@Override
-	public void setControlledPanel(JPanel panel) {
-		super.setControlledPanel(panel);
-		panel.add(cardCreationPanel, "record panel");
-
-		cardCreationPanel.setControlledPanel(panel);
-	}
-
-	@Override
-	public void setControlledLayout(CardLayout layout)	{
-		super.setControlledLayout(layout);
-		cardCreationPanel.setControlledLayout(layout);
-	}
+	boolean editing;
 
 	/**
 	 * Create the panel.
 	 */
 	public SetCreationPanel() {
 		addComponentListener(new SetBrowserComponentListener(this));
-		
+
 		setBorder(BorderFactory.createEmptyBorder());
 		setLayout(new BorderLayout(0, 0));
 		setOpaque(false);
@@ -79,7 +62,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		Box box = new Box(BoxLayout.Y_AXIS);
 		mainPanel.add(box, BorderLayout.CENTER);
 
-		JLabel lblAssignSet = new JLabel("Create a new set or select one from the list on the right", SwingConstants.LEADING);
+		JLabel lblAssignSet = new JLabel("Create a new set or choose one to edit from the list on the right", SwingConstants.LEADING);
 		lblAssignSet.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 		JPanel pane = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		pane.setOpaque(false);
@@ -135,8 +118,6 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		continuePanel.add(btnContinue);
 
 		mainPanel.add(continuePanel, BorderLayout.SOUTH);
-
-		cardCreationPanel = new CardCreationPanel();
 		add(mainPanel, BorderLayout.CENTER);
 
 	}
@@ -149,12 +130,12 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		spinnerInterval.setValue(set.getInterval());
 		authorTextField.setText(set.getAuthor());
 		Collection<String> setTags = set.getTags();
-		if (setTags == null)
+		if (setTags == null) {
 			setTags = new LinkedList<>();
-
-			tags.setTags(setTags);
-			revalidate();
-			repaint();
+		}
+		tags.setTags(setTags);
+		revalidate();
+		repaint();
 	}
 
 	public void update() {
@@ -186,25 +167,34 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
 
-			authorName = authorTextField.getText();
-			authorTextField.getText();
-
-
-			// If a set is selected us that as the set for us to add new cards to
-			FlashCardSet currentSet = _setBrowser.getSelectedSet();
-
-			if (currentSet == null)
-				currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
-
-			cardCreationPanel.assignWorkingSet(currentSet);
-
-			if (cardCreationPanel.hasWorkingSet())
-				controlledLayout.show(controlledPanel, "record panel");
-			else {
-				Controller.guiMessage("Must create a set or choose an existing one", true);
-				return;
+			try {
+				authorName = Controller.parseInput(authorTextField.getText());
+			} catch (IOException e1) {
+				authorName = "Anonymous";
 			}
+
+			List<String> setTags = tags.getTags(true);
+			if (editing) {
+				editSet(_setBrowser.getSelectedSet(), nameInput, authorName, interval, setTags);
+			} else {
+				newSet(nameInput, authorName, interval, setTags);
+			}
+			_setBrowser.updateSourceList();
 		}
+	}
+
+	private void editSet(FlashCardSet set, String name, String author, int interval, List<String> tags ) {
+		set.setAuthor(author);
+		set.setInterval(interval);
+		try {
+			set.setTags(tags);
+		} catch (IOException e) {
+			Controller.guiMessage("Could not modify set tags", true);
+		}
+	}
+
+	private void newSet(String name, String author, int interval, List<String> tags ) {
+		Controller.createSet(name, author, tags, interval);
 	}
 
 	@Override
@@ -230,5 +220,5 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	public void removeSetBrowser() {
 		_setBrowser.removeParentComponent(this);
 	}
-	
+
 }

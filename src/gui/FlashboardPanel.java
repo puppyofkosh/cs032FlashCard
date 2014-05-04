@@ -180,8 +180,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		try {
 			if (currentSet != null)
 				updateCards(currentSet.getAll());
-			else
-				Writer.out("Current set is null");
 		} catch (IOException e) {
 			e.printStackTrace();
 			Controller.guiMessage("Could not read cards from set", true);

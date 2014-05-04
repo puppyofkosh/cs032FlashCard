@@ -3,43 +3,39 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.text.ParseException;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import audio.WavFileConcatenator;
 import settings.Settings;
-import utils.Writer;
 
 public class SettingsPanel extends JPanel implements ActionListener {
 	public SettingsPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
 		JPanel TimeoutPanel = new JPanel();
 		add(TimeoutPanel);
-		
+
 		JLabel lblNewLabel_2 = new JLabel("Recording Timeout");
 		TimeoutPanel.add(lblNewLabel_2);
-		
+
 		spinner = new JSpinner();
 		TimeoutPanel.add(spinner);
 		spinner.setValue(Settings.getTimeout());
 		spinner.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				
+
 				try {
 					spinner.commitEdit();
 				} catch (ParseException e1) {
@@ -50,47 +46,47 @@ public class SettingsPanel extends JPanel implements ActionListener {
 				Settings.setTimeout(newValue);
 			}
 		});
-		
+
 		((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setEditable(false);
-		
-		
+
+
 		JPanel panel = new JPanel();
 		add(panel);
-		
+
 		lblNewLabel = new JLabel(Settings.getOutputDestination());
 		panel.add(lblNewLabel);
-		
+
 		btnOutputChanger = new JButton("change output location");
 		panel.add(btnOutputChanger);
 		btnOutputChanger.addActionListener(this);
-		
+
 		JPanel panel_1 = new JPanel();
 		add(panel_1);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Default Author Name");
 		panel_1.add(lblNewLabel_1);
-		
+
 		defaultAuthorName = new JTextField();
 		panel_1.add(defaultAuthorName);
 		defaultAuthorName.setColumns(10);
 		defaultAuthorName.setText(Settings.getDefaultAuthor());
 		defaultAuthorName.addActionListener(this);
-		
+
 		JPanel panel_3 = new JPanel();
 		add(panel_3);
-		
+
 		mainColorButton = new JButton("Select Color 1");
 		panel_3.add(mainColorButton);
 		mainColorButton.setForeground(Settings.getMainColor());
 		mainColorButton.addActionListener(this);
-		
+
 		secondaryColorButton = new JButton("Select Color 2");
 		panel_3.add(secondaryColorButton);
 		secondaryColorButton.setForeground(Settings.getSecondaryColor());
 		secondaryColorButton.addActionListener(this);
 	}
-	
-	
+
+
 
 	/**
 	 * 
@@ -102,7 +98,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 	JButton secondaryColorButton;
 	JSpinner spinner;
 	JLabel lblNewLabel;
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(mainColorButton)) {
@@ -138,5 +134,5 @@ public class SettingsPanel extends JPanel implements ActionListener {
 		frame.pack();
 		frame.setVisible(true);
 	}
-	
+
 }

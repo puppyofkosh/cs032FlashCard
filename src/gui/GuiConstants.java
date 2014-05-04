@@ -14,7 +14,7 @@ public class GuiConstants {
 	public static final String SET_CREATION_PANEL_NAME = "set creation panel";
 	public static final String FLASHBOARD_PANEL_NAME = "flashboard panel";
 	public static final String DATABASE_PANEL_NAME = "database panel";
-
+	public static final String SETTINGS_PANEL_NAME = "settings panel";
 	
 	public static final Color BLACK = Color.BLACK;
 	public static final Color CARD_BACKGROUND = Color.CYAN;
@@ -34,7 +34,8 @@ public class GuiConstants {
 		EXPORT,
 		IMPORT,
 		CARD,
-		SET
+		SET,
+		SETTINGS
 	}
 
 	

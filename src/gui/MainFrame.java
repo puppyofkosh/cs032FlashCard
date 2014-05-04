@@ -19,14 +19,18 @@ public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private SidePanel sidePanel;
+
+	private FlashboardPanel flashboardPanel;
 	private ImportPanel importPanel;
 	private QuizletPanel quizletPanel;
 	private ExportPanel exportPanel;
 	private SetCreationPanel setCreationPanel;
-	private FlashboardPanel flashboardPanel;
+	private CardCreationPanel cardCreationPanel;
+	private SettingsPanel settingsPanel;
+
 	private CardLayout mainPanelLayout;
 	private JPanel mainPanelContainer;
-	private SidePanel sidePanel;
 
 	/**
 	 * Launch the application.
@@ -76,19 +80,26 @@ public class MainFrame extends JFrame {
 		importPanel = new ImportPanel();
 		importPanel.setControlledLayout(mainPanelLayout);
 		importPanel.setControlledPanel(mainPanelContainer);
+		mainPanelContainer.add(importPanel, GuiConstants.IMPORT_PANEL_NAME);
 
+		//Is this okay?
 		quizletPanel = new QuizletPanel();
 		mainPanelContainer.add(quizletPanel, GuiConstants.QUIZLET_PANEL_NAME);
-
-		mainPanelContainer.add(importPanel, GuiConstants.IMPORT_PANEL_NAME);
 
 		exportPanel = new ExportPanel();
 		mainPanelContainer.add(exportPanel, GuiConstants.EXPORT_PANEL_NAME);
 
+		//Hmmm
 		setCreationPanel = new SetCreationPanel();
 		setCreationPanel.setControlledLayout(mainPanelLayout);
 		setCreationPanel.setControlledPanel(mainPanelContainer);
-		mainPanelContainer.add(setCreationPanel, GuiConstants.CREATE_PANEL_NAME);
+		mainPanelContainer.add(setCreationPanel, GuiConstants.SET_CREATION_PANEL_NAME);
+		
+		cardCreationPanel = new CardCreationPanel();
+		mainPanelContainer.add(cardCreationPanel, GuiConstants.CREATE_PANEL_NAME);
+
+		settingsPanel = new SettingsPanel();
+		mainPanelContainer.add(settingsPanel, GuiConstants.SETTINGS_PANEL_NAME);
 
 		flashboardPanel = new FlashboardPanel();
 		mainPanelContainer.add(flashboardPanel, GuiConstants.FLASHBOARD_PANEL_NAME);
@@ -111,6 +122,10 @@ public class MainFrame extends JFrame {
 			break;
 		case IMPORT:
 			break;
+		case SET:
+			break;
+		case SETTINGS:
+			break;
 		default:
 			break;
 		}
@@ -130,9 +145,16 @@ public class MainFrame extends JFrame {
 		case IMPORT:
 			mainPanelLayout.show(mainPanelContainer, GuiConstants.IMPORT_PANEL_NAME);
 			break;
+		case SET:
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.SET_CREATION_PANEL_NAME);
+			break;
+		case SETTINGS: 
+			mainPanelLayout.show(mainPanelContainer, GuiConstants.SETTINGS_PANEL_NAME);
+			break;
 		default:
 			break;
 		}
+
 		sidePanel.setSelected(tab);
 		update(tab);
 	}
