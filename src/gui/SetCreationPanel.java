@@ -174,8 +174,14 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 			authorName = authorTextField.getText();
 			authorTextField.getText();
-
-			FlashCardSet currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
+			
+			
+			// If a set is selected us that as the set for us to add new cards to
+			FlashCardSet currentSet = setBrowser.getSelectedSet();
+			
+			if (currentSet == null)
+				currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
+			
 			cardCreationPanel.assignWorkingSet(currentSet);
 
 			if (cardCreationPanel.hasWorkingSet())
