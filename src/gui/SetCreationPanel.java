@@ -1,12 +1,7 @@
 package gui;
 
-import flashcard.FlashCardSet;
-import gui.IconFactory.IconType;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -28,11 +23,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import settings.Settings;
+import utils.Writer;
 
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
+import flashcard.FlashCardSet;
 
 public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener, Browsable {
 
@@ -42,11 +39,10 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	private static final long serialVersionUID = 1L;
 	private JTextField setNameField, authorTextField;
 	private JSpinner spinnerInterval;
-	private JButton btnContinue;
+	private JButton editSet, clear, newSet;
 	private TagPanel tags;
 	private SetBrowser _setBrowser;
 	private String authorName = "";
-	boolean editing;
 
 	/**
 	 * Create the panel.
@@ -109,17 +105,23 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		scroller.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 		tagPanel.add(scroller, BorderLayout.CENTER);
 
-		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		continuePanel.setBackground(Color.BLACK);
-		btnContinue = new ImageButton("Continue to Card Creation", IconFactory.loadIcon(IconType.CARD, 36, true));
-		btnContinue.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
-		btnContinue.addActionListener(this);
 
-		continuePanel.add(btnContinue);
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5,0));
+		buttonPanel.setBackground(GuiConstants.SET_TAG_COLOR);
+		editSet = new JButton("Edit Set");
+		editSet.addActionListener(this);
+		clear = new JButton("Clear");
+		clear.addActionListener(this);
+		newSet = new JButton("Create New Set");
+		newSet.addActionListener(this);
+		buttonPanel.add(editSet);
+		buttonPanel.add(Box.createGlue());
+		buttonPanel.add(clear);
+		buttonPanel.add(Box.createGlue());
+		buttonPanel.add(newSet);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		mainPanel.add(continuePanel, BorderLayout.SOUTH);
 		add(mainPanel, BorderLayout.CENTER);
-
 	}
 
 	private void populateFields(FlashCardSet set) {
@@ -133,7 +135,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		if (setTags == null) {
 			setTags = new LinkedList<>();
 		}
-		tags.setTags(setTags);
+		tags.setTags(setTags, true, true);
 		revalidate();
 		repaint();
 	}
@@ -151,7 +153,9 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 
 		} else if (e.getSource() == authorTextField) {
 
-		} else if (e.getSource() == btnContinue) {
+		} else if (e.getSource() == clear) {
+			clear();
+		} else if (e.getSource() == editSet || e.getSource() == newSet) {
 			try {
 				spinnerInterval.commitEdit();
 			} catch (ParseException e1) {
@@ -174,16 +178,26 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 			}
 
 			List<String> setTags = tags.getTags(true);
-			if (editing) {
+			if (e.getSource() == editSet) {
 				editSet(_setBrowser.getSelectedSet(), nameInput, authorName, interval, setTags);
 			} else {
 				newSet(nameInput, authorName, interval, setTags);
 			}
 			_setBrowser.updateSourceList();
+			_setBrowser.addParentComponent(this);
+			clear();
 		}
 	}
 
+	private void clear() {
+		setNameField.setText("");
+		authorTextField.setText(authorName);
+		spinnerInterval.setValue(0);
+		tags.setTags(new LinkedList<String>(), true);
+	}
+
 	private void editSet(FlashCardSet set, String name, String author, int interval, List<String> tags ) {
+		set.setName(name);
 		set.setAuthor(author);
 		set.setInterval(interval);
 		try {
@@ -210,7 +224,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		_setBrowser.addParentComponent(this);
 		add(_setBrowser, BorderLayout.EAST);
 		revalidate();
-		repaint();		
+		repaint();
 	}
 
 	/**
