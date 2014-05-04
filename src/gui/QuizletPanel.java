@@ -249,6 +249,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		public void done()
 		{
 			progressMonitor.close();
+			Controller.updateAll();
+			Controller.requestSetBrowser().updateSourceList();
 		}
 
 		@Override
@@ -283,7 +285,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						producedCards.add(Controller.createCard(data));
 
 						cardsDone++;
-						int progress = cardsDone * 100 /(cards.length * ids.size());
+						int progress = Math.min(cardsDone * 100 /(cards.length * ids.size()), 99);
 						System.out.println("progress is " + progress);
 						setProgress(progress);
 					}
@@ -293,12 +295,14 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				}
 			}
 
-			// Download is complete, write the cards.			
+			// Download is complete, write the cards.	
+			
 			FlashCardSet set = Controller.createSet(setName, "quizlet", tags, interval);
 			for (FlashCard f : producedCards)
 				set.addCard(f);
 			
-			Controller.updateAll();
+		//	Controller.updateAll();
+		//	Controller.requestSetBrowser().updateSourceList();
 			return null;
 		}
 	}

@@ -50,7 +50,7 @@ public class Controller {
 	private static MainFrame gui;
 	public static SetBrowser setBrowser = new SetBrowser();	
 
-	
+	private static TabType currentTab;
 	
 	public static SetBrowser requestSetBrowser() {
 		return setBrowser;
@@ -323,6 +323,8 @@ public class Controller {
 		}
 		DatabaseFactory.deleteCard(card);
 		updateAll();
+		gui.showTab(TabType.IMPORT);
+		gui.showTab(currentTab);
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {
@@ -367,9 +369,12 @@ public class Controller {
 
 	public static void switchTabs(TabType tab) {
 		gui.showTab(tab);
+		currentTab = tab;
 	}
 
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
+		gui.showTab(TabType.IMPORT);
+		gui.showTab(currentTab);
 	}
 }
