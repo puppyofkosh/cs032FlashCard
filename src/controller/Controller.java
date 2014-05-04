@@ -50,7 +50,7 @@ public class Controller {
 	private static MainFrame gui;
 	public static SetBrowser setBrowser = new SetBrowser();	
 
-	private static TabType currentTab;
+	private static TabType currentTab = TabType.FLASHBOARD;
 	
 	public static SetBrowser requestSetBrowser() {
 		return setBrowser;
