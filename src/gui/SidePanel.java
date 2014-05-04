@@ -83,6 +83,28 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		repaint();
 	}
 
+	public void setSelected(TabType tab) {
+		switch (tab) {
+		case CARD:
+			setSelected(btnCreate);
+			break;
+		case EXPORT:
+			setSelected(btnExport);
+			break;
+		case FLASHBOARD:
+			setSelected(btnFlashboard);
+			break;
+		case IMPORT:
+			setSelected(btnImport);
+			break;
+		case SET:
+			setSelected(btnSets);
+			break;
+		default:
+			break;
+		}
+	}
+
 	private void setHovered(JComponent button) {
 		if (button == btnSelected)
 			return;
@@ -111,19 +133,14 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource() == btnFlashboard) {
 			Controller.switchTabs(TabType.FLASHBOARD);
-			setSelected(btnFlashboard);
 		} else if (e.getSource() == btnExport) {
 			Controller.switchTabs(TabType.EXPORT);
-			setSelected(btnExport);
 		} else if (e.getSource() == btnImport) {
 			Controller.switchTabs(TabType.IMPORT);
-			setSelected(btnImport);
 		} else if (e.getSource() == btnCreate) {
 			Controller.switchTabs(TabType.CARD);
-			setSelected(btnCreate);
 		}  else if (e.getSource() == btnSets) {
 			Controller.switchTabs(TabType.SET);
-			setSelected(btnSets);
 		}
 	}
 

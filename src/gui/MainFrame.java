@@ -26,6 +26,7 @@ public class MainFrame extends JFrame {
 	private FlashboardPanel flashboardPanel;
 	private CardLayout mainPanelLayout;
 	private JPanel mainPanelContainer;
+	private SidePanel sidePanel;
 
 	/**
 	 * Launch the application.
@@ -60,7 +61,7 @@ public class MainFrame extends JFrame {
 		JPanel sidePanelContainer = new JPanel();
 		contentPane.add(sidePanelContainer, BorderLayout.WEST);
 		sidePanelContainer.setLayout(new GridLayout(0, 1, 0, 0));
-		SidePanel sidePanel = new SidePanel();
+		sidePanel = new SidePanel();
 		sidePanel.setBorder(BorderFactory.createEmptyBorder());
 		sidePanelContainer.add(sidePanel);
 
@@ -132,6 +133,7 @@ public class MainFrame extends JFrame {
 		default:
 			break;
 		}
+		sidePanel.setSelected(tab);
 		update(tab);
 	}
 }

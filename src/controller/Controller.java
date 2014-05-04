@@ -7,6 +7,7 @@ import flashcard.SimpleSet;
 import gui.GuiConstants.TabType;
 import gui.MainFrame;
 import gui.SetBrowser;
+import gui.SidePanel;
 
 import java.awt.CardLayout;
 import java.awt.Rectangle;
@@ -17,7 +18,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
@@ -48,15 +48,14 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
-	private static CardLayout tabs;
+	public static SetBrowser setBrowser = new SetBrowser();	
+
 	
-	public static SetBrowser setBrowser = new SetBrowser();
 	
-	public static SetBrowser requestSetBrowser()
-	{
+	public static SetBrowser requestSetBrowser() {
 		return setBrowser;
 	}
-
+	
 	/**
 	 * Import a tsv or similar
 	 * 
@@ -66,17 +65,17 @@ public class Controller {
 
 		// Make a thread that just imports the cards
 		Thread thread = new Thread(new Runnable() {
-		
+
 			public void run()
 			{
 				TextToSpeechReader ttsReader;
 				try {
 					ttsReader = new FreeTTSReader();
-		
+
 					FileImporter importer = new FileImporter(new File(filename),
 							ttsReader);
 					importer.importCards();
-		
+
 					System.out.println("Imported " + importer.getCardList().size()
 							+ " cards");
 				} catch (IOException e) {
