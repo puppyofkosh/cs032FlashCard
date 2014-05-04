@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -168,20 +169,26 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 				Controller.guiMessage("Could not parse new spinner value", true);
 			}
 			int interval = (int) spinnerInterval.getValue();
-			String nameInput = Controller.parseInput(setNameField.getText());
+			String nameInput;
+			try {
+				nameInput = Controller.parseInput(setNameField.getText());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				return;
+			}
 			if (!Controller.verifyInput(nameInput))
 				nameInput = Controller.parseCardName(nameInput);
 
 			authorName = authorTextField.getText();
 			authorTextField.getText();
-			
-			
+
+
 			// If a set is selected us that as the set for us to add new cards to
 			FlashCardSet currentSet = setBrowser.getSelectedSet();
-			
+
 			if (currentSet == null)
 				currentSet = Controller.createSet(nameInput, authorName, tags.getTags(true), interval);
-			
+
 			cardCreationPanel.assignWorkingSet(currentSet);
 
 			if (cardCreationPanel.hasWorkingSet())
