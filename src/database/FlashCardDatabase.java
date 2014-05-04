@@ -710,8 +710,8 @@ public class FlashCardDatabase implements Resources {
 
 			ResultSet rs = statement.executeQuery(idQuery);
 			if (rs.next()) {
-				System.out.println("WARNING: A card with that path "
-						+ flashcard.getPath()
+				System.out.println("WARNING: A card with that unique id "
+						+ flashcard.getUniqueId()
 						+ " already exists. Not writing this card");
 				return new DatabaseFlashCard(rs.getInt("ID"), this);
 			}

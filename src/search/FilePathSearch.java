@@ -1,6 +1,7 @@
 package search;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import backend.Resources;
@@ -17,15 +18,20 @@ public class FilePathSearch implements Search, Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String path = "";
-	public FilePathSearch(String filePath)
+	private List<String> paths;
+	public FilePathSearch(List<String> filePaths)
 	{
-		path = filePath;
+		paths = filePaths;
 	}
 	
 	@Override
 	public List<FlashCard> search(Resources db) {
-		return db.getFlashCardsByPath(path);
+		List<FlashCard> cards = new ArrayList<>();
+		for (String path : paths)
+		{
+			cards.addAll(db.getFlashCardsByPath(path));
+		}
+		return cards;
 	}
 
 }

@@ -329,6 +329,14 @@ public class Controller {
 		return DatabaseFactory.getResources().getAllSets();
 	}
 
+	/**
+	 * If a set with the same name & metadata already exists, return that, otherwise create a new set
+	 * @param name
+	 * @param author
+	 * @param tags
+	 * @param interval
+	 * @return
+	 */
 	public static FlashCardSet createSet(String name, String author,
 			List<String> tags, int interval) {
 		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(
@@ -347,6 +355,33 @@ public class Controller {
 		if (existingSet != null && existingSet.sameMetaData(set)) {
 			return existingSet;
 		}
+		set = DatabaseFactory.writeSet(set);
+		return set;
+	}
+	
+	/**
+	 * Create a new set, write it to disk, and return it. The name may not match up
+	 * with what is given.
+	 * @param name
+	 * @param author
+	 * @param tags
+	 * @param interval
+	 * @return
+	 */
+	public static FlashCardSet generateNewSet(String name, String author,
+			List<String> tags, int interval)
+	{
+		FlashCardSet set = new SimpleSet(name);
+		for (String tag : tags) {
+			try {
+				set.addTag(tag);
+			} catch (IOException e) {
+				Controller.guiMessage("Could not write tag: " + tag, true);
+			}
+		}
+		set.setAuthor(author);
+		set.setInterval(interval);
+		
 		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
