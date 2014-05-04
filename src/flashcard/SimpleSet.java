@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import database.DatabaseSet;
+
 
 /***
  * Not completely implemented-just contains a name
@@ -113,5 +115,18 @@ public class SimpleSet implements FlashCardSet{
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof FlashCardSet))
+			return false;
+		
+		if ((o instanceof DatabaseSet))
+			System.out.println("You are comparing a set not stored in DB with one that is. WARNING");
+
+		FlashCardSet s = (FlashCardSet)o;
+		return sameMetaData(s);
 	}
 }
