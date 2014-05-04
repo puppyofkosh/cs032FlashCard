@@ -52,7 +52,7 @@ public class Controller {
 	
 	public static SetBrowser setBrowser = new SetBrowser();
 	
-	public static SetBrowser requestSetBrowser(JComponent c)
+	public static SetBrowser requestSetBrowser()
 	{
 		return setBrowser;
 	}

@@ -9,8 +9,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -53,7 +55,17 @@ public class SetBrowser extends JPanel  {
 	private SourceListSelectionListener _parentComponent;
 	private SourceListCategory setsCategory;
 	private SourceList sourceList;
-
+	
+	public void addParentComponent(SourceListSelectionListener pt)
+	{
+		sourceList.addSourceListSelectionListener(pt);
+	}
+	
+	public void removeParentComponent(SourceListSelectionListener pt)
+	{
+		sourceList.removeSourceListSelectionListener(pt);
+	}
+	
 	/**
 	 * Creates a new SetBrowser, preloaded with all the cards from the library.
 	 */
@@ -150,6 +162,7 @@ public class SetBrowser extends JPanel  {
 		});
 
 		//Passes the selection event to the parentComponent
+		// FIXME: can we just replace this with sourceList.addSourceListSelectionListener(_parentComponent) at the beginning?
 		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
 			@Override
 			public void sourceListItemSelected(SourceListItem arg0) {

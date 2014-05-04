@@ -36,7 +36,7 @@ import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 
-public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener, ComponentListener {
+public class SetCreationPanel extends GenericPanel implements ActionListener, SourceListSelectionListener, Browsable {
 
 	/**
 	 * 
@@ -69,7 +69,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	 * Create the panel.
 	 */
 	public SetCreationPanel() {
-		addComponentListener(this);
+		addComponentListener(new SetBrowserComponentListener(this));
 		
 		setBorder(BorderFactory.createEmptyBorder());
 		setLayout(new BorderLayout(0, 0));
@@ -217,28 +217,20 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		// To prevent us from messing around with the setbrowser 
-		_setBrowser = null;
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		_setBrowser = Controller.requestSetBrowser(this);
+	public void showSetBrowser(SetBrowser browser) {
+		_setBrowser = browser;
+		_setBrowser.addParentComponent(this);
 		add(_setBrowser, BorderLayout.EAST);
 		revalidate();
-		repaint();
+		repaint();		
 	}
+
+	/**
+	 * When the window is no longer shown, don't subscribe to updates from the set browser
+	 */
+	@Override
+	public void removeSetBrowser() {
+		_setBrowser.removeParentComponent(this);
+	}
+	
 }

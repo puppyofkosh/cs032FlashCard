@@ -41,7 +41,7 @@ import backend.ItunesExporter;
 import client.Client;
 import database.DatabaseFactory;
 
-public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener {
+public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener, Browsable {
 	/**
 	 * 
 	 */
@@ -72,6 +72,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
+		// Will call addSetBrowser whenever this panel is shown
+		addComponentListener(new SetBrowserComponentListener(this));
 
 		JPanel chooseMethodPanel = new JPanel();
 		headerPanel.add(chooseMethodPanel);
@@ -116,15 +118,10 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 			@Override
 			public void componentHidden(ComponentEvent arg0) {
-				_setBrowser = null;
 			}
 
 			@Override
 			public void componentShown(ComponentEvent arg0) {
-				_setBrowser = Controller.requestSetBrowser(ExportPanel.this);
-				add(_setBrowser, BorderLayout.EAST);
-				revalidate();
-				repaint();
 			}
 		});
 
@@ -265,6 +262,18 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
                	progressMonitor.close();
             }
         }
+	}
+
+	@Override
+	public void showSetBrowser(SetBrowser browser) {
+		_setBrowser = browser;
+		add(_setBrowser, BorderLayout.EAST);
+		revalidate();
+		repaint();
+	}
+
+	@Override
+	public void removeSetBrowser() {
 	}
 	
 }

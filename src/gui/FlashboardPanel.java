@@ -35,7 +35,7 @@ import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 
-public class FlashboardPanel extends JPanel implements SourceListSelectionListener, ComponentListener {
+public class FlashboardPanel extends JPanel implements SourceListSelectionListener, Browsable {
 
 	/**
 	 * FIXME:
@@ -68,7 +68,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		super(new BorderLayout(0,0));
 		setOpaque(false);
 
-		addComponentListener(this);
+		addComponentListener(new SetBrowserComponentListener(this));
 
 		//EMPTY PANEL
 		//This panel is displayed when there are 1.) No cards in selected set
@@ -207,28 +207,20 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		}
 	}
 
-	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		_setBrowser = null;
-	}
 
+	/**
+	 * Called every time this panel is shown
+	 */
 	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		_setBrowser = Controller.requestSetBrowser(this);
+	public void showSetBrowser(SetBrowser browser) {
+		_setBrowser = browser;
 		add(_setBrowser, BorderLayout.EAST);
+		_setBrowser.addParentComponent(this);
 		revalidate();
-		repaint();
+		repaint();		
+	}
+
+	@Override
+	public void removeSetBrowser() {		
 	}
 }
