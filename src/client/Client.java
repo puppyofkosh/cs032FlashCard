@@ -206,8 +206,13 @@ public class Client extends SwingWorker<Response, Response> {
 			//request(new ParametrizedCardRequest(new SearchParameters(input)));
 	}
 
-	public void requestFullCard(NetworkedFlashCard c) {
-		request(new ParametrizedCardRequest(new FilePathSearch(c.getIdentifier())));
+	public void requestFullCard(List<NetworkedFlashCard> nc) {
+		List<String> ids = new ArrayList<>();
+		for (NetworkedFlashCard card : nc)
+		{
+			ids.add(card.getIdentifier());
+		}
+		request(new ParametrizedCardRequest(new FilePathSearch(ids)));
 	}
 
 	public void requestAllMetaData() {
