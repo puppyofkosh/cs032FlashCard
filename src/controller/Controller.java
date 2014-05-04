@@ -62,21 +62,29 @@ public class Controller {
 	 * 
 	 * @param filename
 	 */
-	public static void importCardsToLibrary(String filename) {
-		// FIXME: Not necessary to create a new reader every time
-		TextToSpeechReader ttsReader;
-		try {
-			ttsReader = new FreeTTSReader();
+	public static void importCardsToLibrary(final String filename) {
 
-			FileImporter importer = new FileImporter(new File(filename),
-					ttsReader);
-			importer.importCards();
-
-			System.out.println("Imported " + importer.getCardList().size()
-					+ " cards");
-		} catch (IOException e) {
-			guiMessage("Invalid file", true);
-		}
+		// Make a thread that just imports the cards
+		Thread thread = new Thread(new Runnable() {
+		
+			public void run()
+			{
+				TextToSpeechReader ttsReader;
+				try {
+					ttsReader = new FreeTTSReader();
+		
+					FileImporter importer = new FileImporter(new File(filename),
+							ttsReader);
+					importer.importCards();
+		
+					System.out.println("Imported " + importer.getCardList().size()
+							+ " cards");
+				} catch (IOException e) {
+					guiMessage("Invalid file", true);
+				}
+			}
+		});
+		thread.start();
 	}
 
 	/*
