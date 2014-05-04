@@ -32,6 +32,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 	SetSelectionButton(String text, FlashCard card) {
 		super(text);
 		_menu = new JPopupMenu();
+		_card = card;
 		addActionListener(this);
 	}
 
@@ -61,6 +62,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		_menu = new JPopupMenu();
 		Collection<FlashCardSet> cardSets = _card.getSets();
 		Set<String> setNames = new HashSet<>();
 		for(FlashCardSet set : cardSets) {
