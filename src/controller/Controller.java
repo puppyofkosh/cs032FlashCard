@@ -66,8 +66,7 @@ public class Controller {
 			System.out.println("Imported " + importer.getCardList().size()
 					+ " cards");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			guiMessage("Invalid file", true);
 		}
 	}
 
