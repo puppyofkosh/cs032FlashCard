@@ -11,6 +11,7 @@ import java.util.List;
 public interface FlashCardSet {
 	
 	public String getName();
+	public void setName(String name);
 	
 	/**
 	 * We can use this method to get all flash cards in the FlashCardSet.

@@ -107,7 +107,11 @@ public class SimpleSet implements FlashCardSet{
 
 	@Override
 	public void removeCard(FlashCard f) throws IOException {
-		// TODO Auto-generated method stub
-		
+		cards.remove(f);
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 }

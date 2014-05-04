@@ -171,6 +171,11 @@ public class DatabaseTest {
 		assertTrue(dbSet.getAuthor().equals("Ian"));
 		assertTrue(dbSet.getInterval() == 5);
 		
+		// Test changing the name
+		dbSet.setName("chicken");
+		assertTrue(dbSet.getName().equals("chicken"));
+		dbSet.setName("state capitals");
+		
 		// Test adding tags
 		dbSet.addTag("Tag B");
 		assertTrue(dbSet.getTags().contains("Tag B"));
