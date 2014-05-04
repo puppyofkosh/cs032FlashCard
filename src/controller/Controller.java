@@ -7,6 +7,7 @@ import flashcard.SimpleSet;
 import gui.GuiConstants.TabType;
 import gui.ImageToggleButton;
 import gui.MainFrame;
+import gui.SetBrowser;
 
 import java.awt.CardLayout;
 import java.awt.Rectangle;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
@@ -49,6 +51,13 @@ public class Controller {
 	private static Recorder recorder;
 	private static MainFrame gui;
 	private static CardLayout tabs;
+	
+	public static SetBrowser setBrowser = new SetBrowser();
+	
+	public static SetBrowser requestSetBrowser(JComponent c)
+	{
+		return setBrowser;
+	}
 
 	/**
 	 * Import a tsv or similar

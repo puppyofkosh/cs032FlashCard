@@ -57,7 +57,7 @@ public class SetBrowser extends JPanel  {
 	/**
 	 * Creates a new SetBrowser, preloaded with all the cards from the library.
 	 */
-	SetBrowser() {
+	public SetBrowser() {
 		super(new BorderLayout());
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
 		updateSourceList();

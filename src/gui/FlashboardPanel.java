@@ -13,6 +13,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +35,7 @@ import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
 import controller.Controller;
 
-public class FlashboardPanel extends JPanel implements SourceListSelectionListener {
+public class FlashboardPanel extends JPanel implements SourceListSelectionListener, ComponentListener {
 
 	/**
 	 * FIXME:
@@ -49,7 +51,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 
 	private static final long serialVersionUID = 1L;
 	List<FlashCardPanel> cardPanels = new ArrayList<>();
-	SetBrowser browser;
+	SetBrowser _setBrowser;
 	JPanel flashboard;
 	JPanel emptyPanel;
 	private static int NUM_COLS = 3;
@@ -66,9 +68,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		super(new BorderLayout(0,0));
 		setOpaque(false);
 
-		//We pass a reference to this so we can know when things are selected
-		browser = new SetBrowser(this);
-		add(browser, BorderLayout.EAST);
+		addComponentListener(this);
 
 		//EMPTY PANEL
 		//This panel is displayed when there are 1.) No cards in selected set
@@ -187,7 +187,8 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	}
 
 	public void update() {
-		browser.updateSourceList();
+		if (_setBrowser != null)
+			_setBrowser.updateSourceList();
 	}
 
 	/**
@@ -196,13 +197,41 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	 */
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
+		if (_setBrowser == null)
+			return;
+		
 		try {
-			FlashCardSet currentSet = browser.getSelectedSet();
+			FlashCardSet currentSet = _setBrowser.getSelectedSet();
 			if (currentSet != null)
 				updateFlashboard(currentSet.getAll());
 
 		} catch (IOException e) {
 			Controller.guiMessage("Could not get all the cards from the current set", true);
 		}
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		_setBrowser = null;
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		_setBrowser = Controller.requestSetBrowser(this);
+		add(_setBrowser, BorderLayout.EAST);
+		revalidate();
+		repaint();
 	}
 }
