@@ -9,10 +9,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -34,6 +32,7 @@ import com.explodingpixels.widgets.PopupMenuCustomizer;
 import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import gui.GuiConstants.TabType;
 import gui.IconFactory.IconType;
 
 /**
@@ -135,8 +134,22 @@ public class SetBrowser extends JPanel  {
 				new PopupMenuCustomizer() {
 			public void customizePopup(JPopupMenu popup) {
 				popup.removeAll();
-				popup.add(new JMenuItem("Create New Card", IconFactory.loadIcon(IconType.CREATE, 20, false)));
-				popup.add(new JMenuItem("Create New Set", IconFactory.loadIcon(IconType.SET, 20, false)));
+				JMenuItem newCard = new JMenuItem("Create New Card", IconFactory.loadIcon(IconType.CREATE, 20, false));
+				newCard.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Controller.switchTabs(TabType.CARD);
+					}
+				});
+				JMenuItem newSet = new JMenuItem("Create New Set", IconFactory.loadIcon(IconType.SET, 20, false));
+				newSet.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Controller.switchTabs(TabType.SET);
+					}
+				});
+				popup.add(newCard);
+				popup.add(newSet);
 			}
 		});
 		controlBar.createAndAddButton(IconFactory.loadIcon(IconType.DELETE, 10, false), new ActionListener() {
