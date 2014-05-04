@@ -1,17 +1,10 @@
 package gui;
 
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-
-import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import quizlet.QuizletRequest;
 import quizlet.QuizletSet;
 
 public class QuizletSetTableModel extends AbstractTableModel {

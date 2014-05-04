@@ -59,7 +59,7 @@ public class MainFrame extends JFrame {
 		JPanel sidePanelContainer = new JPanel();
 		contentPane.add(sidePanelContainer, BorderLayout.WEST);
 		sidePanelContainer.setLayout(new GridLayout(0, 1, 0, 0));
-		SidePanel sidePanel = new SidePanel(this);
+		SidePanel sidePanel = new SidePanel();
 		sidePanel.setBorder(BorderFactory.createEmptyBorder());
 		sidePanelContainer.add(sidePanel);
 

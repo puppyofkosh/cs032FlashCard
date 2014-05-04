@@ -23,14 +23,12 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final MainFrame _parent;
 	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSelected;
 
 	/**
 	 * Create the panel.
 	 */
-	public SidePanel(MainFrame parent) {
-		_parent = parent;
+	public SidePanel() {
 		initialize();
 	}
 

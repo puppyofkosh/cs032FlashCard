@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
+import controller.Controller;
 import protocol.NetworkedFlashCard;
 import search.SearchParameters;
 import utils.FlashcardConstants;
@@ -53,7 +54,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	private Client _client;
 	private SetBrowser _setBrowser;
 	private JTextField searchBox;
-	
+
 	private ProgressMonitor progressMonitor;
 
 	/**
@@ -110,7 +111,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 		_setBrowser = new SetBrowser();
 		add(_setBrowser, BorderLayout.EAST);
-		
+
 		addComponentListener(new ComponentListener() {
 
 			@Override
@@ -127,21 +128,19 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 				_setBrowser.updateSourceList();
 			}
 		});
-
-
 	}
 
 	public void connectAndExport() {
 		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
 		Writer.out("Starting client");
-		
+
 		progressMonitor = new ProgressMonitor(ExportPanel.this,
-                "Uploading",
-                "", 0, 100);
+				"Uploading",
+				"", 0, 100);
 		progressMonitor.setProgress(0);
 		progressMonitor.setNote("Uploading");
 		progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
-				
+
 		_client.addPropertyChangeListener(this);
 		_client.execute();
 		_client.uploadCards(_cardTable.getSelectedCards());
@@ -253,18 +252,18 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		{
 			progressMonitor.close();
 		}
-		
+
 		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
-            int progress = (Integer) evt.getNewValue();
-            progressMonitor.setProgress(progress);
-            String message =
-                String.format("Completed %d%%.\n", progress);
-            progressMonitor.setNote(message);
-            if (progressMonitor.isCanceled() || _client.isDone()) {
-               	_client.cancel(true);
-               	progressMonitor.close();
-            }
-        }
+			int progress = (Integer) evt.getNewValue();
+			progressMonitor.setProgress(progress);
+			String message =
+					String.format("Completed %d%%.\n", progress);
+			progressMonitor.setNote(message);
+			if (progressMonitor.isCanceled() || _client.isDone()) {
+				_client.cancel(true);
+				progressMonitor.close();
+			}
+		}
 	}
-	
+
 }

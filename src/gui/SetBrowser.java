@@ -57,7 +57,7 @@ public class SetBrowser extends JPanel  {
 	/**
 	 * Creates a new SetBrowser, preloaded with all the cards from the library.
 	 */
-	SetBrowser() {
+	public SetBrowser() {
 		super(new BorderLayout());
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
 		updateSourceList();
@@ -175,8 +175,12 @@ public class SetBrowser extends JPanel  {
 	 * Returns the selected item, if it is a FlashCard. If not, returns null.
 	 * @return a FlashCard corresponding to the current selected Item.
 	 */
+	public FlashCard getSelectedCard(SourceListItem item) {
+		return _cards.get(item);
+	}
+
 	public FlashCard getSelectedCard() {
-		return _cards.get(sourceList.getSelectedItem());
+		return getSelectedCard(sourceList.getSelectedItem());
 	}
 
 	/**
@@ -185,12 +189,16 @@ public class SetBrowser extends JPanel  {
 	 * @return a FlashCardSet containing the selected item, or the currently
 	 * selected FlashCardSet.
 	 */
-	public FlashCardSet getSelectedSet() {
-		FlashCardSet set = _sets.get(sourceList.getSelectedItem());
+	public FlashCardSet getSelectedSet(SourceListItem item) {
+		FlashCardSet set = _sets.get(item);
 		if (set == null) {
-			set = _sets.get(_parents.get(sourceList.getSelectedItem()));
+			set = _sets.get(_parents.get(item));
 		}
 		return set;
+	}
+
+	public FlashCardSet getSelectedSet() {
+		return getSelectedSet(sourceList.getSelectedItem());
 	}
 
 	/**

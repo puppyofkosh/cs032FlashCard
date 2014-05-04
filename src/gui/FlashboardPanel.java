@@ -51,6 +51,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	JPanel flashboard;
 	JPanel emptyPanel;
 	FlashCardSet displayedSet;
+	SourceListItem lastItem;
 	private static int NUM_COLS = 3;
 	private static int NUM_ROWS;
 
@@ -90,11 +91,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 				Controller.switchTabs(TabType.CREATE);
 			}
 		});
-
-		//		// Start us off with 50 panels
-		//		for (int i = 0; i < 50; i++) {
-		//				freePanels.add(new FlashCardPanel(SerializableFlashCard.getEmptyCard()));
-		//		}
 
 		emptyPanel.add(emptyButton);
 
@@ -166,9 +162,8 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	public void updateCards(Collection<FlashCard> cards) {
 		// All the panels being used before are now up for grabs and can be recycled
 		freePanels.addAll(cardPanels);
-		cardPanels = new ArrayList<>();		
+		cardPanels = new ArrayList<>();
 		for(FlashCard card : cards) {
-
 			// Try to use a recycled panel if any are available. If not, we must create a new panel ourselves.
 			FlashCardPanel cardPanel = null;
 			if (freePanels.size() > 0) {
@@ -184,14 +179,20 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 
 	public void update() {
 		browser.updateSourceList();
+		displayedSet = browser.getSelectedSet(lastItem);
 		if (displayedSet != null) {
 			try {
 				Writer.out(displayedSet.getAll().size());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			try {
 				updateCards(displayedSet.getAll());
 			} catch (IOException e) {
 				Controller.guiMessage("Could not get all cards in set", true);
 			}
 		}
+		Writer.out("DISPLAYED SET IS NULL");
 	}
 
 	/**
@@ -201,6 +202,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
 		try {
+			lastItem = arg0;
 			displayedSet = browser.getSelectedSet();
 			if (displayedSet != null)
 				updateFlashboard(displayedSet.getAll());

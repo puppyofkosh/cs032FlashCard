@@ -3,20 +3,17 @@ package gui;
 import gui.IconFactory.IconType;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
-import utils.Writer;
 import controller.Controller;
 
 public class ImportPanel extends GenericPanel implements MouseListener {

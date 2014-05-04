@@ -7,7 +7,6 @@ import flashcard.SimpleSet;
 import gui.GuiConstants.TabType;
 import gui.MainFrame;
 
-import java.awt.CardLayout;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +45,6 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
-	private static CardLayout tabs;
 
 	/**
 	 * Import a tsv or similar

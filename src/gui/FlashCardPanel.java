@@ -3,8 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -15,7 +13,6 @@ import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -87,7 +84,7 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel.setLayout(new BoxLayout(_headerPanel, BoxLayout.X_AXIS));
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		_cardName = new JLabel(_card.getName(), SwingConstants.CENTER);
+		_cardName = new JLabel(defaultName, SwingConstants.CENTER);
 		_headerPanel.add(_cardName);
 		_headerPanel.add(new SetSelectionButton("Modify Sets", _card));
 
@@ -95,6 +92,7 @@ public class FlashCardPanel extends JPanel {
 		_delete = new JLabel(IconFactory.loadIcon(IconType.DELETE, GuiConstants.DEFAULT_BUTTON_SIZE, false));
 		_delete.setHorizontalAlignment(SwingConstants.TRAILING);
 		_delete.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		
 		//This mouse listener adds functionality to the X that appears next to.
 		//the Card's name.
 		_delete.addMouseListener(new MouseListener() {

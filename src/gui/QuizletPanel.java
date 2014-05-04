@@ -11,19 +11,19 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ProgressMonitor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
@@ -32,14 +32,12 @@ import javax.swing.table.TableModel;
 
 import org.json.JSONException;
 
+import quizlet.QuizletCard;
+import quizlet.QuizletRequest;
 import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
-import quizlet.QuizletCard;
-import quizlet.QuizletRequest;
-
-import javax.swing.JSpinner;
 
 public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 	

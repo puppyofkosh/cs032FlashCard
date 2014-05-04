@@ -1,16 +1,10 @@
 package gui;
 
-import java.io.IOException;
-import java.util.Collection;
-
 import javax.swing.table.AbstractTableModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import audio.AudioFile;
-import flashcard.FlashCard;
-import flashcard.FlashCardSet;
 import quizlet.QuizletCard;
 
 public class QuizletCardTableModel extends AbstractTableModel {
