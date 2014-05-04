@@ -26,7 +26,10 @@ import flashcard.FlashCard;
 @SuppressWarnings("serial")
 public class ServerConnectionPanel extends JPanel implements ClientFrontend, ActionListener {
 
-	CardTablePanel _cards;
+	CardTablePanel _availableCards;
+	
+	CardTablePanel _selectedCards;
+	
 	Client _client;
 	JTextField host;
 	JTextField portNumber;
@@ -35,6 +38,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 	private JPanel searchPanel;
 	private JTextField searchField;
 	private JButton btnImportSelectedCards;
+	private JButton btnAddCardToSelectedPanel;
 	
 	// A CardTablePanel can only store cards, and we need to store NetworkedCards, so we keep track of the cards here.
 	private List<NetworkedFlashCard> availableCards = new ArrayList<>();
@@ -55,9 +59,14 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 		btnImportSelectedCards = new JButton("Import Selected Cards");
 		btnImportSelectedCards.addActionListener(this);
 		searchPanel.add(btnImportSelectedCards);
+		
+		btnAddCardToSelectedPanel = new JButton("add");
+	
+		_availableCards = new CardTablePanel();
+		add(_availableCards);
 
-		_cards = new CardTablePanel();
-		add(_cards);
+		_selectedCards = new CardTablePanel();
+		add(_selectedCards);
 
 		status = new JTextPane();
 		status.setEditable(false);
@@ -146,7 +155,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 				portNumber.setText("");
 			}
 		} else if (e.getSource() == btnImportSelectedCards) {
-			for(FlashCard f : _cards.getSelectedCards())
+			for(FlashCard f : _availableCards.getSelectedCards())
 			{
 				if (availableCards.contains(f))
 				{
@@ -164,7 +173,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Act
 
 	@Override
 	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
-		_cards.updateCards(new ArrayList<FlashCard>(flashcards));
+		_availableCards.updateCards(new ArrayList<FlashCard>(flashcards));
 		availableCards = flashcards;
 	}
 }
