@@ -309,8 +309,14 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 			}
 
 			SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-			data.name = Controller.parseCardName(Controller.parseInput(textFieldName.getText()));
-
+			String parsedName;
+			try {
+				parsedName = Controller.parseInput(textFieldName.getText());
+				data.name = Controller.parseCardName(parsedName);
+			} catch (IOException iox) {
+				Controller.guiMessage("This card name is invalid", true);
+				return;
+			}
 			data.setQuestion(question);
 			data.setAnswer(answer);
 
@@ -331,7 +337,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener {
 				Controller.guiMessage("Could not write card into set", true);
 				e1.printStackTrace();
 			}
-
 			clear();
 			// Move user to the next pane
 			Controller.updateGUI();
