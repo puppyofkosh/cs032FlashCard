@@ -29,6 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import settings.Settings;
+
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
@@ -111,6 +113,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		authorTextField.setName(authorName);
 		authorTextField.addActionListener(this);
 		headerPanel.add(authorTextField);
+		authorTextField.setText(Settings.getDefaultAuthor());
 
 		JPanel tagPanel = new JPanel(new BorderLayout(0,0));
 		tagPanel.setOpaque(false);

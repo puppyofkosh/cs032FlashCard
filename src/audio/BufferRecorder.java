@@ -12,6 +12,7 @@ import javax.sound.sampled.TargetDataLine;
 import javax.swing.SwingWorker;
 
 import controller.Controller;
+import settings.Settings;
 import utils.FlashcardConstants;
 
 /**
@@ -77,11 +78,12 @@ public class BufferRecorder implements Recorder {
 		}
 	}
 	private class TimeoutThread extends SwingWorker<Boolean, Void> {
-		int duration = 60;
+		int duration;
 		Runnable[] runnables;
 		TimeoutThread(Runnable...runnables) {
 	
 			this.runnables = runnables;
+			duration = Settings.getTimeout();
 		}
 		
 		@Override

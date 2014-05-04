@@ -1,9 +1,7 @@
 package audio;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +17,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
+import settings.Settings;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
@@ -42,12 +41,12 @@ public class WavFileConcatenator {
 	 * or 'output' if that cannot be found
 	 */
 	private static String setupOutputLocation() {
-		File locationFile = new File("output_location.set");
-		if (locationFile.exists()) {
-			try (BufferedReader read = new BufferedReader(new FileReader(locationFile))) {
-				return read.readLine(); 
-			} catch (Throwable e) {}
-		}
+		//File locationFile = new File("output_location.set");
+		//if (locationFile.exists()) {
+		//	try (BufferedReader read = new BufferedReader(new FileReader(locationFile))) {
+		//		return read.readLine(); 
+		//	} catch (Throwable e) {}
+		//}
 		new File("output").mkdir();
 		return "output";
 	}
@@ -105,10 +104,11 @@ public class WavFileConcatenator {
 	 * necessary to avoid an overlap
 	 */
 	private static File getUniqueWavFile(String fileName) {
-		File output = new File(destination + "/"+ fileName + ".wav");
+		new File(Settings.getOutputDestination()).mkdirs();
+		File output = new File(Settings.getOutputDestination() + "/"+ fileName + ".wav");
 		int collisionPreventer = 0;
 		while (output.exists()) {
-			output = new File(destination + "/" + fileName + collisionPreventer++ + ".wav");
+			output = new File(Settings.getOutputDestination() + "/" + fileName + collisionPreventer++ + ".wav");
 		}
 		
 		return output;
