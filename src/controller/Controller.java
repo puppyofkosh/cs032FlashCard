@@ -353,7 +353,7 @@ public class Controller {
 	}
 
 	public static void updateAll() {
-		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT, TabType.CREATE);
+		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT, TabType.CARD);
 	}
 
 	public static void updateGUI(TabType...types) {

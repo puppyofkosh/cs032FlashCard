@@ -117,7 +117,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 			Controller.switchTabs(TabType.CARD);
 			setSelected(btnCreate);
 		}  else if (e.getSource() == btnSets) {
-						Controller.switchTabs(TabType.SET);
+			Controller.switchTabs(TabType.SET);
 			setSelected(btnSets);
 		}
 	}
