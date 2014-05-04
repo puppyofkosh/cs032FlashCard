@@ -7,7 +7,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,15 +16,18 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
+import utils.Writer;
 import controller.Controller;
 
-public class ImportPanel extends GenericPanel {
+public class ImportPanel extends GenericPanel implements MouseListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	ServerConnectionPanel dbPanel;
+	JPanel panel, panel_1, panel_2;
+	JButton btnNewButton, btnNewButton_1, btnNewButton_2; 
 
 	/**
 	 * Create the panel.
@@ -31,35 +35,35 @@ public class ImportPanel extends GenericPanel {
 	public ImportPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setOpaque(false);
-		JPanel panel = new JPanel();
-		add(panel);
+		panel = new JPanel();
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		panel.setBackground(GuiConstants.CARD_BACKGROUND.darker());
 		panel.setOpaque(false);
-		panel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
+		panel.addMouseListener(this);
+		add(panel);
 
-		JButton btnNewButton = IconFactory.createImageButton("From Quizlet", IconType.QUIZLET, 64, true);
+		btnNewButton = IconFactory.createImageButton("From Quizlet", IconType.QUIZLET, 64, true);
 		btnNewButton.setOpaque(false);
-		panel.add(btnNewButton);
+		btnNewButton.addMouseListener(this);
 		btnNewButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, GuiConstants.QUIZLET_PANEL_NAME);
 			}
-
 		});
+		panel.add(btnNewButton);
 
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		add(panel_1);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
+		panel_1.setBackground(GuiConstants.CARD_BACKGROUND.darker());
 		panel_1.setOpaque(false);
-		panel_1.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
+		panel_1.addMouseListener(this);
 
 
-
-
-		JButton btnNewButton_1 = IconFactory.createImageButton("From Database", IconType.DATABASE, 64, true);
+		btnNewButton_1 = IconFactory.createImageButton("From Database", IconType.DATABASE, 64, true);
 		btnNewButton_1.setOpaque(false);
+		btnNewButton_1.addMouseListener(this);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controlledLayout.show(controlledPanel, GuiConstants.DATABASE_PANEL_NAME);
@@ -69,13 +73,16 @@ public class ImportPanel extends GenericPanel {
 		panel_1.add(btnNewButton_1);
 
 
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		add(panel_2);		
 		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
+		panel_2.setBackground(GuiConstants.CARD_BACKGROUND.darker());
+		panel_2.addMouseListener(this);
 		panel_2.setOpaque(false);
 
-		JButton btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64, true);
+		btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64, true);
 		btnNewButton_2.setOpaque(false);
+		btnNewButton_2.addMouseListener(this);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -104,5 +111,51 @@ public class ImportPanel extends GenericPanel {
 	@Override
 	public void setControlledLayout(CardLayout layout) {
 		super.setControlledLayout(layout);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		if (e.getSource() == panel || e.getSource() == btnNewButton) {
+			panel.setOpaque(true);
+			panel.repaint();
+		} else if (e.getSource() == panel_1 || e.getSource() == btnNewButton_1) {
+			panel_1.setOpaque(true);
+			panel_1.repaint();
+		} else if (e.getSource() == panel_2 || e.getSource() == btnNewButton_2) {
+			panel_2.setOpaque(true);
+			panel_2.repaint();
+		}
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		if (e.getSource() == panel || e.getSource() == btnNewButton) {
+			panel.setOpaque(false);
+			panel.repaint();
+		} else if (e.getSource() == panel_1 || e.getSource() == btnNewButton_1) {
+			panel_1.setOpaque(false);
+			panel_1.repaint();
+		} else if (e.getSource() == panel_2 || e.getSource() == btnNewButton_2) {
+			panel_2.setOpaque(false);
+			panel_2.repaint();
+		}
 	}
 }

@@ -26,22 +26,12 @@ import flashcard.FlashCardSet;
 public class SetSelectionButton extends JButton implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	JPopupMenu menu;
+	JPopupMenu _menu;
+	FlashCard _card;
 
 	SetSelectionButton(String text, FlashCard card) {
 		super(text);
-		menu = new JPopupMenu();
-		Collection<FlashCardSet> cardSets = card.getSets();
-		Set<String> setNames = new HashSet<>();
-		for(FlashCardSet set : cardSets) {
-			setNames.add(set.getName());
-		}
-
-		for(FlashCardSet set : Controller.getAllSets()) {
-			JCheckBoxMenuItem item = new JCheckBoxMenuItem(set.getName(), setNames.contains(set.getName()));
-			menu.add(item);
-			item.addItemListener(new SetListener(item, set, card));
-		}
+		_menu = new JPopupMenu();
 		addActionListener(this);
 	}
 
@@ -54,6 +44,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 			_set = set;
 			_card = card;
 		}
+
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			try {
@@ -70,7 +61,16 @@ public class SetSelectionButton extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		menu.show(this, 0, this.getHeight());
+		Collection<FlashCardSet> cardSets = _card.getSets();
+		Set<String> setNames = new HashSet<>();
+		for(FlashCardSet set : cardSets) {
+			setNames.add(set.getName());
+		}
+		for(FlashCardSet set : Controller.getAllSets()) {
+			JCheckBoxMenuItem item = new JCheckBoxMenuItem(set.getName(), setNames.contains(set.getName()));
+			_menu.add(item);
+			item.addItemListener(new SetListener(item, set, _card));
+		}
+		_menu.show(this, 0, this.getHeight());
 	}
-
 }

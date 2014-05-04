@@ -25,7 +25,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 
 	private final MainFrame _parent;
 	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSelected;
-	
+
 	/**
 	 * Create the panel.
 	 */
@@ -40,11 +40,11 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	public void initialize() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.BLACK);
-		
+
 		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32, true), JLabel.LEFT);
 		initMenuItem(btnFlashboard);
 		add(btnFlashboard);
-		
+
 		btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32, true), JLabel.LEFT);
 		initMenuItem(btnExport);
 		add(btnExport);
@@ -58,14 +58,14 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		btnCreate = new JLabel("Create    ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
 		initMenuItem(btnCreate);
 		add(btnCreate);
-		
+
 		setSelected(btnFlashboard);
 	}
-	
+
 	private void initMenuItem(JLabel button) {
 		button.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		button.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
-		button.setBorder(BorderFactory.createEmptyBorder(10,4,10,10));
+		button.setBorder(BorderFactory.createEmptyBorder(11,4,15,10));
 		button.addMouseListener(this);
 	}
 
@@ -108,12 +108,12 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

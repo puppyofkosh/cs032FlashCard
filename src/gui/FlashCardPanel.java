@@ -65,7 +65,6 @@ public class FlashCardPanel extends JPanel {
 		revalidate();
 	}
 
-
 	/**
 	 * Constructs a FlashCardPanel from a given card.
 	 * @param card
