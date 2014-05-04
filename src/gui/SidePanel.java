@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 import controller.Controller;
@@ -23,7 +24,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSelected;
+	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, btnSelected, btnHovered;
 
 	/**
 	 * Create the panel.
@@ -47,15 +48,17 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		initMenuItem(btnExport);
 		add(btnExport);
 
-		add(Box.createVerticalStrut(10));
 		btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32, true), JLabel.LEFT);
 		initMenuItem(btnImport);
 		add(btnImport);
 
-		add(Box.createVerticalStrut(10));
-		btnCreate = new JLabel("Create    ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
+		btnCreate = new JLabel("Cards     ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
 		initMenuItem(btnCreate);
 		add(btnCreate);
+
+		btnSets = new JLabel("Sets      ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
+		initMenuItem(btnSets);
+		add(btnSets);
 
 		setSelected(btnFlashboard);
 	}
@@ -73,6 +76,19 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		btnSelected.setBackground(GuiConstants.CARD_BACKGROUND);
 		btnSelected.setOpaque(true);
 		repaint();
+	}
+
+	private void setHovered(JComponent button) {
+		if (button == btnSelected)
+			return;
+		button.setOpaque(true);
+		button.setBackground(GuiConstants.CARD_TAG_COLOR);
+	}
+
+	private void setUnHovered(JComponent button) {
+		button.setOpaque(false);
+		button.setBackground(GuiConstants.CARD_BACKGROUND);
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -98,20 +114,21 @@ public class SidePanel extends GenericPanel implements MouseListener {
 			Controller.switchTabs(TabType.IMPORT);
 			setSelected(btnImport);
 		} else if (e.getSource() == btnCreate) {
-			Controller.switchTabs(TabType.CREATE);
+			Controller.switchTabs(TabType.CARD);
 			setSelected(btnCreate);
+		}  else if (e.getSource() == btnSets) {
+						Controller.switchTabs(TabType.SET);
+			setSelected(btnSets);
 		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		setHovered(((JComponent) e.getSource()));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		setUnHovered(((JComponent) e.getSource()));
 	}
 }

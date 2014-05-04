@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
 				try {
 					Controller.launchGUI();
 				} catch (Throwable e) {
+					e.printStackTrace();
 					System.out.println("unable to open FlashBoard");
 				}
 			}
@@ -99,7 +100,7 @@ public class MainFrame extends JFrame {
 
 	public void update(TabType tab) {
 		switch (tab) {
-		case CREATE:
+		case CARD:
 			setCreationPanel.update();
 			break;
 		case EXPORT:
@@ -116,7 +117,7 @@ public class MainFrame extends JFrame {
 
 	public void showTab(TabType tab) {
 		switch (tab) {
-		case CREATE:
+		case CARD:
 			mainPanelLayout.show(mainPanelContainer, GuiConstants.CREATE_PANEL_NAME);
 			break;
 		case EXPORT:

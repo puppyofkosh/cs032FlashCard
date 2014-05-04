@@ -33,7 +33,8 @@ public class GuiConstants {
 		FLASHBOARD,
 		EXPORT,
 		IMPORT,
-		CREATE
+		CARD,
+		SET
 	}
 
 	

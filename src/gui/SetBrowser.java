@@ -55,17 +55,17 @@ public class SetBrowser extends JPanel  {
 	private SourceListSelectionListener _parentComponent;
 	private SourceListCategory setsCategory;
 	private SourceList sourceList;
-	
+
 	public void addParentComponent(SourceListSelectionListener pt)
 	{
 		sourceList.addSourceListSelectionListener(pt);
 	}
-	
+
 	public void removeParentComponent(SourceListSelectionListener pt)
 	{
 		sourceList.removeSourceListSelectionListener(pt);
 	}
-	
+
 	/**
 	 * Creates a new SetBrowser, preloaded with all the cards from the library.
 	 */
@@ -78,12 +78,8 @@ public class SetBrowser extends JPanel  {
 	SetBrowser(SourceListSelectionListener parentComponent) {
 		this();
 		_parentComponent = parentComponent;
-	}
-	
-	public void addParentComponent(SourceListSelectionListener parentComponent) {
-		_parentComponent = parentComponent;
-	}
-	
+	}	
+
 	/**
 	 * Updates the source list with all the cards from the library.
 	 * Probably not a great way to do it, but the easiest for now.
