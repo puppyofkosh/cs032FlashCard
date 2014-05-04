@@ -348,7 +348,6 @@ public class Controller {
 		if (existingSet != null && existingSet.sameMetaData(set)) {
 			return existingSet;
 		}
-
 		set = DatabaseFactory.writeSet(set);
 		return set;
 	}
