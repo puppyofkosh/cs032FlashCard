@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,16 +17,26 @@ public class ImageButton extends JButton implements MouseListener {
 		this(null, null);
 	}
 
-	ImageButton(String text, Icon icon) {		
+	ImageButton(String text, Icon icon, int size) {
 		super(text, icon);
 		setForeground(GuiConstants.PRIMARY_FONT_COLOR);
-		setMargin(new Insets(0, 0, 0, 0));		
-		setContentAreaFilled(false);		
+		setFont(new Font(Font.MONOSPACED, Font.PLAIN, size > 0 ? size : getFont().getSize()));
+		setMargin(new Insets(0, 0, 0, 0));
+		setContentAreaFilled(false);
 		setBorderPainted(false);
 		setBorder(null);
 		setFocusable(false);
 		addMouseListener(this);
 	}
+	
+	ImageButton(String text, int size) {
+		this(text, null, size);
+	}
+	
+	ImageButton(String text, Icon icon) {
+		this(text, icon, -1);
+	}
+
 
 	ImageButton(String text) {
 		this(text, null);
