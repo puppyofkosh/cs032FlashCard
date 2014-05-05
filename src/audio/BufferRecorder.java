@@ -36,7 +36,7 @@ public class BufferRecorder implements Recorder {
 			line = (TargetDataLine) AudioSystem.getLine(info);
 		} catch (LineUnavailableException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Controller.guiMessage("unable to record", true);
 		}
 		new CaptureThread(runnables).start();
 	}
@@ -45,9 +45,14 @@ public class BufferRecorder implements Recorder {
 	public AudioFile stopRecord() {
 		line.stop();
 		line.close();
-		AudioFile newFile = new MemoryAudioFile(recordedAudio.getRawBytes());
-		recordedAudio.delete();
+		AudioFile newFile = null;
+		try { 
+			newFile = new MemoryAudioFile(recordedAudio.getRawBytes());
+		} catch (Throwable e) {}
+		if (recordedAudio.exists())
+			recordedAudio.delete();
 		return newFile;
+		
 	}
 	
 	private class CaptureThread extends Thread {
@@ -59,7 +64,6 @@ public class BufferRecorder implements Recorder {
 			try {
 				line.open(format);
 			} catch (LineUnavailableException e) {
-				e.printStackTrace();
 				Controller.guiMessage("Unable to record", true);
 			}
 			
@@ -72,7 +76,7 @@ public class BufferRecorder implements Recorder {
 				AudioSystem.write(new AudioInputStream(line), fileType, recordedAudio);
 				thread.cancel(true);
 			} catch (IOException e) {
-				e.printStackTrace();
+				
 				Controller.guiMessage("Unable to record", true);
 			}
 		}
