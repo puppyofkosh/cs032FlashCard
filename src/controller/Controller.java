@@ -404,6 +404,14 @@ public class Controller {
 	public static void launchGUI() {
 		gui = new MainFrame();
 	}
+	
+	public static void editCard(FlashCard card) {
+		//FIXME not done yet
+	}
+	
+	public static void editSet(FlashCardSet set) {
+		
+	}
 
 	public static void switchTabs(TabType tab) {
 		gui.showTab(tab);
@@ -412,7 +420,6 @@ public class Controller {
 
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
-		gui.showTab(TabType.IMPORT);
 		gui.showTab(currentTab);
 	}
 }
