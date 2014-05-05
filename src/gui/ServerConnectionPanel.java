@@ -38,7 +38,7 @@ import flashcard.FlashCardSet;
 
 @SuppressWarnings("serial")
 public class ServerConnectionPanel extends JPanel implements ClientFrontend, PropertyChangeListener,
-		ActionListener {
+ActionListener {
 
 	CardTablePanel _serverCards;
 
@@ -57,12 +57,12 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 
 	// keeps track of add worker
 	private ProgressMonitor downloadProgress;
-	
-	
+
+
 	// After we've downloaded the cards, this is the worker that we use to add them to their
 	// set
 	private SetAddWorker setAdditionWorker;
-	
+
 	// A CardTablePanel can only store cards, and we need to store
 	// NetworkedCards, so we keep track of the cards here.
 	private List<NetworkedFlashCard> _networkedCards = new ArrayList<>();
@@ -94,7 +94,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 		_serverCards = new CardTablePanel();
 		_serverCards.setPreferredSize(new Dimension(_serverCards.getPreferredSize().width, _serverCards.getPreferredSize().height / 2));
 		add(_serverCards);
-				
+
 		_selectedCards = new CardTablePanel();
 		add(_selectedCards);
 
@@ -108,25 +108,13 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 		displayConnectionStatus(false);
 		add(status);
 
-		JPanel connectionButtons = new JPanel();
-		add(connectionButtons);
-
-		JLabel lblHost = new JLabel("Host:");
-		connectionButtons.add(lblHost);
-
-		host = new JTextField(14);
-		connectionButtons.add(host);
-
-		JLabel lblPort = new JLabel("PORT:");
-		connectionButtons.add(lblPort);
-
-		portNumber = new JTextField();
-		portNumber.setColumns(5);
-		connectionButtons.add(portNumber);
-
-		btnConnect = new JButton("Connect");
-		btnConnect.addActionListener(this);
-		connectionButtons.add(btnConnect);
+//		JPanel connectionButtons = new JPanel();
+//		add(connectionButtons);
+//
+//
+//		btnConnect = new JButton("Connect");
+//		btnConnect.addActionListener(this);
+//		connectionButtons.add(btnConnect);
 
 	}
 
@@ -166,19 +154,19 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 		System.out.println("Downloaded " + cards);
 
 		FlashCardSet set = Controller.generateNewSet("Downloaded", "", new ArrayList<String>(), 0);
-		
+
 		setAdditionWorker = new SetAddWorker(set, cards);
 		setAdditionWorker.addPropertyChangeListener(this);
-		
+
 		downloadProgress = new ProgressMonitor(this,
-                "Uploading",
-                "", 0, 100);
+				"Uploading",
+				"", 0, 100);
 		downloadProgress.setProgress(0);
 		downloadProgress.setNote("Uploading");
 		downloadProgress.setMillisToDecideToPopup(downloadProgress.getMillisToDecideToPopup()/4);
 
 		setAdditionWorker.execute();
-		
+
 	}
 
 	@Override
@@ -198,7 +186,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 		} else if (e.getSource() == btnImportSelectedCards) {
 			if (_client == null)
 				return;			
-			
+
 			List<NetworkedFlashCard> cardsToDownload = new ArrayList<>();
 			for (FlashCard f : _selectedCards.getAllCards()) {
 				if (_networkedCards.contains(f)) {
@@ -207,7 +195,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 				}
 			}
 			_client.requestFullCard(cardsToDownload);
-			
+
 		} else if (e.getSource() == searchField) {
 			if (_client != null) {
 				_client.requestCard(searchField.getText());
@@ -242,15 +230,15 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 		}
 
 		if ("progress".equals(evt.getPropertyName()) && downloadProgress != null) {
-            int progress = (Integer) evt.getNewValue();
-            downloadProgress.setProgress(progress);
-            String message =
-                String.format("Completed %d%%.\n", progress);
-            downloadProgress.setNote(message);
-            if (downloadProgress.isCanceled() || setAdditionWorker.isDone()) {
-            	setAdditionWorker.cancel(false);
-               	downloadProgress.close();
-            }
-        }		
+			int progress = (Integer) evt.getNewValue();
+			downloadProgress.setProgress(progress);
+			String message =
+					String.format("Completed %d%%.\n", progress);
+			downloadProgress.setNote(message);
+			if (downloadProgress.isCanceled() || setAdditionWorker.isDone()) {
+				setAdditionWorker.cancel(false);
+				downloadProgress.close();
+			}
+		}		
 	}
 }
