@@ -295,7 +295,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		ImportThread() {
 			ids = new ArrayList<>();
 			for (int row: setTable.getSelectedRows()) {
-				ids.add(setTable.getValueAt(row, 3).toString());
+				ids.add(String.valueOf(((QuizletSet) setTable.getValueAt(row, 0)).id));
 			}
 			tags = tagPanel.getTags();
 			setName = "";
