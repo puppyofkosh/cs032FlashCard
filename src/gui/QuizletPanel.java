@@ -82,6 +82,10 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		setNamePanel.add(lblInterval);
 
 		spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinner.getEditor());
+		editor.getTextField().setColumns(2);
+		editor.getTextField().setEditable(false);
+
 		setNamePanel.add(spinner);
 
 		tagPanel = new TagPanel("Set tags: ", true);

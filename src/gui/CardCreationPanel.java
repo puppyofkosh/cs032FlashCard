@@ -41,14 +41,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String playText = "Play";
 	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
 	private String stopText = "Stop";
-	private FlashCardSet workingSet;
 	private String inputHint = "Text To Speech";
-	
 	Set<FlashCardSet> setSet;
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
-
 	private JPanel namePanel;
 	private JTextField textFieldName;
 
@@ -133,8 +130,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		intervalPanel.add(lblInterval);
 
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
-		if (workingSet != null)
-			spinnerInterval.setValue(workingSet.getInterval());
 		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
 		editor.getTextField().setColumns(2);
 		editor.getTextField().setEditable(false);
@@ -345,7 +340,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 			FlashCard newCard = Controller.createCard(data);
-			
+
 			for(FlashCardSet set : setSet) {
 				try {
 					set.addCard(newCard);
@@ -353,7 +348,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 					Controller.guiMessage("Could not add card to Set " + set.getName(), true);
 				}
 			}
-			
+
 			clear();
 			// Move user to the next pane
 			Controller.updateAll();
@@ -363,16 +358,5 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	@Override
 	public void run() {
 		recording = false;
-	}
-
-	public boolean hasWorkingSet() {
-		return workingSet != null;
-	}
-
-	public void assignWorkingSet(FlashCardSet currentSet) {
-		workingSet = currentSet;
-		spinnerInterval.setValue(workingSet.getInterval());
-		tagPanel.setTags(workingSet.getTags(), true, false);
-		//IF WE ADD A SETBROWSER HERE, SELECT IT.
 	}
 }

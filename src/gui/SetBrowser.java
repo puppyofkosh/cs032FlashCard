@@ -224,7 +224,20 @@ public class SetBrowser extends JPanel  {
 	public FlashCardSet getSelectedSet() {
 		return getSelectedSet(sourceList.getSelectedItem());
 	}
-
+/*	
+	private PopupListener createRightClickMenu() {
+		JMenuItem delete = new JMenuItem("Remove Cards", IconFactory.loadIcon(IconType.DELETE, 12, false));
+		delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FlashCardSet selectedSet = getSelectedSet();
+				if (selectedSet == null) 
+					
+			}
+		});
+		return new PopupListener(delete);
+	}
+*/
 	/**
 	 * A custom implementation of a color scheme for sourceList.
 	 * Not really done yet.

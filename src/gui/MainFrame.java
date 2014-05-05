@@ -94,7 +94,7 @@ public class MainFrame extends JFrame {
 		setCreationPanel.setControlledLayout(mainPanelLayout);
 		setCreationPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(setCreationPanel, GuiConstants.SET_CREATION_PANEL_NAME);
-		
+
 		cardCreationPanel = new CardCreationPanel();
 		mainPanelContainer.add(cardCreationPanel, GuiConstants.CREATE_PANEL_NAME);
 
