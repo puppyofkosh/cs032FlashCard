@@ -38,6 +38,7 @@ import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
+import gui.GuiConstants.TabType;
 
 public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 
@@ -67,6 +68,13 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		searchTextField = new JTextField();
 		searchPanel.add(searchTextField);
 		searchTextField.setColumns(10);
+		searchTextField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new SearchThread().execute();
+			}
+		});
 
 		JPanel setNamePanel = new JPanel();
 		add(setNamePanel);
@@ -113,6 +121,15 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		
 		JPanel bottomPanel = new JPanel();
 		add(bottomPanel);
+		
+		btnBack = new JButton("Back");
+		bottomPanel.add(btnBack);
+		btnBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Controller.switchTabs(TabType.IMPORT);
+			}
+		});
 
 		btnImport = new JButton("Import!");
 		bottomPanel.add(btnImport);
@@ -152,15 +169,16 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 	private JTable cardTable;
 	private JTextField setNameTextField;
 	private JButton btnImport;
+	private JButton btnBack;
 	private TagPanel tagPanel;
 	private JSpinner spinner;
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		JFrame frame = new JFrame("test");
 		frame.getContentPane().add(new QuizletPanel());
 		frame.pack();
 		frame.setVisible(true);
-	}
+	}*/
 
 	class PreviewRenderer implements TableCellRenderer {
 
