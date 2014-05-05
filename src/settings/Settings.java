@@ -106,6 +106,7 @@ public class Settings implements Serializable {
 	public static void setMainColor(Color newValue) {
 		settings.mainColor = newValue;
 		saveSettings();
+		Controller.guiMessage("Color will be changed on reboot");
 	}
 
 	public static Color getSecondaryColor() {
@@ -115,6 +116,7 @@ public class Settings implements Serializable {
 	public static void setSecondaryColor(Color newValue) {
 		settings.secondaryColor = newValue;
 		saveSettings();
+		Controller.guiMessage("Color will be changed on reboot");
 	}
 
 	/**
