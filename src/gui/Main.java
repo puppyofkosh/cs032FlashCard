@@ -26,7 +26,7 @@ public class Main {
 			public void run() {
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.add(new ExportPanel());
+				frame.add(new SetBrowser());
 				frame.pack();
 				frame.setVisible(true);
 			}
