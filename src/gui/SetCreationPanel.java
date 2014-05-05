@@ -124,7 +124,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
-	private void populateFields(FlashCardSet set) {
+	public void populateFields(FlashCardSet set) {
 		if (set == null)
 			return;
 
