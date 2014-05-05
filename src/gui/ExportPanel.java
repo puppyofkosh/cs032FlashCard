@@ -9,9 +9,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -28,8 +25,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
-
-import controller.Controller;
 
 import protocol.NetworkedFlashCard;
 import search.SearchParameters;
@@ -101,7 +96,6 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-
 		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		continuePanel.setBackground(Color.BLACK);
 		btnExport = new ImageButton("Export", IconFactory.loadIcon(IconType.EXPORT, 36, true));
@@ -113,6 +107,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		_cardTable = new CardTablePanel("Cards for Export");
 		mainPanel.add(_cardTable, BorderLayout.CENTER);
 	}
+	
 
 	public void connectAndExport() {
 		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
