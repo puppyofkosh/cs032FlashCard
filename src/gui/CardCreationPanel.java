@@ -41,7 +41,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String playText = "Play";
 	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
 	private String stopText = "Stop";
-	private FlashCardSet workingSet;
 	private String inputHint = "Text To Speech";
 	Set<FlashCardSet> setSet;
 
@@ -131,8 +130,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		intervalPanel.add(lblInterval);
 
 		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
-		if (workingSet != null)
-			spinnerInterval.setValue(workingSet.getInterval());
 		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
 		editor.getTextField().setColumns(2);
 		editor.getTextField().setEditable(false);
@@ -361,9 +358,5 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	@Override
 	public void run() {
 		recording = false;
-	}
-
-	public boolean hasWorkingSet() {
-		return workingSet != null;
 	}
 }
