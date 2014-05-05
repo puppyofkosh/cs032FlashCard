@@ -1,5 +1,7 @@
 package gui;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.json.JSONArray;
@@ -16,6 +18,7 @@ public class QuizletSetTableModel extends AbstractTableModel {
 	public QuizletSetTableModel(JSONArray data) {
 		this.data = data;
 	}
+	
 
 	@Override
 	public Class<?> getColumnClass(int c) {
@@ -25,7 +28,7 @@ public class QuizletSetTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 4;
+		return 3;
 	}
 
 	@Override
@@ -39,20 +42,15 @@ public class QuizletSetTableModel extends AbstractTableModel {
 		// TODO Auto-generated method stub
 		try {
 			QuizletSet set = new QuizletSet(data.getJSONObject(arg0));
-
 			switch(arg1) {
 			case 0:
 				return set.name;
-
 			case 1:
 				return set.author;
-
 			case 2:
 				return set.terms;
-
 			case 3:
 				return set.id;
-
 			default :
 				throw new IndexOutOfBoundsException();
 			}
@@ -67,16 +65,11 @@ public class QuizletSetTableModel extends AbstractTableModel {
 	public String getColumnName(int index) {
 		switch(index) {
 		case 0:
-			return "name";
-
+			return "Name";
 		case 1:
-			return "author";
-
+			return "Author";
 		case 2:
-			return "number of terms";
-		case 3:
-			return "preview";
-
+			return "Terms";
 		default :
 			throw new IndexOutOfBoundsException();
 		}
@@ -84,7 +77,7 @@ public class QuizletSetTableModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		return col == 3;
+		return false;
 	}
 
 	@Override

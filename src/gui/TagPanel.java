@@ -172,7 +172,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			remove(emptyLabel);
 
 		emptyLabel = new JLabel(text);
-		emptyLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		emptyLabel.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
 	}
 
 	private void update() {

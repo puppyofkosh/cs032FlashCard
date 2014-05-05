@@ -20,7 +20,7 @@ public class QuizletCardTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 3;
+		return 4;
 	}
 
 	@Override
@@ -57,14 +57,11 @@ public class QuizletCardTableModel extends AbstractTableModel {
 	public String getColumnName(int index) {
 		switch(index) {
 		case 0:
-			return "term";
-			
+			return "Term";
 		case 1:
-			return "definition";
-			
+			return "Definition";
 		case 2:
-			return "preview";
-		
+			return "";
 		default :
 			throw new IndexOutOfBoundsException();
 		}

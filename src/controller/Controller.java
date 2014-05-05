@@ -284,6 +284,15 @@ public class Controller {
 		else
 			card.removeTag(tag);
 	}
+	
+	public static String shortenText(String text) {
+		if (text.length() > GuiConstants.MAX_TEXT_LENGTH) {
+			return text.substring(0, GuiConstants.MAX_TEXT_LENGTH) + "...";
+		} else {
+			return text;
+		}
+	}
+
 
 	private static TextToSpeechReader getReader() {
 		if (reader != null)

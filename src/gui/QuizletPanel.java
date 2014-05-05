@@ -1,6 +1,12 @@
 package gui;
 
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
+import flashcard.SerializableFlashCard;
+import gui.GuiConstants.TabType;
+
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -12,11 +18,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,6 +33,9 @@ import javax.swing.JTextField;
 import javax.swing.ProgressMonitor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
@@ -35,36 +44,30 @@ import org.json.JSONException;
 import quizlet.QuizletCard;
 import quizlet.QuizletRequest;
 import controller.Controller;
-import flashcard.FlashCard;
-import flashcard.FlashCardSet;
-import flashcard.SerializableFlashCard;
-import gui.GuiConstants.TabType;
 
 public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 
 	private ProgressMonitor progressMonitor;
 	private ImportThread importThread;
+	private static final long serialVersionUID = 1L;
+	private JTextField searchTextField;
+	private JTable setTable;
+	private JTable cardTable;
+	private JTextField setNameTextField;
+	private JButton btnImport;
+	private JButton btnBack;
+	private TagPanel tagPanel;
+	private JSpinner spinner;
 
 	public QuizletPanel() {
 		addComponentListener(this);
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
 		setOpaque(false);
 		JPanel searchPanel = new JPanel();
+		searchPanel.setOpaque(false);
 		add(searchPanel);
-
-		JButton searchButton = new JButton("Search");
-		searchPanel.add(searchButton);
-
-		searchButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new SearchThread().execute();
-			}
-		});
-
 
 		searchTextField = new JTextField();
 		searchPanel.add(searchTextField);
@@ -77,7 +80,20 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			}
 		});
 
+		JButton searchButton = new JButton("Search Quizlet");
+		searchPanel.add(searchButton);
+
+		searchButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new SearchThread().execute();
+			}
+		});
+
+
 		JPanel setNamePanel = new JPanel();
+		setNamePanel.setOpaque(false);
 		add(setNamePanel);
 
 		JLabel setNameLabel = new JLabel("Set Name");
@@ -101,28 +117,45 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		add(tagPanel);
 
 		JPanel tablePanel = new JPanel();
+		tablePanel.setOpaque(false);
 		add(tablePanel);
 		tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.X_AXIS));
 
 		setTable = new JTable();
+		setTable.setBackground(GuiConstants.SET_TAG_COLOR);
+		setTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	            // do some actions here, for example
+	            // print first column value from selected row
+	            System.out.println(setTable.getValueAt(setTable.getSelectedRow(), 3));
+	        }
+	    });
+
+		
 		JScrollPane setScrollPane = new JScrollPane(setTable);
+		setScrollPane.getViewport().setBackground(GuiConstants.SET_TAG_COLOR);
+		setScrollPane.setBorder(new TitledBorder(BorderFactory.createEmptyBorder(),"Sets from Quizlet Search",
+				TitledBorder.LEFT, TitledBorder.TOP, new Font(Font.MONOSPACED, Font.PLAIN, 20), GuiConstants.PRIMARY_FONT_COLOR));
 		tablePanel.add(setScrollPane);
 
-		setTable.setDefaultRenderer(Long.class, new PreviewRenderer());
-		setTable.setDefaultEditor(Long.class, new PreviewEditor(new JCheckBox()));
-
 		cardTable = new JTable();
+		cardTable.setBackground(GuiConstants.CARD_TAG_COLOR);
 		JScrollPane cardScrollPane = new JScrollPane(cardTable);
+		cardScrollPane.getViewport().setBackground(GuiConstants.CARD_TAG_COLOR);
+		cardScrollPane.setBorder(new TitledBorder(BorderFactory.createEmptyBorder(),"Cards from Quizlet Set",
+				TitledBorder.LEFT, TitledBorder.TOP, new Font(Font.MONOSPACED, Font.PLAIN, 20), GuiConstants.PRIMARY_FONT_COLOR));
+
 		tablePanel.add(cardScrollPane);
 
-		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer());
+		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer("Play Cards"));
 		cardTable.setDefaultEditor(QuizletCard.class, new PreviewEditor(new JCheckBox()));
 		cardTable.setRowSelectionAllowed(false);
 		cardTable.setColumnSelectionAllowed(false);
-		
+
 		JPanel bottomPanel = new JPanel();
+		bottomPanel.setOpaque(false);
 		add(bottomPanel);
-		
+
 		btnBack = new JButton("Back");
 		bottomPanel.add(btnBack);
 		btnBack.addActionListener(new ActionListener() {
@@ -164,16 +197,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		});
 	}
 
-	private static final long serialVersionUID = 1L;
-	private JTextField searchTextField;
-	private JTable setTable;
-	private JTable cardTable;
-	private JTextField setNameTextField;
-	private JButton btnImport;
-	private JButton btnBack;
-	private TagPanel tagPanel;
-	private JSpinner spinner;
-
 	/*public static void main(String[] args) {
 		JFrame frame = new JFrame("test");
 		frame.getContentPane().add(new QuizletPanel());
@@ -183,9 +206,15 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 	class PreviewRenderer implements TableCellRenderer {
 
+		String _text;
+
+		PreviewRenderer(String text) {
+			_text = text;
+		}
+
 		public Component getTableCellRendererComponent(JTable table, Object value,
 				boolean isSelected, boolean hasFocus, int row, int column) {
-			return new JButton("Preview");
+			return new JButton(_text);
 		}
 	}
 
@@ -323,7 +352,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			}
 
 			// Download is complete, write the cards.	
-			
+
 			FlashCardSet set = Controller.generateNewSet(setName, "quizlet", tags, interval);
 			for (FlashCard f : producedCards)
 				set.addCard(f);

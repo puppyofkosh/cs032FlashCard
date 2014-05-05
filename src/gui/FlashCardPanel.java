@@ -58,10 +58,9 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
 		_headerPanel.setBackground(GuiConstants.CARD_BACKGROUND);
-		_headerPanel.setLayout(new BoxLayout(_headerPanel, BoxLayout.X_AXIS));
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		_cardName = new JLabel(defaultName, SwingConstants.CENTER);
+		_cardName = new JLabel(Controller.shortenText(defaultName), SwingConstants.CENTER);
 		_headerPanel.add(_cardName);
 		add(_headerPanel);
 

@@ -16,6 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import controller.Controller;
+
 public class TagLabel extends JPanel implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
@@ -46,7 +48,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		_tagPanel = tagPanel;
 		_global = global;
 		_deletable = deletable;
-		_tag = new JLabel(shortenText(_tagText));
+		_tag = new JLabel(Controller.shortenText(_tagText));
 		_tag.setBorder(BorderFactory.createEmptyBorder(1, 1, 3, 1));
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 		_tag.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
@@ -70,13 +72,6 @@ public class TagLabel extends JPanel implements MouseListener{
 		return _tagText;
 	}
 
-	private String shortenText(String text) {
-		if (text.length() > GuiConstants.MAX_TAG_LENGTH) {
-			return text.substring(0, GuiConstants.MAX_TAG_LENGTH) + "...";
-		} else {
-			return text;
-		}
-	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
