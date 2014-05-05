@@ -131,10 +131,11 @@ public class MainFrame extends JFrame {
 			break;
 		}
 	}
-	
+
 	public void editCard(FlashCard card) {
+		
 	}
-	
+
 	public void editSet(FlashCardSet set) {
 		setCreationPanel.populateFields(set);
 		showTab(TabType.CARD);
