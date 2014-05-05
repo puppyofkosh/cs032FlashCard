@@ -435,6 +435,8 @@ public class Controller {
 	 */
 	public static void replaceCard(FlashCard oldCard, FlashCard newCard)
 	{
+		System.out.println("replacing " + oldCard + " by " + newCard);
+		
 		Collection<FlashCardSet> sets = oldCard.getSets();
 		Controller.deleteCard(oldCard);
 		try {

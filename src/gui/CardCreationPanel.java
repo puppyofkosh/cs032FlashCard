@@ -62,7 +62,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private JTextField textAnswer;
 	private TagPanel tagPanel;
 
-	private JButton btnFlash, btnEdit;
+	private JButton btnFlash;
 
 
 	/**
@@ -234,10 +234,13 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		spinnerInterval.setValue(card.getInterval());
 		tagPanel.reinitialize(card);
 		btnFlash.setText("Edit Card");
+		setSet.clear();
+		setSet.addAll(card.getSets());
 	}
 
 	public void confirmEdit(FlashCard newCard) {
 		if (editedCard != null) {
+			System.out.println("replacing card");
 			Controller.replaceCard(editedCard, newCard);
 			editedCard = null;
 			btnFlash.setText("Create Card");
@@ -339,21 +342,32 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			playToggle(false, btnAnswerPlay);
 		} else if (e.getSource() == textAnswer) {
 			readTTS(false);
-		} else if (e.getSource() == btnFlash || e.getSource() == btnEdit) {
+		} else if (e.getSource() == btnFlash) {
+			
 			//The user wants to create the card and move on to the next one.
 			if (setSet.size() == 0)
 			{
 				Controller.guiMessage("Must choose some sets for this card to be in");
 				return;
 			}
-			createCard();
+			
+			if (this.editedCard == null)
+			{
+				createCard();
+			}
+			else
+			{
+				editCard();
+			}
+			
 		}
 	}
 
-	private void createCard() {
+	public FlashCard createCardFromFields()
+	{
 		if (question == null || answer == null || !hasQuestion || !hasAnswer) {
 			Controller.guiMessage("Must record question and answer", true);
-			return;
+			return null;
 		}
 
 		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
@@ -366,7 +380,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 				data.name = Controller.parseInput(textQuestion.getText());
 			} catch (IOException e1) {
 				Controller.guiMessage("Invalid card name");
-				return;
+				return null;
 			}
 
 		}
@@ -385,7 +399,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 		FlashCard newCard = Controller.createCard(data);
-
+		
 		for(FlashCardSet set : setSet) {
 			try {
 				set.addCard(newCard);
@@ -393,8 +407,27 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 				Controller.guiMessage("Could not add card to Set " + set.getName(), true);
 			}
 		}
+		return newCard;
+	}
+	
+	private void editCard()
+	{
+		FlashCard newCard = createCardFromFields();
+		if (newCard == null || editedCard == null)
+			return;
+	
+		Controller.replaceCard(editedCard, newCard);
+		editedCard = null;
+		clear();
+		Controller.updateAll();
+	}
+	
+	private void createCard() {
+		FlashCard newCard = createCardFromFields();
+		if (newCard == null)
+			return;
 
-		confirmEdit(newCard);
+
 		clear();
 		Controller.updateAll();
 	}
