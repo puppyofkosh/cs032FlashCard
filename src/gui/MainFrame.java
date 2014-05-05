@@ -66,6 +66,7 @@ public MainFrame() {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setPreferredSize(new Dimension(GuiConstants.WIDTH, GuiConstants.HEIGHT));
 	contentPane = new JPanel(new BorderLayout(0,0));
+	setMinimumSize(new Dimension(760, 400));
 	setContentPane(contentPane);
 	contentPane.setBackground(GuiConstants.CARD_BACKGROUND);
 	contentPane.setBorder(BorderFactory.createEmptyBorder());
