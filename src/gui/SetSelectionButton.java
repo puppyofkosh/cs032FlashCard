@@ -66,6 +66,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 					else if (_sets != null)
 						_sets.remove(_set);
 				}
+				Controller.updateGUI(Controller.getCurrentTab());
 			} catch (IOException ioe) {
 				Controller.guiMessage("Could not modify flashcard set", true);
 				_item.doClick();

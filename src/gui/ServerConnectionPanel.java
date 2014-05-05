@@ -6,35 +6,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ProgressMonitor;
-import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.SwingWorker;
-
-import controller.Controller;
 
 import protocol.NetworkedFlashCard;
+import settings.Settings;
 import client.Client;
-import database.DatabaseFactory;
+import controller.Controller;
 import database.SetAddWorker;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import gui.GuiConstants.TabType;
 
 @SuppressWarnings("serial")
 public class ServerConnectionPanel extends JPanel implements ClientFrontend, PropertyChangeListener,
@@ -45,8 +39,6 @@ ActionListener {
 	CardTablePanel _selectedCards;
 
 	Client _client;
-	JTextField host;
-	JTextField portNumber;
 	JTextPane status;
 	JButton btnConnect;
 	private JPanel searchPanel;
@@ -54,6 +46,7 @@ ActionListener {
 	private JButton btnImportSelectedCards;
 	private JButton btnAddCardToSelectedPanel;
 	private JButton btnRemoveCardFromSelectedPanel;
+	private JButton btnBack;
 
 	// keeps track of add worker
 	private ProgressMonitor downloadProgress;
@@ -91,6 +84,17 @@ ActionListener {
 		btnRemoveCardFromSelectedPanel.addActionListener(this);
 		searchPanel.add(btnRemoveCardFromSelectedPanel);
 
+
+		btnBack = new JButton("Back");
+		btnBack.addActionListener(this);
+		searchPanel.add(btnBack);
+
+
+		btnConnect = new JButton("Connect");
+		btnConnect.addActionListener(this);
+		searchPanel.add(btnConnect);
+
+
 		_serverCards = new CardTablePanel();
 		_serverCards.setPreferredSize(new Dimension(_serverCards.getPreferredSize().width, _serverCards.getPreferredSize().height / 2));
 		add(_serverCards);
@@ -107,14 +111,6 @@ ActionListener {
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		displayConnectionStatus(false);
 		add(status);
-
-//		JPanel connectionButtons = new JPanel();
-//		add(connectionButtons);
-//
-//
-//		btnConnect = new JButton("Connect");
-//		btnConnect.addActionListener(this);
-//		connectionButtons.add(btnConnect);
 
 	}
 
@@ -172,16 +168,15 @@ ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnConnect) {
-			String hostName = host.getText();
+			String hostName = Settings.getHost();
 			int port = -1;
 			try {
 				// portNumber.commitEdit();
-				port = (Integer.parseInt(portNumber.getText()));
+				port = (Integer.parseInt(Settings.getPortNumber()));
 				if (!hostName.isEmpty() && port > 0)
 					attemptConnection(hostName, port);
 			} catch (NumberFormatException e1) {
 				guiMessage("Could not parse port number");
-				portNumber.setText("");
 			}
 		} else if (e.getSource() == btnImportSelectedCards) {
 			if (_client == null)
@@ -212,6 +207,8 @@ ActionListener {
 			for (FlashCard f : _selectedCards.getSelectedCards()) {
 				_selectedCards.removeCard(f);
 			}
+		} else if (e.getSource() == btnBack) {
+			Controller.switchTabs(TabType.IMPORT);
 		}
 	}
 

@@ -322,9 +322,8 @@ public class Controller {
 			}
 		}
 		DatabaseFactory.deleteCard(card);
-		updateAll();
-		gui.showTab(TabType.IMPORT);
-		gui.showTab(currentTab);
+		
+		updateGUI(getCurrentTab());
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {
@@ -358,6 +357,8 @@ public class Controller {
 			return existingSet;
 		}
 		set = DatabaseFactory.writeSet(set);
+
+		updateGUI(getCurrentTab());
 		return set;
 	}
 	
@@ -385,6 +386,8 @@ public class Controller {
 		set.setInterval(interval);
 		
 		set = DatabaseFactory.writeSet(set);
+		
+		updateGUI(getCurrentTab());
 		return set;
 	}
 
@@ -399,6 +402,7 @@ public class Controller {
 		for(TabType type : types) {
 			gui.update(type);
 		}
+		setBrowser.updateSourceList();
 	}
 
 	public static void launchGUI() {
@@ -420,6 +424,12 @@ public class Controller {
 
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
-		gui.showTab(currentTab);
+		
+		updateGUI(getCurrentTab());
+	}
+	
+	public static TabType getCurrentTab()
+	{
+		return currentTab;
 	}
 }
