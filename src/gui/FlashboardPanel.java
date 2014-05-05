@@ -6,8 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,8 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import utils.Writer;
 
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
@@ -52,7 +48,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	SetBrowser _setBrowser;
 	JPanel flashboard;
 	JPanel emptyPanel;
-	private static int NUM_COLS = 3;
+	private static int NUM_COLS = 2;
 	private static int NUM_ROWS;
 	FlashCardSet currentSet;
 	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
