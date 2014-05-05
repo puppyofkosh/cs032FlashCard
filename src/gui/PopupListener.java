@@ -14,15 +14,15 @@ import javax.swing.JPopupMenu;
 public class PopupListener implements MouseListener {
 
 	JMenuItem[] items;
-	
+
 	public PopupListener(JMenuItem...items) {
 		this.items = items;
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		popup(arg0);
-		
+
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PopupListener implements MouseListener {
 	public void mouseReleased(MouseEvent arg0) {
 		popup(arg0);
 	}
-	
+
 	private void popup(MouseEvent e) {
 		if (!e.isPopupTrigger())
 			return;
@@ -52,8 +52,7 @@ public class PopupListener implements MouseListener {
 		for (JMenuItem item: items) {
 			menu.add(item);
 		}
-		
+
 		menu.show(e.getComponent(), e.getX(), e.getY());
 	}
-
 }
