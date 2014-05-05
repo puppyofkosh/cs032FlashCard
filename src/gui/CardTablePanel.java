@@ -2,8 +2,10 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,11 +19,13 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import utils.FlashcardConstants;
@@ -42,7 +46,7 @@ public class CardTablePanel extends JPanel {
 		this();
 		setTitle(title);
 	}
-	
+
 	/**
 	 * Create the panel.
 	 */
@@ -50,8 +54,8 @@ public class CardTablePanel extends JPanel {
 		setLayout(new BorderLayout(0,0));
 		cards = new ArrayList<>();
 		setOpaque(false);
-		
-		
+
+
 		searchTableModel = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -75,12 +79,14 @@ public class CardTablePanel extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		addMouseListener(createRightClickMenu());
 		searchTable.addMouseListener(createRightClickMenu());
-
 		updateTable();
 	}
 
 	public void setTitle(String title) {
-		setBorder(BorderFactory.createTitledBorder(title));
+		setBorder(new TitledBorder(BorderFactory.createEmptyBorder(), title,
+				TitledBorder.LEFT, TitledBorder.TOP,
+				new Font(Font.MONOSPACED, Font.PLAIN, 20),
+				GuiConstants.PRIMARY_FONT_COLOR));
 	}
 
 	public CardTablePanel(List<FlashCard> cards) {
@@ -88,13 +94,13 @@ public class CardTablePanel extends JPanel {
 		updateCards(cards);
 		updateTable();
 	}
-	
+
 	public void removeCard(FlashCard f)
 	{
 		cards.remove(f);
 		updateTable();
 	}
-	
+
 	public List<FlashCard> getAllCards() {
 		return Collections.unmodifiableList(cards);
 	}
@@ -111,7 +117,7 @@ public class CardTablePanel extends JPanel {
 		this.cards = cards;
 		updateTable();
 	}
-	
+
 	public void addCard(FlashCard newCard)
 	{
 		cards.add(newCard);
@@ -140,7 +146,7 @@ public class CardTablePanel extends JPanel {
 		}
 		populateTableModel(data.toArray(new String[data.size()][]), FlashcardConstants.DEFAULT_TABLE_COLUMNS);
 	}
-	
+
 	private PopupListener createRightClickMenu() {
 		JMenuItem delete = new JMenuItem("Remove Cards", IconFactory.loadIcon(IconType.DELETE, 12, false));
 		delete.addActionListener(new ActionListener() {
@@ -151,13 +157,13 @@ public class CardTablePanel extends JPanel {
 		});
 		return new PopupListener(delete);
 	}
-	
+
 	public void removeSelectedCards() {
 		cards.removeAll(getSelectedCards());
 		updateTable();
 	}
 
-	
+
 
 	private void populateTableModel(String[][] data, String[] columns) {
 		searchTableModel.setDataVector(data, columns);
@@ -170,6 +176,16 @@ public class CardTablePanel extends JPanel {
 	 */
 	private class SearchTableTransferHandler extends TransferHandler {
 
+		public int getSourceActions(JComponent c) {
+			return COPY;
+		}
+
+		protected Transferable createTransferable(JComponent c) {
+			//Attempt to get the currently selected card.
+			Collection<FlashCard> cards = getSelectedCards();
+			return new TransferableFlashCards(cards);
+		}
+
 		private final DataFlavor acceptedDF = 
 				new DataFlavor(TransferableFlashCards.class, "FlashCard");
 
@@ -180,7 +196,6 @@ public class CardTablePanel extends JPanel {
 		public boolean canImport(TransferSupport support) {
 			// we'll only support drops (not clipboard paste)
 			if (support.isDrop()) {
-
 				for(DataFlavor df: support.getDataFlavors()) {
 					return df.equals(acceptedDF);
 				}
