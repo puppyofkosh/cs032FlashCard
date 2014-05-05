@@ -101,7 +101,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		namePanel.setOpaque(false);
 		removeEmptySpace(namePanel);
 
-
 		qPanel = new JPanel();
 		mainPanel.add(qPanel);
 
@@ -218,6 +217,17 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			Controller.startRecord(btnQuestionRecord, btnAnswerRecord, this);
 		}
 	}
+	
+	public void populate(FlashCard card) {
+		question = card.getQuestionAudio();
+		hasQuestion = true;
+		answer = card.getAnswerAudio();
+		hasAnswer = true;
+		textFieldName.setText(card.getName());
+		spinnerInterval.setValue(card.getInterval());
+		tagPanel.reinitialize(card);
+	}
+	
 
 	private void playToggle(boolean isQuestion, ImageToggleButton button) {
 		if (recording) {
@@ -225,7 +235,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			button.toggle();
 			return;
 		}
-			
+
 		try {
 			if (button.isOn())
 				Controller.playAudioThenRun(isQuestion ? question : answer, button);
@@ -315,55 +325,58 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			readTTS(false);
 		} else if (e.getSource() == btnFlash) {
 			//The user wants to create the card and move on to the next one.
-			if (question == null || answer == null || !hasQuestion || !hasAnswer) {
-				Controller.guiMessage("Must record question and answer", true);
+			createCard();
+		}
+	}
+	
+	private void createCard() {
+		if (question == null || answer == null || !hasQuestion || !hasAnswer) {
+			Controller.guiMessage("Must record question and answer", true);
+			return;
+		}
+
+		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
+		String parsedName;
+		try {
+			parsedName = Controller.parseInput(textFieldName.getText());
+			data.name = Controller.parseCardName(parsedName);
+		} catch (IOException iox) {
+			try {
+				data.name = Controller.parseInput(textQuestion.getText());
+			} catch (IOException e1) {
+				Controller.guiMessage("Invalid card name");
 				return;
 			}
 
-			SerializableFlashCard.Data data = new SerializableFlashCard.Data();
-			String parsedName;
-			try {
-				parsedName = Controller.parseInput(textFieldName.getText());
-				data.name = Controller.parseCardName(parsedName);
-			} catch (IOException iox) {
-				try {
-					data.name = Controller.parseInput(textQuestion.getText());
-				} catch (IOException e1) {
-					Controller.guiMessage("Invalid card name");
-					return;
-				}
-
-			}
-			data.setQuestion(question);
-			data.setAnswer(answer);
-
-			try {
-				spinnerInterval.commitEdit();
-			} catch (ParseException e1) {
-				Controller.guiMessage("ERROR: Could not commit spinner edit", true);
-				e1.printStackTrace();
-			}
-			data.interval = (int) spinnerInterval.getValue();
-
-			data.tags = tagPanel.getTags(false);
-			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
-
-			FlashCard newCard = Controller.createCard(data);
-
-			for(FlashCardSet set : setSet) {
-				try {
-					set.addCard(newCard);
-				} catch (IOException e1) {
-					Controller.guiMessage("Could not add card to Set " + set.getName(), true);
-				}
-			}
-
-			clear();
-			// Move user to the next pane
-			Controller.updateAll();
-			controlledLayout.show(controlledPanel, "create panel");
 		}
+		data.setQuestion(question);
+		data.setAnswer(answer);
+
+		try {
+			spinnerInterval.commitEdit();
+		} catch (ParseException e1) {
+			Controller.guiMessage("ERROR: Could not commit spinner edit", true);
+			e1.printStackTrace();
+		}
+		data.interval = (int) spinnerInterval.getValue();
+
+		data.tags = tagPanel.getTags(false);
+		data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
+
+		FlashCard newCard = Controller.createCard(data);
+
+		for(FlashCardSet set : setSet) {
+			try {
+				set.addCard(newCard);
+			} catch (IOException e1) {
+				Controller.guiMessage("Could not add card to Set " + set.getName(), true);
+			}
+		}
+		clear();
+		Controller.updateAll();
 	}
+	
+	
 	@Override
 	public void run() {
 		recording = false;
