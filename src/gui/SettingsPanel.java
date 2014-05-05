@@ -14,79 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import settings.Settings;
 
 public class SettingsPanel extends JPanel implements ActionListener {
-	public SettingsPanel() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		JPanel TimeoutPanel = new JPanel();
-		add(TimeoutPanel);
-
-		JLabel lblNewLabel_2 = new JLabel("Recording Timeout");
-		TimeoutPanel.add(lblNewLabel_2);
-
-		spinner = new JSpinner();
-		TimeoutPanel.add(spinner);
-		spinner.setValue(Settings.getTimeout());
-		spinner.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-
-				try {
-					spinner.commitEdit();
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				int newValue = (int) spinner.getValue();
-				Settings.setTimeout(newValue);
-			}
-		});
-
-		((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setEditable(false);
-
-
-		JPanel panel = new JPanel();
-		add(panel);
-
-		lblNewLabel = new JLabel(Settings.getOutputDestination());
-		panel.add(lblNewLabel);
-
-		btnOutputChanger = new JButton("change output location");
-		panel.add(btnOutputChanger);
-		btnOutputChanger.addActionListener(this);
-
-		JPanel panel_1 = new JPanel();
-		add(panel_1);
-
-		JLabel lblNewLabel_1 = new JLabel("Default Author Name");
-		panel_1.add(lblNewLabel_1);
-
-		defaultAuthorName = new JTextField();
-		panel_1.add(defaultAuthorName);
-		defaultAuthorName.setColumns(10);
-		defaultAuthorName.setText(Settings.getDefaultAuthor());
-		defaultAuthorName.addActionListener(this);
-
-		JPanel panel_3 = new JPanel();
-		add(panel_3);
-
-		mainColorButton = new JButton("Select Color 1");
-		panel_3.add(mainColorButton);
-		mainColorButton.setForeground(Settings.getMainColor());
-		mainColorButton.addActionListener(this);
-
-		secondaryColorButton = new JButton("Select Color 2");
-		panel_3.add(secondaryColorButton);
-		secondaryColorButton.setForeground(Settings.getSecondaryColor());
-		secondaryColorButton.addActionListener(this);
-	}
-
-
 
 	/**
 	 * 
@@ -96,43 +30,131 @@ public class SettingsPanel extends JPanel implements ActionListener {
 	JButton btnOutputChanger;
 	JButton mainColorButton;
 	JButton secondaryColorButton;
-	JSpinner spinner;
+	JSpinner timeoutSpinner;
 	JLabel lblNewLabel;
+	JTextField host, portNumber;
+
+
+	public SettingsPanel() {
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setOpaque(false);
+		JPanel timeoutPanel = new JPanel();
+		timeoutPanel.setOpaque(false);
+		add(timeoutPanel);
+
+		JLabel timeoutLabel = new JLabel("Recording Timeout");
+		timeoutPanel.add(timeoutLabel);
+
+		timeoutSpinner = new JSpinner(new SpinnerNumberModel(Settings.getTimeout(), 0, 1000, 5));
+		((JSpinner.DefaultEditor) timeoutSpinner.getEditor()).getTextField().setEditable(false);
+		timeoutPanel.add(timeoutSpinner);
+		timeoutSpinner.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				try {
+					timeoutSpinner.commitEdit();
+				} catch (ParseException e1) {
+				}
+				int newValue = (int) timeoutSpinner.getValue();
+				Settings.setTimeout(newValue);
+			}
+		});
+
+		JPanel connectionButtons = new JPanel();
+		connectionButtons.setOpaque(false);
+		add(connectionButtons);
+		JLabel lblHost = new JLabel("Database Hostname:");
+		connectionButtons.add(lblHost);
+
+		host = new JTextField(Settings.getHost());
+		host.setColumns(10);
+		host.addActionListener(this);
+		connectionButtons.add(host);
+
+		JLabel lblPort = new JLabel("Port Number:");
+		connectionButtons.add(lblPort);
+
+		portNumber = new JTextField(Settings.getPortNumber());
+		portNumber.setColumns(5);
+		portNumber.addActionListener(this);
+		connectionButtons.add(portNumber);
+
+		JPanel outputPanel = new JPanel();
+		outputPanel.setOpaque(false);
+		add(outputPanel);
+
+		lblNewLabel = new JLabel("Output Location: " + Settings.getOutputDestination());
+		outputPanel.add(lblNewLabel);
+
+		btnOutputChanger = new JButton("Change Output Location");
+		outputPanel.add(btnOutputChanger);
+		btnOutputChanger.addActionListener(this);
+
+		JPanel authorPanel = new JPanel();
+		authorPanel.setOpaque(false);
+		add(authorPanel);
+
+		JLabel authorLabel = new JLabel("Default Author Name");
+		authorPanel.add(authorLabel);
+
+		defaultAuthorName = new JTextField();
+		authorPanel.add(defaultAuthorName);
+		defaultAuthorName.setColumns(10);
+		defaultAuthorName.setText(Settings.getDefaultAuthor());
+		defaultAuthorName.addActionListener(this);
+
+		JPanel colorPanel = new JPanel();
+		colorPanel.setOpaque(false);
+		add(colorPanel);
+
+		mainColorButton = new JButton("Select Color 1");
+		colorPanel.add(mainColorButton);
+		mainColorButton.setForeground(Settings.getMainColor());
+		mainColorButton.setBackground(Color.BLACK);
+		mainColorButton.setOpaque(true);
+		mainColorButton.setBorderPainted(false);
+		mainColorButton.addActionListener(this);
+
+		secondaryColorButton = new JButton("Select Color 2");
+		colorPanel.add(secondaryColorButton);
+		secondaryColorButton.setForeground(Settings.getSecondaryColor());
+		secondaryColorButton.setOpaque(true);
+		secondaryColorButton.setBorderPainted(false);
+		secondaryColorButton.setBackground(Color.BLACK);
+		secondaryColorButton.addActionListener(this);
+	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(mainColorButton)) {
+		if (e.getSource() == mainColorButton) {
 			Color newColor = JColorChooser.showDialog(this, "Choose Main Color", Settings.getMainColor());
 			if (newColor != null && !newColor.equals(Settings.getMainColor())) {
 				Settings.setMainColor(newColor);
 				mainColorButton.setForeground(newColor);
 			}
-		} else if (e.getSource().equals(secondaryColorButton)) {
+		} else if (e.getSource() == secondaryColorButton) {
 			Color newColor = JColorChooser.showDialog(this, "Choose Secondary Color", Settings.getSecondaryColor());
 			if (newColor != null && !newColor.equals(Settings.getSecondaryColor())) {
 				Settings.setSecondaryColor(newColor);
 				secondaryColorButton.setForeground(newColor);
 			}
-		} else if (e.getSource().equals(btnOutputChanger)) {
+		} else if (e.getSource() == btnOutputChanger) {
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int returnedValue = fileChooser.showDialog(this, "Select");
 			if (returnedValue == JFileChooser.APPROVE_OPTION) {
 				Settings.setDestination(fileChooser.getSelectedFile().getPath());
-				lblNewLabel.setText(Settings.getOutputDestination());
+				lblNewLabel.setText("Output Location: " + Settings.getOutputDestination());
 			}
-		} else if(e.getSource().equals(defaultAuthorName)) {
+		} else if(e.getSource() == defaultAuthorName) {
 			String newName = defaultAuthorName.getText();
 			if (!newName.equals(Settings.getDefaultAuthor()))
 				Settings.setDefaultAuthor(newName);
+		} else if (e.getSource() == portNumber) {
+			Settings.setPortNumber(portNumber.getText());
+		} else if (e.getSource() == host) {
+			Settings.setHost(host.getText());
 		}
 	}
-
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("test");
-		frame.add(new SettingsPanel());
-		frame.pack();
-		frame.setVisible(true);
-	}
-
 }
