@@ -83,7 +83,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		emptyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Controller.switchTabs(TabType.CARD);
+				Controller.switchTabs(TabType.SET);
 			}
 		});
 		emptyPanel.add(emptyButton);
