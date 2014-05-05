@@ -322,9 +322,8 @@ public class Controller {
 			}
 		}
 		DatabaseFactory.deleteCard(card);
-		updateAll();
-		gui.showTab(TabType.IMPORT);
-		gui.showTab(currentTab);
+		
+		updateGUI(getCurrentTab());
 	}
 
 	public static Collection<FlashCardSet> getAllSets() {
@@ -417,8 +416,8 @@ public class Controller {
 
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
-		gui.showTab(TabType.IMPORT);
-		gui.showTab(currentTab);
+		
+		updateGUI(getCurrentTab());
 	}
 	
 	public static TabType getCurrentTab()

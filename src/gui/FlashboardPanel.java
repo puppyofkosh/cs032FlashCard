@@ -33,7 +33,7 @@ import flashcard.FlashCardSet;
 import gui.GuiConstants.TabType;
 import gui.IconFactory.IconType;
 
-public class FlashboardPanel extends JPanel implements SourceListSelectionListener, ComponentListener {
+public class FlashboardPanel extends JPanel implements SourceListSelectionListener, Browsable {
 
 	/**
 	 * FIXME:
@@ -66,7 +66,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		super(new BorderLayout(0,0));
 		setOpaque(false);
 
-		addComponentListener(this);
+		addComponentListener(new SetBrowserComponentListener(this));
 
 		//EMPTY PANEL
 		//This panel is displayed when there are 1.) No cards in selected set
@@ -194,8 +194,10 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	@Override
 	public void sourceListItemSelected(SourceListItem arg0) {
 		try {
+			System.out.println("event");
 			if (_setBrowser != null)
 			{
+				System.out.println("updating");
 				currentSet = _setBrowser.getSelectedSet();
 				if (currentSet != null)
 					updateFlashboard(currentSet.getAll());
@@ -206,28 +208,18 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		_setBrowser = null;
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		_setBrowser = Controller.requestSetBrowser();
-		_setBrowser.getSourceList().addSourceListSelectionListener(this);
+	public void showSetBrowser(SetBrowser browser) {
+		_setBrowser = browser;
+		_setBrowser.addParentComponent(this);
 		add(_setBrowser, BorderLayout.EAST);
 		revalidate();
 		repaint();
 	}
+
+	@Override
+	public void removeSetBrowser() {
+		System.out.println("Set browser gone");
+		_setBrowser = null;
+	}
+
 }

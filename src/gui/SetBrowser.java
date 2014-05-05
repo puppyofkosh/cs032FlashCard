@@ -7,10 +7,13 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -54,9 +57,14 @@ public class SetBrowser extends JPanel  {
 	private SourceListSelectionListener _parentComponent;
 	private SourceListCategory setsCategory;
 	private SourceList sourceList;
-
+	
+	private Set<SourceListSelectionListener> listeners = new HashSet<>();
+	
 	public void addParentComponent(SourceListSelectionListener pt)
 	{
+		listeners.add(pt);
+		
+		System.out.println("Now controlled by" + pt.getClass().getName());
 		sourceList.addSourceListSelectionListener(pt);
 	}
 
@@ -71,7 +79,7 @@ public class SetBrowser extends JPanel  {
 	public SetBrowser() {
 		super(new BorderLayout());
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
-		updateSourceList();
+		initializeSourceList();
 	}
 
 	SetBrowser(SourceListSelectionListener parentComponent) {
@@ -79,17 +87,17 @@ public class SetBrowser extends JPanel  {
 		_parentComponent = parentComponent;
 	}	
 
-	/**
-	 * Updates the source list with all the cards from the library.
-	 * Probably not a great way to do it, but the easiest for now.
-	 */
-	public void updateSourceList() {	
+	
+	public void updateSourceList()
+	{
 		removeAll();
 		_cards = new HashMap<>();
 		_sets = new HashMap<>();
 		_parents = new HashMap<>();
-		SourceListModel model = new SourceListModel();
-		sourceList = new SourceList(model);	
+		
+		SourceListModel model = sourceList.getModel();
+		model.removeCategory(setsCategory);
+	
 		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
 
@@ -118,8 +126,33 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-
+		
+		JComponent listPanel = sourceList.getComponent();
+		add(listPanel, BorderLayout.CENTER);
+		revalidate();
+		repaint();
+	}
+	
+	/**
+	 * Updates the source list with all the cards from the library.
+	 * Probably not a great way to do it, but the easiest for now.
+	 * FIXME: This doesn't actually "update" the list, but rather replaces it.
+	 */
+	public void initializeSourceList() {	
+		removeAll();
+		_cards = new HashMap<>();
+		_sets = new HashMap<>();
+		_parents = new HashMap<>();
+		SourceListModel model = new SourceListModel();
+		sourceList = new SourceList(model);	
+		
+		for (SourceListSelectionListener l : listeners)
+			sourceList.addSourceListSelectionListener(l);
+		
+		setsCategory = new SourceListCategory("All Sets");
+		model.addCategory(setsCategory);
 		sourceList.setExpanded(setsCategory, true);
+		
 		//Allows keyboard interaction with setbrowser.
 		//Potentially want to add another keyboard interaction for 
 		//expanding/collapsing items.
@@ -160,14 +193,12 @@ public class SetBrowser extends JPanel  {
 				FlashCard card = getSelectedCard();
 				if (card != null) {
 					Controller.deleteCard(card);
-					sourceList.getModel().removeItemFromItem(item, _parents.get(item));
 					return;
 				}
 
 				FlashCardSet set = getSelectedSet();
 				if (set != null) {
 					Controller.deleteSet(set);
-					//sourceList.getModel().removeItemFromCategory(item, setsCategory);
 				}
 			}
 		});
@@ -177,18 +208,17 @@ public class SetBrowser extends JPanel  {
 		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
 			@Override
 			public void sourceListItemSelected(SourceListItem arg0) {
+				
+				System.out.println("thing clicked");
 				if (_parentComponent != null)
 					_parentComponent.sourceListItemSelected(arg0);
 			}
 		});
+		
 
 		//This handles dragging from the sourceList into another component.
 		sourceList.setTransferHandler(new SourceListTransferHandler());
-
-		JComponent listPanel = sourceList.getComponent();
-		add(listPanel, BorderLayout.CENTER);
-		revalidate();
-		repaint();
+		updateSourceList();
 	}
 
 	public SourceList getSourceList() {
