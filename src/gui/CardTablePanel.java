@@ -49,6 +49,7 @@ public class CardTablePanel extends JPanel {
 	public CardTablePanel() {
 		setLayout(new BorderLayout(0,0));
 		cards = new ArrayList<>();
+		setOpaque(false);
 		
 		
 		searchTableModel = new DefaultTableModel() {

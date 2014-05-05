@@ -101,6 +101,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		JScrollPane scroller = new JScrollPane(tags);
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
+		scroller.setViewportBorder(null);
 		scroller.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 		tagPanel.add(scroller, BorderLayout.CENTER);
 

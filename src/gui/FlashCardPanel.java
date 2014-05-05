@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,7 +51,6 @@ public class FlashCardPanel extends JPanel {
 		setPreferredSize(new Dimension(225, 150));
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
-		setBorder(BorderFactory.createMatteBorder(0, 0, 2, 2, Color.WHITE));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		//The header will contain the given card's name and a delete button.
@@ -85,6 +83,7 @@ public class FlashCardPanel extends JPanel {
 		js.setOpaque(false);
 		js.getViewport().setOpaque(false);
 		js.setBorder(BorderFactory.createEmptyBorder());
+		js.setViewportBorder(null);
 		add(js);
 		addMouseListener(createRightClickMenu());
 		_tagPanel.addMouseListener(createRightClickMenu());

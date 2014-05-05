@@ -7,9 +7,7 @@ import flashcard.SimpleSet;
 import gui.GuiConstants.TabType;
 import gui.MainFrame;
 import gui.SetBrowser;
-import gui.SidePanel;
 
-import java.awt.CardLayout;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +27,6 @@ import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
-import backend.AutoCorrector;
 import backend.FileImporter;
 import database.DatabaseFactory;
 
@@ -234,18 +231,12 @@ public class Controller {
 	public static String parseInput(String text) throws IOException {
 		StringBuilder fixedText = new StringBuilder();
 		char currentCharacter;
-		boolean capitalize = true;
 		for (int i = 0; i < text.length(); i++) {
-			currentCharacter = Character.toLowerCase(text.charAt(i));
+			currentCharacter = text.charAt(i);
 			if (Character.isJavaIdentifierPart(currentCharacter)) {
-				if (capitalize) {
-					currentCharacter = Character.toUpperCase(currentCharacter);
-					capitalize = false;
-				}
 				fixedText.append(currentCharacter);
-			} else if (Character.isWhitespace(currentCharacter) && !capitalize) {
+			} else if (Character.isWhitespace(currentCharacter)) {
 				fixedText.append(" ");
-				capitalize = true;
 			}
 		}
 		String newText = fixedText.toString().trim();

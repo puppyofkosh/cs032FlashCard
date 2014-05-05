@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -61,7 +62,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	public FlashboardPanel() {
 		super(new BorderLayout(0,0));
 		setOpaque(false);
-
 		addComponentListener(new SetBrowserComponentListener(this));
 
 		//EMPTY PANEL
@@ -91,14 +91,13 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		//Contains the grid of cards to be laid out.
 		flashboard = new JPanel();
 		flashboard.setOpaque(false);
-		flashboard.setBorder(BorderFactory.createEmptyBorder());
 		JScrollPane scroller = new JScrollPane(flashboard,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroller.setBorder(BorderFactory.createEmptyBorder());
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
-
+		scroller.setViewportBorder(null);
 		add(scroller, BorderLayout.CENTER);
 		clearFlashboard();
 	}
@@ -119,13 +118,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	public void updateFlashboard(Collection<FlashCard> cards) {
 		updateCards(cards);
 		redrawGrid();
-	}
-
-	/**
-	 * Should be called when we want to refresh the browser and the panel.
-	 */
-	public void onView() {
-
 	}
 
 	/**

@@ -173,6 +173,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		scroller.setBorder(BorderFactory.createEmptyBorder());
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
+		scroller.setViewportBorder(null);
 		mainPanel.add(scroller);
 
 
@@ -210,11 +211,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		if (recording) {
 			if (isQuestion) {
 				question = Controller.finishRecording();
-				Controller.guiMessage("has question");
+				//Controller.guiMessage("has question");
 				hasQuestion = true;
 			} else {
 				answer = Controller.finishRecording();
-				Controller.guiMessage("has answer");
+				//Controller.guiMessage("has answer");
 				hasAnswer = true;
 			}
 			recording = false;
