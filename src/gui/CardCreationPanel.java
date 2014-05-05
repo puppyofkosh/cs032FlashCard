@@ -5,8 +5,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +32,7 @@ import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import gui.IconFactory.IconType;
 
-public class CardCreationPanel extends GenericPanel implements ActionListener, Runnable {
+public class CardCreationPanel extends GenericPanel implements ActionListener, Runnable, ComponentListener {
 
 	//Instance variables that are not gui components or are used multiple times
 	private static final long serialVersionUID = 1L;
@@ -40,6 +44,9 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String stopText = "Stop  ";
 	private String inputHint = "Text To Speech";
 	private Set<FlashCardSet> setSet;
+	
+	// If editing is enabled newCard is the replacement for editedCard
+	private FlashCard newCard;
 	private FlashCard editedCard;
 
 	//The following gui variables are arranged from top to bottom, like their
@@ -74,6 +81,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	}
 
 	private void initPanelComponents() {
+		addComponentListener(this);
+		
 		setLayout(new BorderLayout(0,0));
 		setOpaque(false);
 
@@ -232,19 +241,12 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		textFieldName.setText(card.getName());
 		spinnerInterval.setValue(card.getInterval());
 		tagPanel.reinitialize(card);
+		tagPanel.ignoreCard();
 		btnFlash.setText("Edit Card");
 		setSet.clear();
 		setSet.addAll(card.getSets());
 	}
 
-	public void confirmEdit(FlashCard newCard) {
-		if (editedCard != null) {
-			System.out.println("replacing card");
-			Controller.replaceCard(editedCard, newCard);
-			editedCard = null;
-			btnFlash.setText("Create Card");
-		}
-	}
 
 
 	private void playToggle(boolean isQuestion, ImageToggleButton button) {
@@ -314,6 +316,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		removeAll();
 		initPanelComponents();
 		initFunctionality();
+		editedCard = null;
 	}
 
 	/**
@@ -418,6 +421,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		Controller.replaceCard(editedCard, newCard);
 		editedCard = null;
 		clear();
+		btnFlash.setText("Create Card");
 		Controller.updateAll();
 	}
 	
@@ -434,5 +438,22 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	@Override
 	public void run() {
 		recording = false;
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		clear();
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {		
 	}
 }

@@ -82,6 +82,14 @@ public class TagPanel extends JPanel implements MouseListener {
 		this(null, text, global);
 	}
 
+	/**
+	 * Used if we want to reinitialize with a card's data and then not have the panel edit the card anymore
+	 */
+	public void ignoreCard()
+	{
+		_card = null;
+	}
+	
 	TagPanel(List<String> tags, String text, boolean global) {
 		super(new WrapLayout(WrapLayout.CENTER, 1, 1));
 
