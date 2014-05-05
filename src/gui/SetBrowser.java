@@ -218,8 +218,6 @@ public class SetBrowser extends JPanel  {
 		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
 			@Override
 			public void sourceListItemSelected(SourceListItem arg0) {
-
-				System.out.println("thing clicked");
 				if (_parentComponent != null)
 					_parentComponent.sourceListItemSelected(arg0);
 			}
