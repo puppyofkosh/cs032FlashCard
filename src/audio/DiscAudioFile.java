@@ -49,9 +49,10 @@ public class DiscAudioFile extends File implements AudioFile {
 		try {
 			AudioSystem.write(getStream(), Type.WAVE, bytStream);
 		} catch (IOException e) {
+			//XXX :/
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			Controller.guiMessage("audio data could not be read", true);
+			//Controller.guiMessage("audio data could not be read", true);
 			return null;
 		}
 		return bytStream.toByteArray();

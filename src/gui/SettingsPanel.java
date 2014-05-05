@@ -90,6 +90,8 @@ public class SettingsPanel extends JPanel implements ActionListener {
 		lblNewLabel.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		btnOutputChanger = new JButton("Change Output Location");
+		btnOutputChanger.setBackground(Color.BLACK);
+		btnOutputChanger.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		outputPanel.add(btnOutputChanger);
 		btnOutputChanger.addActionListener(this);
 
