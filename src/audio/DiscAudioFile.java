@@ -30,7 +30,7 @@ public class DiscAudioFile extends File implements AudioFile {
 	public AudioInputStream getStream() throws IOException {
 		// TODO Auto-generated method stub
 		try {
-		return AudioSystem.getAudioInputStream(this);
+			return AudioSystem.getAudioInputStream(this);
 		}
 		catch (UnsupportedAudioFileException e) {
 			throw new IOException("Audio File Format Exception");
