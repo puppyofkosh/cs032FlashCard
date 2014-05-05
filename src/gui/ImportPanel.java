@@ -79,7 +79,7 @@ public class ImportPanel extends GenericPanel implements MouseListener {
 		panel_2.addMouseListener(this);
 		panel_2.setOpaque(false);
 
-		btnNewButton_2 = IconFactory.createImageButton("From File", IconType.IMPORT, 64, true);
+		btnNewButton_2 = IconFactory.createImageButton("From TSV File", IconType.IMPORT, 64, true);
 		btnNewButton_2.setOpaque(false);
 		btnNewButton_2.addMouseListener(this);
 		btnNewButton_2.addActionListener(new ActionListener() {
