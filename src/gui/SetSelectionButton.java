@@ -85,7 +85,6 @@ public class SetSelectionButton extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("sets is " + _sets);
 		_menu = new JPopupMenu();
 		Set<String> setNames = new HashSet<>();
 		if (_card != null) {
@@ -101,6 +100,6 @@ public class SetSelectionButton extends JButton implements ActionListener {
 			_menu.add(item);
 			item.addItemListener(new ModifySetListener(item, set));
 		}
-		_menu.show(this, 0, this.getHeight());
+		_menu.show(this, 0, this.getHeight() - 4);
 	}
 }
