@@ -1,5 +1,7 @@
 package gui;
 
+import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 import gui.GuiConstants.TabType;
 
 import java.awt.BorderLayout;
@@ -89,7 +91,6 @@ public class MainFrame extends JFrame {
 		exportPanel = new ExportPanel();
 		mainPanelContainer.add(exportPanel, GuiConstants.EXPORT_PANEL_NAME);
 
-		//Hmmm
 		setCreationPanel = new SetCreationPanel();
 		setCreationPanel.setControlledLayout(mainPanelLayout);
 		setCreationPanel.setControlledPanel(mainPanelContainer);
@@ -129,6 +130,14 @@ public class MainFrame extends JFrame {
 		default:
 			break;
 		}
+	}
+	
+	public void editCard(FlashCard card) {
+	}
+	
+	public void editSet(FlashCardSet set) {
+		setCreationPanel.populateFields(set);
+		showTab(TabType.CARD);
 	}
 
 	public void showTab(TabType tab) {
