@@ -1,7 +1,7 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -41,11 +41,10 @@ ActionListener {
 	Client _client;
 	JTextPane status;
 	JButton btnConnect;
+	boolean _connected;
 	private JPanel searchPanel;
 	private JTextField searchField;
 	private JButton btnImportSelectedCards;
-	private JButton btnAddCardToSelectedPanel;
-	private JButton btnRemoveCardFromSelectedPanel;
 	private JButton btnBack;
 
 	// keeps track of add worker
@@ -63,44 +62,42 @@ ActionListener {
 	ServerConnectionPanel() {
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setOpaque(false);
 
-		searchPanel = new JPanel();
+		searchPanel = new JPanel(new BorderLayout(10,0));
+		searchPanel.setOpaque(false);
 		add(searchPanel);
 
 		searchField = new JTextField();
 		searchField.addActionListener(this);
-		searchPanel.add(searchField);
-		searchField.setColumns(10);
+		searchPanel.add(searchField, BorderLayout.CENTER);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setOpaque(false);
+		searchPanel.add(buttonPanel, BorderLayout.EAST);
+
 
 		btnImportSelectedCards = new JButton("Import Selected Cards");
 		btnImportSelectedCards.addActionListener(this);
-		searchPanel.add(btnImportSelectedCards);
-
-		btnAddCardToSelectedPanel = new JButton("Add");
-		btnAddCardToSelectedPanel.addActionListener(this);
-		searchPanel.add(btnAddCardToSelectedPanel);
-
-		btnRemoveCardFromSelectedPanel = new JButton("Remove");
-		btnRemoveCardFromSelectedPanel.addActionListener(this);
-		searchPanel.add(btnRemoveCardFromSelectedPanel);
-
+		buttonPanel.add(btnImportSelectedCards);
 
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(this);
-		searchPanel.add(btnBack);
-
+		buttonPanel.add(btnBack);
 
 		btnConnect = new JButton("Connect");
 		btnConnect.addActionListener(this);
-		searchPanel.add(btnConnect);
+		buttonPanel.add(btnConnect);
 
+		JPanel serverTables = new JPanel(new BorderLayout(10,0));
+		serverTables.setOpaque(false);
+		add(serverTables);
 
-		_serverCards = new CardTablePanel();
-		_serverCards.setPreferredSize(new Dimension(_serverCards.getPreferredSize().width, _serverCards.getPreferredSize().height / 2));
-		add(_serverCards);
+		_serverCards = new CardTablePanel("Server Cards");
+		serverTables.add(_serverCards, BorderLayout.WEST);
 
-		_selectedCards = new CardTablePanel();
-		add(_selectedCards);
+		_selectedCards = new CardTablePanel("Import Queue");
+		serverTables.add(_selectedCards, BorderLayout.CENTER);
 
 		status = new JTextPane();
 		status.setEditable(false);
@@ -116,14 +113,17 @@ ActionListener {
 
 	@Override
 	public void displayConnectionStatus(boolean connected) {
+		_connected = connected;
 		if (status == null)
 			return;
-		if (connected) {
+		if (_connected) {
 			status.setText("Connected");
 			status.setBackground(Color.GREEN);
+			btnConnect.setText("Disconnect");
 		} else {
 			status.setText("Disconnected");
 			status.setBackground(Color.RED);
+			btnConnect.setText("Connect");
 		}
 	}
 
@@ -146,9 +146,6 @@ ActionListener {
 
 	@Override
 	public void updateLocallyStoredCards(List<FlashCard> cards) {
-		// _cards.updateCards(cards);
-		System.out.println("Downloaded " + cards);
-
 		FlashCardSet set = Controller.generateNewSet("Downloaded", "", new ArrayList<String>(), 0);
 
 		setAdditionWorker = new SetAddWorker(set, cards);
@@ -168,15 +165,18 @@ ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnConnect) {
-			String hostName = Settings.getHost();
-			int port = -1;
-			try {
-				// portNumber.commitEdit();
-				port = (Integer.parseInt(Settings.getPortNumber()));
-				if (!hostName.isEmpty() && port > 0)
-					attemptConnection(hostName, port);
-			} catch (NumberFormatException e1) {
-				guiMessage("Could not parse port number");
+			if (!_connected) {
+				String hostName = Settings.getHost();
+				int port = -1;
+				try {
+					port = (Integer.parseInt(Settings.getPortNumber()));
+					if (!hostName.isEmpty() && port > 0)
+						attemptConnection(hostName, port);
+				} catch (NumberFormatException e1) {
+					guiMessage("Could not parse port number");
+				}
+			} else {
+				_client.kill();
 			}
 		} else if (e.getSource() == btnImportSelectedCards) {
 			if (_client == null)
@@ -194,18 +194,6 @@ ActionListener {
 		} else if (e.getSource() == searchField) {
 			if (_client != null) {
 				_client.requestCard(searchField.getText());
-			}
-		} else if (e.getSource() == btnAddCardToSelectedPanel) {
-			// Add the selected cards in _availableCards to the _selectedCards
-			// pane
-			for (FlashCard f : _serverCards.getSelectedCards()) {
-				if (!_selectedCards.getAllCards().contains(f)) {
-					_selectedCards.addCard(f);
-				}
-			}
-		} else if (e.getSource() == btnRemoveCardFromSelectedPanel) {
-			for (FlashCard f : _selectedCards.getSelectedCards()) {
-				_selectedCards.removeCard(f);
 			}
 		} else if (e.getSource() == btnBack) {
 			Controller.switchTabs(TabType.IMPORT);
