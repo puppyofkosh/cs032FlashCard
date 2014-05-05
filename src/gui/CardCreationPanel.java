@@ -39,7 +39,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String playText = "Play  ";
 	private String stopText = "Stop  ";
 	private String inputHint = "Text To Speech";
-	Set<FlashCardSet> setSet;
+	private Set<FlashCardSet> setSet;
+	private FlashCard editedCard;
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
@@ -61,7 +62,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private JTextField textAnswer;
 	private TagPanel tagPanel;
 
-	private JButton btnFlash;
+	private JButton btnFlash, btnEdit;
 
 
 	/**
@@ -120,6 +121,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		btnQuestionPlay.addActionListener(this);
 
 		qPanel.setOpaque(false);
+		qPanel.setBackground(GuiConstants.CARD_BACKGROUND);
+
 		removeEmptySpace(qPanel);
 
 		intervalPanel = new JPanel();
@@ -161,6 +164,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		aPanel.add(btnAnswerPlay);
 
 		aPanel.setOpaque(false);
+		aPanel.setBackground(GuiConstants.CARD_BACKGROUND);
 		removeEmptySpace(aPanel);
 
 		//This panel has an input field and a space for tags to be added.
@@ -176,12 +180,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		flashPanel.setOpaque(true);
 		flashPanel.setBackground(GuiConstants.CARD_TAG_COLOR);
 
-		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 36, true));
+		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 20, true), 20);
 		btnFlash.setOpaque(false);
-		btnFlash.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 		btnFlash.setHorizontalAlignment(SwingConstants.CENTER);
 		btnFlash.addActionListener(this);
-		btnFlash.setBorder(BorderFactory.createEmptyBorder());
+
 		flashPanel.add(btnFlash);
 		flashPanel.setMaximumSize(flashPanel.getPreferredSize());
 		add(flashPanel, BorderLayout.SOUTH);
@@ -221,7 +224,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		}
 	}
 
-	public void populateFields(FlashCard card) {
+	public void editCard(FlashCard card) {
+		editedCard = card;
 		question = card.getQuestionAudio();
 		hasQuestion = true;
 		answer = card.getAnswerAudio();
@@ -229,6 +233,15 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		textFieldName.setText(card.getName());
 		spinnerInterval.setValue(card.getInterval());
 		tagPanel.reinitialize(card);
+		btnFlash.setText("Edit Card");
+	}
+
+	public void confirmEdit(FlashCard newCard) {
+		if (editedCard != null) {
+			Controller.replaceCard(editedCard, newCard);
+			editedCard = null;
+			btnFlash.setText("Create Card");
+		}
 	}
 
 
@@ -326,7 +339,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			playToggle(false, btnAnswerPlay);
 		} else if (e.getSource() == textAnswer) {
 			readTTS(false);
-		} else if (e.getSource() == btnFlash) {
+		} else if (e.getSource() == btnFlash || e.getSource() == btnEdit) {
 			//The user wants to create the card and move on to the next one.
 			createCard();
 		}
@@ -375,10 +388,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 				Controller.guiMessage("Could not add card to Set " + set.getName(), true);
 			}
 		}
+
+		confirmEdit(newCard);
 		clear();
 		Controller.updateAll();
 	}
-
 
 	@Override
 	public void run() {

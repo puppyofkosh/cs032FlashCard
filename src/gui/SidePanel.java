@@ -64,7 +64,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		btnSets = new JLabel("Sets      ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
 		initMenuItem(btnSets);
 		add(btnSets);
-		
+
 		add(Box.createVerticalStrut(struts));
 		//TODO make a real icon.
 		btnSettings = new JLabel("Settings  ", IconFactory.loadIcon(IconType.SETTINGS, 32, true), JLabel.LEFT);
@@ -124,7 +124,6 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	private void setUnHovered(JComponent button) {
 		button.setOpaque(false);
 		button.setBackground(GuiConstants.CARD_BACKGROUND);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {

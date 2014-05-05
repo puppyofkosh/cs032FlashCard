@@ -43,8 +43,7 @@ public class MainFrame extends JFrame {
 				try {
 					Controller.launchGUI();
 				} catch (Throwable e) {
-					e.printStackTrace();
-					System.out.println("unable to open FlashBoard");
+					System.out.println("Unable to open FlashBoard. ");
 				}
 			}
 		});
@@ -133,12 +132,14 @@ public class MainFrame extends JFrame {
 	}
 
 	public void editCard(FlashCard card) {
+		cardCreationPanel.editCard(card);
+		showTab(TabType.CARD);
 		
 	}
 
 	public void editSet(FlashCardSet set) {
 		setCreationPanel.populateFields(set);
-		showTab(TabType.CARD);
+		showTab(TabType.SET);
 	}
 
 	public void showTab(TabType tab) {

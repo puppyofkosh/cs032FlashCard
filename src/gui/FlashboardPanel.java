@@ -71,6 +71,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));		
 		emptyPanel.setBorder(BorderFactory.createEmptyBorder());
 		emptyPanel.setOpaque(false);
+		emptyPanel.setBackground(GuiConstants.CARD_BACKGROUND);
 
 		JLabel emptyLabel = new JLabel("Select from the right or");
 		emptyLabel.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
