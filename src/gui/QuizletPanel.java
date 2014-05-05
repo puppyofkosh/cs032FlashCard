@@ -49,7 +49,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		addComponentListener(this);
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		
+		setOpaque(false);
 		JPanel searchPanel = new JPanel();
 		add(searchPanel);
 
