@@ -57,7 +57,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		Box box = new Box(BoxLayout.Y_AXIS);
 		mainPanel.add(box, BorderLayout.CENTER);
 
-		JLabel lblAssignSet = new JLabel("Create a new set or choose one to edit from the list on the right", SwingConstants.LEADING);
+		JLabel lblAssignSet = new JLabel("Create a new set or choose one to edit", SwingConstants.LEADING);
 		lblAssignSet.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 		JPanel pane = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		pane.setOpaque(false);
