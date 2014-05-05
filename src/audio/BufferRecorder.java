@@ -11,9 +11,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 import javax.swing.SwingWorker;
 
-import controller.Controller;
 import settings.Settings;
 import utils.FlashcardConstants;
+import controller.Controller;
 
 /**
  * Recorder that writes audio to a file as it records, then
@@ -46,7 +46,8 @@ public class BufferRecorder implements Recorder {
 		line.stop();
 		line.close();
 		AudioFile newFile = new MemoryAudioFile(recordedAudio.getRawBytes());
-		recordedAudio.delete();
+		if (recordedAudio.exists())
+			recordedAudio.delete();
 		return newFile;
 	}
 	
