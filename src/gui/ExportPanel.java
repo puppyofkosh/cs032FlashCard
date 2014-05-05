@@ -18,7 +18,6 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -28,7 +27,7 @@ import javax.swing.SwingWorker;
 
 import protocol.NetworkedFlashCard;
 import search.SearchParameters;
-import utils.FlashcardConstants;
+import settings.Settings;
 import utils.Writer;
 import audio.WavFileConcatenator;
 import backend.Exporter;
@@ -79,7 +78,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 		headerPanel.add(chooseMethodPanel);
 
-		searchBox = new JTextField(20);
+		searchBox = new JTextField(15);
 		searchBox.setForeground(Color.LIGHT_GRAY);
 		searchBox.setText("Search Here");
 		searchBox.setForeground(Color.BLACK);
@@ -103,20 +102,21 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
 		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		continuePanel.setBackground(Color.BLACK);
-		btnExport = new ImageButton("Export", IconFactory.loadIcon(IconType.EXPORT, 36, true));
-		btnExport.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+		continuePanel.setBackground(GuiConstants.SET_TAG_COLOR);
+		btnExport = new JButton("Export");
+		btnExport.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		btnExport.setBackground(Color.BLACK);
 		btnExport.addActionListener(this);
 		continuePanel.add(btnExport);
 		mainPanel.add(continuePanel, BorderLayout.SOUTH);
-
+		
 		_cardTable = new CardTablePanel("Add Cards for Export");
 		mainPanel.add(_cardTable, BorderLayout.CENTER);
 	}
 
 
 	public void connectAndExport() {
-		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
+		_client = new Client(Settings.getHost(), Integer.parseInt(Settings.getPortNumber()), this);
 		Writer.out("Starting client");
 
 		progressMonitor = new ProgressMonitor(ExportPanel.this,
