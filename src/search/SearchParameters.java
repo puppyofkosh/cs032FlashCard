@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import controller.Controller;
+
+import backend.AutoCorrector;
 import backend.Resources;
 import flashcard.FlashCard;
 
@@ -30,6 +33,7 @@ public class SearchParameters implements Serializable, Search {
 
 	@Override
 	public List<FlashCard> search(Resources db) {
+		
 		List<FlashCard> cards = new ArrayList<>();
 
 		String[] searchTokens = _input.split("[, ]");
@@ -41,6 +45,11 @@ public class SearchParameters implements Serializable, Search {
 		}
 		
 		cards.addAll(db.getFlashCardsByName(_input));
+		
+		List<String> candidates = Search.corrector.getEngine().makeSuggestionsOnPhrase(_input);
+		
+		for (int i = 0; i < 20 && i < candidates.size(); ++i)
+			cards.addAll(db.getFlashCardsByName(candidates.get(i)));
 		
 		// Eliminate duplicates
 		return new ArrayList<>(new HashSet<>(cards));
