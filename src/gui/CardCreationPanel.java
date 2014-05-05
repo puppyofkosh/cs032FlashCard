@@ -210,11 +210,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		if (recording) {
 			if (isQuestion) {
 				question = Controller.finishRecording();
-				Controller.guiMessage("has question");
+				//Controller.guiMessage("has question");
 				hasQuestion = true;
 			} else {
 				answer = Controller.finishRecording();
-				Controller.guiMessage("has answer");
+				//Controller.guiMessage("has answer");
 				hasAnswer = true;
 			}
 			recording = false;
