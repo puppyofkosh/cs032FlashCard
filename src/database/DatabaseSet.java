@@ -270,5 +270,18 @@ public class DatabaseSet implements FlashCardSet{
 			e.printStackTrace();
 		}		
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{	
+		if (!(o instanceof FlashCardSet))
+			return false;
+		
+		if (!(o instanceof DatabaseSet))
+			System.out.println("You are comparing a set not stored in DB with one that is. WARNING");
+
+		FlashCardSet s = (FlashCardSet)o;
+		return sameMetaData(s);
+	}
 
 }
