@@ -183,7 +183,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				}
 
 				System.out.println("Creating monitor");
-				progressMonitor = new ProgressMonitor(QuizletPanel.this,
+				progressMonitor = new ProgressMonitor(	Panel.this,
 						"Running a Long Task",
 						"", 0, 100);
 				progressMonitor.setProgress(0);
@@ -225,6 +225,11 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 	
 	class QuizletSetRenderer extends DefaultTableCellRenderer {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public void setValue(Object o) {
 			setText(((QuizletSet) o).name);
 		}
