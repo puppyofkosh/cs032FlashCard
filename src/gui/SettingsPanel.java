@@ -43,6 +43,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
 		JLabel timeoutLabel = new JLabel("Recording Timeout");
 		timeoutPanel.add(timeoutLabel);
+		timeoutLabel.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		timeoutSpinner = new JSpinner(new SpinnerNumberModel(Settings.getTimeout(), 0, 1000, 5));
 		((JSpinner.DefaultEditor) timeoutSpinner.getEditor()).getTextField().setEditable(false);
@@ -64,6 +65,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 		add(connectionButtons);
 		JLabel lblHost = new JLabel("Database Hostname:");
 		connectionButtons.add(lblHost);
+		lblHost.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		host = new JTextField(Settings.getHost());
 		host.setColumns(10);
@@ -72,6 +74,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
 		JLabel lblPort = new JLabel("Port Number:");
 		connectionButtons.add(lblPort);
+		lblPort.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		portNumber = new JTextField(Settings.getPortNumber());
 		portNumber.setColumns(5);
@@ -84,6 +87,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
 		lblNewLabel = new JLabel("Output Location: " + Settings.getOutputDestination());
 		outputPanel.add(lblNewLabel);
+		lblNewLabel.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		btnOutputChanger = new JButton("Change Output Location");
 		outputPanel.add(btnOutputChanger);
@@ -95,6 +99,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
 		JLabel authorLabel = new JLabel("Default Author Name");
 		authorPanel.add(authorLabel);
+		authorLabel.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		defaultAuthorName = new JTextField();
 		authorPanel.add(defaultAuthorName);
@@ -108,6 +113,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 		colorPanel.setOpaque(false);
 		colorPanel.add(colorLabel);
 		add(colorPanel);
+		colorLabel.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		
 		
 		mainColorButton = new JButton("Select Color 1");
