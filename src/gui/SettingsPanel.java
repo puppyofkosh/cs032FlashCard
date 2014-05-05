@@ -9,7 +9,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -103,10 +102,14 @@ public class SettingsPanel extends JPanel implements ActionListener {
 		defaultAuthorName.setText(Settings.getDefaultAuthor());
 		defaultAuthorName.addActionListener(this);
 
+
+		JLabel colorLabel = new JLabel("Change application colors for next launch.");
 		JPanel colorPanel = new JPanel();
 		colorPanel.setOpaque(false);
+		colorPanel.add(colorLabel);
 		add(colorPanel);
-
+		
+		
 		mainColorButton = new JButton("Select Color 1");
 		colorPanel.add(mainColorButton);
 		mainColorButton.setForeground(Settings.getMainColor());
