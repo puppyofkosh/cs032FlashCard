@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import database.DatabaseFactory;
-
 import edu.brown.cs032.autocorrect.backend.AutoCorrectEngine;
 import edu.brown.cs032.autocorrect.backend.ranker.DefaultRanker;
 import edu.brown.cs032.autocorrect.backend.ranker.SuggestionRanker;

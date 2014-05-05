@@ -38,7 +38,7 @@ public class AutoFillField extends JTextField {
 	//Suppress prevents the autocorrections from revealing after the document change listener
 	//detects a change due to an accepted suggestion
 	private boolean popped, suppress = false;
-	
+
 	/**
 	 * This class is the autofillfield for the GUI - we have four
 	 * @param client
@@ -109,12 +109,12 @@ public class AutoFillField extends JTextField {
 					requestAutocorrections();
 			}
 		});
-		
+
 		this.addMouseListener(new MouseListener() {
 			@Override public void mousePressed(MouseEvent e) {
 				selectAll();
 			}
-			
+
 			//Dont need these methods...
 			@Override public void mouseClicked(MouseEvent e) {
 				selectAll();
@@ -227,7 +227,7 @@ public class AutoFillField extends JTextField {
 		if (suppress) {
 			suppress = false;
 		} else {
-		showPopup();
+			showPopup();
 		}
 	}
 
@@ -240,7 +240,7 @@ public class AutoFillField extends JTextField {
 		//We need to juggle focus a little to select the appropriate row.
 		requestFocusInWindow();
 	}
-	
+
 	public void populateField(String s, boolean suppressPopup) {
 		suppress = suppressPopup;
 		setForeground(Color.BLACK);
@@ -273,10 +273,10 @@ public class AutoFillField extends JTextField {
 	}
 
 	private void requestAutocorrections() {
-			if (!this.getText().equals(initialText))
-				_controller.requestAutocorrections(this.getText(), boxNo);
+		if (!this.getText().equals(initialText))
+			_controller.requestAutocorrections(this.getText(), boxNo);
 	}
-	
+
 	/**
 	 * Resets the autofillfield to its initial value
 	 */

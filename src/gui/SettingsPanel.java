@@ -114,15 +114,11 @@ public class SettingsPanel extends JPanel implements ActionListener {
 		colorPanel.add(mainColorButton);
 		mainColorButton.setForeground(Settings.getMainColor());
 		mainColorButton.setBackground(Color.BLACK);
-		mainColorButton.setOpaque(true);
-		mainColorButton.setBorderPainted(false);
 		mainColorButton.addActionListener(this);
 
 		secondaryColorButton = new JButton("Select Color 2");
 		colorPanel.add(secondaryColorButton);
 		secondaryColorButton.setForeground(Settings.getSecondaryColor());
-		secondaryColorButton.setOpaque(true);
-		secondaryColorButton.setBorderPainted(false);
 		secondaryColorButton.setBackground(Color.BLACK);
 		secondaryColorButton.addActionListener(this);
 	}

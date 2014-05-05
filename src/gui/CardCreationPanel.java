@@ -173,6 +173,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		scroller.setBorder(BorderFactory.createEmptyBorder());
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
+		scroller.setViewportBorder(null);
 		mainPanel.add(scroller);
 
 

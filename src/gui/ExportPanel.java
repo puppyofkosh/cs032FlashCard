@@ -61,10 +61,13 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	 */
 	public ExportPanel() {
 		super(new BorderLayout(0,0));
+		setOpaque(false);
 
 		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
+		mainPanel.setOpaque(false);
 		add(mainPanel);
 		JPanel headerPanel = new JPanel();
+		headerPanel.setOpaque(false);
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -72,6 +75,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		addComponentListener(new SetBrowserComponentListener(this));
 
 		JPanel chooseMethodPanel = new JPanel();
+		chooseMethodPanel.setOpaque(false);
+
 		headerPanel.add(chooseMethodPanel);
 
 		searchBox = new JTextField(20);
