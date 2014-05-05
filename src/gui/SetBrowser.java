@@ -57,19 +57,17 @@ public class SetBrowser extends JPanel  {
 	private SourceListSelectionListener _parentComponent;
 	private SourceListCategory setsCategory;
 	private SourceList sourceList;
-	
+
 	private Set<SourceListSelectionListener> listeners = new HashSet<>();
-	
-	public void addParentComponent(SourceListSelectionListener pt)
-	{
+
+	public void addParentComponent(SourceListSelectionListener pt) {
 		listeners.add(pt);
-		
+
 		System.out.println("Now controlled by" + pt.getClass().getName());
 		sourceList.addSourceListSelectionListener(pt);
 	}
 
-	public void removeParentComponent(SourceListSelectionListener pt)
-	{
+	public void removeParentComponent(SourceListSelectionListener pt) {
 		sourceList.removeSourceListSelectionListener(pt);
 	}
 
@@ -87,17 +85,16 @@ public class SetBrowser extends JPanel  {
 		_parentComponent = parentComponent;
 	}	
 
-	
-	public void updateSourceList()
-	{
+
+	public void updateSourceList() {
 		removeAll();
 		_cards = new HashMap<>();
 		_sets = new HashMap<>();
 		_parents = new HashMap<>();
-		
+
 		SourceListModel model = sourceList.getModel();
 		model.removeCategory(setsCategory);
-	
+
 		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
 
@@ -126,33 +123,33 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-		
+
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
 		revalidate();
 		repaint();
 	}
-	
+
 	/**
 	 * Updates the source list with all the cards from the library.
 	 * Probably not a great way to do it, but the easiest for now.
 	 * FIXME: This doesn't actually "update" the list, but rather replaces it.
 	 */
-	public void initializeSourceList() {	
+	public void initializeSourceList() {
 		removeAll();
 		_cards = new HashMap<>();
 		_sets = new HashMap<>();
 		_parents = new HashMap<>();
 		SourceListModel model = new SourceListModel();
 		sourceList = new SourceList(model);	
-		
+
 		for (SourceListSelectionListener l : listeners)
 			sourceList.addSourceListSelectionListener(l);
-		
+
 		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
 		sourceList.setExpanded(setsCategory, true);
-		
+
 		//Allows keyboard interaction with setbrowser.
 		//Potentially want to add another keyboard interaction for 
 		//expanding/collapsing items.
@@ -193,14 +190,12 @@ public class SetBrowser extends JPanel  {
 				FlashCard card = getSelectedCard();
 				if (card != null) {
 					Controller.deleteCard(card);
-					sourceList.getModel().removeItemFromItem(item, _parents.get(item));
 					return;
 				}
 
 				FlashCardSet set = getSelectedSet();
 				if (set != null) {
 					Controller.deleteSet(set);
-					//sourceList.getModel().removeItemFromCategory(item, setsCategory);
 				}
 			}
 		});
@@ -210,13 +205,13 @@ public class SetBrowser extends JPanel  {
 		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
 			@Override
 			public void sourceListItemSelected(SourceListItem arg0) {
-				
+
 				System.out.println("thing clicked");
 				if (_parentComponent != null)
 					_parentComponent.sourceListItemSelected(arg0);
 			}
 		});
-		
+
 
 		//This handles dragging from the sourceList into another component.
 		sourceList.setTransferHandler(new SourceListTransferHandler());
