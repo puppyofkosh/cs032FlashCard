@@ -424,4 +424,25 @@ public class Controller {
 	public static TabType getCurrentTab() {
 		return currentTab;
 	}
+	
+	
+	/**
+	 * replace a card with a different card in the DB
+	 * @param oldCard
+	 * @param newCard
+	 */
+	public static void replaceCard(FlashCard oldCard, FlashCard newCard)
+	{
+		Collection<FlashCardSet> sets = oldCard.getSets();
+		Controller.deleteCard(oldCard);
+		try {
+			for (FlashCardSet s : sets)
+			{
+				s.addCard(newCard);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
