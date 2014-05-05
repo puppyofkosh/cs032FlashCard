@@ -34,6 +34,7 @@ import audio.WavFileConcatenator;
 import backend.Exporter;
 import backend.ItunesExporter;
 import client.Client;
+import controller.Controller;
 import database.DatabaseFactory;
 
 public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener, Browsable {
@@ -107,22 +108,22 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		_cardTable = new CardTablePanel("Cards for Export");
 		mainPanel.add(_cardTable, BorderLayout.CENTER);
 	}
-	
+
 
 	public void connectAndExport() {
 		_client = new Client(FlashcardConstants.DEFAULT_HOSTNAME, FlashcardConstants.DEFAULT_PORT, this);
 		Writer.out("Starting client");
 
 		progressMonitor = new ProgressMonitor(ExportPanel.this,
-                "Uploading",
-                "", 0, 100);
+				"Uploading",
+				"", 0, 100);
 		progressMonitor.setProgress(0);
 		progressMonitor.setNote("Uploading");
 		progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
-				
+
 		_client.addPropertyChangeListener(this);
 		_client.execute();
-		_client.uploadCards(_cardTable.getSelectedCards());
+		_client.uploadCards(_cardTable.getAllCards());
 	}
 
 	@Override
@@ -166,11 +167,10 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 			updateLocallyStoredCards(results);
 		}
 		else if (e.getSource() == btnExport) {
-			_cardTable.updateSelectedCards();
-			List<FlashCard> cards = _cardTable.getSelectedCards();
+			List<FlashCard> cards = _cardTable.getAllCards();
 
 			if (cards.isEmpty()) {
-				JOptionPane.showMessageDialog(panel, "You must pick which cards to export!");
+				Controller.guiMessage("You must pick some cards to export!", true);
 				return;
 			}
 
@@ -210,10 +210,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 			else if(rdbtnNetwork.isSelected()) {
 				connectAndExport();
-			}
-
-			else
-				JOptionPane.showMessageDialog(panel, "You must choose what kind of export to perform!");
+			} else
+				Controller.guiMessage("You must choose what kind of export to perform!", true);
 		} 
 	}
 
@@ -233,16 +231,16 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		}
 
 		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
-            int progress = (Integer) evt.getNewValue();
-            progressMonitor.setProgress(progress);
-            String message =
-                String.format("Completed %d%%.\n", progress);
-            progressMonitor.setNote(message);
-            if (progressMonitor.isCanceled() || _client.isDone()) {
-               	_client.cancel(true);
-               	progressMonitor.close();
-            }
-        }
+			int progress = (Integer) evt.getNewValue();
+			progressMonitor.setProgress(progress);
+			String message =
+					String.format("Completed %d%%.\n", progress);
+			progressMonitor.setNote(message);
+			if (progressMonitor.isCanceled() || _client.isDone()) {
+				_client.cancel(true);
+				progressMonitor.close();
+			}
+		}
 	}
 
 	@Override
@@ -256,5 +254,5 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	@Override
 	public void removeSetBrowser() {
 	}
-	
+
 }
