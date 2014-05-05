@@ -24,14 +24,20 @@ public class IconFactory {
 		IMPORT,
 		CREATE,
 		DATABASE,
-		QUIZLET
+		QUIZLET,
+		SETTINGS
 	}
 
 	private static String imgFolder = "./res/img/";
 
-	private static ImageIcon STOP_ICON = createImageIcon("Stop Button.png");
 	private static ImageIcon PLAY_ICON = createImageIcon("Play Button.png");
+	private static ImageIcon PLAY_ICON_INVERTED = createImageIcon("Play Button Inverted.png");
+
+	private static ImageIcon STOP_ICON = createImageIcon("Stop Button.png");
+	private static ImageIcon STOP_ICON_INVERTED = createImageIcon("Stop Button Inverted.png");
+
 	private static ImageIcon RECORD_ICON = createImageIcon("Record Button.png");
+	private static ImageIcon RECORD_ICON_INVERTED = createImageIcon("Record Button Inverted.png");
 
 	private static ImageIcon DELETE_ICON = createImageIcon("Delete Icon.png");
 	private static ImageIcon DELETE_ICON_INVERTED = createImageIcon("Delete Icon Inverted.png");
@@ -60,8 +66,8 @@ public class IconFactory {
 	private static ImageIcon QUIZLET_ICON = createImageIcon("Quizlet Icon.png");
 	private static ImageIcon QUIZLET_ICON_INVERTED = createImageIcon("Quizlet Icon Inverted.png");
 
-
-
+	private static ImageIcon SETTINGS_ICON = createImageIcon("Settings Icon.png");
+	private static ImageIcon SETTINGS_ICON_INVERTED = createImageIcon("Settings Icon Inverted.png");
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private static ImageIcon createImageIcon(String path) {
@@ -79,11 +85,11 @@ public class IconFactory {
 	public static ImageIcon loadIcon(IconType type, boolean inverted) {
 		switch (type) {
 		case STOP:
-			return STOP_ICON;
+			return  inverted ? STOP_ICON_INVERTED : STOP_ICON;
 		case PLAY:
-			return PLAY_ICON;
+			return inverted ? PLAY_ICON_INVERTED : PLAY_ICON;
 		case RECORD:
-			return RECORD_ICON;
+			return inverted ? RECORD_ICON_INVERTED : RECORD_ICON;
 		case DELETE:
 			return inverted ? DELETE_ICON_INVERTED : DELETE_ICON;
 		case CARD:
@@ -102,6 +108,8 @@ public class IconFactory {
 			return inverted ? DATABASE_ICON_INVERTED : DATABASE_ICON;
 		case QUIZLET:
 			return inverted ? QUIZLET_ICON_INVERTED : QUIZLET_ICON;
+		case SETTINGS:
+			return inverted ? SETTINGS_ICON_INVERTED : SETTINGS_ICON;
 		default:
 			Controller.guiMessage("Not a valid icon type", true);
 			return loadMissingIcon();

@@ -1,5 +1,7 @@
 package gui;
 
+import gui.IconFactory.IconType;
+
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,8 +37,8 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 	}
 
 	public static ImageToggleButton playStopButton(String playText, String stopText) {
-		return new ImageToggleButton(new ImageIcon("./res/img/Play Button.png"),
-				new ImageIcon("./res/img/Stop Button.png"), playText, stopText);
+		return new ImageToggleButton(IconFactory.loadIcon(IconType.PLAY, true),
+				IconFactory.loadIcon(IconType.STOP, true), playText, stopText);
 	}
 
 	public static ImageToggleButton playStopButton() {

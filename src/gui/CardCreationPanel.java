@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,11 +35,9 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private AudioFile question;
 	private AudioFile answer;
 	private boolean recording;
-	private ImageIcon recordImage = new ImageIcon("./res/img/Record Button.png");
-	private String recordText = "Generate Audio";
-	private String playText = "Play";
-	private ImageIcon stopImage = new ImageIcon("./res/img/Stop Button.png");
-	private String stopText = "Stop";
+	private String recordText = "Record";
+	private String playText = "Play  ";
+	private String stopText = "Stop  ";
 	private String inputHint = "Text To Speech";
 	Set<FlashCardSet> setSet;
 
@@ -109,7 +106,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		textQuestion = new JTextField(20);
 		textQuestion.addActionListener(this);
 
-		btnQuestionRecord = new ImageToggleButton(recordImage, stopImage, recordText, stopText);
+		btnQuestionRecord = new ImageToggleButton(
+				IconFactory.loadIcon(IconType.RECORD, true),
+				IconFactory.loadIcon(IconType.STOP, true),
+				recordText, stopText);
 		btnQuestionRecord.addActionListener(this);
 
 		btnQuestionPlay = ImageToggleButton.playStopButton(playText, stopText);
@@ -145,7 +145,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		JLabel lblAnswer = new JLabel("A:");
 		aPanel.add(lblAnswer);
 
-		btnAnswerRecord =  new ImageToggleButton(recordImage, stopImage, recordText, stopText);
+		btnAnswerRecord =  new ImageToggleButton(
+				IconFactory.loadIcon(IconType.RECORD, true),
+				IconFactory.loadIcon(IconType.STOP, true),
+				recordText, stopText);
 		btnAnswerRecord.addActionListener(this);
 		aPanel.add(btnAnswerRecord);
 
@@ -217,8 +220,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			Controller.startRecord(btnQuestionRecord, btnAnswerRecord, this);
 		}
 	}
-	
-	public void populate(FlashCard card) {
+
+	public void populateFields(FlashCard card) {
 		question = card.getQuestionAudio();
 		hasQuestion = true;
 		answer = card.getAnswerAudio();
@@ -227,7 +230,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		spinnerInterval.setValue(card.getInterval());
 		tagPanel.reinitialize(card);
 	}
-	
+
 
 	private void playToggle(boolean isQuestion, ImageToggleButton button) {
 		if (recording) {
@@ -328,7 +331,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			createCard();
 		}
 	}
-	
+
 	private void createCard() {
 		if (question == null || answer == null || !hasQuestion || !hasAnswer) {
 			Controller.guiMessage("Must record question and answer", true);
@@ -375,8 +378,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		clear();
 		Controller.updateAll();
 	}
-	
-	
+
+
 	@Override
 	public void run() {
 		recording = false;

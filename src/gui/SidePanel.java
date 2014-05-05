@@ -67,7 +67,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		
 		add(Box.createVerticalStrut(struts));
 		//TODO make a real icon.
-		btnSettings = new JLabel("Settings  ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
+		btnSettings = new JLabel("Settings  ", IconFactory.loadIcon(IconType.SETTINGS, 32, true), JLabel.LEFT);
 		initMenuItem(btnSettings);
 		add(btnSettings);
 
