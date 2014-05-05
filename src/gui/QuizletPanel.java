@@ -30,12 +30,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.ProgressMonitor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
@@ -43,6 +45,7 @@ import org.json.JSONException;
 
 import quizlet.QuizletCard;
 import quizlet.QuizletRequest;
+import quizlet.QuizletSet;
 import controller.Controller;
 
 public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
@@ -125,11 +128,13 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		setTable.setBackground(GuiConstants.SET_TAG_COLOR);
 		setTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent event) {
-	            // do some actions here, for example
-	            // print first column value from selected row
-	            System.out.println(setTable.getValueAt(setTable.getSelectedRow(), 3));
+	            new PreviewThread(String.valueOf(((QuizletSet) setTable.getValueAt(setTable.getSelectedRow(), 0)).id)).execute();
+	        
 	        }
 	    });
+		setTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		setTable.setRowSelectionAllowed(true);
+		setTable.setDefaultRenderer(QuizletSet.class, new QuizletSetRenderer());
 
 		
 		JScrollPane setScrollPane = new JScrollPane(setTable);
@@ -215,6 +220,13 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		public Component getTableCellRendererComponent(JTable table, Object value,
 				boolean isSelected, boolean hasFocus, int row, int column) {
 			return new JButton(_text);
+		}
+	}
+	
+	class QuizletSetRenderer extends DefaultTableCellRenderer {
+		
+		public void setValue(Object o) {
+			setText(((QuizletSet) o).name);
 		}
 	}
 

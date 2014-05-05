@@ -44,7 +44,7 @@ public class QuizletSetTableModel extends AbstractTableModel {
 			QuizletSet set = new QuizletSet(data.getJSONObject(arg0));
 			switch(arg1) {
 			case 0:
-				return set.name;
+				return set;
 			case 1:
 				return set.author;
 			case 2:

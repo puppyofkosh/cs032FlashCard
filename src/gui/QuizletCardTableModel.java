@@ -20,7 +20,7 @@ public class QuizletCardTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 4;
+		return 3;
 	}
 
 	@Override
