@@ -37,6 +37,11 @@ public class SetSelectionButton extends JButton implements ActionListener {
 		addActionListener(this);
 	}
 
+	/**
+	 * Gives a collection of sets for this button to modify based on which sets are selected
+	 * @param text
+	 * @param sets
+	 */
 	SetSelectionButton(String text, Collection<FlashCardSet> sets) {
 		super(text);
 		_menu = new JPopupMenu();
@@ -54,13 +59,17 @@ public class SetSelectionButton extends JButton implements ActionListener {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
+			System.out.println("item changed");
+			
 			try {
 				if (_item.isSelected()) {
+					System.out.println(_sets + " is the set");
 					if (_card != null)
 						_set.addCard(_card);
 					else if (_sets != null)
 						_sets.add(_set);
 				} else {
+					System.out.println("item not selected");
 					if (_card != null)
 						_set.removeCard(_card);
 					else if (_sets != null)
@@ -76,6 +85,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println("sets is " + _sets);
 		_menu = new JPopupMenu();
 		Set<String> setNames = new HashSet<>();
 		if (_card != null) {
@@ -83,7 +93,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 			for(FlashCardSet set : cardSets) {
 				setNames.add(set.getName());
 			}
-		}
+		}		
 		for(FlashCardSet set : Controller.getAllSets()) {
 			boolean checked = false;
 			checked = checked || setNames.contains(set.getName()) || (_sets != null && _sets.contains(set));

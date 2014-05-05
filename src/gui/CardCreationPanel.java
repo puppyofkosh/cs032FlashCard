@@ -341,6 +341,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			readTTS(false);
 		} else if (e.getSource() == btnFlash || e.getSource() == btnEdit) {
 			//The user wants to create the card and move on to the next one.
+			if (setSet.size() == 0)
+			{
+				Controller.guiMessage("Must choose some sets for this card to be in");
+				return;
+			}
 			createCard();
 		}
 	}
