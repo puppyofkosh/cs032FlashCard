@@ -197,6 +197,10 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 	}
 
 	private void editSet(FlashCardSet set, String name, String author, int interval, List<String> tags ) {
+		if (set == null) {
+			Controller.guiMessage("No Set Selected", true);
+			return;
+		}
 		set.setName(name);
 		set.setAuthor(author);
 		set.setInterval(interval);

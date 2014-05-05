@@ -167,7 +167,10 @@ public class SetBrowser extends JPanel  {
 				FlashCardSet set = getSelectedSet();
 				if (set != null) {
 					Controller.deleteSet(set);
-					//sourceList.getModel().removeItemFromCategory(item, setsCategory);
+					try {
+						sourceList.getModel().removeItemFromCategory(item, setsCategory);
+					} catch (Throwable e1) {}
+					
 				}
 			}
 		});
