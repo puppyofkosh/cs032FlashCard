@@ -23,7 +23,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import settings.Settings;
-import utils.Writer;
 
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
