@@ -1,12 +1,8 @@
 package gui;
 
-import flashcard.FlashCard;
-import gui.IconFactory.IconType;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -15,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -35,6 +30,7 @@ import backend.ItunesExporter;
 import client.Client;
 import controller.Controller;
 import database.DatabaseFactory;
+import flashcard.FlashCard;
 
 public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener, Browsable {
 	/**
@@ -65,9 +61,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
 		mainPanel.setOpaque(false);
 		add(mainPanel);
-		JPanel headerPanel = new JPanel();
+		JPanel headerPanel = new JPanel(new BorderLayout(0,0));
 		headerPanel.setOpaque(false);
-		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
 		// Will call addSetBrowser whenever this panel is shown
@@ -76,14 +71,11 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		JPanel chooseMethodPanel = new JPanel();
 		chooseMethodPanel.setOpaque(false);
 
-		headerPanel.add(chooseMethodPanel);
+		headerPanel.add(chooseMethodPanel, BorderLayout.EAST);
 
-		searchBox = new JTextField(15);
-		searchBox.setForeground(Color.LIGHT_GRAY);
-		searchBox.setText("Search Here");
-		searchBox.setForeground(Color.BLACK);
+		searchBox = new JTextField("Search Here");
 		searchBox.addActionListener(this);
-		chooseMethodPanel.add(searchBox);
+		headerPanel.add(searchBox, BorderLayout.CENTER);
 
 		rdbtnWav = new JRadioButton("Wav");
 		chooseMethodPanel.add(rdbtnWav);

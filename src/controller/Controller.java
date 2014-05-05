@@ -49,7 +49,6 @@ public class Controller {
 	private static Recorder recorder;
 	private static MainFrame gui;
 	public static SetBrowser setBrowser = new SetBrowser();	
-	
 
 	private static TabType currentTab = TabType.FLASHBOARD;
 	

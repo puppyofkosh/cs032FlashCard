@@ -64,8 +64,6 @@ public class SetBrowser extends JPanel  {
 
 	public void addParentComponent(SourceListSelectionListener pt) {
 		listeners.add(pt);
-
-		System.out.println("Now controlled by" + pt.getClass().getName());
 		sourceList.addSourceListSelectionListener(pt);
 	}
 

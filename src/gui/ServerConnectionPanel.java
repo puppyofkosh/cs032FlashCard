@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -60,15 +59,15 @@ ActionListener {
 	private List<NetworkedFlashCard> _networkedCards = new ArrayList<>();
 
 	ServerConnectionPanel() {
-		super();
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		super(new BorderLayout(0,0));
 		setOpaque(false);
 
 		searchPanel = new JPanel(new BorderLayout(10,0));
+		searchPanel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
 		searchPanel.setOpaque(false);
-		add(searchPanel);
+		add(searchPanel, BorderLayout.NORTH);
 
-		searchField = new JTextField();
+		searchField = new JTextField("Search Here");
 		searchField.addActionListener(this);
 		searchPanel.add(searchField, BorderLayout.CENTER);
 
@@ -107,7 +106,7 @@ ActionListener {
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		displayConnectionStatus(false);
-		add(status);
+		add(status, BorderLayout.SOUTH);
 
 	}
 
