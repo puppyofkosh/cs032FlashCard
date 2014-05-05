@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -36,9 +37,9 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private AudioFile question;
 	private AudioFile answer;
 	private boolean recording;
-	private String recordText = "Record";
-	private String playText = "Play  ";
-	private String stopText = "Stop  ";
+	private String recordText = "Record ";
+	private String playText = "Play   ";
+	private String stopText = "Stop   ";
 	private String inputHint = "Text To Speech";
 	private Set<FlashCardSet> setSet;
 	
@@ -108,6 +109,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		mainPanel.add(qPanel);
 
 		JLabel lblQuestion = new JLabel("Q:");
+		lblQuestion.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		lblQuestion.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 30));
+
+		lblQuestion.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 		textQuestion = new JTextField(20);
 		textQuestion.addActionListener(this);
@@ -151,6 +156,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		mainPanel.add(aPanel);
 
 		JLabel lblAnswer = new JLabel("A:");
+		lblAnswer.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		lblAnswer.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 30));
 		aPanel.add(lblAnswer);
 
 		btnAnswerRecord =  new ImageToggleButton(
@@ -160,7 +167,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		btnAnswerRecord.addActionListener(this);
 		aPanel.add(btnAnswerRecord);
 
-		textAnswer = new JTextField(20);		
+		textAnswer = new JTextField(20);	
 		textAnswer.addActionListener(this);
 		aPanel.add(textAnswer);
 
