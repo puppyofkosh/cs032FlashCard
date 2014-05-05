@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Color;
 
+import settings.Settings;
+
 public class GuiConstants {
 
 	public static final int WIDTH = 900;
@@ -16,11 +18,10 @@ public class GuiConstants {
 	public static final String DATABASE_PANEL_NAME = "database panel";
 	public static final String SETTINGS_PANEL_NAME = "settings panel";
 	
-	public static final Color BLACK = Color.BLACK;
-	public static final Color CARD_BACKGROUND = Color.CYAN;
+	public static final Color CARD_BACKGROUND = Settings.getMainColor();
 	public static final Color SET_TAG_COLOR = CARD_BACKGROUND.darker();
 	public static final Color CARD_TAG_COLOR = SET_TAG_COLOR.darker();
-	public static final Color PRIMARY_FONT_COLOR = Color.WHITE;
+	public static final Color PRIMARY_FONT_COLOR = Settings.getSecondaryColor();
 
 	//Some default settings for tag label.
 	public static final int DEFAULT_TAG_LABEL_ROUNDEDNESS = 10;
