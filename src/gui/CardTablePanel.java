@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +17,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;
+import gui.IconFactory.IconType;
 
 @SuppressWarnings("serial")
 public class CardTablePanel extends JPanel {
@@ -54,8 +58,6 @@ public class CardTablePanel extends JPanel {
 			}
 		};
 
-		
-		
 		searchTable = new JTable(searchTableModel);
 		searchTable.setDragEnabled(true);
 		searchTable.setDropMode(DropMode.INSERT_ROWS);
@@ -70,6 +72,9 @@ public class CardTablePanel extends JPanel {
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		add(scrollPane, BorderLayout.CENTER);
+		addMouseListener(createRightClickMenu());
+		searchTable.addMouseListener(createRightClickMenu());
+
 		updateTable();
 	}
 
@@ -135,6 +140,24 @@ public class CardTablePanel extends JPanel {
 		}
 		populateTableModel(data.toArray(new String[data.size()][]), FlashcardConstants.DEFAULT_TABLE_COLUMNS);
 	}
+	
+	private PopupListener createRightClickMenu() {
+		JMenuItem delete = new JMenuItem("Remove Cards", IconFactory.loadIcon(IconType.DELETE, 12, false));
+		delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeSelectedCards();
+			}
+		});
+		return new PopupListener(delete);
+	}
+	
+	public void removeSelectedCards() {
+		cards.removeAll(getSelectedCards());
+		updateTable();
+	}
+
+	
 
 	private void populateTableModel(String[][] data, String[] columns) {
 		searchTableModel.setDataVector(data, columns);
