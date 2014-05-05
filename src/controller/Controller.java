@@ -358,6 +358,8 @@ public class Controller {
 			return existingSet;
 		}
 		set = DatabaseFactory.writeSet(set);
+
+		updateGUI(getCurrentTab());
 		return set;
 	}
 	
@@ -385,6 +387,8 @@ public class Controller {
 		set.setInterval(interval);
 		
 		set = DatabaseFactory.writeSet(set);
+		
+		updateGUI(getCurrentTab());
 		return set;
 	}
 
@@ -399,6 +403,7 @@ public class Controller {
 		for(TabType type : types) {
 			gui.update(type);
 		}
+		setBrowser.updateSourceList();
 	}
 
 	public static void launchGUI() {
@@ -414,5 +419,10 @@ public class Controller {
 		DatabaseFactory.deleteSet(set);
 		gui.showTab(TabType.IMPORT);
 		gui.showTab(currentTab);
+	}
+	
+	public static TabType getCurrentTab()
+	{
+		return currentTab;
 	}
 }
