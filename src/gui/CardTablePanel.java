@@ -94,8 +94,7 @@ public class CardTablePanel extends JPanel {
 		updateTable();
 	}
 	
-	public List<FlashCard> getAllCards()
-	{
+	public List<FlashCard> getAllCards() {
 		return Collections.unmodifiableList(cards);
 	}
 
