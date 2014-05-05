@@ -154,8 +154,8 @@ public class Client extends SwingWorker<Response, Response> {
 	 * Shuts down the client closing all the connections.
 	 */
 	public void kill() {
-		_running = false;
 		_frontend.displayConnectionStatus(false);
+		_running = false;
 		try {
 			if (_input != null)
 				_input.close();
