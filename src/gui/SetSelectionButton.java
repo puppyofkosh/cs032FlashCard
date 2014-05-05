@@ -82,7 +82,7 @@ public class SetSelectionButton extends JButton implements ActionListener {
 			for(FlashCardSet set : cardSets) {
 				setNames.add(set.getName());
 			}
-		} 
+		}
 		for(FlashCardSet set : Controller.getAllSets()) {
 			boolean checked = false;
 			checked = checked || setNames.contains(set.getName()) || (_sets != null && _sets.contains(set));
