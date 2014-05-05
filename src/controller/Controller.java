@@ -4,6 +4,7 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
+import gui.GuiConstants;
 import gui.GuiConstants.TabType;
 import gui.MainFrame;
 import gui.SetBrowser;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import utils.Writer;
 import audio.AudioFile;
@@ -177,7 +179,12 @@ public class Controller {
 		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
 		dialog.add(label);
 		Rectangle bounds = gui.getBounds();
-		dialog.setBounds(bounds.x + (bounds.width / 3) , Math.max(bounds.y - 120, 0), text.length() * 7, 100);
+		label.setFont(label.getFont().deriveFont((float) (bounds.width/ (text.length() + 2))));
+		label.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		label.setBackground(GuiConstants.CARD_BACKGROUND);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setOpaque(true);
+		dialog.setBounds(bounds.x + (bounds.width / 4) , bounds.y + (bounds.height / 4), bounds.width / 2, bounds.height / 2);
 		dialog.setVisible(true);
 		new Thread(new Runnable() {
 			@Override
@@ -426,6 +433,8 @@ public class Controller {
 	 */
 	public static void replaceCard(FlashCard oldCard, FlashCard newCard)
 	{
+		System.out.println("replacing " + oldCard + " by " + newCard);
+		
 		Collection<FlashCardSet> sets = oldCard.getSets();
 		Controller.deleteCard(oldCard);
 		try {
