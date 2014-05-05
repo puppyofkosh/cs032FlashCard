@@ -29,6 +29,7 @@ import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
+import backend.AutoCorrector;
 import backend.FileImporter;
 import database.DatabaseFactory;
 
@@ -49,6 +50,7 @@ public class Controller {
 	private static Recorder recorder;
 	private static MainFrame gui;
 	public static SetBrowser setBrowser = new SetBrowser();	
+	
 
 	private static TabType currentTab = TabType.FLASHBOARD;
 	
@@ -441,7 +443,6 @@ public class Controller {
 				s.addCard(newCard);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

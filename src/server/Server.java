@@ -22,7 +22,7 @@ public class Server extends Thread {
 	private ServerSocket _socket;
 	private ClientPool _clients;
 	private boolean _running;
-
+	
 	/**
 	 * Initialize a server on the given port. This server will not listen until
 	 * it is launched with the start() method.
