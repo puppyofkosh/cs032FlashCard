@@ -322,7 +322,6 @@ public class Controller {
 			}
 		}
 		DatabaseFactory.deleteCard(card);
-		
 		updateGUI(getCurrentTab());
 	}
 
@@ -410,11 +409,12 @@ public class Controller {
 	}
 	
 	public static void editCard(FlashCard card) {
-		//FIXME not done yet
+		gui.editCard(card);
+		
 	}
 	
 	public static void editSet(FlashCardSet set) {
-		
+		gui.editSet(set);
 	}
 
 	public static void switchTabs(TabType tab) {
@@ -428,8 +428,7 @@ public class Controller {
 		updateGUI(getCurrentTab());
 	}
 	
-	public static TabType getCurrentTab()
-	{
+	public static TabType getCurrentTab() {
 		return currentTab;
 	}
 }
