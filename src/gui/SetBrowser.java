@@ -16,9 +16,11 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
 
 import com.explodingpixels.macwidgets.MacIcons;
@@ -122,9 +124,19 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
+		
+		
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
+		
+		JLabel label = new JLabel("View Sets Here");
+		label.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		label.setOpaque(true);
+		label.setBackground(Color.BLACK);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		add(label, BorderLayout.NORTH);
 		revalidate();
 		repaint();
 	}
@@ -250,7 +262,30 @@ public class SetBrowser extends JPanel  {
 	public FlashCardSet getSelectedSet() {
 		return getSelectedSet(sourceList.getSelectedItem());
 	}
+	
+	/*private SourceListContextMenuProvider createRightClickMenu() {
+		SourceListContextMenuProvider menu = new SourceListContextMenuProvider() {
 
+			@Override
+			public JPopupMenu createContextMenu() {
+				return null;
+			}
+
+			@Override
+			public JPopupMenu createContextMenu(SourceListItem arg0) {
+				JPopupMenu menu = new JPopupMenu();
+				
+			}
+
+			@Override
+			public JPopupMenu createContextMenu(SourceListCategory arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		}
+	}*/
+
+	
 	/**
 	 * A custom implementation of a color scheme for sourceList.
 	 * Not really done yet.
