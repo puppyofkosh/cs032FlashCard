@@ -201,6 +201,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	}
 
 	private void recordToggle(boolean isQuestion) {
+		Controller.stopAudio();
 		if (recording) {
 			if (isQuestion) {
 				question = Controller.finishRecording();
@@ -219,6 +220,12 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	}
 
 	private void playToggle(boolean isQuestion, ImageToggleButton button) {
+		if (recording) {
+			Controller.guiMessage("Can't play audio while recording", true);
+			button.toggle();
+			return;
+		}
+			
 		try {
 			if (button.isOn())
 				Controller.playAudioThenRun(isQuestion ? question : answer, button);
@@ -294,12 +301,14 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			//isQuestion - whether or not the recording is being done for the
 			//question or answer audio file.
 			recordToggle(true);
+			btnAnswerRecord.toggle();
 		} else if (e.getSource() == btnQuestionPlay) {
 			playToggle(true, btnQuestionPlay);
 		} else if (e.getSource() == textQuestion) {
 			readTTS(true);
 		} else if (e.getSource() == btnAnswerRecord) {
 			recordToggle(false);
+			btnQuestionRecord.toggle();
 		} else if (e.getSource() == btnAnswerPlay) {
 			playToggle(false, btnAnswerPlay);
 		} else if (e.getSource() == textAnswer) {
