@@ -272,6 +272,12 @@ public class DatabaseSet implements FlashCardSet{
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		return new Integer(id).hashCode();
+	}
+	
+	@Override
 	public boolean equals(Object o)
 	{	
 		if (!(o instanceof FlashCardSet))

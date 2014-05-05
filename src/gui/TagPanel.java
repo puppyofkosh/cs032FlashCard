@@ -269,6 +269,8 @@ public class TagPanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+		if (_inputField.isFocusOwner())
+			return;
 		_inputField.setVisible(false);
 		update();
 	}

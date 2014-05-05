@@ -211,11 +211,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		if (recording) {
 			if (isQuestion) {
 				question = Controller.finishRecording();
-				Controller.guiMessage("has question");
+				//Controller.guiMessage("has question");
 				hasQuestion = true;
 			} else {
 				answer = Controller.finishRecording();
-				Controller.guiMessage("has answer");
+				//Controller.guiMessage("has answer");
 				hasAnswer = true;
 			}
 			recording = false;
@@ -342,6 +342,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			readTTS(false);
 		} else if (e.getSource() == btnFlash || e.getSource() == btnEdit) {
 			//The user wants to create the card and move on to the next one.
+			if (setSet.size() == 0)
+			{
+				Controller.guiMessage("Must choose some sets for this card to be in");
+				return;
+			}
 			createCard();
 		}
 	}
