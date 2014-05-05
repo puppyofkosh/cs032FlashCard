@@ -297,7 +297,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 			// Download is complete, write the cards.	
 			
-			FlashCardSet set = Controller.createSet(setName, "quizlet", tags, interval);
+			FlashCardSet set = Controller.generateNewSet(setName, "quizlet", tags, interval);
 			for (FlashCard f : producedCards)
 				set.addCard(f);
 			
