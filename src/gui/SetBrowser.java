@@ -26,6 +26,7 @@ import javax.swing.TransferHandler;
 import com.explodingpixels.macwidgets.MacIcons;
 import com.explodingpixels.macwidgets.SourceList;
 import com.explodingpixels.macwidgets.SourceListCategory;
+import com.explodingpixels.macwidgets.SourceListContextMenuProvider;
 import com.explodingpixels.macwidgets.SourceListControlBar;
 import com.explodingpixels.macwidgets.SourceListDarkColorScheme;
 import com.explodingpixels.macwidgets.SourceListItem;
@@ -79,6 +80,7 @@ public class SetBrowser extends JPanel  {
 		super(new BorderLayout());
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
 		initializeSourceList();
+		sourceList.setSourceListContextMenuProvider(this.createRightClickMenu());
 	}
 
 	SetBrowser(SourceListSelectionListener parentComponent) {
@@ -263,8 +265,8 @@ public class SetBrowser extends JPanel  {
 		return getSelectedSet(sourceList.getSelectedItem());
 	}
 	
-	/*private SourceListContextMenuProvider createRightClickMenu() {
-		SourceListContextMenuProvider menu = new SourceListContextMenuProvider() {
+	private SourceListContextMenuProvider createRightClickMenu() {
+		SourceListContextMenuProvider menuProvider = new SourceListContextMenuProvider() {
 
 			@Override
 			public JPopupMenu createContextMenu() {
@@ -273,7 +275,47 @@ public class SetBrowser extends JPanel  {
 
 			@Override
 			public JPopupMenu createContextMenu(SourceListItem arg0) {
+				sourceList.setSelectedItem(arg0);
 				JPopupMenu menu = new JPopupMenu();
+				JMenuItem item1 = new JMenuItem("edit");
+				menu.add(item1);
+				JMenuItem item2 = new JMenuItem("delete");
+				menu.add(item2);
+				item1.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						FlashCard card = getSelectedCard();
+						if (card != null)
+							Controller.editCard(card);
+						else {
+							FlashCardSet set = getSelectedSet();
+							if (set == null)
+								return;
+							
+							Controller.editSet(set);
+						}
+					}
+				});
+				
+				item2.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						FlashCard card = getSelectedCard();
+						if (card != null)
+							Controller.deleteCard(card);
+						else {
+							FlashCardSet set = getSelectedSet();
+							if (set == null)
+								return;
+								
+							Controller.deleteSet(set);
+							
+						}
+					}
+				});
+				return menu;
 				
 			}
 
@@ -282,8 +324,9 @@ public class SetBrowser extends JPanel  {
 				// TODO Auto-generated method stub
 				return null;
 			}
-		}
-	}*/
+		};
+		return menuProvider;
+	}
 
 	
 	/**

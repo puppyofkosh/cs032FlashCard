@@ -181,14 +181,8 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 			if (rdbtnWav.isSelected()) {
 				try {
-					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-					int returnedValue = fileChooser.showDialog(panel, "Select");
-					if (returnedValue == JFileChooser.APPROVE_OPTION) {
-						WavFileConcatenator.changeDestination(fileChooser.getSelectedFile().getPath());
-						WavFileConcatenator.concatenate(cards);
-						JOptionPane.showMessageDialog(panel, "Audio has been created");
-					}
+					WavFileConcatenator.concatenate(cards);
+					JOptionPane.showMessageDialog(panel, "Audio has been created");
 				} catch (IOException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();

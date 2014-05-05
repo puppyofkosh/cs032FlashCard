@@ -7,7 +7,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.SwingWorker;
 
@@ -39,7 +38,7 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 
 	@Override
 	public void stop() {
-		System.out.println("Stopping");
+		//System.out.println("Stopping");
 		if (playThread != null) {
 			playThread.stopPlaying();
 			playThread = null;
@@ -59,7 +58,7 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 
 	@Override
 	public void playThenRun(FlashCard card, Runnable...runnables) throws IOException {
-		System.out.println("Starting");
+		//System.out.println("Starting");
 		if (card == null)
 			throw new IOException("Recieved null FlashCard");
 
@@ -111,7 +110,7 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 				while (bytesRead != -1) {
 					
 					if (!isPlaying) {
-						System.out.println("blocking interrupted");
+						//System.out.println("blocking interrupted");
 						line.stop();
 						line.close();
 						throw new InterruptedException("");
@@ -125,11 +124,8 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 				line.stop();
 				line.close();
 
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-				return;
-			} catch (LineUnavailableException e) {
-				System.out.println(e.getMessage());
+			} catch (Exception e) {
+				//System.out.println(e.getMessage());
 				return;
 			}
 		}
@@ -152,7 +148,7 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 				blockingPlay(card.getAnswerAudio());
 
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted");
+				//System.out.println("Interrupted");
 			}
 			return null;
 		}

@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.AudioFileFormat.Type;
 
+import controller.Controller;
 import utils.FlashcardConstants;
 
 /**
@@ -49,7 +50,8 @@ public class DiscAudioFile extends File implements AudioFile {
 			AudioSystem.write(getStream(), Type.WAVE, bytStream);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			Controller.guiMessage("audio data could not be read", true);
 			return null;
 		}
 		return bytStream.toByteArray();
