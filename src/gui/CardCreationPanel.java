@@ -43,12 +43,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String stopText = "Stop";
 	private FlashCardSet workingSet;
 	private String inputHint = "Text To Speech";
-	
 	Set<FlashCardSet> setSet;
 
 	//The following gui variables are arranged from top to bottom, like their
 	//physical representations on the screen.
-
 	private JPanel namePanel;
 	private JTextField textFieldName;
 
@@ -345,7 +343,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 			FlashCard newCard = Controller.createCard(data);
-			
+
 			for(FlashCardSet set : setSet) {
 				try {
 					set.addCard(newCard);
@@ -353,7 +351,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 					Controller.guiMessage("Could not add card to Set " + set.getName(), true);
 				}
 			}
-			
+
 			clear();
 			// Move user to the next pane
 			Controller.updateAll();
@@ -367,12 +365,5 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 	public boolean hasWorkingSet() {
 		return workingSet != null;
-	}
-
-	public void assignWorkingSet(FlashCardSet currentSet) {
-		workingSet = currentSet;
-		spinnerInterval.setValue(workingSet.getInterval());
-		tagPanel.setTags(workingSet.getTags(), true, false);
-		//IF WE ADD A SETBROWSER HERE, SELECT IT.
 	}
 }
