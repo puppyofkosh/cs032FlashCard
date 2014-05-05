@@ -127,7 +127,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 	        public void valueChanged(ListSelectionEvent event) {
 	            // do some actions here, for example
 	            // print first column value from selected row
-	            System.out.println(setTable.getValueAt(setTable.getSelectedRow(), 3));
+	            System.out.println(setTable.getValueAt(setTable.getSelectedRow(), 2));
 	        }
 	    });
 
