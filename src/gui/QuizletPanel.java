@@ -108,7 +108,9 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer());
 		cardTable.setDefaultEditor(QuizletCard.class, new PreviewEditor(new JCheckBox()));
-
+		cardTable.setRowSelectionAllowed(false);
+		cardTable.setColumnSelectionAllowed(false);
+		
 		JPanel bottomPanel = new JPanel();
 		add(bottomPanel);
 
