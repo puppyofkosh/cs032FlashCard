@@ -110,7 +110,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		continuePanel.add(btnExport);
 		mainPanel.add(continuePanel, BorderLayout.SOUTH);
 
-		_cardTable = new CardTablePanel("Cards for Export");
+		_cardTable = new CardTablePanel("Add Cards for Export");
 		mainPanel.add(_cardTable, BorderLayout.CENTER);
 	}
 
