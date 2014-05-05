@@ -88,6 +88,7 @@ public class SetBrowser extends JPanel  {
 		_cards = new HashMap<>();
 		_sets = new HashMap<>();
 		_parents = new HashMap<>();
+
 		SourceListModel model = new SourceListModel();
 		sourceList = new SourceList(model);	
 		setsCategory = new SourceListCategory("All Sets");
@@ -187,6 +188,7 @@ public class SetBrowser extends JPanel  {
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
+
 		revalidate();
 		repaint();
 	}
@@ -224,20 +226,7 @@ public class SetBrowser extends JPanel  {
 	public FlashCardSet getSelectedSet() {
 		return getSelectedSet(sourceList.getSelectedItem());
 	}
-/*	
-	private PopupListener createRightClickMenu() {
-		JMenuItem delete = new JMenuItem("Remove Cards", IconFactory.loadIcon(IconType.DELETE, 12, false));
-		delete.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FlashCardSet selectedSet = getSelectedSet();
-				if (selectedSet == null) 
-					
-			}
-		});
-		return new PopupListener(delete);
-	}
-*/
+
 	/**
 	 * A custom implementation of a color scheme for sourceList.
 	 * Not really done yet.
