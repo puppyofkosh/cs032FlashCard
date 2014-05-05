@@ -52,10 +52,12 @@ public class FlashCardPanel extends JPanel {
 		_card = card;
 		setBackground(GuiConstants.CARD_BACKGROUND);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, GuiConstants.PRIMARY_FONT_COLOR));
 
 		//The header will contain the given card's name and a delete button.
 		_headerPanel = new JPanel();
 		_headerPanel.setOpaque(false);
+		_headerPanel.setBackground(GuiConstants.CARD_BACKGROUND);
 		_headerPanel.setLayout(new BoxLayout(_headerPanel, BoxLayout.X_AXIS));
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
