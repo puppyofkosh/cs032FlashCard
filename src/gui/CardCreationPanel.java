@@ -43,7 +43,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private Set<FlashCardSet> setSet;
 	
 	// If editing is enabled newCard is the replacement for editedCard
-	private FlashCard newCard;
 	private FlashCard editedCard;
 
 	//The following gui variables are arranged from top to bottom, like their
@@ -183,11 +182,13 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		mainPanel.add(scroller);
 
 
-		JPanel flashPanel= new JPanel(new BorderLayout(0, 0));
+		JPanel flashPanel= new JPanel();
 		flashPanel.setOpaque(true);
 		flashPanel.setBackground(GuiConstants.CARD_TAG_COLOR);
 
-		btnFlash = new ImageButton("Create Card", IconFactory.loadIcon(IconType.FLASHBOARD, 20, true), 20);
+		btnFlash = new JButton("Create Card");
+		btnFlash.setBackground(Color.BLACK);
+		btnFlash.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		btnFlash.setOpaque(false);
 		btnFlash.setHorizontalAlignment(SwingConstants.CENTER);
 		btnFlash.addActionListener(this);

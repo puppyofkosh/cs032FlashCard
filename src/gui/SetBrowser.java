@@ -59,7 +59,6 @@ public class SetBrowser extends JPanel  {
 	private SourceListSelectionListener _parentComponent;
 	private SourceListCategory setsCategory;
 	private SourceList sourceList;
-
 	private Set<SourceListSelectionListener> listeners = new HashSet<>();
 
 	public void addParentComponent(SourceListSelectionListener pt) {
@@ -124,18 +123,18 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-		
-		
+
+
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
-		
+
 		JLabel label = new JLabel("View Sets Here");
 		label.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		label.setOpaque(true);
 		label.setBackground(Color.BLACK);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		add(label, BorderLayout.NORTH);
 		revalidate();
 		repaint();
@@ -260,7 +259,7 @@ public class SetBrowser extends JPanel  {
 	public FlashCardSet getSelectedSet() {
 		return getSelectedSet(sourceList.getSelectedItem());
 	}
-	
+
 	private SourceListContextMenuProvider createRightClickMenu() {
 		SourceListContextMenuProvider menuProvider = new SourceListContextMenuProvider() {
 
@@ -278,7 +277,7 @@ public class SetBrowser extends JPanel  {
 				JMenuItem item2 = new JMenuItem("delete");
 				menu.add(item2);
 				item1.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						FlashCard card = getSelectedCard();
@@ -288,14 +287,14 @@ public class SetBrowser extends JPanel  {
 							FlashCardSet set = getSelectedSet();
 							if (set == null)
 								return;
-							
+
 							Controller.editSet(set);
 						}
 					}
 				});
-				
+
 				item2.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						FlashCard card = getSelectedCard();
@@ -305,14 +304,14 @@ public class SetBrowser extends JPanel  {
 							FlashCardSet set = getSelectedSet();
 							if (set == null)
 								return;
-								
+
 							Controller.deleteSet(set);
-							
+
 						}
 					}
 				});
 				return menu;
-				
+
 			}
 
 			@Override
@@ -324,7 +323,7 @@ public class SetBrowser extends JPanel  {
 		return menuProvider;
 	}
 
-	
+
 	/**
 	 * A custom implementation of a color scheme for sourceList.
 	 * Not really done yet.

@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -109,11 +110,17 @@ public class SetCreationPanel extends GenericPanel implements ActionListener, So
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5,0));
 		buttonPanel.setBackground(GuiConstants.SET_TAG_COLOR);
 		editSet = new JButton("Edit Set");
+		editSet.setBackground(Color.BLACK);
+		editSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		editSet.addActionListener(this);
 		clear = new JButton("Clear");
+		clear.setBackground(Color.BLACK);
+		clear.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		clear.addActionListener(this);
 		newSet = new JButton("Create New Set");
 		newSet.addActionListener(this);
+		newSet.setBackground(Color.BLACK);
+		newSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		buttonPanel.add(editSet);
 		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(clear);
