@@ -313,14 +313,7 @@ public class Controller {
 	}
 
 	public static void deleteCard(FlashCard card) {
-		for(FlashCardSet set : card.getSets()) {
-			try {
-				set.removeCard(card);
-			} catch (IOException e) {
-				Controller.guiMessage("LOL WUT", true);
-				e.printStackTrace();
-			}
-		}
+		// The DB handles removing the card from its sets
 		DatabaseFactory.deleteCard(card);
 		updateGUI(getCurrentTab());
 	}
