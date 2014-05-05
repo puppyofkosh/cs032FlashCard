@@ -28,13 +28,13 @@ import javax.swing.text.StyledDocument;
 import javax.swing.SwingWorker;
 
 import controller.Controller;
-
 import protocol.NetworkedFlashCard;
 import client.Client;
 import database.DatabaseFactory;
 import database.SetAddWorker;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
+import gui.GuiConstants.TabType;
 
 @SuppressWarnings("serial")
 public class ServerConnectionPanel extends JPanel implements ClientFrontend, PropertyChangeListener,
@@ -54,6 +54,7 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 	private JButton btnImportSelectedCards;
 	private JButton btnAddCardToSelectedPanel;
 	private JButton btnRemoveCardFromSelectedPanel;
+	private JButton btnBack;
 
 	// keeps track of add worker
 	private ProgressMonitor downloadProgress;
@@ -110,6 +111,10 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 
 		JPanel connectionButtons = new JPanel();
 		add(connectionButtons);
+		
+		btnBack = new JButton("Back");
+		connectionButtons.add(btnBack);
+		btnBack.addActionListener(this);
 
 		JLabel lblHost = new JLabel("Host:");
 		connectionButtons.add(lblHost);
@@ -224,6 +229,8 @@ public class ServerConnectionPanel extends JPanel implements ClientFrontend, Pro
 			for (FlashCard f : _selectedCards.getSelectedCards()) {
 				_selectedCards.removeCard(f);
 			}
+		} else if (e.getSource() == btnBack) {
+			Controller.switchTabs(TabType.IMPORT);
 		}
 	}
 
