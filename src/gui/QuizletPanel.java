@@ -275,6 +275,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			progressMonitor.close();
 			Controller.updateAll();
 			Controller.requestSetBrowser().updateSourceList();
+			if (!isCancelled())
+				Controller.guiMessage("Done Importing");
 		}
 
 		@Override
