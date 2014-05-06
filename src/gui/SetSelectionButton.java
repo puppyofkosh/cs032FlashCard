@@ -20,6 +20,21 @@ import flashcard.FlashCardSet;
 /**
  * A button that when triggered displays a list of sets. The user can opt to
  * add/remove card from sets by checking them.
+ * 
+ * ---
+ * This class is messy in that it really has 2 functionalities.
+ * When called with the (String, FlashCard) ctor, it will modify the flashcard to have whatever sets
+ * the user selects
+ * 
+ * When called with the (String, Collection) ctor, it will add whatever sets have been selected to the Collection
+ * it is passed.
+ * 
+ * We need to rewrite this into 2 separate classes each of which as one of the above functionalities.
+ * 
+ * -ian
+ * ---
+ * 
+ * 
  * @author samkortchmar
  *
  */
@@ -63,13 +78,11 @@ public class SetSelectionButton extends JButton implements ActionListener {
 			
 			try {
 				if (_item.isSelected()) {
-					System.out.println(_sets + " is the set");
 					if (_card != null)
 						_set.addCard(_card);
 					else if (_sets != null)
 						_sets.add(_set);
 				} else {
-					System.out.println("item not selected");
 					if (_card != null)
 						_set.removeCard(_card);
 					else if (_sets != null)

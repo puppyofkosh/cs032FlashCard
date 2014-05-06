@@ -21,7 +21,7 @@ public abstract class GenericPanel extends JPanel{
 	protected CardLayout controlledLayout;
 	protected JPanel controlledPanel;
 	
-	GenericPanel() {
+	public GenericPanel() {
 		super(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		setBorder(BorderFactory.createEmptyBorder());
 	}

@@ -31,3 +31,6 @@ files/*
 /forms-1.3.0.jar
 /tmp.wav
 /.config
+
+# Directory for finalized wav files
+output/*
