@@ -15,4 +15,10 @@ public class SetBrowserComponentListener extends ComponentAdapter{
 	public void componentShown(ComponentEvent arg0) {
 		browser.showSetBrowser(Controller.requestSetBrowser());
 	}
+	
+	@Override
+	public void componentHidden(ComponentEvent e)
+	{
+		browser.removeSetBrowser();
+	}
 }

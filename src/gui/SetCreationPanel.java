@@ -251,7 +251,10 @@ public class SetCreationPanel extends GenericPanel implements ActionListener,
 	 */
 	@Override
 	public void removeSetBrowser() {
-		_setBrowser.removeParentComponent(this);
+		if (_setBrowser != null)
+		{
+			_setBrowser.removeParentComponent(this);
+		}
 	}
 
 }

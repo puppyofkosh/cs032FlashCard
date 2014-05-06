@@ -33,8 +33,8 @@ public class SimpleSet implements FlashCardSet{
 	}
 	
 	@Override
-	public Collection<FlashCard> getAll() throws IOException {
-		return cards;
+	public List<FlashCard> getAll() throws IOException {
+		return new ArrayList<>(cards);
 	}
 
 	@Override

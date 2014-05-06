@@ -3,10 +3,21 @@ package flashcard;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.UUID;
 
 public abstract class AbstractFlashCard implements FlashCard, Serializable {
+	
+	public static class NameComparator implements Comparator<FlashCard>
+	{
+
+		@Override
+		public int compare(FlashCard a, FlashCard b) {
+			return a.getName().compareTo(b.getName());
+		}
+		
+	}
 	
 	/**
 	 * 

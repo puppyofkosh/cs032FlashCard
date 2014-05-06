@@ -51,10 +51,14 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	JPanel emptyPanel;
 	private static int NUM_COLS = 2;
 	private static int NUM_ROWS;
+	
+	public static final int MAX_FLASH_CARDS = 4;
+	
 	FlashCardSet currentSet;
 	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
 	public Queue<FlashCardPanel> freePanels = new LinkedList<>();
 
+	
 	/**
 	 * Creates a new Flashboard Panel with nothing selected and 
 	 * nothing displayed.
@@ -111,12 +115,52 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	}
 
 	/**
+	 * Draw the flash board such that the first thing drawn is the given card
+	 * @param card
+	 */
+	public void updateFlashboardToShow(FlashCard card)
+	{
+		if (currentSet != null)
+		{
+			try
+			{
+				if (!currentSet.getAll().contains(card))
+					return;
+				
+				List<FlashCard> toDraw = new ArrayList<>();
+				List<FlashCard> availableCards = new ArrayList<>(currentSet.getAll());
+				for (int i = availableCards.indexOf(card) ; i != availableCards.size() && toDraw.size() != MAX_FLASH_CARDS; ++i)
+				{
+					toDraw.add(availableCards.get(i));
+				}
+				
+				updateFlashboard(toDraw);
+			}
+			catch (IOException e)
+			{
+				Controller.guiMessage("Error with database: " + e.getMessage());
+			}
+		}
+	}
+	
+	/**
 	 * This updates the flashboard - loading in the cards
 	 * @param cards
 	 * And then redrawing the grid of cards.
 	 */
-	public void updateFlashboard(Collection<FlashCard> cards) {
-		updateCards(cards);
+	public void updateFlashboard(List<FlashCard> cards) {
+	
+		Collection<FlashCard> toDraw = null;
+		if (cards.size() > MAX_FLASH_CARDS)
+		{
+			toDraw = cards.subList(0, MAX_FLASH_CARDS);
+		}
+		else
+		{
+			toDraw = cards;
+		}
+		updateCards(toDraw);
+
 		redrawGrid();
 	}
 
@@ -168,12 +212,11 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			_setBrowser.updateSourceList();
 		try {
 			if (currentSet != null)
-				updateCards(currentSet.getAll());
+				updateFlashboard(currentSet.getAll());
 		} catch (IOException e) {
 			e.printStackTrace();
 			Controller.guiMessage("Could not read cards from set", true);
 		}
-		redrawGrid();
 	}
 
 	/**
@@ -188,10 +231,17 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 				// The SetBrowser doesn't always have a selected set (even if the flashboard is displaying the cards for a certain set)
 				// We don't want to overwrite currentSet unless if we know the new value won't be null
 				FlashCardSet selectedSet = _setBrowser.getSelectedSet();
-				if (selectedSet != null)
+				// selectedSet != currentSet => Make sure we don't call update unless the set has changed
+				if (selectedSet != null && selectedSet != currentSet)
 				{
 					currentSet = selectedSet;
 					updateFlashboard(currentSet.getAll());
+				}
+				
+				FlashCard selectedCard = _setBrowser.getSelectedCard();
+				if (selectedCard != null)
+				{
+					updateFlashboardToShow(selectedCard);
 				}
 			}
 		} catch (IOException e) {
@@ -213,5 +263,4 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		System.out.println("Set browser gone");
 		_setBrowser = null;
 	}
-
 }

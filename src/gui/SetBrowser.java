@@ -7,10 +7,13 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +38,7 @@ import com.explodingpixels.macwidgets.SourceListSelectionListener;
 import com.explodingpixels.widgets.PopupMenuCustomizer;
 
 import controller.Controller;
+import flashcard.AbstractFlashCard;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 import gui.GuiConstants.TabType;
@@ -110,7 +114,11 @@ public class SetBrowser extends JPanel  {
 			try {
 				_sets.put(setFolder, set);
 				model.addItemToCategory(setFolder, setsCategory);
-				Collection<FlashCard> setCards = set.getAll();
+				
+				// Sort the cards by name
+				List<FlashCard> setCards =new ArrayList<>(set.getAll());
+				Collections.sort(setCards, new AbstractFlashCard.NameComparator());
+				
 				setFolder.setCounterValue(setCards.size());
 				for(FlashCard card : setCards) {
 					SourceListItem currentItem = new SourceListItem(card.getName(), cardIcon);

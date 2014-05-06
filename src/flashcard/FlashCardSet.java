@@ -19,7 +19,7 @@ public interface FlashCardSet {
 	 * for example, it will be used by the GUI to represent flashcards, as
 	 * @return - a Collection of FlashCards.
 	 */
-	Collection<FlashCard> getAll() throws IOException;
+	List<FlashCard> getAll() throws IOException;
 	
 	/**
 	 * Add a card to the set

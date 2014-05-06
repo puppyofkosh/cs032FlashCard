@@ -56,6 +56,8 @@ public class TagPanel extends JPanel implements MouseListener {
 				addTag(setTag, true, false);
 			}
 		}
+		add(emptyLabel);
+		_inputField.setVisible(false);
 	}
 
 	TagPanel(FlashCard card) {

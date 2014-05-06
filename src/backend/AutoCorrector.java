@@ -17,6 +17,7 @@ import edu.brown.cs032.autocorrect.backend.suggestion.WhiteSpaceSuggestionGenera
 public class AutoCorrector {
 	
 	private AutoCorrectEngine engine;
+		
 	public AutoCorrectEngine getEngine() 
 	{
 		// Try to see if the available terms have changed. If so, reinitialize

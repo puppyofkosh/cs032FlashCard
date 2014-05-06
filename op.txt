@@ -1,0 +1,351 @@
+System property "mbrola.base" is undefined.  Will not use MBROLA voices.
+Clearing
+Updating
+Updating
+Creating monitor
+event
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+367 terms for AC
+Adding token Whiskey
+Adding token Rebellion,
+progress is 3
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Only
+Adding token Federalist
+progress is 6
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Judicial
+Adding token Review,
+progress is 9
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token War
+Adding token of
+progress is 12
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Monroe
+Adding token Doctrine,
+progress is 15
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token 6th
+Adding token President
+progress is 18
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Old
+Adding token Hickory,
+progress is 21
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Trail
+Adding token of
+progress is 25
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token 1st
+Adding token President
+progress is 28
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Annexed
+Adding token Texas
+progress is 31
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Declared
+Adding token War
+progress is 34
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token 2nd
+Adding token President
+progress is 37
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Signed
+Adding token Compromise
+progress is 40
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Kansas-Nebraska
+Adding token Act,
+progress is 43
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Only
+Adding token PA
+progress is 46
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Civil
+Adding token War,
+progress is 50
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token 13th
+Adding token amendment
+progress is 53
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Transcontinental
+Adding token Railroad
+progress is 56
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Ended
+Adding token Reconstruction,
+progress is 59
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Shot
+Adding token by
+progress is 62
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Pendleton
+Adding token Civil
+progress is 65
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Dawes
+Adding token Act,
+progress is 68
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Oklahoma
+Adding token Land
+progress is 71
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Panic
+Adding token of
+progress is 75
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Spanish
+Adding token American
+progress is 78
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Panama
+Adding token Canal,
+progress is 81
+Wrote synthesized speech to tmp.wav
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Adding token Dollar
+Adding token Diplomacy
+progress is 84
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token WW1,
+Adding token 14
+progress is 87
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Teapot
+Adding token Dome
+progress is 90
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Silent
+Adding token Cal
+progress is 93
+event
+Setting progress
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Black
+Adding token Tuesday
+progress is 96
+Wrote synthesized speech to tmp.wav
+Wrote synthesized speech to tmp.wav
+Adding token Elected
+Adding token 4
+progress is 99
+Using unique namePresidents2
+event
+Setting progress
+Writing Flashcard at files/Washington/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Washington/
+Writing audio for cardFlashcard at files/Washington/
+Adding card200 to set 15
+Writing Flashcard at files/Adams/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Adams/
+Writing audio for cardFlashcard at files/Adams/
+Adding card201 to set 15
+Writing Flashcard at files/Jefferson/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Jefferson/
+Writing audio for cardFlashcard at files/Jefferson/
+Adding card202 to set 15
+Writing Flashcard at files/Madison/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Madison/
+Writing audio for cardFlashcard at files/Madison/
+Adding card203 to set 15
+Writing Flashcard at files/Monroe/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Monroe/
+Writing audio for cardFlashcard at files/Monroe/
+Adding card204 to set 15
+Writing Flashcard at files/Quincy Adams/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Quincy Adams/
+Writing audio for cardFlashcard at files/Quincy Adams/
+Adding card205 to set 15
+Writing Flashcard at files/Jackson/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Jackson/
+Writing audio for cardFlashcard at files/Jackson/
+Adding card206 to set 15
+Writing Flashcard at files/Van Buren/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Van Buren/
+Writing audio for cardFlashcard at files/Van Buren/
+Adding card207 to set 15
+Writing Flashcard at files/W. Harrison/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/W. Harrison/
+Writing audio for cardFlashcard at files/W. Harrison/
+Adding card208 to set 15
+Writing Flashcard at files/Tyler/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Tyler/
+Writing audio for cardFlashcard at files/Tyler/
+Adding card209 to set 15
+Writing Flashcard at files/Polk/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Polk/
+Writing audio for cardFlashcard at files/Polk/
+Adding card210 to set 15
+Writing Flashcard at files/Taylor/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Taylor/
+Writing audio for cardFlashcard at files/Taylor/
+Adding card211 to set 15
+Writing Flashcard at files/Fillmore/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Fillmore/
+Writing audio for cardFlashcard at files/Fillmore/
+Adding card212 to set 15
+Writing Flashcard at files/Pierce/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Pierce/
+Writing audio for cardFlashcard at files/Pierce/
+Adding card213 to set 15
+Writing Flashcard at files/Buchanan/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Buchanan/
+Writing audio for cardFlashcard at files/Buchanan/
+Adding card214 to set 15
+Writing Flashcard at files/Lincoln/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Lincoln/
+Writing audio for cardFlashcard at files/Lincoln/
+Adding card215 to set 15
+Writing Flashcard at files/Johnson/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Johnson/
+Writing audio for cardFlashcard at files/Johnson/
+Adding card216 to set 15
+Writing Flashcard at files/Grant/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Grant/
+Writing audio for cardFlashcard at files/Grant/
+Adding card217 to set 15
+Writing Flashcard at files/Hayes/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Hayes/
+Writing audio for cardFlashcard at files/Hayes/
+Adding card218 to set 15
+Writing Flashcard at files/Garfield/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Garfield/
+Writing audio for cardFlashcard at files/Garfield/
+Adding card219 to set 15
+Writing Flashcard at files/Arthur/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Arthur/
+Writing audio for cardFlashcard at files/Arthur/
+Adding card220 to set 15
+Writing Flashcard at files/Cleveland (1st term)/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Cleveland (1st term)/
+Writing audio for cardFlashcard at files/Cleveland (1st term)/
+Adding card221 to set 15
+Writing Flashcard at files/B. Harrison/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/B. Harrison/
+Writing audio for cardFlashcard at files/B. Harrison/
+Adding card222 to set 15
+Writing Flashcard at files/Cleveland (2nd term)/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Cleveland (2nd term)/
+Writing audio for cardFlashcard at files/Cleveland (2nd term)/
+Adding card223 to set 15
+Writing Flashcard at files/McKinley/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/McKinley/
+Writing audio for cardFlashcard at files/McKinley/
+Adding card224 to set 15
+Writing Flashcard at files/T. Roosevelt/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/T. Roosevelt/
+Writing audio for cardFlashcard at files/T. Roosevelt/
+Adding card225 to set 15
+Writing Flashcard at files/Taft/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Taft/
+Writing audio for cardFlashcard at files/Taft/
+Adding card226 to set 15
+Writing Flashcard at files/Wilson/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Wilson/
+Writing audio for cardFlashcard at files/Wilson/
+Adding card227 to set 15
+Writing Flashcard at files/Harding/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Harding/
+Writing audio for cardFlashcard at files/Harding/
+Adding card228 to set 15
+Writing Flashcard at files/Coolidge/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Coolidge/
+Writing audio for cardFlashcard at files/Coolidge/
+Adding card229 to set 15
+Writing Flashcard at files/Hoover/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/Hoover/
+Writing audio for cardFlashcard at files/Hoover/
+Adding card230 to set 15
+Writing Flashcard at files/FDR/
+SwingWorker-pool-1-thread-4
+Writing card to path ./files/FDR/
+Writing audio for cardFlashcard at files/FDR/
+Adding card231 to set 15
+event

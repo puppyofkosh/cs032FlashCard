@@ -393,7 +393,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						data.setAnswer(Controller.readTTS(card.definition));
 						data.answerText = card.definition;
 						data.interval = interval;
-						data.tags = new ArrayList<>();
+						data.tags = card.generatedTags();
 						data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 						// add the cards to a temporary place before writing them. If the user cancels, we don't want a half-full set in our db

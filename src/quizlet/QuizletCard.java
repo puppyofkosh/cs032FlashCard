@@ -3,11 +3,14 @@ package quizlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import search.Search;
 
 import controller.Controller;
 import audio.AudioFile;
@@ -21,6 +24,21 @@ public class QuizletCard {
 	private QuizletCard(JSONObject object) throws JSONException {
 		this.term = object.getString("term");
 		this.definition = object.getString("definition");
+	}
+	
+	public List<String> generatedTags()
+	{
+		List<String> tags = new ArrayList<>();
+		for (String token : definition.split(" "))
+		{
+			if (!Search.commonWords.contains(token.toLowerCase()) && tags.size() < 2)
+			{
+				System.out.println("Adding token " + token);
+				tags.add(token);
+			}
+		}
+		
+		return tags;
 	}
 	
 	public static QuizletCard[] getCards(JSONObject set) throws JSONException {
