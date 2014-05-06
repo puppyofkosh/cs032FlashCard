@@ -378,7 +378,7 @@ public class Controller {
 	 * @param interval
 	 * @return
 	 */
-	public static FlashCardSet generateNewSet(String name, String author,
+	public static FlashCardSet createNewSet(String name, String author,
 			List<String> tags, int interval)
 	{
 		FlashCardSet set = new SimpleSet(name);
@@ -406,10 +406,10 @@ public class Controller {
 	}
 
 	public static void updateGUI(TabType...types) {
+		setBrowser.updateSourceList();
 		for(TabType type : types) {
 			gui.update(type);
 		}
-		setBrowser.updateSourceList();
 	}
 
 	public static void launchGUI() {

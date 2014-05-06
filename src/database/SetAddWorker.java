@@ -30,7 +30,6 @@ public class SetAddWorker extends SwingWorker<Void, Void>{
 		int progress = 0;
 		for (FlashCard c : cards)
 		{
-			Thread.sleep(500);
 			set.addCard(c);
 			progress++;
 			setProgress((int)(100.0 * progress / cards.size()));

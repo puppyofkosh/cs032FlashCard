@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -30,9 +31,12 @@ import backend.ItunesExporter;
 import client.Client;
 import controller.Controller;
 import database.DatabaseFactory;
+import database.SetAddWorker;
 import flashcard.FlashCard;
+import flashcard.FlashCardSet;
 
-public class ExportPanel extends JPanel implements ClientFrontend, ActionListener, PropertyChangeListener, Browsable {
+public class ExportPanel extends JPanel implements ClientFrontend,
+		ActionListener, PropertyChangeListener, Browsable {
 	/**
 	 * 
 	 */
@@ -41,6 +45,7 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	private JRadioButton rdbtnWav;
 	private JRadioButton rdbtnNetwork;
 	private JRadioButton rdbtnItunes;
+	private JRadioButton rdbtnSet;
 	private Exporter itunesExporter;
 	private JPanel panel;
 	private JButton btnExport;
@@ -48,20 +53,24 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	private SetBrowser _setBrowser;
 	private JTextField searchBox;
 
+	// Worker used for when we "export" to set
+	private SetAddWorker setAdditionWorker;
+
 	private ProgressMonitor progressMonitor;
 
 	/**
 	 * Create the panel.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public ExportPanel() {
-		super(new BorderLayout(0,0));
+		super(new BorderLayout(0, 0));
 		setOpaque(false);
 
-		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
+		JPanel mainPanel = new JPanel(new BorderLayout(0, 0));
 		mainPanel.setOpaque(false);
 		add(mainPanel);
-		JPanel headerPanel = new JPanel(new BorderLayout(0,0));
+		JPanel headerPanel = new JPanel(new BorderLayout(0, 0));
 		headerPanel.setOpaque(false);
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -86,14 +95,19 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		rdbtnItunes = new JRadioButton("iTunes");
 		chooseMethodPanel.add(rdbtnItunes);
 
+		rdbtnSet = new JRadioButton("Set");
+		chooseMethodPanel.add(rdbtnSet);
+
 		ButtonGroup group = new ButtonGroup();
 		group.add(rdbtnWav);
 		group.add(rdbtnNetwork);
 		group.add(rdbtnItunes);
+		group.add(rdbtnSet);
 
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		JPanel continuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,
+				0));
 		continuePanel.setBackground(GuiConstants.SET_TAG_COLOR);
 		btnExport = new JButton("Export");
 		btnExport.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
@@ -101,22 +115,22 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		btnExport.addActionListener(this);
 		continuePanel.add(btnExport);
 		mainPanel.add(continuePanel, BorderLayout.SOUTH);
-		
+
 		_cardTable = new CardTablePanel("Add Cards for Export");
 		mainPanel.add(_cardTable, BorderLayout.CENTER);
 	}
 
-
 	public void connectAndExport() {
-		_client = new Client(Settings.getHost(), Integer.parseInt(Settings.getPortNumber()), this);
+		_client = new Client(Settings.getHost(), Integer.parseInt(Settings
+				.getPortNumber()), this);
 		Writer.out("Starting client");
 
-		progressMonitor = new ProgressMonitor(ExportPanel.this,
-				"Uploading",
+		progressMonitor = new ProgressMonitor(ExportPanel.this, "Uploading",
 				"", 0, 100);
 		progressMonitor.setProgress(0);
 		progressMonitor.setNote("Uploading");
-		progressMonitor.setMillisToDecideToPopup(progressMonitor.getMillisToDecideToPopup()/4);
+		progressMonitor.setMillisToDecideToPopup(progressMonitor
+				.getMillisToDecideToPopup() / 4);
 
 		_client.addPropertyChangeListener(this);
 		_client.execute();
@@ -127,7 +141,6 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	public void updateLocallyStoredCards(List<FlashCard> cards) {
 		_cardTable.updateCards(cards);
 	}
-
 
 	@Override
 	public void guiMessage(String msg, int duration) {
@@ -142,7 +155,6 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 		}
 
 	}
-
 
 	@Override
 	public void guiMessage(String msg) {
@@ -160,21 +172,23 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.searchBox) {
 			SearchParameters search = new SearchParameters(searchBox.getText());
-			List<FlashCard> results = search.search(DatabaseFactory.getResources());
+			List<FlashCard> results = search.search(DatabaseFactory
+					.getResources());
 			updateLocallyStoredCards(results);
-		}
-		else if (e.getSource() == btnExport) {
+		} else if (e.getSource() == btnExport) {
 			List<FlashCard> cards = _cardTable.getAllCards();
 
 			if (cards.isEmpty()) {
-				Controller.guiMessage("You must pick some cards to export!", true);
+				Controller.guiMessage("You must pick some cards to export!",
+						true);
 				return;
 			}
 
 			if (rdbtnWav.isSelected()) {
 				try {
 					WavFileConcatenator.concatenate(cards);
-					JOptionPane.showMessageDialog(panel, "Audio has been created");
+					JOptionPane.showMessageDialog(panel,
+							"Audio has been created");
 				} catch (IOException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
@@ -183,27 +197,53 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 
 			else if (rdbtnItunes.isSelected()) {
 				try {
-					String playlist = JOptionPane.showInputDialog(panel, "Choose name of playlist");
+					String playlist = JOptionPane.showInputDialog(panel,
+							"Choose name of playlist");
 					if (playlist == null || playlist.equals("")) {
-						JOptionPane.showMessageDialog(panel, "Playlist not created because no name was selected");
+						JOptionPane
+								.showMessageDialog(panel,
+										"Playlist not created because no name was selected");
 						return;
 					}
-					itunesExporter = new ItunesExporter(new File(playlist + ".m3u"));
+					itunesExporter = new ItunesExporter(new File(playlist
+							+ ".m3u"));
 
 					itunesExporter.export(cards);
-					JOptionPane.showMessageDialog(panel, "Playlist has been created! To use this playlist, open Itunes and click Import Playlist, and choose the file \'"
-							+ playlist + ".m3u\' in the directory this program is located in.");
-				} catch (Throwable ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
+					JOptionPane
+							.showMessageDialog(
+									panel,
+									"Playlist has been created! To use this playlist, open Itunes and click Import Playlist, and choose the file \'"
+											+ playlist
+											+ ".m3u\' in the directory this program is located in.");
+				} catch (IOException ioe) {
+					Controller.guiMessage("Could not export to itunes "
+							+ ioe.getMessage());
 				}
+
 			}
 
-			else if(rdbtnNetwork.isSelected()) {
+			else if (rdbtnNetwork.isSelected()) {
 				connectAndExport();
-			} else
-				Controller.guiMessage("You must choose what kind of export to perform!", true);
-		} 
+			}
+
+			else if (rdbtnSet.isSelected()) {
+				FlashCardSet set = Controller
+						.createNewSet("Merged set",
+								Settings.getDefaultAuthor(),
+								new ArrayList<String>(), 0);
+				setAdditionWorker = new SetAddWorker(set, cards);
+				setAdditionWorker.addPropertyChangeListener(this);
+				setAdditionWorker.execute();
+
+			}
+
+			else {
+				Controller
+						.guiMessage(
+								"You must choose what kind of export to perform!",
+								true);
+			}
+		}
 	}
 
 	@Override
@@ -216,16 +256,17 @@ public class ExportPanel extends JPanel implements ClientFrontend, ActionListene
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (_client.getState() == SwingWorker.StateValue.DONE)
-		{
-			progressMonitor.close();
+		if ((_client != null && _client.getState() == SwingWorker.StateValue.DONE)
+				|| (setAdditionWorker != null && setAdditionWorker.getState() == SwingWorker.StateValue.DONE)) {
+			Controller.updateGUI(Controller.getCurrentTab());
+			if (progressMonitor != null)
+				progressMonitor.close();
 		}
 
 		if ("progress".equals(evt.getPropertyName()) && progressMonitor != null) {
 			int progress = (Integer) evt.getNewValue();
 			progressMonitor.setProgress(progress);
-			String message =
-					String.format("Completed %d%%.\n", progress);
+			String message = String.format("Completed %d%%.\n", progress);
 			progressMonitor.setNote(message);
 			if (progressMonitor.isCanceled() || _client.isDone()) {
 				_client.cancel(true);

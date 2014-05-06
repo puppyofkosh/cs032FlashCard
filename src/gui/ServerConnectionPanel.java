@@ -145,7 +145,7 @@ ActionListener {
 
 	@Override
 	public void updateLocallyStoredCards(List<FlashCard> cards) {
-		FlashCardSet set = Controller.generateNewSet("Downloaded", "", new ArrayList<String>(), 0);
+		FlashCardSet set = Controller.createNewSet("Downloaded", "", new ArrayList<String>(), 0);
 
 		setAdditionWorker = new SetAddWorker(set, cards);
 		setAdditionWorker.addPropertyChangeListener(this);
