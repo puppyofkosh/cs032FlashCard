@@ -48,7 +48,10 @@ public class Controller {
 	private static TextToSpeechReader reader;
 	private static Recorder recorder;
 	private static MainFrame gui;
-	public static SetBrowser setBrowser = new SetBrowser();	
+	public static SetBrowser setBrowser = new SetBrowser();
+	
+	// the flashcard being played right now
+	private static FlashCard currentlyPlayingFlashCard = null;
 
 	private static TabType currentTab = TabType.FLASHBOARD;
 	
@@ -259,6 +262,7 @@ public class Controller {
 	//	}
 
 	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
+		currentlyPlayingFlashCard = card;
 		player.playThenRun(card, runnables);
 	}
 
@@ -322,6 +326,9 @@ public class Controller {
 
 	public static void deleteCard(FlashCard card) {
 		// The DB handles removing the card from its sets
+		if (currentlyPlayingFlashCard != null && card.equals(currentlyPlayingFlashCard))
+			stopAudio();
+		
 		DatabaseFactory.deleteCard(card);
 		updateGUI(getCurrentTab());
 	}

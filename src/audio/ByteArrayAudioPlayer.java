@@ -11,6 +11,7 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.SwingWorker;
 
 import flashcard.FlashCard;
+import flashcard.SerializableFlashCard;
 
 /**
  * FIXME: In the ideal world, this class would be re-usable
@@ -137,7 +138,8 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 		FlashCard card;
 		PlayCardThread(FlashCard card, Runnable...runnables) {
 			super(runnables);
-			this.card = card;
+			// Keep the card locally in case it is removed from DB
+			this.card = new SerializableFlashCard(card);
 		}
 		
 		@Override

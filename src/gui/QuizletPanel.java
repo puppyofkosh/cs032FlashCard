@@ -346,7 +346,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			} catch (IOException e){};
 			if (setName.equals(""))
 				try {
-					setName = Controller.parseInput((String) setTable.getValueAt(setTable.getSelectedRow(), 0)); 
+					QuizletSet set = (QuizletSet) setTable.getValueAt(setTable.getSelectedRow(), 0);
+					setName = Controller.parseInput(set.name);
 				} catch (IOException e) {setName = "quizlet";}
 			try {
 				spinner.commitEdit();
