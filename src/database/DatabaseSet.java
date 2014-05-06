@@ -182,11 +182,6 @@ public class DatabaseSet implements FlashCardSet{
 		return "";
 	}
 
-	@Override
-	public void addAuthor() {
-		// TODO Auto-generated method stub
-		throw new IllegalStateException("What is this method supposed to do?");
-	}
 
 	@Override
 	public void setTags(List<String> tags) throws IOException {

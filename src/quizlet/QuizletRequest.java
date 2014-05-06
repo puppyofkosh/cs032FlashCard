@@ -32,17 +32,12 @@ public class QuizletRequest {
 		}
 	}
 	
-	public static JSONArray search(String search) {
+	public static JSONArray search(String search) throws JSONException, IOException {
 		String fixedSearch = search.replace(" ", "%20");
-		try {
-			URL url = new URL("https://api.quizlet.com/2.0/search/sets?client_id=h69PJudW8j&autocomplete=1&q=" + fixedSearch);
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+		URL url;
+		url = new URL("https://api.quizlet.com/2.0/search/sets?client_id=h69PJudW8j&autocomplete=1&q=" + fixedSearch);
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
 				return new JSONObject(reader.readLine()).getJSONArray("sets");
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IllegalArgumentException();
 		}
 	}
 	
@@ -51,11 +46,14 @@ public class QuizletRequest {
 			URL url = new URL("https://api.quizlet.com/2.0/sets/" + id + "?client_id=h69PJudW8j");
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
 				return new JSONObject(reader.readLine());
+			} catch (JSONException | IOException e1) {
+				return null;
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IllegalArgumentException();
 		}
+		catch (MalformedURLException e2)
+		{
+			return null;
+		}
+		
 	}
 }

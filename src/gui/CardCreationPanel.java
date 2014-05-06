@@ -427,7 +427,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		editedCard = null;
 		clear();
 		btnFlash.setText("Create Card");
-		Controller.updateAll();
+		Controller.updateGUI(Controller.getCurrentTab());
 	}
 	
 	private void createCard() {
@@ -437,7 +437,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 
 		clear();
-		Controller.updateAll();
+		Controller.updateGUI(Controller.getCurrentTab());
 	}
 
 	@Override
@@ -447,7 +447,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
-		clear();
+		//clear();
 	}
 
 	@Override

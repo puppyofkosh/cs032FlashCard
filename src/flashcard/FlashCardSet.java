@@ -51,10 +51,6 @@ public interface FlashCardSet {
 	
 	String getAuthor();
 	
-	// FIXME: Wtf?
-	void addAuthor();
-	
-
 	void setAuthor(String author);
 	
 	/**

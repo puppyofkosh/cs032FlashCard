@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 import utils.FlashcardConstants;
 
+import com.sun.speech.freetts.Age;
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 import com.sun.speech.freetts.audio.AudioPlayer;
@@ -53,6 +54,7 @@ public class FreeTTSReader implements TextToSpeechReader {
         
 		
 		voice.setAudioPlayer(audioPlayer);
+		voice.setRate(110);
 	}
 
 	

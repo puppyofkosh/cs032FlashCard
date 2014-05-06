@@ -84,11 +84,6 @@ public class SimpleSet implements FlashCardSet{
 	}
 
 	@Override
-	public void addAuthor() {
-		
-	}
-
-	@Override
 	public void setAuthor(String author) {
 		this.author = author;
 	}

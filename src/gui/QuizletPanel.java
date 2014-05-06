@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -41,6 +42,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import quizlet.QuizletCard;
@@ -62,6 +64,24 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 	private TagPanel tagPanel;
 	private JSpinner spinner;
 
+	private void performSearch()
+	{
+		long setId = 0;
+		try
+		{
+			setId = Long.parseLong(searchTextField.getText());
+		}
+		catch (NumberFormatException e)
+		{
+			new SearchThread().execute();
+			return;
+		}
+		
+		// If they entered a set number, we search for that
+		new PreviewThread("" + setId).execute();
+		setTable.setModel(new QuizletSetTableModel(new JSONArray()));
+	}
+	
 	public QuizletPanel() {
 		addComponentListener(this);
 
@@ -79,7 +99,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new SearchThread().execute();
+				performSearch();
 			}
 		});
 
@@ -90,7 +110,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new SearchThread().execute();
+				performSearch();
 			}
 		});
 
@@ -128,6 +148,9 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		setTable.setBackground(GuiConstants.SET_TAG_COLOR);
 		setTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent event) {
+	        	if (setTable.getSelectedRow() == -1)
+	        		return;
+	        	
 	            new PreviewThread(String.valueOf(((QuizletSet) setTable.getValueAt(setTable.getSelectedRow(), 0)).id)).execute();
 	        
 	        }
@@ -177,7 +200,8 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (setTable.getSelectedRowCount() == 0) {
+				// Either no sets have been selected or no cards are in the right pane
+				if (setTable.getSelectedRowCount() == 0 && cardTable.getRowCount() == 0) {
 					JOptionPane.showMessageDialog(btnImport, "You must select some sets to import");
 					return;
 				}
@@ -193,7 +217,14 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				//if (importThread != null)
 				//	importThread.cancel(true);
 
-				importThread = new ImportThread();
+				List<String> ids = new ArrayList<>();
+				for (int row: setTable.getSelectedRows()) {
+					ids.add(String.valueOf(((QuizletSet) setTable.getValueAt(row, 0)).id));
+				}
+				if (ids.size() == 0)
+					ids.add(searchTextField.getText());
+				
+				importThread = new ImportThread(ids);
 				importThread.addPropertyChangeListener(QuizletPanel.this);
 				importThread.execute();
 
@@ -265,21 +296,34 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 	private class SearchThread extends SwingWorker<TableModel, Void> {
 		private String searchText;
-		SearchThread() {
+		public SearchThread() {
 			this.searchText = searchTextField.getText();
 		}
 
 		@Override
 		public TableModel doInBackground() {
-			return new QuizletSetTableModel(QuizletRequest.search(searchText));
+			JSONArray result;
+			try {
+				result = QuizletRequest.search(searchText);
+				if (result == null)
+					return null;
+				return new QuizletSetTableModel(result);
+			} catch (JSONException | IOException e) {
+				return null;
+			}
 		}
 
 		@Override
 		public void done() {
+			
+			TableModel result;
 			try {
-				setTable.setModel(get());
-			} catch (Throwable e) {
-				Controller.guiMessage("Quizlet did not respond", true);
+				result = get();
+				if (result != null)
+					setTable.setModel(result);
+				else
+					Controller.guiMessage("Quizlet did not respond");
+			} catch (InterruptedException | ExecutionException e) {
 			}
 		}
 	}
@@ -292,20 +336,18 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		private List<String> ids;
 
 
-		ImportThread() {
-			ids = new ArrayList<>();
-			for (int row: setTable.getSelectedRows()) {
-				ids.add(String.valueOf(((QuizletSet) setTable.getValueAt(row, 0)).id));
-			}
+		ImportThread(List<String> ids) {
+			this.ids = ids;
+
 			tags = tagPanel.getTags();
 			setName = "";
 			try {
 				setName = Controller.parseInput(setNameTextField.getText());
-			} catch (Throwable e){};
+			} catch (IOException e){};
 			if (setName.equals(""))
 				try {
 					setName = Controller.parseInput((String) setTable.getValueAt(setTable.getSelectedRow(), 0)); 
-				} catch (Exception e) {setName = "quizlet";}
+				} catch (IOException e) {setName = "quizlet";}
 			try {
 				spinner.commitEdit();
 			} catch (ParseException e1) {
@@ -320,7 +362,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		public void done()
 		{
 			progressMonitor.close();
-			Controller.updateAll();
+			Controller.updateGUI(Controller.getCurrentTab());
 			Controller.requestSetBrowser().updateSourceList();
 			if (!isCancelled())
 				Controller.guiMessage("Done Importing");
@@ -362,9 +404,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						System.out.println("progress is " + progress);
 						setProgress(progress);
 					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (JSONException ignore) {
 				}
 			}
 
@@ -396,11 +436,20 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 		@Override
 		public void done() {
+			TableModel model;
 			try {
-				cardTable.setModel(get());
-			} catch (Throwable e) {
-				Controller.guiMessage("Quizlet did not respond", true);
+				model = get();
+				
+				if (model == null)
+				{
+					Controller.guiMessage("Quizlet did not respond", true);
+					return;
+				}
+					
+				cardTable.setModel(model);
+			} catch (InterruptedException | ExecutionException e) {
 			}
+			
 		}
 	}
 

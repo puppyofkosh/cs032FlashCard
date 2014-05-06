@@ -42,13 +42,13 @@ public class QuizletCard {
 	
 	private class QuizletFlashCard implements FlashCard {
 		
-		AudioFile question = Controller.readTTS(term);
-		AudioFile answer = Controller.readTTS(definition);
+		AudioFile question;
+		AudioFile answer;
 		int interval;
 		
 		QuizletFlashCard() {
-			AudioFile question = Controller.readTTS(term);
-			AudioFile answer = Controller.readTTS(definition);
+			question = Controller.readTTS(term);
+			answer = Controller.readTTS(definition);
 			interval = 0;
 		}
 		
