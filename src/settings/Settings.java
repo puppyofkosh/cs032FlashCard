@@ -29,13 +29,13 @@ public class Settings implements Serializable {
 	private static final String DEFAULT_HOSTNAME = "localhost";
 	private static final String DEFAULT_PORT_NUMBER = "9888";
 
-	private int recordingTimeout;
-	private String outputDestination;
-	private String defaultAuthor;
-	private Color mainColor;
-	private Color secondaryColor;
-	private String host;
-	private String portNumber;
+	private int recordingTimeout = DEFAULT_TIMEOUT;
+	private String outputDestination = DEFAULT_OUTPUT;
+	private String defaultAuthor = DEFAULT_AUTHOR;
+	private Color mainColor = DEFAULT_COLOR_1;
+	private Color secondaryColor = DEFAULT_COLOR_2;
+	private String host = DEFAULT_HOSTNAME;
+	private String portNumber = DEFAULT_PORT_NUMBER;
 
 	private static Settings settings = setupSettings();
 
