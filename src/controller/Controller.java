@@ -440,6 +440,11 @@ public class Controller {
 		return currentTab;
 	}
 	
+	public static void pageFlashboard(boolean forward) {
+		gui.page(forward);
+		
+	}
+	
 	
 	/**
 	 * replace a card with a different card in the DB

@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -19,7 +20,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+
+import utils.Writer;
 
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
@@ -30,7 +32,7 @@ import flashcard.FlashCardSet;
 import gui.GuiConstants.TabType;
 import gui.IconFactory.IconType;
 
-public class FlashboardPanel extends JPanel implements SourceListSelectionListener, Browsable {
+public class FlashboardPanel extends JPanel implements SourceListSelectionListener, Browsable, ActionListener {
 
 	/**
 	 * FIXME:
@@ -51,14 +53,16 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	JPanel emptyPanel;
 	private static int NUM_COLS = 2;
 	private static int NUM_ROWS;
-	
+	private int currentIndex;
+	JButton back,next, emptyButton;
+
 	public static final int MAX_FLASH_CARDS = 4;
-	
+
 	FlashCardSet currentSet;
 	// Keep track of panels we've already created but wish to recycle, as creating FlashCardPanels is extremely expensive
 	public Queue<FlashCardPanel> freePanels = new LinkedList<>();
 
-	
+
 	/**
 	 * Creates a new Flashboard Panel with nothing selected and 
 	 * nothing displayed.
@@ -82,28 +86,45 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		emptyLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 25));
 		emptyPanel.add(emptyLabel);
 
-		JButton emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25, true);
+		emptyButton = IconFactory.createImageButton("Create New Set", IconType.SET, 32, 25, true);
 		emptyButton.setBorderPainted(true);
-		emptyButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Controller.switchTabs(TabType.SET);
-			}
-		});
+		emptyButton.addActionListener(this);
 		emptyPanel.add(emptyButton);
 
 		//Contains the grid of cards to be laid out.
+		JPanel mainPanel = new JPanel(new BorderLayout(0,0));
+		mainPanel.setOpaque(false);
 		flashboard = new JPanel();
 		flashboard.setOpaque(false);
-		JScrollPane scroller = new JScrollPane(flashboard,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroller.setBorder(BorderFactory.createEmptyBorder());
-		scroller.setOpaque(false);
-		scroller.getViewport().setOpaque(false);
-		scroller.setViewportBorder(null);
-		add(scroller, BorderLayout.CENTER);
+		add(mainPanel, BorderLayout.CENTER);
+		mainPanel.add(flashboard, BorderLayout.CENTER);
+		mainPanel.add(createBottomBar(), BorderLayout.SOUTH);
 		clearFlashboard();
+	}
+
+	/**
+	 * A useful display bar that also allows you to cycle through flash cards in a set.
+	 * @return
+	 */
+	public JPanel createBottomBar() {
+		JPanel bottomBar = new JPanel(new FlowLayout(FlowLayout.TRAILING, 5, 0));
+		bottomBar.setBackground(GuiConstants.SET_TAG_COLOR);
+		JLabel infoText = new JLabel("Browse and play your sets here");
+		infoText.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		infoText.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+		bottomBar.add(infoText);
+		back = new JButton("Back");
+		back.addActionListener(this);
+		back.setBackground(Color.BLACK);
+		back.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		bottomBar.add(back);
+		next = new JButton("Next");
+		next.addActionListener(this);
+		next.setBackground(Color.BLACK);
+		next.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		bottomBar.add(next);
+
+		return bottomBar;
 	}
 
 	/**
@@ -115,6 +136,27 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 	}
 
 	/**
+	 * This pages the flashboard forward MAX_FLASH_CARDS cards.
+	 */
+	public void page(boolean forward) {
+		//We want to show a page containing successive cards.
+		try {
+			int pageIndex = currentIndex + (forward ? MAX_FLASH_CARDS : (MAX_FLASH_CARDS * -1));
+			if (currentSet == null)
+				return;
+			int maxCards = 	currentSet.getAll().size();
+			if (pageIndex < 0 || pageIndex >= maxCards) {
+				pageIndex = (pageIndex % maxCards + maxCards) % maxCards;
+				//Java wraps mods to negative so we need this.
+			}
+
+			_setBrowser.setSelection(pageIndex);
+		} catch (IOException e) {
+			Controller.guiMessage("Error paging: could not get cards", true);
+		}
+	}
+
+	/**
 	 * Draw the flash board such that the first thing drawn is the given card
 	 * @param card
 	 */
@@ -123,9 +165,8 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		if (currentSet != null)
 		{
 			try
-			{
+			{	
 				int cardIndex = currentSet.getAll().indexOf(card);
-				
 				List<FlashCard> allCards = currentSet.getAll();
 				List<FlashCard> toDraw = new ArrayList<>(allCards.subList(cardIndex, allCards.size()));
 				// Fill the list if possible
@@ -134,7 +175,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 					if (toDraw.size() < MAX_FLASH_CARDS && allCards.size() >= MAX_FLASH_CARDS)
 						toDraw.add(f);
 				}
-				
+
 				updateFlashboard(toDraw);
 			}
 			catch (IOException e)
@@ -143,14 +184,14 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			}
 		}
 	}
-	
+
 	/**
 	 * This updates the flashboard - loading in the cards
 	 * @param cards
 	 * And then redrawing the grid of cards.
 	 */
 	public void updateFlashboard(List<FlashCard> cards) {
-	
+
 		Collection<FlashCard> toDraw = null;
 		if (cards.size() > MAX_FLASH_CARDS)
 		{
@@ -229,6 +270,8 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		try {
 			if (_setBrowser != null)
 			{
+				currentIndex = _setBrowser.getSelectedIndex();
+				Writer.out(currentIndex);
 				// The SetBrowser doesn't always have a selected set (even if the flashboard is displaying the cards for a certain set)
 				// We don't want to overwrite currentSet unless if we know the new value won't be null
 				FlashCardSet selectedSet = _setBrowser.getSelectedSet();
@@ -238,7 +281,7 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 					currentSet = selectedSet;
 					updateFlashboard(currentSet.getAll());
 				}
-				
+
 				FlashCard selectedCard = _setBrowser.getSelectedCard();
 				if (selectedCard != null)
 				{
@@ -261,7 +304,17 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 
 	@Override
 	public void removeSetBrowser() {
-		System.out.println("Set browser gone");
 		_setBrowser = null;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == back) {
+			page(false);
+		} else if (e.getSource() == next) {
+			page(true);
+		} else if (e.getSource() == emptyButton) {
+			Controller.switchTabs(TabType.SET);
+		}
 	}
 }

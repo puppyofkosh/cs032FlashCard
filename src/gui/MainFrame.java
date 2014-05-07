@@ -142,6 +142,10 @@ public void update(TabType tab) {
 	}
 }
 
+public void page(boolean forward) {
+	flashboardPanel.page(forward);
+}
+
 public void editCard(FlashCard card) {
 	cardCreationPanel.editCard(card);
 	showTab(TabType.CARD);

@@ -56,7 +56,8 @@ public class TagPanel extends JPanel implements MouseListener {
 				addTag(setTag, true, false);
 			}
 		}
-		add(emptyLabel);
+		if (_tags.isEmpty())
+			add(emptyLabel);
 		_inputField.setVisible(false);
 	}
 

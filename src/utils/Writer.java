@@ -22,7 +22,7 @@ public class Writer {
 	 * @param strs
 	 */
 	public static void out(Object...strs) {
-		//System.out.println(composeString(strs));
+		System.out.println(composeString(strs));
 	}
 
 	public static void err(Object...strs) {

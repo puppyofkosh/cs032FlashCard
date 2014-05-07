@@ -81,7 +81,7 @@ public class SetBrowser extends JPanel  {
 		super(new BorderLayout());
 		setPreferredSize(new Dimension(200, GuiConstants.HEIGHT));
 		initializeSourceList();
-		sourceList.setSourceListContextMenuProvider(this.createRightClickMenu());
+		sourceList.setSourceListContextMenuProvider(createRightClickMenu());
 	}
 
 	SetBrowser(SourceListSelectionListener parentComponent) {
@@ -131,7 +131,7 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-
+		sourceList.useIAppStyleScrollBars();
 
 
 		JComponent listPanel = sourceList.getComponent();
@@ -146,6 +146,45 @@ public class SetBrowser extends JPanel  {
 		add(label, BorderLayout.NORTH);
 		revalidate();
 		repaint();
+	}
+	
+	public void setSelection(int newIndex) {
+		SourceListItem set;
+		SourceListItem selected = sourceList.getSelectedItem();
+		if (selected == null)
+			return;
+		List<SourceListItem> children = selected.getChildItems();
+		if (children == null || children.isEmpty()) {
+			set = _parents.get(selected);
+			children = set.getChildItems();
+		} else {
+			set = selected;
+		}
+		SourceListItem newSelectedItem = children.get(newIndex);
+		sourceList.setSelectedItem(newSelectedItem);
+		sourceList.scrollItemToVisible(newSelectedItem);
+	}
+	
+	/**
+	 * Attempts to get the selected index of the current item.
+	 * If its a set, it will return -1, or if nothing is selected it will
+	 * return -1;
+	 * @return
+	 */
+	public int getSelectedIndex() {
+		SourceListItem parent;
+		SourceListItem selected = sourceList.getSelectedItem();
+		if (selected == null)
+			return -1;
+		List<SourceListItem> children = selected.getChildItems();
+		if (children == null || children.isEmpty()) {
+			parent = _parents.get(selected);
+			children = parent.getChildItems();
+		} else {
+			parent = selected;
+		}
+		int selectedIndex =  children.indexOf(selected);
+		return selectedIndex;
 	}
 
 	/**
@@ -173,16 +212,38 @@ public class SetBrowser extends JPanel  {
 		//expanding/collapsing items.
 		sourceList.setFocusable(true);
 		sourceList.setColorScheme(new CustomColorScheme());
+		
+		sourceList.installSourceListControlBar(createDefaultControlBar());
 
+		//Passes the selection event to the parentComponent
+		// FIXME: can we just replace this with sourceList.addSourceListSelectionListener(_parentComponent) at the beginning?
+		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
+			@Override
+			public void sourceListItemSelected(SourceListItem arg0) {
+				if (_parentComponent != null)
+					_parentComponent.sourceListItemSelected(arg0);
+			}
+		});
 
+		//This handles dragging from the sourceList into another component.
+		sourceList.setTransferHandler(new SourceListTransferHandler());
+		updateSourceList();
+	}
+	
+	/**
+	 * Creates a control bar for the bottom of the source list.
+	 * @return
+	 */
+	private SourceListControlBar createDefaultControlBar() { 
 		//This control bar is on the bottom of the control bar and has an add/delete button on it.
 		SourceListControlBar controlBar = new SourceListControlBar();
-		sourceList.installSourceListControlBar(controlBar);
 		controlBar.createAndAddPopdownButton(MacIcons.PLUS,
 				new PopupMenuCustomizer() {
 			public void customizePopup(JPopupMenu popup) {
 				popup.removeAll();
 				JMenuItem newCard = new JMenuItem("Create New Card", IconFactory.loadIcon(IconType.CREATE, 20, false));
+				newCard.setForeground(Color.BLACK);
+				newCard.setBackground(Color.BLACK);
 				newCard.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -204,7 +265,6 @@ public class SetBrowser extends JPanel  {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SourceListItem item = sourceList.getSelectedItem();
 				FlashCard card = getSelectedCard();
 				if (card != null) {
 					Controller.deleteCard(card);
@@ -217,23 +277,9 @@ public class SetBrowser extends JPanel  {
 				}
 			}
 		});
-
-		//Passes the selection event to the parentComponent
-		// FIXME: can we just replace this with sourceList.addSourceListSelectionListener(_parentComponent) at the beginning?
-		sourceList.addSourceListSelectionListener(new SourceListSelectionListener() {
-			@Override
-			public void sourceListItemSelected(SourceListItem arg0) {
-				if (_parentComponent != null)
-					_parentComponent.sourceListItemSelected(arg0);
-			}
-		});
-
-
-		//This handles dragging from the sourceList into another component.
-		sourceList.setTransferHandler(new SourceListTransferHandler());
-		updateSourceList();
+		return controlBar;
 	}
-
+	
 	public SourceList getSourceList() {
 		return sourceList;
 	}
@@ -280,9 +326,9 @@ public class SetBrowser extends JPanel  {
 			public JPopupMenu createContextMenu(SourceListItem arg0) {
 				sourceList.setSelectedItem(arg0);
 				JPopupMenu menu = new JPopupMenu();
-				JMenuItem item1 = new JMenuItem("edit");
+				JMenuItem item1 = new JMenuItem("Edit");
 				menu.add(item1);
-				JMenuItem item2 = new JMenuItem("delete");
+				JMenuItem item2 = new JMenuItem("Delete");
 				menu.add(item2);
 				item1.addActionListener(new ActionListener() {
 
