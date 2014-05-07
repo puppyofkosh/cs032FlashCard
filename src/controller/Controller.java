@@ -120,6 +120,7 @@ public class Controller {
 	}
 
 	public static void stopAudio() {
+		currentlyPlayingFlashCard = null;
 		player.stop();
 	}
 
@@ -264,6 +265,11 @@ public class Controller {
 	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
 		currentlyPlayingFlashCard = card;
 		player.playThenRun(card, runnables);
+	}
+	
+	public static FlashCard getCurrentlyPlayingFlashCard()
+	{
+		return currentlyPlayingFlashCard;
 	}
 
 	public static boolean verifyInput(String input) {

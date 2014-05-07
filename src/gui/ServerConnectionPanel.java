@@ -207,9 +207,10 @@ ActionListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (setAdditionWorker.getState() == SwingWorker.StateValue.DONE && downloadProgress != null)
+		if (setAdditionWorker != null && setAdditionWorker.getState() == SwingWorker.StateValue.DONE && downloadProgress != null)
 		{
 			System.out.println("Done");
+			Controller.updateGUI(Controller.getCurrentTab());
 			downloadProgress.close();
 		}
 

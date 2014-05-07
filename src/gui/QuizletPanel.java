@@ -175,7 +175,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 		tablePanel.add(cardScrollPane);
 
-		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer("Play Cards"));
+		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer("Play"));
 		cardTable.setDefaultEditor(QuizletCard.class, new PreviewEditor(new JCheckBox()));
 		cardTable.setRowSelectionAllowed(false);
 		cardTable.setColumnSelectionAllowed(false);
@@ -201,7 +201,9 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Either no sets have been selected or no cards are in the right pane
-				if (setTable.getSelectedRowCount() == 0 && cardTable.getRowCount() == 0) {
+				if (setTable.getSelectedRowCount() == 0 && cardTable.getRowCount() == 0 ||
+						// OR there are cards in the right pane (from a previous preview) but none selected in the left pane
+						(setTable.getRowCount() > 0 && cardTable.getRowCount() > 0 && setTable.getSelectedRow() == -1)) {
 					JOptionPane.showMessageDialog(btnImport, "You must select some sets to import");
 					return;
 				}
@@ -272,24 +274,53 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		 */
 		private static final long serialVersionUID = 1L;
 		protected JButton button;
+		
+		private FlashCard cardClicked = null;
 
 		public PreviewEditor(JCheckBox checkBox) {
 			super(checkBox);
-			button = new JButton("Preview");
+			button = new JButton("Previewing");
 			button.setOpaque(true);
+			button.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					try
+					{
+						if (cardClicked != null && Controller.getCurrentlyPlayingFlashCard() != cardClicked)
+						{
+							button.setText("Pause");
+							Controller.playFlashcardThenRun(cardClicked);
+						}
+						else if (cardClicked != null)
+						{
+							button.setText("Play");
+							Controller.stopAudio();
+						}
+					}
+					catch (IOException e)
+					{
+						Controller.guiMessage("Can't play card");
+					}
+				}
+				
+			});
 		}
 
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int row, int column) {
-
-			if (column == 3)  
+			System.out.println("selected");
+			
+			if (column == 3)
+			{
+				System.out.println("Column 3");
 				new PreviewThread(value.toString()).execute();
+			}
 			else  
-				try {
-					Controller.playFlashcardThenRun(((QuizletCard) value).getFlashCard((int) spinner.getValue()));
-				} catch (IOException e) {
-					Controller.guiMessage("Cannot preview card", true);
-				} 
+			{
+				cardClicked = ((QuizletCard) value).getFlashCard((int) spinner.getValue());
+			}
 			return button;
 		}
 	}
@@ -328,7 +359,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		}
 	}
 
-	private class ImportThread extends SwingWorker<Void, Void> {
+	private class ImportThread extends SwingWorker<Boolean, Void> {
 
 		private int interval;
 		private String setName;
@@ -344,11 +375,17 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			try {
 				setName = Controller.parseInput(setNameTextField.getText());
 			} catch (IOException e){};
-			if (setName.equals(""))
+			if (setName.equals("") && setTable.getSelectedRow() != -1)
+			{
 				try {
 					QuizletSet set = (QuizletSet) setTable.getValueAt(setTable.getSelectedRow(), 0);
 					setName = Controller.parseInput(set.name);
-				} catch (IOException e) {setName = "quizlet";}
+				} catch (IOException e) {}
+			}
+			
+			if (setName.equals(""))
+				setName = "Quizlet Set";
+			
 			try {
 				spinner.commitEdit();
 			} catch (ParseException e1) {
@@ -362,14 +399,23 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		@Override
 		public void done()
 		{
+			try {
+				Boolean result = get();
+				
+				if (result != null && result == true)
+					Controller.guiMessage("Done Importing");	
+				else
+					Controller.guiMessage("Error importing. Partial set created");
+			} catch (InterruptedException | ExecutionException e) {
+				Controller.guiMessage("Error importing.");
+			}
+			
 			progressMonitor.close();
 			Controller.updateGUI(Controller.getCurrentTab());
-			if (!isCancelled())
-				Controller.guiMessage("Done Importing");
 		}
 
 		@Override
-		protected Void doInBackground() throws Exception {
+		protected Boolean doInBackground() throws Exception {
 
 			setProgress(0);
 			List<FlashCard> producedCards = new ArrayList<>();
@@ -381,13 +427,21 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 					QuizletCard[] cards = QuizletCard.getCards(QuizletRequest.getSet(id));
 					for (QuizletCard card: cards) {
 						if (isCancelled())
-							return null;
+							return false;
 
 						if (card.term.length() == 0 || card.definition.length() == 0)
-							continue;
+							return false;
 
 						data = new SerializableFlashCard.Data();
-						data.name = Controller.parseCardName(card.term);
+						try
+						{
+							data.name = Controller.parseInput(card.term);
+						}
+						catch (IOException e)
+						{
+							data.name = "Quizlet Card";
+						}
+						
 						data.setQuestion(Controller.readTTS(card.term));
 						data.questionText = card.definition;
 						data.setAnswer(Controller.readTTS(card.definition));
@@ -405,15 +459,16 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						setProgress(progress);
 					}
 				} catch (JSONException ignore) {
+					return false;
 				}
 			}
 
 			// Download is complete, write the cards.	
 
-			FlashCardSet set = Controller.createNewSet(setName, "quizlet", tags, interval);
+			FlashCardSet set = Controller.createNewSet(setName, "Quizlet Set", tags, interval);
 			for (FlashCard f : producedCards)
 				set.addCard(f);
-			return null;
+			return true;
 		}
 	}
 
@@ -464,7 +519,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 					String.format("Completed %d%%.\n", progress);
 			progressMonitor.setNote(message);
 			if (progressMonitor.isCanceled() || importThread.isDone()) {
-				importThread.cancel(true);
 				progressMonitor.close();
 			}
 		}	
@@ -476,7 +530,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			progressMonitor.close();
 		if (importThread != null)
 			importThread.cancel(true);
-
 	}
 
 	@Override
