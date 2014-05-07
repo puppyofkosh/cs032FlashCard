@@ -462,7 +462,6 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
-		//clear();
 	}
 
 	@Override

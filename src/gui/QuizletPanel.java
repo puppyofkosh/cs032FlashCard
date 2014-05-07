@@ -387,7 +387,15 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 							continue;
 
 						data = new SerializableFlashCard.Data();
-						data.name = Controller.parseCardName(card.term);
+						try
+						{
+							data.name = Controller.parseInput(card.term);
+						}
+						catch (IOException e)
+						{
+							data.name = "Quizlet Card";
+						}
+						
 						data.setQuestion(Controller.readTTS(card.term));
 						data.questionText = card.definition;
 						data.setAnswer(Controller.readTTS(card.definition));
