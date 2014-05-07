@@ -359,7 +359,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		}
 	}
 
-	private class ImportThread extends SwingWorker<Void, Void> {
+	private class ImportThread extends SwingWorker<Boolean, Void> {
 
 		private int interval;
 		private String setName;
@@ -399,14 +399,23 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		@Override
 		public void done()
 		{
+			try {
+				Boolean result = get();
+				
+				if (result != null && result == true)
+					Controller.guiMessage("Done Importing");	
+				else
+					Controller.guiMessage("Error importing. Partial set created");
+			} catch (InterruptedException | ExecutionException e) {
+				
+			}
+			
 			progressMonitor.close();
 			Controller.updateGUI(Controller.getCurrentTab());
-			if (!isCancelled())
-				Controller.guiMessage("Done Importing");
 		}
 
 		@Override
-		protected Void doInBackground() throws Exception {
+		protected Boolean doInBackground() throws Exception {
 
 			setProgress(0);
 			List<FlashCard> producedCards = new ArrayList<>();
@@ -418,7 +427,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 					QuizletCard[] cards = QuizletCard.getCards(QuizletRequest.getSet(id));
 					for (QuizletCard card: cards) {
 						if (isCancelled())
-							return null;
+							return false;
 
 						if (card.term.length() == 0 || card.definition.length() == 0)
 							continue;
@@ -450,15 +459,16 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						setProgress(progress);
 					}
 				} catch (JSONException ignore) {
+					return false;
 				}
 			}
 
 			// Download is complete, write the cards.	
 
-			FlashCardSet set = Controller.createNewSet(setName, "quizlet", tags, interval);
+			FlashCardSet set = Controller.createNewSet(setName, "Quizlet Set", tags, interval);
 			for (FlashCard f : producedCards)
 				set.addCard(f);
-			return null;
+			return true;
 		}
 	}
 
