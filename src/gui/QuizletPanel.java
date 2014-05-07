@@ -407,7 +407,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 				else
 					Controller.guiMessage("Error importing. Partial set created");
 			} catch (InterruptedException | ExecutionException e) {
-				
+				Controller.guiMessage("Error importing.");
 			}
 			
 			progressMonitor.close();
@@ -430,7 +430,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 							return false;
 
 						if (card.term.length() == 0 || card.definition.length() == 0)
-							continue;
+							return false;
 
 						data = new SerializableFlashCard.Data();
 						try
@@ -519,7 +519,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 					String.format("Completed %d%%.\n", progress);
 			progressMonitor.setNote(message);
 			if (progressMonitor.isCanceled() || importThread.isDone()) {
-				importThread.cancel(true);
 				progressMonitor.close();
 			}
 		}	
@@ -531,7 +530,6 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			progressMonitor.close();
 		if (importThread != null)
 			importThread.cancel(true);
-
 	}
 
 	@Override
