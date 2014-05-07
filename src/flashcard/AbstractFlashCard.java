@@ -13,12 +13,10 @@ public abstract class AbstractFlashCard implements FlashCard, Serializable {
 	
 	public static class NameComparator implements Comparator<FlashCard>
 	{
-		
 		@Override
 		public int compare(FlashCard a, FlashCard b) {
 			return NumberAwareStringComparator.INSTANCE.compare(a.getName(), b.getName());
-		}
-		
+		}	
 	}
 	
 	/**

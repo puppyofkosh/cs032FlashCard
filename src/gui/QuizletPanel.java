@@ -201,7 +201,9 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Either no sets have been selected or no cards are in the right pane
-				if (setTable.getSelectedRowCount() == 0 && cardTable.getRowCount() == 0) {
+				if (setTable.getSelectedRowCount() == 0 && cardTable.getRowCount() == 0 ||
+						// OR there are cards in the right pane (from a previous preview) but none selected in the left pane
+						(setTable.getRowCount() > 0 && cardTable.getRowCount() > 0 && setTable.getSelectedRow() == -1)) {
 					JOptionPane.showMessageDialog(btnImport, "You must select some sets to import");
 					return;
 				}
@@ -373,11 +375,17 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			try {
 				setName = Controller.parseInput(setNameTextField.getText());
 			} catch (IOException e){};
-			if (setName.equals(""))
+			if (setName.equals("") && setTable.getSelectedRow() != -1)
+			{
 				try {
 					QuizletSet set = (QuizletSet) setTable.getValueAt(setTable.getSelectedRow(), 0);
 					setName = Controller.parseInput(set.name);
-				} catch (IOException e) {setName = "quizlet";}
+				} catch (IOException e) {}
+			}
+			
+			if (setName.equals(""))
+				setName = "Quizlet Set";
+			
 			try {
 				spinner.commitEdit();
 			} catch (ParseException e1) {
