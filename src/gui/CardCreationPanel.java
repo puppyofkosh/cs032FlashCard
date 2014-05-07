@@ -40,7 +40,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String recordText = "Record ";
 	private String playText = "Play   ";
 	private String stopText = "Stop   ";
-	private String inputHint = "Text To Speech";
+	private static final String DEFAULT_INPUT_HINT = "Text To Speech";
 	private Set<FlashCardSet> setSet;
 	
 	// If editing is enabled newCard is the replacement for editedCard
@@ -298,12 +298,12 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private void enableTTS(boolean enabled) {
 		String disableText = "TTS unavailable.";
 		textAnswer.setForeground(Color.GRAY);
-		textAnswer.setText(enabled ? inputHint : disableText);
+		textAnswer.setText(enabled ? DEFAULT_INPUT_HINT : disableText);
 		textAnswer.setForeground(Color.BLACK);
 		textAnswer.setEnabled(enabled);
 
 		textQuestion.setForeground(Color.GRAY);
-		textQuestion.setText(enabled ? inputHint : disableText);
+		textQuestion.setText(enabled ? DEFAULT_INPUT_HINT : disableText);
 		textQuestion.setForeground(Color.BLACK);
 		textQuestion.setEnabled(enabled);
 	}
@@ -331,6 +331,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(e.paramString());
 		if (e.getSource() == textFieldName) {
+			// If the user has nothing in the question field, set it to the name
+			if (textQuestion.getText().equals(DEFAULT_INPUT_HINT))
+			{
+				textQuestion.setText(textFieldName.getText());
+			}
 			//Do nothing - we only want to hold on to this value for later.
 		} else if (e.getSource() == btnQuestionRecord) {
 			//This, and the following boolean values usually correspond to
@@ -373,8 +378,16 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	public FlashCard createCardFromFields()
 	{
 		if (question == null || answer == null || !hasQuestion || !hasAnswer) {
-			Controller.guiMessage("Must record question and answer", true);
-			return null;
+			if (!hasQuestion)
+			{
+				readTTS(true);
+				hasQuestion = true;
+			}
+			if (!hasAnswer)
+			{
+				readTTS(false);
+				hasAnswer = true;
+			}
 		}
 
 		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
@@ -435,8 +448,10 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		if (newCard == null)
 			return;
 
-
+		// Store which sets they selected so next time they're still selected
+		Set<FlashCardSet> selectedSets = setSet;
 		clear();
+		setSet.addAll(selectedSets);
 		Controller.updateGUI(Controller.getCurrentTab());
 	}
 

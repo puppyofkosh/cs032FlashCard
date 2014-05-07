@@ -118,6 +118,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == _inputField) {
+					System.out.println("CMD" + e.getActionCommand());
 					addTag(_inputField.getText(), global);
 					_inputField.setText("");
 				}
@@ -154,6 +155,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			tag = Controller.parseInput(tag);
 		} catch (IOException e1) {
 			Controller.guiMessage("Invalid tag: " + tag, true);
+			
 			return;
 		}
 

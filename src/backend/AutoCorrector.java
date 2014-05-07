@@ -43,6 +43,7 @@ public class AutoCorrector {
 		
 		terms.addAll(DatabaseFactory.getResources().getAllCardNames());
 		terms.addAll(DatabaseFactory.getResources().getAllTags());
+		terms.addAll(DatabaseFactory.getResources().getAllSetNames());
 		System.out.println(terms.size() + " terms for AC");
 		engine = initEngine(terms);
 	}

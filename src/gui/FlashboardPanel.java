@@ -124,14 +124,15 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 		{
 			try
 			{
-				if (!currentSet.getAll().contains(card))
-					return;
+				int cardIndex = currentSet.getAll().indexOf(card);
 				
-				List<FlashCard> toDraw = new ArrayList<>();
-				List<FlashCard> availableCards = new ArrayList<>(currentSet.getAll());
-				for (int i = availableCards.indexOf(card) ; i != availableCards.size() && toDraw.size() != MAX_FLASH_CARDS; ++i)
+				List<FlashCard> allCards = currentSet.getAll();
+				List<FlashCard> toDraw = new ArrayList<>(allCards.subList(cardIndex, allCards.size()));
+				// Fill the list if possible
+				for (FlashCard f: allCards)
 				{
-					toDraw.add(availableCards.get(i));
+					if (toDraw.size() < MAX_FLASH_CARDS && allCards.size() >= MAX_FLASH_CARDS)
+						toDraw.add(f);
 				}
 				
 				updateFlashboard(toDraw);

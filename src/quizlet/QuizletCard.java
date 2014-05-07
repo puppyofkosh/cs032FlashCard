@@ -29,12 +29,21 @@ public class QuizletCard {
 	public List<String> generatedTags()
 	{
 		List<String> tags = new ArrayList<>();
-		for (String token : definition.split(" "))
+		for (String token : definition.split("[ \\n.,\\t]"))
 		{
-			if (!Search.commonWords.contains(token.toLowerCase()) && tags.size() < 2)
+			String fixed = "";
+			try {
+				fixed = Controller.parseInput(token);
+			} catch (IOException e) {
+				break;
+			}
+			if (fixed.length() == 0)
+				break;
+			
+			if (!Search.commonWords.contains(fixed.toLowerCase()) && tags.size() < 2)
 			{
-				System.out.println("Adding token " + token);
-				tags.add(token);
+				System.out.println("Adding token " + fixed);
+				tags.add(fixed);
 			}
 		}
 		
