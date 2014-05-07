@@ -177,6 +177,8 @@ public class SetBrowser extends JPanel  {
 		List<SourceListItem> children = selected.getChildItems();
 		if (children == null || children.isEmpty()) {
 			parent = _parents.get(selected);
+			if (parent == null)
+				return -1;
 			children = parent.getChildItems();
 		} else {
 			parent = selected;
