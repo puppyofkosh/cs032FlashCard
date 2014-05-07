@@ -85,6 +85,9 @@ public class ExportPanel extends JPanel implements ClientFrontend,
 		searchBox = new JTextField("Search Here");
 		searchBox.addActionListener(this);
 		headerPanel.add(searchBox, BorderLayout.CENTER);
+		
+		// FIXME: Until we get search wokring
+		searchBox.setVisible(false);
 
 		rdbtnWav = new JRadioButton("Wav");
 		chooseMethodPanel.add(rdbtnWav);
