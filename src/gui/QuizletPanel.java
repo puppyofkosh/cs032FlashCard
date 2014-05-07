@@ -175,7 +175,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 
 		tablePanel.add(cardScrollPane);
 
-		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer("Play Cards"));
+		cardTable.setDefaultRenderer(QuizletCard.class, new PreviewRenderer("Play"));
 		cardTable.setDefaultEditor(QuizletCard.class, new PreviewEditor(new JCheckBox()));
 		cardTable.setRowSelectionAllowed(false);
 		cardTable.setColumnSelectionAllowed(false);
@@ -272,24 +272,53 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 		 */
 		private static final long serialVersionUID = 1L;
 		protected JButton button;
+		
+		private FlashCard cardClicked = null;
 
 		public PreviewEditor(JCheckBox checkBox) {
 			super(checkBox);
-			button = new JButton("Preview");
+			button = new JButton("Previewing");
 			button.setOpaque(true);
+			button.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					try
+					{
+						if (cardClicked != null && Controller.getCurrentlyPlayingFlashCard() != cardClicked)
+						{
+							button.setText("Pause");
+							Controller.playFlashcardThenRun(cardClicked);
+						}
+						else if (cardClicked != null)
+						{
+							button.setText("Play");
+							Controller.stopAudio();
+						}
+					}
+					catch (IOException e)
+					{
+						Controller.guiMessage("Can't play card");
+					}
+				}
+				
+			});
 		}
 
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int row, int column) {
-
-			if (column == 3)  
+			System.out.println("selected");
+			
+			if (column == 3)
+			{
+				System.out.println("Column 3");
 				new PreviewThread(value.toString()).execute();
+			}
 			else  
-				try {
-					Controller.playFlashcardThenRun(((QuizletCard) value).getFlashCard((int) spinner.getValue()));
-				} catch (IOException e) {
-					Controller.guiMessage("Cannot preview card", true);
-				} 
+			{
+				cardClicked = ((QuizletCard) value).getFlashCard((int) spinner.getValue());
+			}
 			return button;
 		}
 	}
