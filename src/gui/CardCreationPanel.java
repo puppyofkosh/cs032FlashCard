@@ -42,7 +42,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 	private String stopText = "Stop   ";
 	private static final String DEFAULT_INPUT_HINT = "Text To Speech";
 	private Set<FlashCardSet> setSet;
-	
+
 	// If editing is enabled newCard is the replacement for editedCard
 	private FlashCard editedCard;
 
@@ -79,7 +79,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 	private void initPanelComponents() {
 		addComponentListener(this);
-		
+
 		setLayout(new BorderLayout(0,0));
 		setOpaque(false);
 
@@ -355,14 +355,14 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		} else if (e.getSource() == textAnswer) {
 			readTTS(false);
 		} else if (e.getSource() == btnFlash) {
-			
+
 			//The user wants to create the card and move on to the next one.
 			if (setSet.size() == 0)
 			{
 				Controller.guiMessage("Must choose some sets for this card to be in");
 				return;
 			}
-			
+
 			if (this.editedCard == null)
 			{
 				createCard();
@@ -371,7 +371,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 			{
 				editCard();
 			}
-			
+
 		}
 	}
 
@@ -419,7 +419,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		data.pathToFile = SerializableFlashCard.makeFlashCardPath(data);
 
 		FlashCard newCard = Controller.createCard(data);
-		
+
 		for(FlashCardSet set : setSet) {
 			try {
 				set.addCard(newCard);
@@ -430,19 +430,24 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		return newCard;
 	}
 	
+	public void setSpinner(int interval) {
+		spinnerInterval.setValue(interval);
+		spinnerInterval.repaint();
+	}
+
 	private void editCard()
 	{
 		FlashCard newCard = createCardFromFields();
 		if (newCard == null || editedCard == null)
 			return;
-	
+
 		Controller.replaceCard(editedCard, newCard);
 		editedCard = null;
 		clear();
 		btnFlash.setText("Create Card");
 		Controller.updateGUI(Controller.getCurrentTab());
 	}
-	
+
 	private void createCard() {
 		FlashCard newCard = createCardFromFields();
 		if (newCard == null)

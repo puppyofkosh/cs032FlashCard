@@ -1,6 +1,5 @@
 package protocol;
 
-import protocol.Request.RequestType;
 import search.Search;
 
 public class MetaDataCardRequest implements Request{

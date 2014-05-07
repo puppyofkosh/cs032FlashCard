@@ -1,16 +1,10 @@
 package server;
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Map;
 
-import utils.FlashcardConstants;
 import utils.Writer;
-import database.DatabaseFactory;
-import flashcard.FlashCard;
 
 /**
  * A chat server, listening for incoming connections and passing them

@@ -5,7 +5,6 @@ import java.util.List;
 
 import flashcard.FlashCard;
 import flashcard.SerializableFlashCard;
-import flashcard.SerializableFlashCard.Data;
 
 public class UploadCardsRequest implements Request {
 	

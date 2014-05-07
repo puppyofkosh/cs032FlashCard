@@ -21,8 +21,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import utils.Writer;
-
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
 
@@ -271,7 +269,6 @@ public class FlashboardPanel extends JPanel implements SourceListSelectionListen
 			if (_setBrowser != null)
 			{
 				currentIndex = _setBrowser.getSelectedIndex();
-				Writer.out(currentIndex);
 				// The SetBrowser doesn't always have a selected set (even if the flashboard is displaying the cards for a certain set)
 				// We don't want to overwrite currentSet unless if we know the new value won't be null
 				FlashCardSet selectedSet = _setBrowser.getSelectedSet();

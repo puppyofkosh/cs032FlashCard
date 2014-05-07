@@ -6,7 +6,7 @@ package gui;
  *
  */
 public interface Browsable {
-	
+
 	public void showSetBrowser(SetBrowser browser);
 	public void removeSetBrowser();
 }

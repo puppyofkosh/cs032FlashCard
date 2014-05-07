@@ -114,11 +114,11 @@ public class SetBrowser extends JPanel  {
 			try {
 				_sets.put(setFolder, set);
 				model.addItemToCategory(setFolder, setsCategory);
-				
+
 				// Sort the cards by name
 				List<FlashCard> setCards =new ArrayList<>(set.getAll());
 				Collections.sort(setCards, new AbstractFlashCard.NameComparator());
-				
+
 				setFolder.setCounterValue(setCards.size());
 				for(FlashCard card : setCards) {
 					SourceListItem currentItem = new SourceListItem(card.getName(), cardIcon);
@@ -131,8 +131,6 @@ public class SetBrowser extends JPanel  {
 				Controller.guiMessage("Could not get cards from set: " + set.getName(), true);
 			}
 		}
-		sourceList.useIAppStyleScrollBars();
-
 
 		JComponent listPanel = sourceList.getComponent();
 		add(listPanel, BorderLayout.CENTER);
@@ -147,7 +145,7 @@ public class SetBrowser extends JPanel  {
 		revalidate();
 		repaint();
 	}
-	
+
 	public void setSelection(int newIndex) {
 		SourceListItem set;
 		SourceListItem selected = sourceList.getSelectedItem();
@@ -164,7 +162,7 @@ public class SetBrowser extends JPanel  {
 		sourceList.setSelectedItem(newSelectedItem);
 		sourceList.scrollItemToVisible(newSelectedItem);
 	}
-	
+
 	/**
 	 * Attempts to get the selected index of the current item.
 	 * If its a set, it will return -1, or if nothing is selected it will
@@ -212,7 +210,7 @@ public class SetBrowser extends JPanel  {
 		//expanding/collapsing items.
 		sourceList.setFocusable(true);
 		sourceList.setColorScheme(new CustomColorScheme());
-		
+
 		sourceList.installSourceListControlBar(createDefaultControlBar());
 
 		//Passes the selection event to the parentComponent
@@ -229,7 +227,7 @@ public class SetBrowser extends JPanel  {
 		sourceList.setTransferHandler(new SourceListTransferHandler());
 		updateSourceList();
 	}
-	
+
 	/**
 	 * Creates a control bar for the bottom of the source list.
 	 * @return
@@ -279,7 +277,7 @@ public class SetBrowser extends JPanel  {
 		});
 		return controlBar;
 	}
-	
+
 	public SourceList getSourceList() {
 		return sourceList;
 	}
@@ -346,7 +344,6 @@ public class SetBrowser extends JPanel  {
 						}
 					}
 				});
-
 				item2.addActionListener(new ActionListener() {
 
 					@Override

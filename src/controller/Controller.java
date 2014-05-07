@@ -49,16 +49,16 @@ public class Controller {
 	private static Recorder recorder;
 	private static MainFrame gui;
 	public static SetBrowser setBrowser = new SetBrowser();
-	
+
 	// the flashcard being played right now
 	private static FlashCard currentlyPlayingFlashCard = null;
 
 	private static TabType currentTab = TabType.FLASHBOARD;
-	
+
 	public static SetBrowser requestSetBrowser() {
 		return setBrowser;
 	}
-	
+
 	/**
 	 * Import a tsv or similar
 	 * 
@@ -266,7 +266,7 @@ public class Controller {
 		currentlyPlayingFlashCard = card;
 		player.playThenRun(card, runnables);
 	}
-	
+
 	public static FlashCard getCurrentlyPlayingFlashCard()
 	{
 		return currentlyPlayingFlashCard;
@@ -293,7 +293,7 @@ public class Controller {
 		else
 			card.removeTag(tag);
 	}
-	
+
 	public static String shortenText(String text) {
 		if (text.length() > GuiConstants.MAX_TEXT_LENGTH) {
 			return text.substring(0, GuiConstants.MAX_TEXT_LENGTH) + "...";
@@ -334,7 +334,7 @@ public class Controller {
 		// The DB handles removing the card from its sets
 		if (currentlyPlayingFlashCard != null && card.equals(currentlyPlayingFlashCard))
 			stopAudio();
-		
+
 		DatabaseFactory.deleteCard(card);
 		updateGUI(getCurrentTab());
 	}
@@ -374,7 +374,7 @@ public class Controller {
 		updateGUI(getCurrentTab());
 		return set;
 	}
-	
+
 	/**
 	 * Create a new set, write it to disk, and return it. The name may not match up
 	 * with what is given.
@@ -397,9 +397,9 @@ public class Controller {
 		}
 		set.setAuthor(author);
 		set.setInterval(interval);
-		
+
 		set = DatabaseFactory.writeSet(set);
-		
+
 		updateGUI(getCurrentTab());
 		return set;
 	}
@@ -421,12 +421,12 @@ public class Controller {
 	public static void launchGUI() {
 		gui = new MainFrame();
 	}
-	
+
 	public static void editCard(FlashCard card) {
 		gui.editCard(card);
-		
+
 	}
-	
+
 	public static void editSet(FlashCardSet set) {
 		gui.editSet(set);
 	}
@@ -438,20 +438,20 @@ public class Controller {
 
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
-		
+
 		updateGUI(getCurrentTab());
 	}
-	
+
 	public static TabType getCurrentTab() {
 		return currentTab;
 	}
-	
+
 	public static void pageFlashboard(boolean forward) {
 		gui.page(forward);
-		
+
 	}
-	
-	
+
+
 	/**
 	 * replace a card with a different card in the DB
 	 * @param oldCard
@@ -460,7 +460,7 @@ public class Controller {
 	public static void replaceCard(FlashCard oldCard, FlashCard newCard)
 	{
 		System.out.println("replacing " + oldCard + " by " + newCard);
-		
+
 		Collection<FlashCardSet> sets = oldCard.getSets();
 		Controller.deleteCard(oldCard);
 		try {
@@ -472,4 +472,9 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
+
+	public static void setDefaultInterval(int interval) {
+		gui.setDefaultInterval(interval);
+	}
+
 }

@@ -5,9 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import protocol.CardListResponse;
@@ -19,11 +17,9 @@ import protocol.Request;
 import protocol.Response;
 import protocol.UploadCardsRequest;
 import protocol.UploadCardsResponse;
-import search.SearchParameters;
 import utils.Writer;
 import database.DatabaseFactory;
 import flashcard.FlashCard;
-import flashcard.SerializableFlashCard;
 /**
  * A thread for handling client connections to the server.
  * @author skortchm

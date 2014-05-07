@@ -78,9 +78,12 @@ public class SetSelectionButton extends JButton implements ActionListener {
 			
 			try {
 				if (_item.isSelected()) {
-					if (_card != null)
+					if (_card != null) {
 						_set.addCard(_card);
+						Controller.setDefaultInterval(_set.getInterval());
+					}
 					else if (_sets != null)
+						Controller.setDefaultInterval(_set.getInterval());
 						_sets.add(_set);
 				} else {
 					if (_card != null)

@@ -1,7 +1,5 @@
 package settings;
 
-import gui.GuiConstants;
-
 import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;

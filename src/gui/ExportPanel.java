@@ -215,7 +215,7 @@ public class ExportPanel extends JPanel implements ClientFrontend,
 					JOptionPane
 							.showMessageDialog(
 									panel,
-									"Playlist has been created! To use this playlist, open Itunes and click Import Playlist, and choose the file \'"
+									"Playlist has been created!\nTo use this playlist, open Itunes and click Import Playlist, and choose the file \'"
 											+ playlist
 											+ ".m3u\' in the directory this program is located in.");
 				} catch (IOException ioe) {

@@ -10,8 +10,6 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import utils.FlashcardConstants;
-
 import audio.DiscAudioFile;
 import audio.MemoryAudioFile;
 import flashcard.FlashCard;
