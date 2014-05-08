@@ -14,10 +14,7 @@ import flashcard.FlashCard;
 import flashcard.SerializableFlashCard;
 
 /**
- * FIXME: In the ideal world, this class would be re-usable
- * 
- * @author puppyofkosh
- * 
+ * A class for playing audio, based on byte arrays
  */
 public class ByteArrayAudioPlayer implements AudioPlayer {
 	private PlayThread playThread;
@@ -59,9 +56,10 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 
 	@Override
 	public void playThenRun(FlashCard card, Runnable...runnables) throws IOException {
-		//System.out.println("Starting");
 		if (card == null)
 			throw new IOException("Recieved null FlashCard");
+			// to make sure that this is acknowledged, 
+			// it isn't a runtime exception
 
 		else {
 			stop();
@@ -70,18 +68,26 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 		}
 	}
 	
-	public static abstract class PlayThread extends SwingWorker<Void, Void>
-	{
+	/**
+	 * Thread that can play audio and run Runnables afterwards
+	 * on the Event Dispatch Thread
+	 */
+	public static abstract class PlayThread 
+	extends SwingWorker<Void, Void> {
 		protected volatile boolean isPlaying = true;
 		protected Runnable[] runnables;
 		
+		/**
+		 * sets up Thread to run all the Runnable arguments on the
+		 * Event Dispatch Thread after done playing
+		 * @param runnables
+		 */
 		public PlayThread(Runnable...runnables) {
 			this.runnables = runnables;
 			
 		}
 		
-		public void stopPlaying()
-		{
+		public void stopPlaying() {
 			isPlaying = false;
 		}
 		
@@ -92,31 +98,39 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 			}
 		}
 		
+		/**
+		 * plays the AudioFile, blocking until the audio is over
+		 * @param file the AudioFile to play
+		 * @throws InterruptedException if interrupted
+		 */
 		protected void blockingPlay(AudioFile file) throws InterruptedException {
 			SourceDataLine line = null;
 			try {
-				AudioFormat format = AudioConstants.TTSREADER;
+				AudioFormat format = AudioConstants.STANDARD_FORMAT;
 
 				byte[] bytes = file.getRawBytes();
+				
 				AudioInputStream stream = new AudioInputStream(
-						new ByteArrayInputStream(bytes), format, bytes.length
-								/ format.getFrameSize());
+						new ByteArrayInputStream(bytes), format,
+						bytes.length / format.getFrameSize()); // length in frames
+				
+				// setup line to play audio
 				DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 				line = (SourceDataLine) AudioSystem.getLine(info);
 				line.open(format);
 				line.start();
+				// setup buffer to hold the audio
 				int bufferSize = format.getFrameSize() * (int) format.getFrameRate() / 4;
 				byte[] buffer = new byte[bufferSize];
 				int bytesRead = stream.read(buffer);
 				while (bytesRead != -1) {
 					
 					if (!isPlaying) {
-						//System.out.println("blocking interrupted");
 						line.stop();
 						line.close();
 						throw new InterruptedException("");
 					}
-					
+					//play audio and buffer in next bytes
 					line.write(buffer, 0, bytesRead);
 					bytesRead = stream.read(buffer);
 				}
@@ -126,16 +140,17 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 				line.close();
 
 			} catch (Exception e) {
-				//System.out.println(e.getMessage());
 				return;
 			}
 		}
-	}
+	}	
 	
-	
-	
+	/**
+	 * A PlayThread to play a FlashCard
+	 */
 	private class PlayCardThread extends PlayThread {
 		FlashCard card;
+		
 		PlayCardThread(FlashCard card, Runnable...runnables) {
 			super(runnables);
 			// Keep the card locally in case it is removed from DB
@@ -149,13 +164,15 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 				Thread.sleep(card.getInterval() * 1000);				
 				blockingPlay(card.getAnswerAudio());
 
-			} catch (InterruptedException e) {
-				//System.out.println("Interrupted");
-			}
+			} catch (InterruptedException e) {}
+			//just want to stop playing if interrupted
 			return null;
 		}
 	}
 
+	/**
+	 * A Play Thread to play an AudioFile
+	 */
 	private class PlayAudioFileThread extends PlayThread {
 
 		AudioFile file;	
@@ -172,28 +189,5 @@ public class ByteArrayAudioPlayer implements AudioPlayer {
 			} catch (InterruptedException e) {}
 			return null;
 		}
-	}
-
-	public static void main(String[] args) throws InterruptedException,
-			IOException {
-
-		FreeTTSReader reader = new FreeTTSReader();
-		ByteArrayAudioPlayer player = new ByteArrayAudioPlayer();
-
-		AudioFile file = reader.read("Testing, testing 1 2 3, homie");
-		player.play(file);
-		Thread.sleep(6000);
-
-		file = reader.read("Whats up, homie");
-		player.play(file);
-		Thread.sleep(5000);
-
-		file = reader.read("This clip does not contain the word homie");
-		player.play(file);
-		Thread.sleep(5000);
-
-		file = new DiscAudioFile("data/tts-test/strange-characters.wav");
-		player.play(file);
-		Thread.sleep(11000);
 	}
 }

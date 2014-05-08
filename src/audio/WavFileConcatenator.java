@@ -2,9 +2,7 @@ package audio;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,50 +21,11 @@ import flashcard.FlashCardSet;
 
 /**
  * A class for concatenating together AudioFiles
- * @author Peter
  */
 public class WavFileConcatenator {
 
 	// the AudioFile that holds the blank interval audio for concatenation
 	private static DiscAudioFile intervalAudio = setupIntervalAudio();
-	
-	// the path to the destination folder where generated wav files will be placed
-	private static String destination = setupOutputLocation();
-	
-	/**
-	 * attempts to set the output location to the user's chosen location
-	 * from previous runs of the program. If this cannot be done for whatever reason,
-	 * it defaults to 'output'
-	 * @return The user's chosen output location from previous runs of the program,
-	 * or 'output' if that cannot be found
-	 */
-	private static String setupOutputLocation() {
-		//File locationFile = new File("output_location.set");
-		//if (locationFile.exists()) {
-		//	try (BufferedReader read = new BufferedReader(new FileReader(locationFile))) {
-		//		return read.readLine(); 
-		//	} catch (Throwable e) {}
-		//}
-		new File("output").mkdir();
-		return "output";
-	}
-	
-	/**
-	 * Changes the output destination for created wav files
-	 * @param destination The path of the new output folder
-	 */
-	public static void changeDestination(String destination) {
-
-		WavFileConcatenator.destination = destination;
-		new File(destination).mkdirs();
-		
-		File locationFile = new File("output_location.set");
-		locationFile.delete();
-		
-		try (PrintWriter writer = new PrintWriter(new FileWriter(locationFile))) {
-			writer.println(destination);
-		} catch (Throwable e) {}
-	}
 	
 	/**
 	 * Sets up and returns an AudioFile containing 1 second of silent audio 
@@ -74,7 +33,7 @@ public class WavFileConcatenator {
 	 */
 	private static DiscAudioFile setupIntervalAudio() {
 		intervalAudio = new DiscAudioFile("intervalaudio.wav");
-		AudioFormat format = utils.FlashcardConstants.standardizedFormat;
+		AudioFormat format = AudioConstants.STANDARD_FORMAT;
 		int frames = (int) format.getFrameRate();
 		int size = (format.getFrameSize() * frames);
 		byte[] bytes = new byte[size];
@@ -104,9 +63,12 @@ public class WavFileConcatenator {
 	 * necessary to avoid an overlap
 	 */
 	private static File getUniqueWavFile(String fileName) {
+		// ensures the output destination is a valid path
 		new File(Settings.getOutputDestination()).mkdirs();
+		
 		File output = new File(Settings.getOutputDestination() + "/"+ fileName + ".wav");
 		int collisionPreventer = 0;
+		//makes sure file name is unique by possibly adding a number to the end
 		while (output.exists()) {
 			output = new File(Settings.getOutputDestination() + "/" + fileName + collisionPreventer++ + ".wav");
 		}
@@ -126,7 +88,7 @@ public class WavFileConcatenator {
 	 */
 	public static File concatenate(List<AudioInputStream> streams, String name) throws IOException  {
 		long frameLength = 0;
-		AudioFormat format = utils.FlashcardConstants.standardizedFormat;
+		AudioFormat format = AudioConstants.STANDARD_FORMAT;
 		
 		for (AudioInputStream stream : streams) {
 			frameLength += stream.getFrameLength();
@@ -149,6 +111,7 @@ public class WavFileConcatenator {
 		List<AudioInputStream> streams = new ArrayList<>();
 		streams.add(card.getQuestionAudio().getStream());
 		
+		// inserts the desired interval by looping the 1 second silent audio
 		for (int i = 0; i < card.getInterval(); i++) {
 			streams.add(intervalAudio.getStream());
 		}
@@ -175,13 +138,5 @@ public class WavFileConcatenator {
 	 */
 	public static void concatenate(FlashCardSet set) throws IOException {
 		concatenate(set.getAll());
-	}
-	
-	/**
-	 * Gets the output destination of wav files
-	 * @return the output destination of wav files
-	 */
-	public static String getDestination() {
-		return destination;
 	}
 }

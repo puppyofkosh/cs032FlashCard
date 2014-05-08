@@ -12,13 +12,11 @@ import javax.sound.sampled.TargetDataLine;
 import javax.swing.SwingWorker;
 
 import settings.Settings;
-import utils.FlashcardConstants;
 import controller.Controller;
 
 /**
  * Recorder that writes audio to a file as it records, then
  * converts it into a MemoryAudioFile once recording is over
- * @author Peter
  *
  */
 public class BufferRecorder implements Recorder {
@@ -30,7 +28,7 @@ public class BufferRecorder implements Recorder {
 	@Override
 	public void startRecord(Runnable...runnables) {
 		recordedAudio = new DiscAudioFile("temp.wav");
-		format = FlashcardConstants.standardizedFormat;
+		format = AudioConstants.STANDARD_FORMAT;
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format); 
 		try {
 			line = (TargetDataLine) AudioSystem.getLine(info);
@@ -53,6 +51,9 @@ public class BufferRecorder implements Recorder {
 		return newFile;
 	}
 	
+	/**
+	 * A Thread to capture audio from the microphone
+	 */
 	private class CaptureThread extends Thread {
 		
 		TimeoutThread thread;
@@ -68,17 +69,27 @@ public class BufferRecorder implements Recorder {
 			line.start();
 			thread.execute();
 		}
+		
+		@Override
 		public void run() {
 			try {
 				AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
 				AudioSystem.write(new AudioInputStream(line), fileType, recordedAudio);
-				thread.cancel(true);
-			} catch (IOException e) {
+				// writes audio to recordedAudio, blocks until line is closed
 				
+				thread.cancel(true);
+				// once recording is done, there is no need
+				//to worry about exceeding the timeout
+			} catch (IOException e) {
+			
 				Controller.guiMessage("Unable to record", true);
 			}
 		}
 	}
+	
+	/**
+	 * Thread to stop recording if it goes too long
+	 */
 	private class TimeoutThread extends SwingWorker<Boolean, Void> {
 		int duration;
 		Runnable[] runnables;
@@ -93,7 +104,6 @@ public class BufferRecorder implements Recorder {
 			try {
 				Thread.sleep(1000 * duration);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				return false;
 			}
 			return true;
@@ -101,18 +111,10 @@ public class BufferRecorder implements Recorder {
 		
 		@Override
 		public void done() {
-			try {
-				for (Runnable task: runnables) {
-					task.run();
-				}
-				stopRecord();
-				
-			} catch (Exception e) {
-				for (Runnable task: runnables) {
-					task.run();
-				}
+			for (Runnable task: runnables) {
+				task.run();
 			}
+			stopRecord();
 		}
 	}
-
 }

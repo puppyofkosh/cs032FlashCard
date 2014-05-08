@@ -9,8 +9,7 @@ import audio.AudioConstants;
  */
 public class FlashcardConstants {
 
-	public static final	AudioFormat standardizedFormat = AudioConstants.TTSREADER;
-
+	
 	public static final String METADATA_HEADER = "NAME\tINTERVAL\tSETS\tTAGS";
 	public final static String CARDS_FOLDER = "./files/";
 

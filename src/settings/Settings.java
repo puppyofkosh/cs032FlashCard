@@ -11,11 +11,11 @@ import java.io.Serializable;
 
 import controller.Controller;
 
+/**
+ * Class to store the settings between runs
+ */
 public class Settings implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final File configFile = new File(".config");
 
@@ -37,7 +37,6 @@ public class Settings implements Serializable {
 
 	private static Settings settings = setupSettings();
 
-
 	private Settings(int recordingTimeout, String outputDestination,
 			String defaultAuthor, Color mainColor, Color secondaryColor,
 			String host, String portNumber) {
@@ -50,6 +49,11 @@ public class Settings implements Serializable {
 		this.portNumber = portNumber;
 	}
 
+	/**
+	 * Tries to read the settings from the config file,
+	 * and uses the default settings if it can't
+	 * @return the Settings object to use
+	 */
 	private static Settings setupSettings() {
 		try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(configFile))) {
 			return (Settings) stream.readObject();
@@ -60,6 +64,9 @@ public class Settings implements Serializable {
 		}
 	}
 
+	/**
+	 * Saves the current settings
+	 */
 	private static void saveSettings() {
 		configFile.delete();
 

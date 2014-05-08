@@ -3,7 +3,6 @@ package quizlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,27 +10,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * A class for making requests to the Quizlet API
+ */
 public class QuizletRequest {
-
-	public static void main(String[] args) throws UnsupportedEncodingException, IOException, JSONException {
-		BufferedReader reader = null;
-		try {
-			URL url = new URL("https://api.quizlet.com/2.0/search/sets?client_id=h69PJudW8j&q=french&q=animals");
-			reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-			String line = reader.readLine();
-			System.out.println(line);
-			JSONObject o = new JSONObject(line);
-			JSONArray sets = o.getJSONArray("sets");
-			//for(int i )
-		}
-			finally {
-				if (reader != null)
-					try {reader.close();}
-				catch (IOException e) {}
-			
-		}
-	}
 	
+	/**
+	 * Search the Quizlet database using the input search
+	 * @param search the search term to use
+	 * @return the JSONArray containing the sets that Quizlet returned
+	 * @throws JSONException if The JSON returned by Quizlet
+	 * is not properly formatted
+	 * @throws IOException if there is an error in I/O
+	 */
 	public static JSONArray search(String search) throws JSONException, IOException {
 		String fixedSearch = search.replace(" ", "%20");
 		URL url;
@@ -41,6 +32,11 @@ public class QuizletRequest {
 		}
 	}
 	
+	/**
+	 * gets the set from Quizlet with the input id
+	 * @param id the id of the set to get
+	 * @return The JSONObject returned by Quizlet
+	 */
 	public static JSONObject getSet(String id) {
 		try {
 			URL url = new URL("https://api.quizlet.com/2.0/sets/" + id + "?client_id=h69PJudW8j");

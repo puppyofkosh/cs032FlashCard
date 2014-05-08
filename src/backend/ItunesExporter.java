@@ -11,43 +11,41 @@ import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
 /**
- * Lets us export some flashcards to an itunes library somewhere
- * 
- * Peter
- * 
- * @author puppyofkosh
- *
+ * exports cards into a playlist
  */
 public class ItunesExporter implements Exporter{
-
-	// Write CTOR that takes location of an itunes library file
-	// as well as the itunes music directory
-	
-	//private WavFileConcatenator wavConcat;
 	private File playlist;
-//	private String destination;
 	
-	
-	public ItunesExporter(File playlist) throws IOException {
-	//	wavConcat = new WavFileConcatenator();
+	/**
+	 * Creates an ItunesExporter with a chosen playlist file
+	 * @param playlist the file that will hold the playlist (should be .m3u)
+	 */
+	public ItunesExporter(File playlist) {
 		this.playlist = playlist;
 	}
-	 
-	public ItunesExporter(String playlistLocation, String playlistName) throws IOException {
+	
+	/**
+	 * Creates an ItunesExporter with a playlist based on the inputs
+	 * @param playlistLocation the folder to contain the playlist
+	 * @param playlistName the name of the playlist
+	 */
+	public ItunesExporter(String playlistLocation, String playlistName) {
 		this(new File(playlistLocation, playlistName + ".m3u"));
 	}
 	
 	/**
-	 * Use a WavExporter to turne the cards into wavs within the user's itunes directory
-	 * Then, modify the itunes library to include the files we generated
-	 * @throws IOException 
+	 * Turns the cards into wavs
+	 * Then, add the exported cards to the generated playlist
+	 * @throws IOException if an error in I/O occurs
 	 */
 	@Override
 	public synchronized void export(List<FlashCard> f) throws IOException {
 		try (FileWriter writer = new FileWriter(playlist)) {
 			for (FlashCard card : f) {
+				//adds a new line before each new file
 				if (playlist.exists())
 					writer.write("\n");
+				// concatenate returns the file, which is used to get the absolute path
 				writer.write(WavFileConcatenator.concatenate(card).getAbsolutePath());
 			}
 		}

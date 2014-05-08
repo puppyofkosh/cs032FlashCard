@@ -50,7 +50,7 @@ public class FreeTTSReader implements TextToSpeechReader {
 		audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
 		
 		// FIXME: Figure this shit out-what size do we want?
-		audioPlayer.setAudioFormat(FlashcardConstants.standardizedFormat);
+		audioPlayer.setAudioFormat(AudioConstants.STANDARD_FORMAT);
         
 		
 		voice.setAudioPlayer(audioPlayer);
@@ -76,7 +76,7 @@ public class FreeTTSReader implements TextToSpeechReader {
 			}
 			
 			audioPlayer = new SingleFileAudioPlayer(TEMP_FILE_NAME, javax.sound.sampled.AudioFileFormat.Type.WAVE);
-			audioPlayer.setAudioFormat(FlashcardConstants.standardizedFormat);
+			audioPlayer.setAudioFormat(AudioConstants.STANDARD_FORMAT);
 			voice.setAudioPlayer(audioPlayer);
 		}
 		

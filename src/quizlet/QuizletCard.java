@@ -17,6 +17,9 @@ import audio.AudioFile;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
+/**
+ * A class to represent a single Card from Quizlet
+ */
 public class QuizletCard {
 	public String term;
 	public String definition;
@@ -26,6 +29,10 @@ public class QuizletCard {
 		this.definition = object.getString("definition");
 	}
 	
+	/**
+	 * generates tags for a card
+	 * @return A list of generated tags
+	 */
 	public List<String> generatedTags()
 	{
 		List<String> tags = new ArrayList<>();
@@ -49,7 +56,13 @@ public class QuizletCard {
 		
 		return tags;
 	}
-	
+	/**
+	 * Converts a JSONObject representing a Fully detailed Set
+	 *  from Quizlet into QuizletCards
+	 * @param set a JSONObject representing a set from Quizlet
+	 * @return an array of QuizletCard
+	 * @throws JSONException if the JSONObject cannot be read
+	 */
 	public static QuizletCard[] getCards(JSONObject set) throws JSONException {
 		QuizletCard[] output = new QuizletCard[set.getInt("term_count")];
 		JSONArray cards = set.getJSONArray("terms");
@@ -59,26 +72,48 @@ public class QuizletCard {
 		return output;
 	}
 	
+	/**
+	 * Converts this QuizletCard into a FlashCard
+	 * @return a FlashCard that contains the information available
+	 * from this QuizletCard
+	 */
 	public FlashCard getFlashCard() {
 		return new QuizletFlashCard();
 	}
 	
+	/**
+	 * Converts this QuizletCard into a FlashCard with the input interval
+	 * @param interval The interval for the created FlashCard
+	 * @return a FlashCard that contains the information available
+	 * from this QuizletCard and the input interval
+	 */
 	public FlashCard getFlashCard(int interval) {
 		return new QuizletFlashCard(interval);
 	}
 	
+	/**
+	 * A FlashCard to represent a QuizletCard
+	 */
 	private class QuizletFlashCard implements FlashCard {
 		
 		AudioFile question;
 		AudioFile answer;
 		int interval;
 		
+		/**
+		 * Creates a QuizletFlashCard from the parent QuizletCard
+		 */
 		QuizletFlashCard() {
 			question = Controller.readTTS(term);
 			answer = Controller.readTTS(definition);
 			interval = 0;
 		}
 		
+		/**
+		 * Creates a QuizletFlashCard from the parent
+		 *  QuizletCard and input interval
+		 * @param interval the interval of the created FlashCard
+		 */
 		QuizletFlashCard(int interval) {
 			this();
 			this.interval = interval;
