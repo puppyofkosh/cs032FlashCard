@@ -212,7 +212,6 @@ public class DatabaseFlashCard implements FlashCard {
 			return new DiscAudioFile(path + FlashcardConstants.QUESTION_FILE);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -231,7 +230,6 @@ public class DatabaseFlashCard implements FlashCard {
 			return new DiscAudioFile(path + FlashcardConstants.ANSWER_FILE);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

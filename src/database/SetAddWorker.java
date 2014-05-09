@@ -9,6 +9,8 @@ import flashcard.FlashCardSet;
 
 /**
  * Adds a bunch of cards to a set (that's probably on disk) and returns a progress thing
+ * Performs all DB operations in a separate thread so GUI doesn't hang up
+ * 
  * @author puppyofkosh
  *
  */
@@ -17,6 +19,11 @@ public class SetAddWorker extends SwingWorker<Void, Void>{
 	private FlashCardSet set;
 	private List<FlashCard> cards;
 	
+	/**
+	 * Initialize (in Event Dispatch Thread)
+	 * @param s
+	 * @param cards
+	 */
 	public SetAddWorker(FlashCardSet s, List<FlashCard> cards)
 	{
 		this.cards = cards;
@@ -24,6 +31,9 @@ public class SetAddWorker extends SwingWorker<Void, Void>{
 		
 	}
 	
+	/**
+	 * Add the cards to the set (performed in worker thread)
+	 */
 	@Override
 	protected Void doInBackground() throws Exception {
 		

@@ -1,5 +1,11 @@
 package protocol;
 
+/**
+ * Just confirms that the sent cards were uploaded (from a UploadCardsRequest)
+ * TODO: Maybe combine all of the confirmation responses into one class?
+ * @author puppyofkosh
+ *
+ */
 public class UploadCardsResponse implements Response{
 	
 	/**

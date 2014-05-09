@@ -14,40 +14,46 @@ import edu.brown.cs032.autocorrect.backend.suggestion.ExactSuggestionGenerator;
 import edu.brown.cs032.autocorrect.backend.suggestion.LEDSuggestionGenerator;
 import edu.brown.cs032.autocorrect.backend.suggestion.WhiteSpaceSuggestionGenerator;
 
+/**
+ * Class that provides autocorrect/autosuggest setup logic
+ * 
+ * Only really used for the search feature (which does not auto "correct" but
+ * will return results similar to the given search)
+ * 
+ * @author puppyofkosh
+ * 
+ */
 public class AutoCorrector {
-	
+
 	private AutoCorrectEngine engine;
-		
-	public AutoCorrectEngine getEngine() 
-	{
+
+	public AutoCorrectEngine getEngine() {
 		// Try to see if the available terms have changed. If so, reinitialize
-		if (terms.size() != DatabaseFactory.getResources().getAllTags().size())
-		{
+		if (terms.size() != DatabaseFactory.getResources().getAllTags().size()) {
 			init();
 		}
-		
+
 		return engine;
 	}
-	
-	// use this to compare if our current terms are up to date with what's available
+
+	// use this to compare if our current terms are up to date with what's
+	// available
 	private List<String> terms;
-	
-	public AutoCorrector()
-	{
+
+	public AutoCorrector() {
 		init();
 	}
-	
-	public void init()
-	{
+
+	public void init() {
 		terms = new ArrayList<String>();
-		
+
 		terms.addAll(DatabaseFactory.getResources().getAllCardNames());
 		terms.addAll(DatabaseFactory.getResources().getAllTags());
 		terms.addAll(DatabaseFactory.getResources().getAllSetNames());
 		System.out.println(terms.size() + " terms for AC");
 		engine = initEngine(terms);
 	}
-	
+
 	/**
 	 * Return an autocorrect engine to use.
 	 * 
@@ -84,7 +90,8 @@ public class AutoCorrector {
 		// Add other generators
 
 		// Make case insensitive LED generator
-		engine.addGenerator(new LEDSuggestionGenerator(nonDuplicateWordlist, 2, true));
+		engine.addGenerator(new LEDSuggestionGenerator(nonDuplicateWordlist, 2,
+				true));
 		engine.addGenerator(new WhiteSpaceSuggestionGenerator(dictionary));
 		engine.addGenerator(new CaseIgnorantPrefixGenerator(dictionary));
 		return engine;

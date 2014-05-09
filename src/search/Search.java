@@ -18,10 +18,11 @@ import flashcard.FlashCard;
  */
 public interface Search {
 
-	// FIXME: This is a pretty shitty way of doing auto correct imo
+	// FIXME: This is a pretty bad way of doing auto correct IMO
 	public static AutoCorrector corrector = new AutoCorrector();
 
 	// Generate most common words from res/common-words.csv
+	// used for automatic quizlet tagging
 	public static final Set<String> commonWords = Collections
 			.unmodifiableSet(new HashSet<>(FileUtil
 					.allLines("res/common-words.csv")));

@@ -13,76 +13,74 @@ import utils.Writer;
 import audio.AudioFile;
 import audio.MemoryAudioFile;
 
-
 /**
  * Somewhat legit implementation of a flashcard that stores its data in memory
  * and on file, only writing/reading to file when updates are made
+ * 
  * @author puppyofkosh
- *
+ * 
  */
-public class SerializableFlashCard implements FlashCard, Serializable{
+public class SerializableFlashCard implements FlashCard, Serializable {
 
-
-	public static SerializableFlashCard getEmptyCard()
-	{
+	public static SerializableFlashCard getEmptyCard() {
 		return new SerializableFlashCard(new Data());
 	}
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
-	public static class MetaData implements Serializable
-	{
+	/**
+	 * Let's us store all flashcard metadata in one place, and let's us avoid
+	 * 50-arg constructors Hence, all the fields are public. Once a card is
+	 * initialized with a MetaData object, changing it won't influence the card
+	 * object created, so I think that is relatively "safe"
+	 * 
+	 * @author puppyofkosh
+	 * 
+	 */
+	public static class MetaData implements Serializable {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		public String name = "", pathToFile = "";
 		public String questionText = "", answerText = "";
 		public List<String> tags = new ArrayList<>();
 		public int interval = 0;
-		
+
 		private UUID uuid = UUID.randomUUID();
-		
-		public UUID getId()
-		{
+
+		public UUID getId() {
 			return uuid;
 		}
-		
-		public MetaData()
-		{
-			
+
+		public MetaData() {
+
 		}
-		
-		public MetaData(MetaData d)
-		{
+
+		public MetaData(MetaData d) {
 			name = d.name;
 			pathToFile = d.pathToFile;
 			questionText = d.questionText;
 			answerText = d.answerText;
-			
+
 			tags = new ArrayList<>(d.tags);
-			
+
 			interval = d.interval;
 			uuid = d.uuid;
 		}
 
-		public void regenerateId()
-		{
+		public void regenerateId() {
 			uuid = UUID.randomUUID();
 		}
-		
-		public MetaData(FlashCard f)
-		{
+
+		public MetaData(FlashCard f) {
 			name = f.getName();
 			// FIXME: Sets!
 			try {
 				pathToFile = f.getPath();
 				tags = new ArrayList<>(f.getTags());
-				
+
 				interval = f.getInterval();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -91,70 +89,67 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 			uuid = f.getUniqueId();
 		}
 	}
-	
-	public static class AudioData implements Serializable
-	{
-		public AudioFile question, answer;
 
+	public static class AudioData implements Serializable {
+		public AudioFile question, answer;
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * Override so that we convert question and answer to memory audio files
-		 * FIXME: This is a pretty crappy way of doing serialization IMO. Maybe we should make
-		 * AudioFiles serializable?
+		 * FIXME: This is a pretty crappy way of doing serialization IMO. Maybe
+		 * we should make AudioFiles serializable?
+		 * 
 		 * @param stream
 		 * @throws IOException
 		 */
 		private void writeObject(java.io.ObjectOutputStream stream)
-	            throws IOException {
-			
+				throws IOException {
+
 			MemoryAudioFile q = new MemoryAudioFile(question.getRawBytes());
 			MemoryAudioFile a = new MemoryAudioFile(answer.getRawBytes());
-			
+
 			stream.writeObject(q);
 			stream.writeObject(a);
-	    }
+		}
 
 		/**
-		 * Override so that we can convert question and answer to MemoryAudioFile
+		 * Override so that we can convert question and answer to
+		 * MemoryAudioFile
+		 * 
 		 * @param stream
 		 * @throws IOException
 		 * @throws ClassNotFoundException
 		 */
-	    private void readObject(java.io.ObjectInputStream stream)
-	            throws IOException, ClassNotFoundException {			
-			question = (AudioFile)stream.readObject();
-			answer = (AudioFile)stream.readObject();
-	    }
+		private void readObject(java.io.ObjectInputStream stream)
+				throws IOException, ClassNotFoundException {
+			question = (AudioFile) stream.readObject();
+			answer = (AudioFile) stream.readObject();
+		}
 	}
-	
-	public static class Data extends MetaData implements Serializable
-	{
+
+	public static class Data extends MetaData implements Serializable {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		private AudioData audioData = new AudioData();
-	
-		public Data()
-		{
+
+		public Data() {
 			super();
 		}
-		
-		public Data(Data d)
-		{
+
+		public Data(Data d) {
 			super(d);
 			setQuestion(d.getQuestion());
 			setAnswer(d.getAnswer());
 		}
-		
-		public Data(FlashCard f)
-		{
+
+		public Data(FlashCard f) {
 			super(f);
 			// FIXME: Sets!
 			setQuestion(f.getQuestionAudio());
@@ -177,31 +172,29 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 			audioData.answer = answer;
 		}
 	}
-	
+
 	/**
-	 * Given some information about a flashcard, determine where it should be stored
+	 * Given some information about a flashcard, determine where it should be
+	 * stored
+	 * 
 	 * @param d
 	 * @return
 	 */
-	public static String makeFlashCardPath(Data d)
-	{
+	public static String makeFlashCardPath(Data d) {
 		// FIXME: Choose a better convention, if possible, based on sets
 		return "files/" + d.name + "/";
 	}
-	
+
 	private Data data;
-	
-	public SerializableFlashCard(Data data)
-	{
+
+	public SerializableFlashCard(Data data) {
 		this.data = new Data(data);
 	}
-	
-	public SerializableFlashCard(FlashCard f)
-	{
+
+	public SerializableFlashCard(FlashCard f) {
 		this.data = new Data(f);
 	}
-	
-	
+
 	@Override
 	public String getName() {
 		return data.name;
@@ -222,7 +215,7 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	public void addTag(String tag) throws IOException {
 		data.tags.add(tag);
 	}
-	
+
 	public void removeTag(String tag) throws IOException {
 		data.tags.remove(tag);
 	}
@@ -252,31 +245,28 @@ public class SerializableFlashCard implements FlashCard, Serializable{
 	public AudioFile getAnswerAudio() {
 		return data.getAnswer();
 	}
-	
+
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "Flashcard at " + data.pathToFile;
 	}
-	
+
 	@Override
-	public boolean sameMetaData(FlashCard s)
-	{	
+	public boolean sameMetaData(FlashCard s) {
 		// Make sure both sets have the same tags
-		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s
+				.getTags()));
 
 		return (tagEquality && s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
-	
+
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		return getUniqueId().hashCode();
 	}
 
 	@Override
 	public UUID getUniqueId() {
-		// TODO Auto-generated method stub
 		return data.getId();
 	}
 }

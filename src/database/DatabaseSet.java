@@ -13,6 +13,12 @@ import java.util.Set;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
 
+/**
+ * Set implementation that's just a representative of what's on DB
+ * Every setter and getter simply asks our DB object for what's stored in the table
+ * @author puppyofkosh
+ *
+ */
 public class DatabaseSet implements FlashCardSet {
 
 	private int id;
@@ -144,7 +150,6 @@ public class DatabaseSet implements FlashCardSet {
 			return rs.getInt("INTERVAL");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return -1;
@@ -163,7 +168,6 @@ public class DatabaseSet implements FlashCardSet {
 			return rs.getString("AUTHOR");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "";
@@ -181,7 +185,6 @@ public class DatabaseSet implements FlashCardSet {
 			for (String tag : tags)
 				addTag(tag);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -194,7 +197,6 @@ public class DatabaseSet implements FlashCardSet {
 					+ "WHERE ID=" + id;
 			statement.execute(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -206,7 +208,6 @@ public class DatabaseSet implements FlashCardSet {
 					+ "WHERE ID=" + id;
 			statement.execute(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -235,7 +236,6 @@ public class DatabaseSet implements FlashCardSet {
 					+ " AND FLASHCARD_ID=" + card.getLocalId();
 			statement.execute(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -247,7 +247,6 @@ public class DatabaseSet implements FlashCardSet {
 					+ "WHERE ID=" + id;
 			statement.execute(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -28,10 +28,6 @@ import flashcard.SimpleSet;
  */
 public class FileImporter implements Importer {
 
-	// Write ctor that takes filename, delimiter, and perhaps also a TTS object
-	// or flashcard factory
-	// FIXME: Maybe use bufferedreader not scanner
-
 	File file;
 	TextToSpeechReader ttsReader;
 

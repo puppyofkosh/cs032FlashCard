@@ -31,6 +31,13 @@ import search.FilePathSearch;
 import search.SearchParameters;
 import utils.Writer;
 
+/**
+ * Let's us connect to the server and handles all of the "stuff" relating to the
+ * protocol we use between the server and client
+ * 
+ * @author puppyofkosh
+ * 
+ */
 public class Client extends SwingWorker<Response, Response> {
 
 	private Socket _socket;
@@ -50,7 +57,6 @@ public class Client extends SwingWorker<Response, Response> {
 		_clientMessage = s;
 	}
 
-
 	/**
 	 * Constructs a Client with the given port.
 	 * 
@@ -67,8 +73,8 @@ public class Client extends SwingWorker<Response, Response> {
 
 	/**
 	 * Starts the Client, so it connects to the sever. It will set up all the
-	 * necessary requirements, and then launch the GUI.
-	 * THIS IS CALLED IN a separate thread. It should not be modifying GUI stuff
+	 * necessary requirements, and then launch the GUI. THIS IS CALLED IN a
+	 * separate thread. It should not be modifying GUI stuff
 	 */
 	private void connect(int maxAttempts) {
 		int num_attempts = 0;
@@ -196,8 +202,7 @@ public class Client extends SwingWorker<Response, Response> {
 
 	public void requestFullCard(List<NetworkedFlashCard> nc) {
 		List<String> ids = new ArrayList<>();
-		for (NetworkedFlashCard card : nc)
-		{
+		for (NetworkedFlashCard card : nc) {
 			ids.add(card.getIdentifier());
 		}
 		request(new ParametrizedCardRequest(new FilePathSearch(ids)));
@@ -269,8 +274,7 @@ public class Client extends SwingWorker<Response, Response> {
 
 	@Override
 	protected void process(List<Response> chunks) {
-		for (Response r : chunks)
-		{
+		for (Response r : chunks) {
 			processResponse(r);
 		}
 		if (_clientMessage.length() > 0)

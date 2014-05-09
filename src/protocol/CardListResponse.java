@@ -6,6 +6,11 @@ import java.util.List;
 import flashcard.FlashCard;
 import flashcard.SerializableFlashCard;
 
+/**
+ * Response used by server when cards are requested. Just sends a list of serializable flashcards.
+ * @author puppyofkosh
+ *
+ */
 public class CardListResponse implements Response {
 	/**
 	 * 

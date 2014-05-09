@@ -7,7 +7,8 @@ import java.util.List;
 /**
  * Return a bunch of NetworkedFlashCards to the client with this class.
  * NetworkedFlashCards only contain the metadata about each card. To get the
- * audio, the client will have to explicitly "download" the card
+ * audio, the client will have to explicitly "download" the card and send a 
+ * paramaterized card request.
  * 
  * @author puppyofkosh
  * 

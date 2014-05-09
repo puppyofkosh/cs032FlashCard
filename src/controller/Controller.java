@@ -234,6 +234,8 @@ public class Controller {
 	 * If a set with the same name & metadata already exists, return that,
 	 * otherwise create a new set
 	 * 
+	 * Use this for when we're okay with not getting a "new" set, and getting an already existing set
+	 * 
 	 * @param name
 	 * @param author
 	 * @param tags
@@ -268,6 +270,8 @@ public class Controller {
 	 * Create a new set, write it to disk, and return it. The name may not match
 	 * up with what is given.
 	 * 
+	 * Use this when we want to guarantee a NEW set is created on disk.
+	 * 
 	 * @param name
 	 * @param author
 	 * @param tags
@@ -298,6 +302,10 @@ public class Controller {
 		gui.editSet(set);
 	}
 
+	/**
+	 * Remove given set from both GUI and database/disk
+	 * @param set
+	 */
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
 		updateGUI(getCurrentTab());

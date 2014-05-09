@@ -25,6 +25,15 @@ import flashcard.FlashCardSet;
 import flashcard.SerializableFlashCard;
 import flashcard.SimpleSet;
 
+/**
+ * Actual "database" class that let's us set up and perform queries on a
+ * database set up for storing flash cards.
+ * 
+ * Uses sql lite, but the constructor can easily be changed to use whatever SQL really.
+ * 
+ * @author puppyofkosh
+ * 
+ */
 public class FlashCardDatabase implements Resources {
 
 	/**
@@ -188,31 +197,29 @@ public class FlashCardDatabase implements Resources {
 		return prefix + (overlapPreventer == 0 ? "" : overlapPreventer) + "/";
 	}
 
-	public DatabaseFlashCard getCardByUniqueId(UUID id)
-	{
-		try (Statement statement = getStatement())
-		{
-			String query = "SELECT ID FROM FLASHCARDS WHERE UUID='"
-					+ id + "'";
+	public DatabaseFlashCard getCardByUniqueId(UUID id) {
+		try (Statement statement = getStatement()) {
+			String query = "SELECT ID FROM FLASHCARDS WHERE UUID='" + id + "'";
 
 			ResultSet rs = statement.executeQuery(query);
-			
+
 			if (!rs.next())
 				return null;
-			
+
 			return new DatabaseFlashCard(rs.getInt("ID"), this);
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
-		
+
 	}
-	
+
 	/**
 	 * Write all of the card's info to disk
 	 * 
-	 * Does not necessarily write it to the path that the card requests, returns the path that it used
+	 * Does not necessarily write it to the path that the card requests, returns
+	 * the path that it used
 	 * 
 	 * @param card
 	 * @throws IOException
@@ -230,10 +237,10 @@ public class FlashCardDatabase implements Resources {
 			dir.mkdir();
 
 		System.out.println("Writing audio for card" + card);
-		
+
 		Writer.writeAudioFile(path, card.getQuestionAudio().getStream(), true);
 		Writer.writeAudioFile(path, card.getAnswerAudio().getStream(), false);
-		
+
 		return path;
 	}
 
@@ -251,7 +258,8 @@ public class FlashCardDatabase implements Resources {
 
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection("jdbc:h2:" + dir + db);
-		} catch (Throwable e) {}
+		} catch (Throwable e) {
+		}
 	}
 
 	public void addCardToSet(int cardId, int setId) throws SQLException {

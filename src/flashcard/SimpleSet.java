@@ -10,28 +10,28 @@ import java.util.Set;
 
 import database.DatabaseSet;
 
-
 /***
- * Not completely implemented-just contains a name
+ * Poorly named set implementation that just stores everything in memory. Use
+ * for temporary storage/during creation of a set
+ * 
  * @author puppyofkosh
- *
+ * 
  */
-public class SimpleSet implements FlashCardSet{
+public class SimpleSet implements FlashCardSet {
 
 	private String name = "";
 	private Set<FlashCard> cards = new HashSet<>();
-	
+
 	private Set<String> globalTags = new HashSet<>();
-	
+
 	private String author = "";
 	private int interval = 0;
-	
-	public SimpleSet(String name)
-	{
+
+	public SimpleSet(String name) {
 		this.name = name;
 		cards = new HashSet<>();
 	}
-	
+
 	@Override
 	public List<FlashCard> getAll() throws IOException {
 		return new ArrayList<>(cards);
@@ -41,7 +41,7 @@ public class SimpleSet implements FlashCardSet{
 	public void addTag(String tag) throws IOException {
 		globalTags.add(tag);
 	}
-	
+
 	@Override
 	public void removeTag(String tag) throws IOException {
 		globalTags.remove(tag);
@@ -56,7 +56,7 @@ public class SimpleSet implements FlashCardSet{
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();
@@ -67,17 +67,16 @@ public class SimpleSet implements FlashCardSet{
 		cards.add(f);
 
 	}
+
 	public String getAuthor() {
-		// TODO Auto-generated method stub
 		return author;
 	}
 
 	@Override
 	public int getInterval() {
-		// TODO Auto-generated method stub
 		return interval;
 	}
-	
+
 	@Override
 	public void setTags(List<String> tags) throws IOException {
 		this.globalTags = new HashSet<>(tags);
@@ -92,14 +91,15 @@ public class SimpleSet implements FlashCardSet{
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}
-	
-	@Override
-	public boolean sameMetaData(FlashCardSet s)
-	{	
-		// Make sure both sets have the same tags
-		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s.getTags()));
 
-		return (tagEquality && s.getAuthor().equals(getAuthor()) && s.getName().equals(getName()) && s.getInterval() == getInterval());
+	@Override
+	public boolean sameMetaData(FlashCardSet s) {
+		// Make sure both sets have the same tags
+		boolean tagEquality = new HashSet<>(getTags()).equals(new HashSet<>(s
+				.getTags()));
+
+		return (tagEquality && s.getAuthor().equals(getAuthor())
+				&& s.getName().equals(getName()) && s.getInterval() == getInterval());
 	}
 
 	@Override
@@ -111,17 +111,17 @@ public class SimpleSet implements FlashCardSet{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
-	public boolean equals(Object o)
-	{
+	public boolean equals(Object o) {
 		if (!(o instanceof FlashCardSet))
 			return false;
-		
-		if ((o instanceof DatabaseSet))
-			System.out.println("You are comparing a set not stored in DB with one that is. WARNING");
 
-		FlashCardSet s = (FlashCardSet)o;
+		if ((o instanceof DatabaseSet))
+			System.out
+					.println("You are comparing a set not stored in DB with one that is. WARNING");
+
+		FlashCardSet s = (FlashCardSet) o;
 		return sameMetaData(s);
 	}
 }

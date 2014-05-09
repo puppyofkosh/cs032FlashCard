@@ -6,17 +6,22 @@ import java.util.List;
 import flashcard.FlashCard;
 import flashcard.SerializableFlashCard;
 
+/**
+ * The client requests the given cards be stored permanently on the server.
+ * 
+ * @author puppyofkosh
+ * 
+ */
 public class UploadCardsRequest implements Request {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	List<FlashCard> _cards = new ArrayList<>();
-	
+
 	public UploadCardsRequest(List<FlashCard> card) {
-		for (FlashCard c : card)
-		{
+		for (FlashCard c : card) {
 			_cards.add(new SerializableFlashCard(c));
 		}
 	}
@@ -25,7 +30,7 @@ public class UploadCardsRequest implements Request {
 	public RequestType getType() {
 		return RequestType.UPLOAD;
 	}
-	
+
 	public List<FlashCard> getCardsForUpload() {
 		return _cards;
 	}
