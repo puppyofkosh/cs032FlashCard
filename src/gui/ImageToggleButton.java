@@ -9,6 +9,11 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
+/**
+ * Image button with two states
+ * @author samkortchmar
+ *
+ */
 public class ImageToggleButton extends ImageButton implements ActionListener, Runnable {
 
 	private static final long serialVersionUID = -3150533535670093580L;
@@ -36,6 +41,13 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 		setSize(size);
 	}
 
+	/**
+	 * Convenience method for retrieving a Play/Stop button - the most common
+	 * use of this class.
+	 * @param playText
+	 * @param stopText
+	 * @return
+	 */
 	public static ImageToggleButton playStopButton(String playText, String stopText) {
 		return new ImageToggleButton(IconFactory.loadIcon(IconType.PLAY, true),
 				IconFactory.loadIcon(IconType.STOP, true), playText, stopText);
@@ -49,7 +61,7 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 		_size = size;
 	}
 
-	public ImageIcon getImage() {
+	private ImageIcon getImage() {
 		ImageIcon current = _on ? _onImage : _offImage;
 		Image img = current.getImage() ;  
 		Image newimg = img.getScaledInstance(_size, _size,  java.awt.Image.SCALE_SMOOTH ) ;  
@@ -57,7 +69,7 @@ public class ImageToggleButton extends ImageButton implements ActionListener, Ru
 		return current;
 	}
 
-	public String getString() {
+	private String getString() {
 		return _on ? _onString : _offString;
 	}
 

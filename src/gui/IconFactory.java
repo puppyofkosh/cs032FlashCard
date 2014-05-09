@@ -10,6 +10,11 @@ import javax.swing.ImageIcon;
 
 import controller.Controller;
 
+/**
+ * Loads all the icons for the app.
+ * @author samkortchmar
+ *
+ */
 public class IconFactory {
 
 	public enum IconType {
@@ -69,7 +74,7 @@ public class IconFactory {
 	private static ImageIcon SETTINGS_ICON = createImageIcon("Settings Icon.png");
 	private static ImageIcon SETTINGS_ICON_INVERTED = createImageIcon("Settings Icon Inverted.png");
 
-	/** Returns an ImageIcon, or null if the path was invalid. */
+	/** Returns an ImageIcon, or the missing icon if the path was invalid. */
 	private static ImageIcon createImageIcon(String path) {
 		File file = new File(imgFolder + path);
 		if(file.exists()) {
@@ -82,6 +87,13 @@ public class IconFactory {
 		return loadMissingIcon();
 	}
 
+	/**
+	 * By default, icons are black. If they are inverted, then they will be
+	 * white.
+	 * @param type
+	 * @param inverted
+	 * @return
+	 */
 	public static ImageIcon loadIcon(IconType type, boolean inverted) {
 		switch (type) {
 		case STOP:

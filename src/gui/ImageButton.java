@@ -9,6 +9,11 @@ import java.awt.event.MouseListener;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
+/**
+ * A button without the border painted, so it displays only the image. On hover
+ * it darkens according to whatever the background is.
+ * @author samkortchmar
+ */
 public class ImageButton extends JButton implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
