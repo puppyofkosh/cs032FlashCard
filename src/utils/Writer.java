@@ -13,8 +13,8 @@ import javax.sound.sampled.AudioSystem;
 import com.google.common.base.Joiner;
 
 public class Writer {
-	
-	private static boolean DEBUG_MODE_ON = true;
+
+	private static boolean DEBUG_MODE_ON = false;
 
 
 	/**	
@@ -28,10 +28,10 @@ public class Writer {
 	public static void err(Object...strs) {
 		System.err.println(composeString(strs));
 	}
-	
+
 	public static void writeAudioFile(String path, AudioInputStream stream, boolean isQuestion) throws IOException {
 		String filename = path + "/" + (isQuestion ? "q" : "a") + ".wav";
-		
+
 		// If the file already exists, delete it and overwrite
 		try
 		{
@@ -41,16 +41,16 @@ public class Writer {
 		{
 			// ignore
 		}
-		
+
 		File audioFile = new File(path + "/" + (isQuestion ? "q" : "a") + ".wav");
 		AudioSystem.write(stream, AudioFileFormat.Type.WAVE, audioFile);
 	}
-	
+
 	public static void debug(Object ... strs) {
 		if (DEBUG_MODE_ON)
 			out(strs);
 	}
-	
+
 	public static String condenseCollection(Collection<? extends Object> collection) {
 		if (collection == null || collection.size() == 0)
 			return "";

@@ -142,10 +142,6 @@ public class MainFrame extends JFrame {
 		}
 	}
 
-	public void page(boolean forward) {
-		flashboardPanel.page(forward);
-	}
-
 	public void editCard(FlashCard card) {
 		cardCreationPanel.editCard(card);
 		showTab(TabType.CARD);

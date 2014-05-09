@@ -12,8 +12,6 @@ import gui.SetBrowser;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +19,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import utils.Writer;
 import audio.AudioFile;
 import audio.AudioPlayer;
 import audio.BufferRecorder;
@@ -73,7 +70,7 @@ public class Controller {
 
 			FileImporter importer = new FileImporter(new File(filename),
 					ttsReader);
-			
+
 			FileImportWorker w = new FileImportWorker(importer, new Runnable() 
 			{
 				@Override
@@ -88,42 +85,29 @@ public class Controller {
 		}
 	}
 
-	/*
-	 * Export a card to flat wav
-	 * 
-	 * @param f
-	 * 
-	 * @param destination
-	 */
-	/*
-	 * public static void exportCard(FlashCard f, String destinationFolder) { if
-	 * (!destinationFolder.endsWith("/"))
-	 * guiMessage("WARNING: destinationFolder should end with a slash(/)",
-	 * true); try { WavFileConcatenator.concatenate(f); } catch (IOException e1)
-	 * { // TODO Auto-generated catch block e1.printStackTrace(); } }
-	 */
-
 	/**
-	 * Play a chunk of audio. This method should ensure that only one piece of
-	 * audio is playing at a time
+	 * Plays audio, called from the gui.
+	 * @param file - the audio to be played.
+	 * @param runnables - usually button whose displayed icon will change
+	 * after it is run.
+	 * @throws IOException - if the audio cannot be found or played.
 	 */
-	// public static void playAudio(AudioFile file) throws IOException {
-	// player.play(file);
-	// }
-
 	public static void playAudioThenRun(AudioFile file, Runnable... runnables)
 			throws IOException {
 		player.playThenRun(file, runnables);
 	}
 
+
+	/**
+	 * Hard stop on all audio playing.
+	 */
 	public static void stopAudio() {
 		currentlyPlayingFlashCard = null;
 		player.stop();
 	}
 
 	public static boolean hasPlayer() {
-		// FIXME: implement for real.
-		return true;
+		return player != null;
 	}
 
 	public static boolean hasReader() {
@@ -146,30 +130,22 @@ public class Controller {
 		return card;
 	}
 
-	/***
-	 * Turn a string like "tag1, tag2 tag3..." into [tag1, tag2, tag3]
-	 * 
-	 * @param allTags
-	 * @return
-	 */
-	public static List<String> parseTags(String allTags) {
-		// FIXME: This sucks. Split on spaces/commas/tabs whatever
-		if (allTags.equals(""))
-			return Arrays.asList();
-
-		return new ArrayList<>(Arrays.asList(allTags.split(", ")));
-	}
-
 	public void requestAutocorrections(String text, int boxNo) {
-		// TODO Auto-generated method stub
+		// TODO - autocorrect not yet implemented.
 	}
 
+	/**
+	 * All messages are passed from various gui panels to this method.
+	 * @param text - the message to be displayed.
+	 * @param duration
+	 * @param error - whether or not it is an error.
+	 */
 	public static void guiMessage(String text, int duration, boolean error) {
-		// FIXME - do for real
-		if (error)
-			Writer.err(text);
-		else
-			Writer.out(text);
+		//		Uncomment this if you need to do testing.
+		//		if (error)
+		//			Writer.err(text);
+		//		else
+		//			Writer.out(text);
 
 		if (gui == null)
 			return;
@@ -195,7 +171,6 @@ public class Controller {
 				try {
 					Thread.sleep(time * 1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				dialog.dispose();
@@ -203,19 +178,29 @@ public class Controller {
 		}).start();
 	}
 
+
+	/**
+	 * @see #guiMessage(String, int, boolean)
+	 */
 	public static void guiMessage(String text, boolean error) {
 		guiMessage(text, 3, error);
 	}
 
+	/**
+	 * @see #guiMessage(String, int, boolean)
+	 */
 	public static void guiMessage(String text, int duration) {
 		guiMessage(text, duration, false);
 	}
 
+	/**
+	 * @see #guiMessage(String, int, boolean)
+	 */
 	public static void guiMessage(String text) {
 		guiMessage(text, 3);
 	}
 
-	public static String parseCardName(String text) {
+	private String parseCardName(String text) {
 		// StringBuilder fixedText = new StringBuilder();
 		// char currentCharacter;
 		// for (int i = 0; i < text.length(); i++) {
@@ -270,13 +255,6 @@ public class Controller {
 
 	public static FlashCard getCurrentlyPlayingFlashCard() {
 		return currentlyPlayingFlashCard;
-	}
-
-	public static boolean verifyInput(String input) {
-		// FIXME implement for real
-		// return parseCardName(input).replaceAll("[\\d]",
-		// "").equals(input.replaceAll("[\\s\\d]", ""));
-		return true;
 	}
 
 	public static void addTag(FlashCard card, String tag) throws IOException {
@@ -439,17 +417,11 @@ public class Controller {
 
 	public static void deleteSet(FlashCardSet set) {
 		DatabaseFactory.deleteSet(set);
-
 		updateGUI(getCurrentTab());
 	}
 
 	public static TabType getCurrentTab() {
 		return currentTab;
-	}
-
-	public static void pageFlashboard(boolean forward) {
-		gui.page(forward);
-
 	}
 
 	/**

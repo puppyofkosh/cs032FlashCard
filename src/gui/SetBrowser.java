@@ -63,19 +63,32 @@ public class SetBrowser extends JPanel  {
 	private SourceListSelectionListener _parentComponent;
 	private SourceListCategory setsCategory;
 	private SourceList sourceList;
+
+	//Because of the way we go about refreshing this, we need to store the
+	//so we don't drop them on refresh listeners.
 	private Set<SourceListSelectionListener> listeners = new HashSet<>();
 
+
+	/**
+	 * Adds a sourceList selection listener to the sourceList.
+	 * @param pt
+	 */
 	public void addParentComponent(SourceListSelectionListener pt) {
 		listeners.add(pt);
 		sourceList.addSourceListSelectionListener(pt);
 	}
 
+	/**
+	 * removes sourceList selection listener from the sourceList.
+	 * @param pt
+	 */
 	public void removeParentComponent(SourceListSelectionListener pt) {
+		listeners.remove(pt);
 		sourceList.removeSourceListSelectionListener(pt);
 	}
 
 	/**
-	 * Creates a new SetBrowser, preloaded with all the cards from the library.
+	 * Creates a new SetBrowser, with no cards or listeners initialized.
 	 */
 	public SetBrowser() {
 		super(new BorderLayout());
@@ -90,6 +103,9 @@ public class SetBrowser extends JPanel  {
 	}	
 
 
+	/**
+	 * Refresh the sourceList when we need to. This populates it with all center.
+	 */
 	public void updateSourceList() {
 		removeAll();
 		_cards = new HashMap<>();
@@ -102,10 +118,10 @@ public class SetBrowser extends JPanel  {
 		setsCategory = new SourceListCategory("All Sets");
 		model.addCategory(setsCategory);
 
-		ImageIcon setIcon = IconFactory.loadIcon(IconType.SET, 14, true);
-		ImageIcon cardIcon = IconFactory.loadIcon(IconType.CARD, 14, true);
+		ImageIcon setIcon = IconFactory.loadIcon(IconType.SET, GuiConstants.SOURCELIST_ICON_SIZE, true);
+		ImageIcon cardIcon = IconFactory.loadIcon(IconType.CARD, GuiConstants.SOURCELIST_ICON_SIZE, true);
 
-		//A very complicated looking loop that basically just iterates through
+		//A very complicated looking loop that iterates through
 		//All sets and their cards and adds them to the sourceListModel.
 		//Should really be implemented where sets are Categories and not items
 		//but we wanted to use the custom icons we made.
@@ -146,6 +162,11 @@ public class SetBrowser extends JPanel  {
 		repaint();
 	}
 
+	/**
+	 * Sets the selected item to the newIndex. More complicated than it should
+	 * be because of the way the sourceList works.
+	 * @param newIndex
+	 */
 	public void setSelection(int newIndex) {
 		SourceListItem set;
 		SourceListItem selected = sourceList.getSelectedItem();
@@ -292,6 +313,10 @@ public class SetBrowser extends JPanel  {
 		return _cards.get(item);
 	}
 
+	/**
+	 * Returns the selected item, if it is a FlashCard. If not, returns null.
+	 * @return a FlashCard corresponding to the current selected Item.
+	 */
 	public FlashCard getSelectedCard() {
 		return getSelectedCard(sourceList.getSelectedItem());
 	}
@@ -319,6 +344,7 @@ public class SetBrowser extends JPanel  {
 
 			@Override
 			public JPopupMenu createContextMenu() {
+				//If it is a category or empty space selected, do nothing.
 				return null;
 			}
 
@@ -331,7 +357,6 @@ public class SetBrowser extends JPanel  {
 				JMenuItem item2 = new JMenuItem("Delete");
 				menu.add(item2);
 				item1.addActionListener(new ActionListener() {
-
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						FlashCard card = getSelectedCard();

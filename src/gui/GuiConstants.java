@@ -28,7 +28,7 @@ public class GuiConstants {
 	public static final int DEFAULT_BUTTON_SIZE = 15;
 	public static final int MAX_TEXT_LENGTH = 20;
 	
-	public static final int SOURCELIST_ICON_SIZE = 16;
+	public static final int SOURCELIST_ICON_SIZE = 14;
 	
 	public enum TabType {
 		FLASHBOARD,

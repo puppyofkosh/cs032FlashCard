@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +32,7 @@ import controller.Controller;
 import flashcard.FlashCardSet;
 
 public class SetCreationPanel extends GenericPanel implements ActionListener,
-		SourceListSelectionListener, Browsable {
+SourceListSelectionListener, Browsable {
 
 	/**
 	 * 
@@ -107,7 +106,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener,
 		scroller.setViewportBorder(null);
 		scroller.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 		tagPanel.add(scroller, BorderLayout.CENTER);
-		
+
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5,0));
 		buttonPanel.setBackground(GuiConstants.SET_TAG_COLOR);
@@ -123,8 +122,8 @@ public class SetCreationPanel extends GenericPanel implements ActionListener,
 		newSet.addActionListener(this);
 		newSet.setBackground(Color.BLACK);
 		newSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
-		
-		
+
+
 		buttonPanel.add(editSet);
 		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(clear);
@@ -170,7 +169,7 @@ public class SetCreationPanel extends GenericPanel implements ActionListener,
 				spinnerInterval.commitEdit();
 			} catch (ParseException e1) {
 				Controller
-						.guiMessage("Could not parse new spinner value", true);
+				.guiMessage("Could not parse new spinner value", true);
 			}
 			int interval = (int) spinnerInterval.getValue();
 			String nameInput;
@@ -179,8 +178,6 @@ public class SetCreationPanel extends GenericPanel implements ActionListener,
 			} catch (IOException e1) {
 				nameInput = "Set";
 			}
-			if (!Controller.verifyInput(nameInput))
-				nameInput = Controller.parseCardName(nameInput);
 
 			try {
 				authorName = Controller.parseInput(authorTextField.getText());

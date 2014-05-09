@@ -7,7 +7,7 @@ import java.net.SocketException;
 import utils.Writer;
 
 /**
- * A chat server, listening for incoming connections and passing them
+ * A server, listening for incoming connections and passing them
  * off to {@link ClientHandler}s.
  */
 public class Server extends Thread {

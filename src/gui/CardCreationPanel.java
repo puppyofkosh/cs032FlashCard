@@ -394,7 +394,7 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		String parsedName;
 		try {
 			parsedName = Controller.parseInput(textFieldName.getText());
-			data.name = Controller.parseCardName(parsedName);
+			data.name = parsedName;
 		} catch (IOException iox) {
 			try {
 				data.name = Controller.parseInput(textQuestion.getText());
