@@ -94,7 +94,6 @@ public class MainFrame extends JFrame {
 		importPanel.setControlledPanel(mainPanelContainer);
 		mainPanelContainer.add(importPanel, GuiConstants.IMPORT_PANEL_NAME);
 
-		//Is this okay?
 		quizletPanel = new QuizletPanel();
 		mainPanelContainer.add(quizletPanel, GuiConstants.QUIZLET_PANEL_NAME);
 

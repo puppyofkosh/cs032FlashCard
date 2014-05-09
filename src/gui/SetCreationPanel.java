@@ -36,12 +36,12 @@ public class SetCreationPanel extends GenericPanel implements ActionListener,
 SourceListSelectionListener, Browsable {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField setNameField, authorTextField;
-	private JSpinner spinnerInterval;
-	private JButton editSet, clear, newSet;
-	private TagPanel tags;
+	private JTextField _setNameField, _authorTextField;
+	private JSpinner _spinnerInterval;
+	private JButton _editSet, _clear, _newSet;
+	private TagPanel _tags;
 	private SetBrowser _setBrowser;
-	private String authorName = "";
+	private String _authorName = "";
 
 	/**
 	 * Create the panel.
@@ -71,34 +71,33 @@ SourceListSelectionListener, Browsable {
 		JLabel lblNewLabel = new JLabel("Set Name");
 		headerPanel.add(lblNewLabel);
 
-		setNameField = new JTextField(10);
-		setNameField.addActionListener(this);
-		headerPanel.add(setNameField);
+		_setNameField = new JTextField(10);
+		_setNameField.addActionListener(this);
+		headerPanel.add(_setNameField);
 
-		spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
-		spinnerInterval.setValue(0);
-		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) spinnerInterval.getEditor());
+		_spinnerInterval = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+		_spinnerInterval.setValue(0);
+		JSpinner.DefaultEditor editor = ((JSpinner.DefaultEditor) _spinnerInterval.getEditor());
 		editor.getTextField().setColumns(2);
 		editor.getTextField().setEditable(false);
 
-		headerPanel.add(spinnerInterval);
+		headerPanel.add(_spinnerInterval);
 
 		JLabel lblAuthor = new JLabel("Author");
 		headerPanel.add(lblAuthor);
 
 
-		authorTextField = new JTextField(10);
-		authorTextField.setName(authorName);
-		authorTextField.addActionListener(this);
-		headerPanel.add(authorTextField);
-		authorTextField.setText(Settings.getDefaultAuthor());
+		_authorTextField = new JTextField(10);
+		_authorTextField.addActionListener(this);
+		headerPanel.add(_authorTextField);
+		_authorTextField.setText(Settings.getDefaultAuthor());
 
 		JPanel tagPanel = new JPanel(new BorderLayout(0,0));
 		tagPanel.setOpaque(false);
 		box.add(tagPanel);
 
-		tags = new TagPanel("Add Global Tags Here", true);
-		JScrollPane scroller = new JScrollPane(tags);
+		_tags = new TagPanel("Add Global Tags Here", true);
+		JScrollPane scroller = new JScrollPane(_tags);
 		scroller.setOpaque(false);
 		scroller.getViewport().setOpaque(false);
 		scroller.setViewportBorder(null);
@@ -108,25 +107,25 @@ SourceListSelectionListener, Browsable {
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5,0));
 		buttonPanel.setBackground(GuiConstants.SET_TAG_COLOR);
-		editSet = new JButton("Edit Set");
-		editSet.setBackground(Color.BLACK);
-		editSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
-		editSet.addActionListener(this);
-		clear = new JButton("Clear");
-		clear.setBackground(Color.BLACK);
-		clear.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
-		clear.addActionListener(this);
-		newSet = new JButton("Create New Set");
-		newSet.addActionListener(this);
-		newSet.setBackground(Color.BLACK);
-		newSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		_editSet = new JButton("Edit Set");
+		_editSet.setBackground(Color.BLACK);
+		_editSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		_editSet.addActionListener(this);
+		_clear = new JButton("Clear");
+		_clear.setBackground(Color.BLACK);
+		_clear.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
+		_clear.addActionListener(this);
+		_newSet = new JButton("Create New Set");
+		_newSet.addActionListener(this);
+		_newSet.setBackground(Color.BLACK);
+		_newSet.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 
 
-		buttonPanel.add(editSet);
+		buttonPanel.add(_editSet);
 		buttonPanel.add(Box.createGlue());
-		buttonPanel.add(clear);
+		buttonPanel.add(_clear);
 		buttonPanel.add(Box.createGlue());
-		buttonPanel.add(newSet);
+		buttonPanel.add(_newSet);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		add(mainPanel, BorderLayout.CENTER);
@@ -136,14 +135,14 @@ SourceListSelectionListener, Browsable {
 		if (set == null)
 			return;
 
-		setNameField.setText(set.getName());
-		spinnerInterval.setValue(set.getInterval());
-		authorTextField.setText(set.getAuthor());
+		_setNameField.setText(set.getName());
+		_spinnerInterval.setValue(set.getInterval());
+		_authorTextField.setText(set.getAuthor());
 		Collection<String> setTags = set.getTags();
 		if (setTags == null) {
 			setTags = new LinkedList<>();
 		}
-		tags.setTags(setTags, true, true);
+		_tags.setTags(setTags, true, true);
 		revalidate();
 		repaint();
 	}
@@ -156,39 +155,39 @@ SourceListSelectionListener, Browsable {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == setNameField) {
+		if (e.getSource() == _setNameField) {
 
-		} else if (e.getSource() == authorTextField) {
+		} else if (e.getSource() == _authorTextField) {
 
-		} else if (e.getSource() == clear) {
+		} else if (e.getSource() == _clear) {
 			clear();
-		} else if (e.getSource() == editSet || e.getSource() == newSet) {
+		} else if (e.getSource() == _editSet || e.getSource() == _newSet) {
 			try {
-				spinnerInterval.commitEdit();
+				_spinnerInterval.commitEdit();
 			} catch (ParseException e1) {
 				Controller
 				.guiMessage("Could not parse new spinner value", true);
 			}
-			int interval = (int) spinnerInterval.getValue();
+			int interval = (int) _spinnerInterval.getValue();
 			String nameInput;
 			try {
-				nameInput = Writer.parseInput(setNameField.getText());
+				nameInput = Writer.parseInput(_setNameField.getText());
 			} catch (IOException e1) {
 				nameInput = "Set";
 			}
 
 			try {
-				authorName = Writer.parseInput(authorTextField.getText());
+				_authorName = Writer.parseInput(_authorTextField.getText());
 			} catch (IOException e1) {
-				authorName = "Anonymous";
+				_authorName = "Anonymous";
 			}
 
-			List<String> setTags = tags.getTags(true);
-			if (e.getSource() == editSet) {
-				editSet(_setBrowser.getSelectedSet(), nameInput, authorName,
+			List<String> setTags = _tags.getTags(true);
+			if (e.getSource() == _editSet) {
+				editSet(_setBrowser.getSelectedSet(), nameInput, _authorName,
 						interval, setTags);
 			} else {
-				newSet(nameInput, authorName, interval, setTags);
+				newSet(nameInput, _authorName, interval, setTags);
 			}
 			_setBrowser.updateSourceList();
 			_setBrowser.addParentComponent(this);
@@ -197,10 +196,10 @@ SourceListSelectionListener, Browsable {
 	}
 
 	private void clear() {
-		setNameField.setText("");
-		authorTextField.setText(authorName);
-		spinnerInterval.setValue(0);
-		tags.setTags(new LinkedList<String>(), true);
+		_setNameField.setText("");
+		_authorTextField.setText(_authorName);
+		_spinnerInterval.setValue(0);
+		_tags.setTags(new LinkedList<String>(), true);
 	}
 
 	private void editSet(FlashCardSet set, String name, String author,
@@ -229,6 +228,11 @@ SourceListSelectionListener, Browsable {
 		if (_setBrowser != null) {
 			populateFields(_setBrowser.getSelectedSet());
 		}
+	}
+
+	public void setAuthorName(String newName) {
+		_authorName = newName;
+		_authorTextField.setText(_authorName);
 	}
 
 	@Override

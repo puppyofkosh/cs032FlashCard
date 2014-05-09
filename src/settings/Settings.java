@@ -35,7 +35,6 @@ public class Settings implements Serializable {
 	private Color secondaryColor = DEFAULT_COLOR_2;
 	private String host = DEFAULT_HOSTNAME;
 	private String portNumber = DEFAULT_PORT_NUMBER;
-
 	private static Settings settings = setupSettings();
 
 	private Settings(int recordingTimeout, String outputDestination,
@@ -76,6 +75,7 @@ public class Settings implements Serializable {
 		} catch (IOException e) {
 			Controller.guiMessage("could not save settings", true);
 		}
+		setupSettings();
 	}
 
 	public static int getTimeout() {
@@ -94,6 +94,7 @@ public class Settings implements Serializable {
 	public static void setDestination(String newValue) {
 		settings.outputDestination = newValue;
 		saveSettings();
+
 	}
 
 	public static String getDefaultAuthor() {

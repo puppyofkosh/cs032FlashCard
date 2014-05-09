@@ -8,6 +8,11 @@ import java.util.Collection;
 
 import flashcard.FlashCard;
 
+/**
+ * Wrapper class used for drag and drop
+ * @author samkortchmar
+ *
+ */
 public class TransferableFlashCards implements Transferable {
 
 	Collection<FlashCard> _cards;

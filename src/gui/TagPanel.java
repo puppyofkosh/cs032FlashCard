@@ -31,8 +31,6 @@ public class TagPanel extends JPanel implements MouseListener {
 	private JLabel _emptyLabel;
 	private boolean _global, _inputFieldDisabled;
 
-	
-
 	TagPanel(List<String> tags, String text, boolean global) {
 		super(new WrapLayout(WrapLayout.CENTER, 1, 1));
 
@@ -46,7 +44,7 @@ public class TagPanel extends JPanel implements MouseListener {
 		setEmptyText(text);
 		setTags(tags);
 	}
-	
+
 	TagPanel(String text) {
 		this(null, text, false);
 	}
@@ -100,7 +98,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-	
+
 	public void disableInputField() {
 		_inputFieldDisabled = true;
 	}

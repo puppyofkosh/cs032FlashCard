@@ -14,10 +14,15 @@ import javax.sound.sampled.AudioSystem;
 
 import com.google.common.base.Joiner;
 
+/**
+ * Class contains utility methods for handling and parsing text, as well as 
+ * writing files to disk.
+ * @author samkortchmar
+ *
+ */
 public class Writer {
 
 	private static boolean DEBUG_MODE_ON = false;
-
 
 	/**	
 	 * Utilities for printing.
@@ -35,16 +40,12 @@ public class Writer {
 		String filename = path + "/" + (isQuestion ? "q" : "a") + ".wav";
 
 		// If the file already exists, delete it and overwrite
-		try
-		{
+		try {
 			Files.delete(Paths.get(filename));
 		}
-		catch(IOException ignore)
-		{
-			// ignore
-		}
+		catch(IOException ignore) {}
 
-		File audioFile = new File(path + "/" + (isQuestion ? "q" : "a") + ".wav");
+		File audioFile = new File(filename + ".wav");
 		AudioSystem.write(stream, AudioFileFormat.Type.WAVE, audioFile);
 	}
 

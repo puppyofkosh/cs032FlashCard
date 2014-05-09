@@ -106,7 +106,7 @@ public class FlashCardPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (!_playAndStop.isOn())
 					Controller.stopAudio();
-				
+
 				Controller.deleteCard(_card);
 			}
 		});

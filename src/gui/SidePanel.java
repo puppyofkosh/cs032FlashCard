@@ -5,7 +5,6 @@ import gui.IconFactory.IconType;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -14,14 +13,15 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+
 import controller.Controller;
 
 public class SidePanel extends GenericPanel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, 
-	btnSettings, btnSelected;
+	private JLabel _btnFlashboard, _btnExport, _btnImport, _btnCreate, _btnSets, 
+	_btnSettings, _btnSelected;
 
 	/**
 	 * Create the panel.
@@ -38,37 +38,37 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		setBackground(Color.BLACK);
 		int struts = 0;
 
-		btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32, true), JLabel.LEFT);
-		initMenuItem(btnFlashboard);
-		add(btnFlashboard);
+		_btnFlashboard = new JLabel("Flashboard", IconFactory.loadIcon(IconType.FLASHBOARD, 32, true), JLabel.LEFT);
+		initMenuItem(_btnFlashboard);
+		add(_btnFlashboard);
 
 		add(Box.createVerticalStrut(struts));
-		btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32, true), JLabel.LEFT);
-		initMenuItem(btnExport);
-		add(btnExport);
+		_btnExport = new JLabel("Export    ", IconFactory.loadIcon(IconType.EXPORT, 32, true), JLabel.LEFT);
+		initMenuItem(_btnExport);
+		add(_btnExport);
 
 		add(Box.createVerticalStrut(struts));
-		btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32, true), JLabel.LEFT);
-		initMenuItem(btnImport);
-		add(btnImport);
+		_btnImport = new JLabel("Import    ", IconFactory.loadIcon(IconType.IMPORT, 32, true), JLabel.LEFT);
+		initMenuItem(_btnImport);
+		add(_btnImport);
 
 		add(Box.createVerticalStrut(struts));
-		btnCreate = new JLabel("Cards     ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
-		initMenuItem(btnCreate);
-		add(btnCreate);
+		_btnCreate = new JLabel("Cards     ", IconFactory.loadIcon(IconType.CREATE, 32, true), JLabel.LEFT);
+		initMenuItem(_btnCreate);
+		add(_btnCreate);
 
 		add(Box.createVerticalStrut(struts));
-		btnSets = new JLabel("Sets      ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
-		initMenuItem(btnSets);
-		add(btnSets);
+		_btnSets = new JLabel("Sets      ", IconFactory.loadIcon(IconType.SET, 32, true), JLabel.LEFT);
+		initMenuItem(_btnSets);
+		add(_btnSets);
 
 		add(Box.createVerticalStrut(struts));
 		//TODO make a real icon.
-		btnSettings = new JLabel("Settings  ", IconFactory.loadIcon(IconType.SETTINGS, 32, true), JLabel.LEFT);
-		initMenuItem(btnSettings);
-		add(btnSettings);
+		_btnSettings = new JLabel("Settings  ", IconFactory.loadIcon(IconType.SETTINGS, 32, true), JLabel.LEFT);
+		initMenuItem(_btnSettings);
+		add(_btnSettings);
 
-		setSelected(btnFlashboard);
+		setSelected(_btnFlashboard);
 	}
 
 	/**
@@ -84,32 +84,32 @@ public class SidePanel extends GenericPanel implements MouseListener {
 
 	
 	private void setSelected(JLabel button) {
-		if (btnSelected != null) btnSelected.setOpaque(false);
-		btnSelected = button;
-		btnSelected.setBackground(GuiConstants.CARD_BACKGROUND);
-		btnSelected.setOpaque(true);
+		if (_btnSelected != null) _btnSelected.setOpaque(false);
+		_btnSelected = button;
+		_btnSelected.setBackground(GuiConstants.CARD_BACKGROUND);
+		_btnSelected.setOpaque(true);
 		repaint();
 	}
 
 	public void setSelected(TabType tab) {
 		switch (tab) {
 		case CARD:
-			setSelected(btnCreate);
+			setSelected(_btnCreate);
 			break;
 		case EXPORT:
-			setSelected(btnExport);
+			setSelected(_btnExport);
 			break;
 		case FLASHBOARD:
-			setSelected(btnFlashboard);
+			setSelected(_btnFlashboard);
 			break;
 		case IMPORT:
-			setSelected(btnImport);
+			setSelected(_btnImport);
 			break;
 		case SET:
-			setSelected(btnSets);
+			setSelected(_btnSets);
 			break;
 		case SETTINGS:
-			setSelected(btnSettings);
+			setSelected(_btnSettings);
 			break;
 		default:
 			break;
@@ -117,7 +117,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 	}
 
 	private void setHovered(JComponent button) {
-		if (button == btnSelected)
+		if (button == _btnSelected)
 			return;
 		button.setOpaque(true);
 		button.setBackground(GuiConstants.CARD_TAG_COLOR);
@@ -128,30 +128,24 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		button.setBackground(GuiConstants.CARD_BACKGROUND);
 	}
 
-	public void actionPerformed(ActionEvent e) {
-	}
-
 	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
+	public void mouseClicked(MouseEvent e) {}
 	@Override
-	public void mousePressed(MouseEvent e) {
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getSource() == btnFlashboard) {
+		if (e.getSource() == _btnFlashboard) {
 			Controller.switchTabs(TabType.FLASHBOARD);
-		} else if (e.getSource() == btnExport) {
+		} else if (e.getSource() == _btnExport) {
 			Controller.switchTabs(TabType.EXPORT);
-		} else if (e.getSource() == btnImport) {
+		} else if (e.getSource() == _btnImport) {
 			Controller.switchTabs(TabType.IMPORT);
-		} else if (e.getSource() == btnCreate) {
+		} else if (e.getSource() == _btnCreate) {
 			Controller.switchTabs(TabType.CARD);
-		}  else if (e.getSource() == btnSets) {
+		}  else if (e.getSource() == _btnSets) {
 			Controller.switchTabs(TabType.SET);
-		} else if (e.getSource() == btnSettings) {
+		} else if (e.getSource() == _btnSettings) {
 			Controller.switchTabs(TabType.SETTINGS);
 		}
 	}
