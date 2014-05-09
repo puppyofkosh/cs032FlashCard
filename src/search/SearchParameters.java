@@ -4,12 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
-import controller.Controller;
-
-import backend.AutoCorrector;
 import backend.Resources;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;

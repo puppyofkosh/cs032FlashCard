@@ -17,7 +17,6 @@ public class ClientPool {
 		_clients = new LinkedList<ClientHandler>();
 	}
 	
-	
 	/**
 	 * Add a new client.
 	 * @param client to add

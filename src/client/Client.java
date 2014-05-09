@@ -43,14 +43,14 @@ public class Client extends SwingWorker<Response, Response> {
 	private Queue<Request> _requests;
 	private ClientFrontend _frontend;
 	private int _numRequests;
-	
+
 	private volatile String _clientMessage = "";
-	
+
 	private void setClientMessage(String s) {
 		_clientMessage = s;
 	}
-	
-	
+
+
 	/**
 	 * Constructs a Client with the given port.
 	 * 
@@ -178,7 +178,6 @@ public class Client extends SwingWorker<Response, Response> {
 		return _hasServer && _running;
 	}
 
-	// TODO - these methods should go somewhere else probably?
 	public void requestAllCards() {
 		request(new AllCardsRequest());
 	}
@@ -191,10 +190,8 @@ public class Client extends SwingWorker<Response, Response> {
 	public void requestCard(String input) {
 		if (input.length() == 0)
 			requestAllMetaData();
-		// requestAllCards();
 		else
 			request(new MetaDataCardRequest(new SearchParameters(input)));
-			//request(new ParametrizedCardRequest(new SearchParameters(input)));
 	}
 
 	public void requestFullCard(List<NetworkedFlashCard> nc) {
@@ -219,9 +216,7 @@ public class Client extends SwingWorker<Response, Response> {
 			while (_running) {
 				try {
 					Object o = _input.readObject();
-					System.out.println(o);
 					Response received = (Response) o;
-					Writer.out("Response received");
 					publish(received);
 				} catch (IOException e) {
 					if (_running == false || e instanceof EOFException) {
@@ -252,7 +247,6 @@ public class Client extends SwingWorker<Response, Response> {
 			_frontend.displayConnectionStatus(true);
 			return;
 		case SORTED_CARDS:
-			Writer.out("Received sorted cards response");
 			CardListResponse cLR = (CardListResponse) resp;
 			_frontend.updateLocallyStoredCards(cLR.getSortedCards());
 			return;
@@ -262,14 +256,11 @@ public class Client extends SwingWorker<Response, Response> {
 			UploadCardsResponse ucR = (UploadCardsResponse) resp;
 			_frontend.clientMessage("Upload "
 					+ (ucR.confirmed() ? "Successful" : "Failed"));
-			System.out.println("RECEIVED");
 			return;
 		case META_DATA:
 			MetaDataResponse mdR = (MetaDataResponse) resp;
 			System.out.println(mdR.getSortedCards().size());
-
 			_frontend.updateCardsForImport(mdR.getSortedCards());
-			// _frontend.update(mdR.getSortedCards());
 			return;
 		default:
 			break;

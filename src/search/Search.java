@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import utils.FileUtil;
-
 import backend.AutoCorrector;
 import backend.Resources;
-
-import database.FlashCardDatabase;
 import flashcard.FlashCard;
 
 /**

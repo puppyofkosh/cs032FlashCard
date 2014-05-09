@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import utils.FlashcardConstants;
-
-import com.sun.speech.freetts.Age;
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 import com.sun.speech.freetts.audio.AudioPlayer;

@@ -49,7 +49,7 @@ public class ClientHandler extends Thread {
 
 		_client = clientSocket;
 		_pool = pool;
-		
+
 		_responseQueue = new ConcurrentLinkedQueue<>();
 
 		_output = new ObjectOutputStream(_client.getOutputStream());
@@ -113,9 +113,9 @@ public class ClientHandler extends Thread {
 			UploadCardsRequest ulR = (UploadCardsRequest) req;
 			for(FlashCard  card : ulR.getCardsForUpload()) {
 				Writer.out("Writing card - " + card.getName());
-						
+
 				card = DatabaseFactory.writeCard(card);
-				
+
 				Writer.out("Adding card to library " +  card.getName());
 			}
 			Writer.out("Done");
@@ -149,7 +149,7 @@ public class ClientHandler extends Thread {
 					e.printStackTrace();
 				}
 			}
-			
+
 			System.out.println(cards + " matched search");
 			respond(new MetaDataResponse(networkedCards));
 			return;
@@ -159,12 +159,12 @@ public class ClientHandler extends Thread {
 			throw new IllegalArgumentException("Unsupported request type");
 		}
 	}
-	
+
 	private void respond(Response r) {
 		Writer.out("Responding");
 		_responseQueue.add(r);
 	}
-	
+
 
 	/**
 	 * Kills this handler and cleans up its additional resources.

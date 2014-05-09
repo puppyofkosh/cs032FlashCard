@@ -1,8 +1,5 @@
 package utils;
 
-import javax.sound.sampled.AudioFormat;
-
-import audio.AudioConstants;
 
 /**
  * Contains the constants used in the project
