@@ -28,7 +28,6 @@ import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import utils.FlashcardConstants;
 import utils.Writer;
 import flashcard.FlashCard;
 import gui.IconFactory.IconType;
@@ -45,6 +44,12 @@ public class CardTablePanel extends JPanel {
 	CardTablePanel(String title) {
 		this();
 		setTitle(title);
+	}
+	
+	public CardTablePanel(List<FlashCard> cards) {
+		this();
+		updateDisplayedCards(cards);
+		updateTable();
 	}
 
 	/**
@@ -89,38 +94,22 @@ public class CardTablePanel extends JPanel {
 				GuiConstants.PRIMARY_FONT_COLOR));
 	}
 
-	public CardTablePanel(List<FlashCard> cards) {
-		this();
-		updateCards(cards);
-		updateTable();
-	}
-
-	public void removeCard(FlashCard f)
-	{
-		cards.remove(f);
-		updateTable();
-	}
-
 	public List<FlashCard> getAllCards() {
 		return Collections.unmodifiableList(cards);
 	}
 
-
-	public void updateSelectedCards() {
+	/**
+	 * Gets all cards currently selected.
+	 */
+	private void updateSelectedCards() {
 		selectedCards = new ArrayList<>();
 		for(int index : searchTable.getSelectedRows()) {
 			selectedCards.add(cards.get(index));
 		}
 	}
 
-	public void updateCards(List<FlashCard> cards) {
+	public void updateDisplayedCards(List<FlashCard> cards) {
 		this.cards = cards;
-		updateTable();
-	}
-
-	public void addCard(FlashCard newCard)
-	{
-		cards.add(newCard);
 		updateTable();
 	}
 
@@ -131,7 +120,7 @@ public class CardTablePanel extends JPanel {
 
 	private void updateTable() {
 		if (cards == null || cards.size() == 0) {
-			populateTableModel(new String[0][0], FlashcardConstants.DEFAULT_TABLE_COLUMNS);
+			populateTableModel(new String[0][0], GuiConstants.DEFAULT_TABLE_COLUMNS);
 			return;
 		}
 		ArrayList<String[]> data = new ArrayList<>();
@@ -144,9 +133,13 @@ public class CardTablePanel extends JPanel {
 					Writer.condenseCollection(currentCard.getSets()),
 					Writer.condenseCollection(currentCard.getTags())});
 		}
-		populateTableModel(data.toArray(new String[data.size()][]), FlashcardConstants.DEFAULT_TABLE_COLUMNS);
+		populateTableModel(data.toArray(new String[data.size()][]), GuiConstants.DEFAULT_TABLE_COLUMNS);
 	}
 
+	/**
+	 * Creates a right click menu - contains only "Remove Cards".
+	 * @return
+	 */
 	private PopupListener createRightClickMenu() {
 		JMenuItem delete = new JMenuItem("Remove Cards", IconFactory.loadIcon(IconType.DELETE, 12, false));
 		delete.addActionListener(new ActionListener() {
@@ -158,11 +151,13 @@ public class CardTablePanel extends JPanel {
 		return new PopupListener(delete);
 	}
 
-	public void removeSelectedCards() {
+	/**
+	 * Removes the selected cards from the table.
+	 */
+	private void removeSelectedCards() {
 		cards.removeAll(getSelectedCards());
 		updateTable();
 	}
-
 
 
 	private void populateTableModel(String[][] data, String[] columns) {
@@ -170,7 +165,7 @@ public class CardTablePanel extends JPanel {
 	}
 
 	/**
-	 * Handles all drop operations into the table.
+	 * Handles all drop operations into/from the table.
 	 * @author samkortchmar
 	 *
 	 */

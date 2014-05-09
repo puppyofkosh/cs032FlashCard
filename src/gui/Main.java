@@ -65,7 +65,7 @@ public class Main {
 			for(FlashCardSet set : Controller.getAllSets()) {
 				cards.addAll(set.getAll());
 			}
-			ctp.updateCards(cards);
+			ctp.updateDisplayedCards(cards);
 			p.add(ctp);
 
 			JTextField area = new JTextField(10);

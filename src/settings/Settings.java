@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import utils.FlashcardConstants;
 import controller.Controller;
 
 /**
@@ -24,7 +25,7 @@ public class Settings implements Serializable {
 	private static final String DEFAULT_AUTHOR = "Anonymous";
 	private static final Color DEFAULT_COLOR_1 = Color.CYAN;
 	private static final Color DEFAULT_COLOR_2 = Color.WHITE;
-	private static final String DEFAULT_HOSTNAME = "localhost";
+	private static final String DEFAULT_HOSTNAME = FlashcardConstants.AMAZON_HOSTNAME;
 	private static final String DEFAULT_PORT_NUMBER = "9888";
 
 	private int recordingTimeout = DEFAULT_TIMEOUT;

@@ -78,6 +78,9 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		initFunctionality();
 	}
 
+	/**
+	 * Adds the components to the panel.
+	 */
 	private void initPanelComponents() {
 		addComponentListener(this);
 
@@ -207,6 +210,9 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		textFieldName.requestFocusInWindow();
 	}
 
+	/**
+	 *  Enables some components based on the Controller.
+	 */
 	private void initFunctionality() {
 		hasQuestion = false;
 		question = null;
@@ -217,10 +223,18 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		enableTTS(Controller.hasReader());
 	}
 
+	/**
+	 * This forces box layout to respect the preferred size of the panel.
+	 * @param panel
+	 */
 	private void removeEmptySpace(JPanel panel) {
 		panel.setMaximumSize(panel.getPreferredSize());
 	}
 
+	/**
+	 * Toggles whether we are currently recording audio
+	 * @param isQuestion
+	 */
 	private void recordToggle(boolean isQuestion) {
 		Controller.stopAudio();
 		if (recording) {
@@ -255,6 +269,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 
 
 
+	/**
+	 * Toggles the state of the play buttons.
+	 * @param isQuestion
+	 * @param button
+	 */
 	private void playToggle(boolean isQuestion, ImageToggleButton button) {
 		if (recording) {
 			Controller.guiMessage("Can't play audio while recording", true);
@@ -376,8 +395,8 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		}
 	}
 
-	public FlashCard createCardFromFields()
-	{
+
+	public FlashCard createCardFromFields() {
 		if (question == null || answer == null || !hasQuestion || !hasAnswer) {
 			if (!hasQuestion)
 			{
@@ -430,14 +449,13 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		}
 		return newCard;
 	}
-	
+
 	public void setSpinner(int interval) {
 		spinnerInterval.setValue(interval);
 		spinnerInterval.repaint();
 	}
 
-	private void editCard()
-	{
+	private void editCard() {
 		FlashCard newCard = createCardFromFields();
 		if (newCard == null || editedCard == null)
 			return;

@@ -201,7 +201,7 @@ ActionListener {
 
 	@Override
 	public void updateCardsForImport(List<NetworkedFlashCard> flashcards) {
-		_serverCards.updateCards(new ArrayList<FlashCard>(flashcards));
+		_serverCards.updateDisplayedCards(new ArrayList<FlashCard>(flashcards));
 		_networkedCards = flashcards;
 	}
 

@@ -14,12 +14,9 @@ public class FlashcardConstants {
 	public final static String CARDS_FOLDER = "./files/";
 
 	public static final String CS_HOSTNAME = "cslab5c";
-	//TODO - get amazon ip address again
-	public static final String AMAZON_HOSTNAME = "";
-	public static final String DEFAULT_HOSTNAME = "localhost";
+	public static final String AMAZON_HOSTNAME = "57.86.71.181";
+	public static final String LOCAL_HOSTNAME = "localhost";
 	public static final int DEFAULT_PORT = 9888;
-	
-	public static final String[] DEFAULT_TABLE_COLUMNS = {"Name", "Interval", "Sets", "Tags"};
 	
 	public static final String QUESTION_FILE = "q.wav";
 	public static final String ANSWER_FILE = "a.wav";

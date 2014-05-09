@@ -23,13 +23,22 @@ public class GuiConstants {
 	public static final Color CARD_TAG_COLOR = SET_TAG_COLOR.darker();
 	public static final Color PRIMARY_FONT_COLOR = Settings.getSecondaryColor();
 
-	//Some default settings for tag label.
+	//Default table columns in the cardTable.
+	public static final String[] DEFAULT_TABLE_COLUMNS = {"Name", "Interval", "Sets", "Tags"};
+	
+	//Some default settings for tag labels.
 	public static final int DEFAULT_TAG_LABEL_ROUNDEDNESS = 10;
 	public static final int DEFAULT_BUTTON_SIZE = 15;
 	public static final int MAX_TEXT_LENGTH = 20;
 	
+	//Set Browser
 	public static final int SOURCELIST_ICON_SIZE = 14;
 	
+	/**
+	 * The types of tabs we have in the app.
+	 * @author samkortchmar
+	 *
+	 */
 	public enum TabType {
 		FLASHBOARD,
 		EXPORT,
