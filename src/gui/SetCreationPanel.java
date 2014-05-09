@@ -35,9 +35,6 @@ import flashcard.FlashCardSet;
 public class SetCreationPanel extends GenericPanel implements ActionListener,
 SourceListSelectionListener, Browsable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField setNameField, authorTextField;
 	private JSpinner spinnerInterval;

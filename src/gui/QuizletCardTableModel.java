@@ -19,19 +19,16 @@ public class QuizletCardTableModel extends AbstractTableModel {
 	
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return 3;
 	}
 
 	@Override
 	public int getRowCount() {
-		// TODO Auto-generated method stub
 		return data.length;
 	}
 
 	@Override
 	public Object getValueAt(int arg0, int arg1) {
-		// TODO Auto-generated method stub
 		QuizletCard card = data[arg0];
 		switch(arg1) {
 		case 0:

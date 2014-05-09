@@ -53,9 +53,10 @@ import controller.Controller;
 
 public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 
+	private static final long serialVersionUID = 1L;
+
 	private ProgressMonitor progressMonitor;
 	private ImportThread importThread;
-	private static final long serialVersionUID = 1L;
 	private JTextField searchTextField;
 	private JTable setTable;
 	private JTable cardTable;

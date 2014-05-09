@@ -7,8 +7,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
- * Pretty much all panels in this program should extend this. Provides some extra stuff to avoid boilerplate
- * -gives access to the main layout and panel so we can easily switch screens/views
+ *  Provides some extra stuff to avoid boilerplate
+ * and gives access to the main layout and panel so we can easily switch screens/views
  * @author puppyofkosh
  *
  */

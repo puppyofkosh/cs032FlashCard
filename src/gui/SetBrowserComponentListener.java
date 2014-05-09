@@ -17,8 +17,7 @@ public class SetBrowserComponentListener extends ComponentAdapter{
 	}
 	
 	@Override
-	public void componentHidden(ComponentEvent e)
-	{
+	public void componentHidden(ComponentEvent e)	{
 		browser.removeSetBrowser();
 	}
 }

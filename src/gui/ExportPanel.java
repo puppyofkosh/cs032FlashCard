@@ -146,7 +146,7 @@ public class ExportPanel extends JPanel implements ClientFrontend,
 	}
 
 	@Override
-	public void guiMessage(String msg, int duration) {
+	public void clientMessage(String msg, int duration) {
 		if (msg.contains("Successful")) {
 			JOptionPane.showMessageDialog(panel, msg + " Shutting down Client");
 			if (_client != null) {
@@ -160,8 +160,8 @@ public class ExportPanel extends JPanel implements ClientFrontend,
 	}
 
 	@Override
-	public void guiMessage(String msg) {
-		guiMessage(msg, 3);
+	public void clientMessage(String msg) {
+		clientMessage(msg, 3);
 
 	}
 

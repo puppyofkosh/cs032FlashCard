@@ -18,9 +18,6 @@ import controller.Controller;
 
 public class SidePanel extends GenericPanel implements MouseListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JLabel btnFlashboard, btnExport, btnImport, btnCreate, btnSets, 
@@ -74,6 +71,10 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		setSelected(btnFlashboard);
 	}
 
+	/**
+	 * Convenience method for formatting side buttons.
+	 * @param button
+	 */
 	private void initMenuItem(JLabel button) {
 		button.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		button.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
@@ -81,6 +82,7 @@ public class SidePanel extends GenericPanel implements MouseListener {
 		button.addMouseListener(this);
 	}
 
+	
 	private void setSelected(JLabel button) {
 		if (btnSelected != null) btnSelected.setOpaque(false);
 		btnSelected = button;

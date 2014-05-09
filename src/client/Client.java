@@ -42,20 +42,12 @@ public class Client extends SwingWorker<Response, Response> {
 	private String _hostName;
 	private Queue<Request> _requests;
 	private ClientFrontend _frontend;
-	private int numRequests;
+	private int _numRequests;
 	
-	private volatile String _guiMessage = "";
-	private volatile boolean _guiMessageChanged = false;
+	private volatile String _clientMessage = "";
 	
-	private void setGuiMessage(String s)
-	{
-		_guiMessage = s;
-		_guiMessageChanged = true;
-	}
-	private String processGuiMessage()
-	{
-		_guiMessageChanged = false;
-		return _guiMessage;
+	private void setClientMessage(String s) {
+		_clientMessage = s;
 	}
 	
 	
@@ -103,11 +95,11 @@ public class Client extends SwingWorker<Response, Response> {
 
 			} catch (IOException ex) {
 				Writer.out("ERROR: Can't connect to server");
-				setGuiMessage("Server unavailable!");
+				setClientMessage("Server unavailable!");
 				_hasServer = false;
 				try {
 					Thread.sleep(2500);
-					setGuiMessage("Attempting to reconnect...");
+					setClientMessage("Attempting to reconnect...");
 					Thread.sleep(2500);
 				} catch (InterruptedException e) {
 					Writer.err("ERROR trying to reconnect to server");
@@ -136,8 +128,8 @@ public class Client extends SwingWorker<Response, Response> {
 					_output.writeObject(_requests.poll());
 					_output.flush();
 					setProgress(75);
-					Writer.out("Sent Request", numRequests);
-					numRequests++;
+					Writer.out("Sent Request", _numRequests);
+					_numRequests++;
 				} catch (IOException e) {
 					e.printStackTrace();
 					Writer.out("??Server closed");
@@ -268,7 +260,7 @@ public class Client extends SwingWorker<Response, Response> {
 			break;
 		case UPLOAD:
 			UploadCardsResponse ucR = (UploadCardsResponse) resp;
-			_frontend.guiMessage("Upload "
+			_frontend.clientMessage("Upload "
 					+ (ucR.confirmed() ? "Successful" : "Failed"));
 			System.out.println("RECEIVED");
 			return;
@@ -290,8 +282,8 @@ public class Client extends SwingWorker<Response, Response> {
 		{
 			processResponse(r);
 		}
-		if (_guiMessage.length() > 0)
-			_frontend.guiMessage(_guiMessage);
+		if (_clientMessage.length() > 0)
+			_frontend.clientMessage(_clientMessage);
 	}
 
 }

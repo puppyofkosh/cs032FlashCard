@@ -127,18 +127,18 @@ ActionListener {
 	}
 
 	@Override
-	public void guiMessage(String msg, int duration) {
+	public void clientMessage(String msg, int duration) {
 		status.setText(msg);
 		repaint();
 	}
 
 	@Override
-	public void guiMessage(String msg) {
-		guiMessage(msg, 3);
+	public void clientMessage(String msg) {
+		clientMessage(msg, 3);
 	}
 
 	private void attemptConnection(String hostname, int port) {
-		guiMessage("Attempting connection", 1);
+		clientMessage("Attempting connection", 1);
 		_client = new Client(hostname, port, this);
 		_client.execute();
 	}
@@ -172,7 +172,7 @@ ActionListener {
 					if (!hostName.isEmpty() && port > 0)
 						attemptConnection(hostName, port);
 				} catch (NumberFormatException e1) {
-					guiMessage("Could not parse port number");
+					clientMessage("Could not parse port number");
 				}
 			} else {
 				_client.kill();

@@ -74,9 +74,9 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel.add(_playAndStop);
 
 		//This panel maintains all information about the tags and displays them
-		//as bubbles in a scroll window. When you mouse over it, it will display
-		//a text field where you can add more tags.
+		//as bubbles.
 		_tagPanel = new TagPanel(_card);
+		_tagPanel.disableInputField();
 
 		//A ControlScrollPane allows us to responsively scroll through cards as
 		//well as tags.

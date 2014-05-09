@@ -27,9 +27,36 @@ public class TagPanel extends JPanel implements MouseListener {
 	List<TagLabel> _tags;
 	private FlashCard _card;
 
-	private String inputHint = "Input Tags";
-	private JLabel emptyLabel;
-	private boolean global;
+	private String _inputHint = "Input Tags";
+	private JLabel _emptyLabel;
+	private boolean _global, _inputFieldDisabled;
+
+	
+
+	TagPanel(List<String> tags, String text, boolean global) {
+		super(new WrapLayout(WrapLayout.CENTER, 1, 1));
+
+		if (text == null) text = "No Tags";
+		if (tags == null) tags = new LinkedList<>();
+		_global = global;
+
+		setBorder(BorderFactory.createEmptyBorder());
+		addMouseListener(this);
+		setOpaque(false);
+		setEmptyText(text);
+		setTags(tags);
+	}
+	
+	TagPanel(String text) {
+		this(null, text, false);
+	}
+	TagPanel() {
+		this(null, null, false);
+	}
+
+	TagPanel(String text, boolean global) {
+		this(null, text, global);
+	}
 
 	TagPanel(FlashCard card, String text) {
 		this(text);
@@ -58,8 +85,7 @@ public class TagPanel extends JPanel implements MouseListener {
 			}
 		}
 		if (_tags.isEmpty())
-			add(emptyLabel);
-		_inputField.setVisible(false);
+			add(_emptyLabel);
 	}
 
 	TagPanel(FlashCard card) {
@@ -74,54 +100,34 @@ public class TagPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-
-	TagPanel(String text) {
-		this(null, text, false);
-	}
-	TagPanel() {
-		this(null, null, false);
-	}
-
-	TagPanel(String text, boolean global) {
-		this(null, text, global);
+	
+	public void disableInputField() {
+		_inputFieldDisabled = true;
 	}
 
 	/**
 	 * Used if we want to reinitialize with a card's data and then not have the panel edit the card anymore
 	 */
-	public void ignoreCard()
-	{
+	public void ignoreCard() {
 		_card = null;
 	}
-	
-	TagPanel(List<String> tags, String text, boolean global) {
-		super(new WrapLayout(WrapLayout.CENTER, 1, 1));
 
-		if (text == null) text = "No Tags";
-		if (tags == null) tags = new LinkedList<>();
-		this.global = global;
-
-		setBorder(BorderFactory.createEmptyBorder());
-		addMouseListener(this);
-		setOpaque(false);
-		setEmptyText(text);
-		setTags(tags);
-	}
-
+	/**
+	 * Adds the text box.
+	 */
 	private void initInputField() {
 		if (_inputField != null)
 			remove(_inputField);
 
 		_inputField = new JTextField(7);
 		_inputField.setForeground(Color.GRAY);
-		_inputField.setText(inputHint);
+		_inputField.setText(_inputHint);
 		_inputField.setForeground(Color.BLACK);
 		_inputField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == _inputField) {
-					System.out.println("CMD" + e.getActionCommand());
-					addTag(_inputField.getText(), global);
+					addTag(_inputField.getText(), _global);
 					_inputField.setText("");
 				}
 			}
@@ -149,7 +155,7 @@ public class TagPanel extends JPanel implements MouseListener {
 	}
 
 	public void setPanelType(boolean global) {
-		this.global = global;
+		_global = global;
 	}
 
 	public void addTag(String tag, boolean global, boolean deleteable) {
@@ -157,11 +163,11 @@ public class TagPanel extends JPanel implements MouseListener {
 			tag = Writer.parseInput(tag);
 		} catch (IOException e1) {
 			Controller.guiMessage("Invalid tag: " + tag, true);
-			
+
 			return;
 		}
 
-		if (!_tags.contains(tag) && !tag.equals(inputHint)) {
+		if (!_tags.contains(tag) && !tag.equals(_inputHint)) {
 			try {
 				if (!global)
 					Controller.addTag(_card, tag);
@@ -182,25 +188,25 @@ public class TagPanel extends JPanel implements MouseListener {
 	}
 
 	public void setEmptyText(String text) {
-		if (emptyLabel != null)
-			remove(emptyLabel);
+		if (_emptyLabel != null)
+			remove(_emptyLabel);
 
-		emptyLabel = new JLabel(text);
-		emptyLabel.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+		_emptyLabel = new JLabel(text);
+		_emptyLabel.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
 	}
 
 	private void update() {
 		if (_tags.isEmpty()) {
 			if (_inputField !=null)
 				remove(_inputField);
-			if (emptyLabel != null)
-				add(emptyLabel);
-			add(_inputField);
+			if (_emptyLabel != null)
+				add(_emptyLabel);
+			if (!_inputFieldDisabled)
+				add(_inputField);
 		} else {
-			if (emptyLabel != null)
-				remove(emptyLabel);
+			if (_emptyLabel != null)
+				remove(_emptyLabel);
 		}
-
 		revalidate();
 		repaint();
 	}
@@ -275,17 +281,21 @@ public class TagPanel extends JPanel implements MouseListener {
 	public void mouseReleased(MouseEvent e) {}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		_inputField.setVisible(true);
-		remove(emptyLabel);
-		revalidate();
-		repaint();
+		if (!_inputFieldDisabled) {
+			_inputField.setVisible(true);
+			remove(_emptyLabel);
+			revalidate();
+			repaint();
+		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if (_inputField.isFocusOwner())
-			return;
-		_inputField.setVisible(false);
-		update();
+		if (!_inputFieldDisabled) {
+			if (_inputField.isFocusOwner())
+				return;
+			_inputField.setVisible(false);
+			update();
+		}
 	}
 }

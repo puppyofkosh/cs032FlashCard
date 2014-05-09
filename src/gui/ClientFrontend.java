@@ -13,8 +13,8 @@ import flashcard.FlashCard;
  */
 public interface ClientFrontend {
 	
-	void guiMessage(String msg, int duration);
-	void guiMessage(String msg);
+	void clientMessage(String msg, int duration);
+	void clientMessage(String msg);
 	void updateLocallyStoredCards(List<FlashCard> flashcards);
 	void updateCardsForImport(List<NetworkedFlashCard> flashcards);
 
