@@ -29,6 +29,7 @@ import audio.ByteArrayAudioPlayer;
 import audio.FreeTTSReader;
 import audio.Recorder;
 import audio.TextToSpeechReader;
+import backend.FileImportWorker;
 import backend.FileImporter;
 import database.DatabaseFactory;
 
@@ -66,56 +67,52 @@ public class Controller {
 	 */
 	public static void importCardsToLibrary(final String filename) {
 
-		// Make a thread that just imports the cards
-		Thread thread = new Thread(new Runnable() {
+		TextToSpeechReader ttsReader;
+		try {
+			ttsReader = new FreeTTSReader();
 
-			public void run()
+			FileImporter importer = new FileImporter(new File(filename),
+					ttsReader);
+			
+			FileImportWorker w = new FileImportWorker(importer, new Runnable() 
 			{
-				TextToSpeechReader ttsReader;
-				try {
-					ttsReader = new FreeTTSReader();
-
-					FileImporter importer = new FileImporter(new File(filename),
-							ttsReader);
-					importer.importCards();
-
-					System.out.println("Imported " + importer.getCardList().size()
-							+ " cards");
-				} catch (IOException e) {
-					guiMessage("Invalid file", true);
+				@Override
+				public void run()
+				{
+					Controller.updateGUI(Controller.getCurrentTab());
 				}
-			}
-		});
-		thread.start();
+			});
+			w.execute();
+		} catch (IOException e) {
+			guiMessage("Invalid file", true);
+		}
 	}
 
 	/*
 	 * Export a card to flat wav
 	 * 
 	 * @param f
+	 * 
 	 * @param destination
 	 */
-	/*public static void exportCard(FlashCard f, String destinationFolder) {
-		if (!destinationFolder.endsWith("/"))
-			guiMessage("WARNING: destinationFolder should end with a slash(/)",
-					true);
-		try {
-			WavFileConcatenator.concatenate(f);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}*/
+	/*
+	 * public static void exportCard(FlashCard f, String destinationFolder) { if
+	 * (!destinationFolder.endsWith("/"))
+	 * guiMessage("WARNING: destinationFolder should end with a slash(/)",
+	 * true); try { WavFileConcatenator.concatenate(f); } catch (IOException e1)
+	 * { // TODO Auto-generated catch block e1.printStackTrace(); } }
+	 */
 
 	/**
 	 * Play a chunk of audio. This method should ensure that only one piece of
 	 * audio is playing at a time
 	 */
-	//public static void playAudio(AudioFile file) throws IOException {
-	//player.play(file);
-	//}
+	// public static void playAudio(AudioFile file) throws IOException {
+	// player.play(file);
+	// }
 
-	public static void playAudioThenRun(AudioFile file, Runnable...runnables) throws IOException {
+	public static void playAudioThenRun(AudioFile file, Runnable... runnables)
+			throws IOException {
 		player.playThenRun(file, runnables);
 	}
 
@@ -179,15 +176,18 @@ public class Controller {
 
 		JLabel label = new JLabel(text);
 		final int time = duration;
-		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),false);
+		final JDialog dialog = new JDialog(gui, (error ? "Error" : "Message"),
+				false);
 		dialog.add(label);
 		Rectangle bounds = gui.getBounds();
-		label.setFont(label.getFont().deriveFont((float) (bounds.width/ (text.length() + 2))));
+		label.setFont(label.getFont().deriveFont(
+				(float) (bounds.width / (text.length() + 2))));
 		label.setForeground(GuiConstants.PRIMARY_FONT_COLOR);
 		label.setBackground(GuiConstants.CARD_BACKGROUND);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setOpaque(true);
-		dialog.setBounds(bounds.x + (bounds.width / 4) , bounds.y + (bounds.height / 4), bounds.width / 2, bounds.height / 2);
+		dialog.setBounds(bounds.x + (bounds.width / 4), bounds.y
+				+ (bounds.height / 4), bounds.width / 2, bounds.height / 2);
 		dialog.setVisible(true);
 		new Thread(new Runnable() {
 			@Override
@@ -216,25 +216,25 @@ public class Controller {
 	}
 
 	public static String parseCardName(String text) {
-		//		StringBuilder fixedText = new StringBuilder();
-		//		char currentCharacter;
-		//		for (int i = 0; i < text.length(); i++) {
-		//			currentCharacter = text.charAt(i);
-		//			if (Character.isJavaIdentifierPart(currentCharacter))
-		//				fixedText.append(currentCharacter);
-		//		}
+		// StringBuilder fixedText = new StringBuilder();
+		// char currentCharacter;
+		// for (int i = 0; i < text.length(); i++) {
+		// currentCharacter = text.charAt(i);
+		// if (Character.isJavaIdentifierPart(currentCharacter))
+		// fixedText.append(currentCharacter);
+		// }
 		//
-		//		if (fixedText.length() == 0)
-		//			fixedText.append("untitled");
-		//		int overlapPreventer = 0;
-		//		String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
-		//		File file = new File(prefix);
-		//		while (file.exists()) {
-		//			overlapPreventer++;
-		//			file = new File(prefix + overlapPreventer);
-		//		}
-		//		return fixedText.toString()
-		//				+ (overlapPreventer == 0 ? "" : overlapPreventer);
+		// if (fixedText.length() == 0)
+		// fixedText.append("untitled");
+		// int overlapPreventer = 0;
+		// String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
+		// File file = new File(prefix);
+		// while (file.exists()) {
+		// overlapPreventer++;
+		// file = new File(prefix + overlapPreventer);
+		// }
+		// return fixedText.toString()
+		// + (overlapPreventer == 0 ? "" : overlapPreventer);
 		return text;
 	}
 
@@ -257,24 +257,25 @@ public class Controller {
 		}
 	}
 
+	// public static void playFlashCard(FlashCard card, ImageToggleButton
+	// _button) throws IOException {
+	// player.play(card);
+	// }
 
-	//public static void playFlashCard(FlashCard card, ImageToggleButton _button) throws IOException {
-	//player.play(card);
-	//	}
-
-	public static void playFlashcardThenRun(FlashCard card, Runnable...runnables) throws IOException {
+	public static void playFlashcardThenRun(FlashCard card,
+			Runnable... runnables) throws IOException {
 		currentlyPlayingFlashCard = card;
 		player.playThenRun(card, runnables);
 	}
 
-	public static FlashCard getCurrentlyPlayingFlashCard()
-	{
+	public static FlashCard getCurrentlyPlayingFlashCard() {
 		return currentlyPlayingFlashCard;
 	}
 
 	public static boolean verifyInput(String input) {
 		// FIXME implement for real
-		//		return parseCardName(input).replaceAll("[\\d]", "").equals(input.replaceAll("[\\s\\d]", ""));
+		// return parseCardName(input).replaceAll("[\\d]",
+		// "").equals(input.replaceAll("[\\s\\d]", ""));
 		return true;
 	}
 
@@ -302,7 +303,6 @@ public class Controller {
 		}
 	}
 
-
 	private static TextToSpeechReader getReader() {
 		if (reader != null)
 			return reader;
@@ -321,7 +321,7 @@ public class Controller {
 		return reader.read(text);
 	}
 
-	public static void startRecord(Runnable...runnables) {
+	public static void startRecord(Runnable... runnables) {
 		recorder = new BufferRecorder();
 		recorder.startRecord(runnables);
 	}
@@ -332,7 +332,8 @@ public class Controller {
 
 	public static void deleteCard(FlashCard card) {
 		// The DB handles removing the card from its sets
-		if (currentlyPlayingFlashCard != null && card.equals(currentlyPlayingFlashCard))
+		if (currentlyPlayingFlashCard != null
+				&& card.equals(currentlyPlayingFlashCard))
 			stopAudio();
 
 		DatabaseFactory.deleteCard(card);
@@ -344,7 +345,9 @@ public class Controller {
 	}
 
 	/**
-	 * If a set with the same name & metadata already exists, return that, otherwise create a new set
+	 * If a set with the same name & metadata already exists, return that,
+	 * otherwise create a new set
+	 * 
 	 * @param name
 	 * @param author
 	 * @param tags
@@ -376,8 +379,9 @@ public class Controller {
 	}
 
 	/**
-	 * Create a new set, write it to disk, and return it. The name may not match up
-	 * with what is given.
+	 * Create a new set, write it to disk, and return it. The name may not match
+	 * up with what is given.
+	 * 
 	 * @param name
 	 * @param author
 	 * @param tags
@@ -385,8 +389,7 @@ public class Controller {
 	 * @return
 	 */
 	public static FlashCardSet createNewSet(String name, String author,
-			List<String> tags, int interval)
-	{
+			List<String> tags, int interval) {
 		FlashCardSet set = new SimpleSet(name);
 		for (String tag : tags) {
 			try {
@@ -405,15 +408,13 @@ public class Controller {
 	}
 
 	public static void updateAll() {
-		updateGUI(
-				TabType.FLASHBOARD, TabType.EXPORT,
-				TabType.IMPORT, TabType.CARD,
-				TabType.SET, TabType.SETTINGS);
+		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT,
+				TabType.CARD, TabType.SET, TabType.SETTINGS);
 	}
 
-	public static void updateGUI(TabType...types) {
+	public static void updateGUI(TabType... types) {
 		setBrowser.updateSourceList();
-		for(TabType type : types) {
+		for (TabType type : types) {
 			gui.update(type);
 		}
 	}
@@ -451,21 +452,19 @@ public class Controller {
 
 	}
 
-
 	/**
 	 * replace a card with a different card in the DB
+	 * 
 	 * @param oldCard
 	 * @param newCard
 	 */
-	public static void replaceCard(FlashCard oldCard, FlashCard newCard)
-	{
+	public static void replaceCard(FlashCard oldCard, FlashCard newCard) {
 		System.out.println("replacing " + oldCard + " by " + newCard);
 
 		Collection<FlashCardSet> sets = oldCard.getSets();
 		Controller.deleteCard(oldCard);
 		try {
-			for (FlashCardSet s : sets)
-			{
+			for (FlashCardSet s : sets) {
 				s.addCard(newCard);
 			}
 		} catch (IOException e) {
