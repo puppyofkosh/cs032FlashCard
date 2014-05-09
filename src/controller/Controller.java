@@ -50,19 +50,20 @@ public class Controller {
 
 	// the flashcard being played right now
 	private static FlashCard currentlyPlayingFlashCard = null;
-
 	private static TabType currentTab = TabType.FLASHBOARD;
 
-	public static SetBrowser requestSetBrowser() {
-		return setBrowser;
-	}
+
+	///////////////////////////////////////////////////////////////////////////////	
+	///// AUDIO RECORDING AND PLAYING METHODS /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////	
+
 
 	/**
 	 * Import a tsv or similar
 	 * 
 	 * @param filename
 	 */
-	public static void importCardsToLibrary(final String filename) {
+	public static void importCardsFromFile(final String filename) {
 
 		TextToSpeechReader ttsReader;
 		try {
@@ -97,6 +98,15 @@ public class Controller {
 		player.playThenRun(file, runnables);
 	}
 
+	public static void playFlashcardThenRun(FlashCard card,
+			Runnable... runnables) throws IOException {
+		currentlyPlayingFlashCard = card;
+		player.playThenRun(card, runnables);
+	}
+
+	public static FlashCard getCurrentlyPlayingFlashCard() {
+		return currentlyPlayingFlashCard;
+	}
 
 	/**
 	 * Hard stop on all audio playing.
@@ -114,6 +124,40 @@ public class Controller {
 		return getReader() != null;
 	}
 
+
+	private static TextToSpeechReader getReader() {
+		if (reader != null)
+			return reader;
+		else {
+			try {
+				reader = new FreeTTSReader();
+				return reader;
+			} catch (Throwable e) {
+				guiMessage("Could not load reader", true);
+				return null;
+			}
+		}
+	}
+
+	public static AudioFile readTTS(String text) {
+		return reader.read(text);
+	}
+
+
+	public static void startRecord(Runnable... runnables) {
+		recorder = new BufferRecorder();
+		recorder.startRecord(runnables);
+	}
+
+	public static AudioFile finishRecording() {
+		return recorder.stopRecord();
+	}
+
+
+	///////////////////////////////////////////////////////////////////////////////	
+	///// CARD MODIFICATION METHODS ///////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////	
+
 	/**
 	 * Create a flashcard from the given data and save it to file
 	 * 
@@ -128,6 +172,180 @@ public class Controller {
 		// card = DatabaseFactory.writeCard(card);
 
 		return card;
+	}
+
+	public static void addTag(FlashCard card, String tag) throws IOException {
+		if (card == null)
+			return;
+		else {
+			card.addTag(tag);
+		}
+
+	}
+
+	public static void removeTag(FlashCard card, String tag) throws IOException {
+		if (card == null)
+			return;
+		else
+			card.removeTag(tag);
+	}
+
+	/**
+	 * replace a card with a different card in the DB
+	 * 
+	 * @param oldCard
+	 * @param newCard
+	 */
+	public static void replaceCard(FlashCard oldCard, FlashCard newCard) {
+
+		Collection<FlashCardSet> sets = oldCard.getSets();
+		Controller.deleteCard(oldCard);
+		try {
+			for (FlashCardSet s : sets) {
+				s.addCard(newCard);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void deleteCard(FlashCard card) {
+		// The DB handles removing the card from its sets
+		if (currentlyPlayingFlashCard != null
+				&& card.equals(currentlyPlayingFlashCard))
+			stopAudio();
+
+		DatabaseFactory.deleteCard(card);
+		updateGUI(getCurrentTab());
+	}
+
+	public static void editCard(FlashCard card) {
+		gui.editCard(card);
+
+	}
+
+
+	///////////////////////////////////////////////////////////////////////////////	
+	///// SET MODIFICATION METHODS ////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////	
+
+
+	/**
+	 * If a set with the same name & metadata already exists, return that,
+	 * otherwise create a new set
+	 * 
+	 * @param name
+	 * @param author
+	 * @param tags
+	 * @param interval
+	 * @return
+	 */
+	public static FlashCardSet createSet(String name, String author,
+			List<String> tags, int interval) {
+		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(
+				name);
+		FlashCardSet set = new SimpleSet(name);
+		for (String tag : tags) {
+			try {
+				set.addTag(tag);
+			} catch (IOException e) {
+				Controller.guiMessage("Could not write tag: " + tag, true);
+			}
+		}
+		set.setAuthor(author);
+		set.setInterval(interval);
+
+		if (existingSet != null && existingSet.sameMetaData(set)) {
+			return existingSet;
+		}
+		set = DatabaseFactory.writeSet(set);
+
+		updateGUI(getCurrentTab());
+		return set;
+	}
+
+	/**
+	 * Create a new set, write it to disk, and return it. The name may not match
+	 * up with what is given.
+	 * 
+	 * @param name
+	 * @param author
+	 * @param tags
+	 * @param interval
+	 * @return
+	 */
+	public static FlashCardSet createNewSet(String name, String author,
+			List<String> tags, int interval) {
+		FlashCardSet set = new SimpleSet(name);
+		for (String tag : tags) {
+			try {
+				set.addTag(tag);
+			} catch (IOException e) {
+				Controller.guiMessage("Could not write tag: " + tag, true);
+			}
+		}
+		set.setAuthor(author);
+		set.setInterval(interval);
+
+		set = DatabaseFactory.writeSet(set);
+
+		updateGUI(getCurrentTab());
+		return set;
+	}
+
+
+	public static void editSet(FlashCardSet set) {
+		gui.editSet(set);
+	}
+
+	public static void deleteSet(FlashCardSet set) {
+		DatabaseFactory.deleteSet(set);
+		updateGUI(getCurrentTab());
+	}
+
+	public static void setDefaultInterval(int interval) {
+		gui.setDefaultInterval(interval);
+	}
+
+	public static Collection<FlashCardSet> getAllSets() {
+		return DatabaseFactory.getResources().getAllSets();
+	}
+
+
+
+
+	///////////////////////////////////////////////////////////////////////////////	
+	///// GENERAL GUI METHODS /////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////	
+
+
+	public static void launchGUI() {
+		gui = new MainFrame();
+	}
+
+	public static TabType getCurrentTab() {
+		return currentTab;
+	}
+
+	public static void switchTabs(TabType tab) {
+		currentTab = tab;
+		gui.showTab(tab);
+	}
+
+	public static void updateAll() {
+		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT,
+				TabType.CARD, TabType.SET, TabType.SETTINGS);
+	}
+
+	public static void updateGUI(TabType... types) {
+		setBrowser.updateSourceList();
+		for (TabType type : types) {
+			gui.update(type);
+		}
+	}
+
+	public static SetBrowser requestSetBrowser() {
+		return setBrowser;
 	}
 
 	public void requestAutocorrections(String text, int boxNo) {
@@ -199,253 +417,4 @@ public class Controller {
 	public static void guiMessage(String text) {
 		guiMessage(text, 3);
 	}
-
-	private String parseCardName(String text) {
-		// StringBuilder fixedText = new StringBuilder();
-		// char currentCharacter;
-		// for (int i = 0; i < text.length(); i++) {
-		// currentCharacter = text.charAt(i);
-		// if (Character.isJavaIdentifierPart(currentCharacter))
-		// fixedText.append(currentCharacter);
-		// }
-		//
-		// if (fixedText.length() == 0)
-		// fixedText.append("untitled");
-		// int overlapPreventer = 0;
-		// String prefix = FlashcardConstants.CARDS_FOLDER + fixedText;
-		// File file = new File(prefix);
-		// while (file.exists()) {
-		// overlapPreventer++;
-		// file = new File(prefix + overlapPreventer);
-		// }
-		// return fixedText.toString()
-		// + (overlapPreventer == 0 ? "" : overlapPreventer);
-		return text;
-	}
-
-	public static String parseInput(String text) throws IOException {
-		StringBuilder fixedText = new StringBuilder();
-		char currentCharacter;
-		for (int i = 0; i < text.length(); i++) {
-			currentCharacter = text.charAt(i);
-			if (Character.isJavaIdentifierPart(currentCharacter)) {
-				fixedText.append(currentCharacter);
-			} else if (Character.isWhitespace(currentCharacter)) {
-				fixedText.append(" ");
-			}
-		}
-		String newText = fixedText.toString().trim();
-		if (newText.length() == 0) {
-			throw new IOException("No valid cards");
-		} else {
-			return newText;
-		}
-	}
-
-	// public static void playFlashCard(FlashCard card, ImageToggleButton
-	// _button) throws IOException {
-	// player.play(card);
-	// }
-
-	public static void playFlashcardThenRun(FlashCard card,
-			Runnable... runnables) throws IOException {
-		currentlyPlayingFlashCard = card;
-		player.playThenRun(card, runnables);
-	}
-
-	public static FlashCard getCurrentlyPlayingFlashCard() {
-		return currentlyPlayingFlashCard;
-	}
-
-	public static void addTag(FlashCard card, String tag) throws IOException {
-		if (card == null)
-			return;
-		else {
-			card.addTag(tag);
-		}
-
-	}
-
-	public static void removeTag(FlashCard card, String tag) throws IOException {
-		if (card == null)
-			return;
-		else
-			card.removeTag(tag);
-	}
-
-	public static String shortenText(String text) {
-		if (text.length() > GuiConstants.MAX_TEXT_LENGTH) {
-			return text.substring(0, GuiConstants.MAX_TEXT_LENGTH) + "...";
-		} else {
-			return text;
-		}
-	}
-
-	private static TextToSpeechReader getReader() {
-		if (reader != null)
-			return reader;
-		else {
-			try {
-				reader = new FreeTTSReader();
-				return reader;
-			} catch (Throwable e) {
-				guiMessage("Could not load reader", true);
-				return null;
-			}
-		}
-	}
-
-	public static AudioFile readTTS(String text) {
-		return reader.read(text);
-	}
-
-	public static void startRecord(Runnable... runnables) {
-		recorder = new BufferRecorder();
-		recorder.startRecord(runnables);
-	}
-
-	public static AudioFile finishRecording() {
-		return recorder.stopRecord();
-	}
-
-	public static void deleteCard(FlashCard card) {
-		// The DB handles removing the card from its sets
-		if (currentlyPlayingFlashCard != null
-				&& card.equals(currentlyPlayingFlashCard))
-			stopAudio();
-
-		DatabaseFactory.deleteCard(card);
-		updateGUI(getCurrentTab());
-	}
-
-	public static Collection<FlashCardSet> getAllSets() {
-		return DatabaseFactory.getResources().getAllSets();
-	}
-
-	/**
-	 * If a set with the same name & metadata already exists, return that,
-	 * otherwise create a new set
-	 * 
-	 * @param name
-	 * @param author
-	 * @param tags
-	 * @param interval
-	 * @return
-	 */
-	public static FlashCardSet createSet(String name, String author,
-			List<String> tags, int interval) {
-		FlashCardSet existingSet = DatabaseFactory.getResources().getSetByName(
-				name);
-		FlashCardSet set = new SimpleSet(name);
-		for (String tag : tags) {
-			try {
-				set.addTag(tag);
-			} catch (IOException e) {
-				Controller.guiMessage("Could not write tag: " + tag, true);
-			}
-		}
-		set.setAuthor(author);
-		set.setInterval(interval);
-
-		if (existingSet != null && existingSet.sameMetaData(set)) {
-			return existingSet;
-		}
-		set = DatabaseFactory.writeSet(set);
-
-		updateGUI(getCurrentTab());
-		return set;
-	}
-
-	/**
-	 * Create a new set, write it to disk, and return it. The name may not match
-	 * up with what is given.
-	 * 
-	 * @param name
-	 * @param author
-	 * @param tags
-	 * @param interval
-	 * @return
-	 */
-	public static FlashCardSet createNewSet(String name, String author,
-			List<String> tags, int interval) {
-		FlashCardSet set = new SimpleSet(name);
-		for (String tag : tags) {
-			try {
-				set.addTag(tag);
-			} catch (IOException e) {
-				Controller.guiMessage("Could not write tag: " + tag, true);
-			}
-		}
-		set.setAuthor(author);
-		set.setInterval(interval);
-
-		set = DatabaseFactory.writeSet(set);
-
-		updateGUI(getCurrentTab());
-		return set;
-	}
-
-	public static void updateAll() {
-		updateGUI(TabType.FLASHBOARD, TabType.EXPORT, TabType.IMPORT,
-				TabType.CARD, TabType.SET, TabType.SETTINGS);
-	}
-
-	public static void updateGUI(TabType... types) {
-		setBrowser.updateSourceList();
-		for (TabType type : types) {
-			gui.update(type);
-		}
-	}
-
-	public static void launchGUI() {
-		gui = new MainFrame();
-	}
-
-	public static void editCard(FlashCard card) {
-		gui.editCard(card);
-
-	}
-
-	public static void editSet(FlashCardSet set) {
-		gui.editSet(set);
-	}
-
-	public static void switchTabs(TabType tab) {
-		gui.showTab(tab);
-		currentTab = tab;
-	}
-
-	public static void deleteSet(FlashCardSet set) {
-		DatabaseFactory.deleteSet(set);
-		updateGUI(getCurrentTab());
-	}
-
-	public static TabType getCurrentTab() {
-		return currentTab;
-	}
-
-	/**
-	 * replace a card with a different card in the DB
-	 * 
-	 * @param oldCard
-	 * @param newCard
-	 */
-	public static void replaceCard(FlashCard oldCard, FlashCard newCard) {
-		System.out.println("replacing " + oldCard + " by " + newCard);
-
-		Collection<FlashCardSet> sets = oldCard.getSets();
-		Controller.deleteCard(oldCard);
-		try {
-			for (FlashCardSet s : sets) {
-				s.addCard(newCard);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void setDefaultInterval(int interval) {
-		gui.setDefaultInterval(interval);
-	}
-
 }
