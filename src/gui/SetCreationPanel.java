@@ -24,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import settings.Settings;
+import utils.Writer;
 
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListSelectionListener;
@@ -174,13 +175,13 @@ SourceListSelectionListener, Browsable {
 			int interval = (int) spinnerInterval.getValue();
 			String nameInput;
 			try {
-				nameInput = Controller.parseInput(setNameField.getText());
+				nameInput = Writer.parseInput(setNameField.getText());
 			} catch (IOException e1) {
 				nameInput = "Set";
 			}
 
 			try {
-				authorName = Controller.parseInput(authorTextField.getText());
+				authorName = Writer.parseInput(authorTextField.getText());
 			} catch (IOException e1) {
 				authorName = "Anonymous";
 			}

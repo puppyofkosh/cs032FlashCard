@@ -48,6 +48,7 @@ import org.json.JSONException;
 import quizlet.QuizletCard;
 import quizlet.QuizletRequest;
 import quizlet.QuizletSet;
+import utils.Writer;
 import controller.Controller;
 
 public class QuizletPanel extends JPanel implements PropertyChangeListener, ComponentListener {
@@ -373,13 +374,13 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 			tags = tagPanel.getTags();
 			setName = "";
 			try {
-				setName = Controller.parseInput(setNameTextField.getText());
+				setName = Writer.parseInput(setNameTextField.getText());
 			} catch (IOException e){};
 			if (setName.equals("") && setTable.getSelectedRow() != -1)
 			{
 				try {
 					QuizletSet set = (QuizletSet) setTable.getValueAt(setTable.getSelectedRow(), 0);
-					setName = Controller.parseInput(set.name);
+					setName = Writer.parseInput(set.name);
 				} catch (IOException e) {}
 			}
 			
@@ -435,7 +436,7 @@ public class QuizletPanel extends JPanel implements PropertyChangeListener, Comp
 						data = new SerializableFlashCard.Data();
 						try
 						{
-							data.name = Controller.parseInput(card.term);
+							data.name = Writer.parseInput(card.term);
 						}
 						catch (IOException e)
 						{

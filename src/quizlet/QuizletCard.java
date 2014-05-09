@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import search.Search;
-
+import utils.Writer;
 import controller.Controller;
 import audio.AudioFile;
 import flashcard.FlashCard;
@@ -40,7 +40,7 @@ public class QuizletCard {
 		{
 			String fixed = "";
 			try {
-				fixed = Controller.parseInput(token);
+				fixed = Writer.parseInput(token);
 			} catch (IOException e) {
 				break;
 			}

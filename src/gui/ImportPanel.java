@@ -98,7 +98,7 @@ public class ImportPanel extends GenericPanel implements MouseListener {
 					}
 						
 					tsvPath = fileChooser.getSelectedFile().getPath();
-					Controller.importCardsToLibrary(tsvPath);
+					Controller.importCardsFromFile(tsvPath);
 				}
 
 			}

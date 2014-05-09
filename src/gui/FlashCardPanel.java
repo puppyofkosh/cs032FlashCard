@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import utils.Writer;
 import controller.Controller;
 import flashcard.FlashCard;
 
@@ -60,7 +61,7 @@ public class FlashCardPanel extends JPanel {
 		_headerPanel.setBackground(GuiConstants.CARD_BACKGROUND);
 		_headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		_cardName = new JLabel(Controller.shortenText(defaultName), SwingConstants.CENTER);
+		_cardName = new JLabel(Writer.shortenText(defaultName), SwingConstants.CENTER);
 		_headerPanel.add(_cardName);
 		add(_headerPanel);
 

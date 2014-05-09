@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import controller.Controller;
-
 import utils.TSVLineParser;
+import utils.Writer;
 import audio.AudioFile;
 import audio.MemoryAudioFile;
 import audio.TextToSpeechReader;
@@ -79,7 +78,7 @@ public class FileImporter implements Importer {
 					data.setQuestion(question);
 
 					try {
-						data.name = Controller
+						data.name = Writer
 								.parseInput(entry.get("question"));
 					} catch (IOException e) {
 						data.name = "Imported" + lineNumber;

@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import utils.Writer;
 import controller.Controller;
 import flashcard.FlashCard;
 import flashcard.FlashCardSet;
@@ -153,7 +154,7 @@ public class TagPanel extends JPanel implements MouseListener {
 
 	public void addTag(String tag, boolean global, boolean deleteable) {
 		try {
-			tag = Controller.parseInput(tag);
+			tag = Writer.parseInput(tag);
 		} catch (IOException e1) {
 			Controller.guiMessage("Invalid tag: " + tag, true);
 			

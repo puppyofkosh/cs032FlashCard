@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.Controller;
+import utils.Writer;
 
 public class TagLabel extends JPanel implements MouseListener{
 
@@ -48,7 +48,7 @@ public class TagLabel extends JPanel implements MouseListener{
 		_tagPanel = tagPanel;
 		_global = global;
 		_deletable = deletable;
-		_tag = new JLabel(Controller.shortenText(_tagText));
+		_tag = new JLabel(Writer.shortenText(_tagText));
 		_tag.setBorder(BorderFactory.createEmptyBorder(1, 1, 3, 1));
 		_tag.setFont(new Font("Sans Serif", Font.PLAIN, _size + 2));
 		_tag.setForeground(GuiConstants.PRIMARY_FONT_COLOR);

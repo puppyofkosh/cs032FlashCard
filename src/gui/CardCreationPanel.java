@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import utils.Writer;
 import audio.AudioFile;
 import controller.Controller;
 import flashcard.FlashCard;
@@ -393,11 +394,11 @@ public class CardCreationPanel extends GenericPanel implements ActionListener, R
 		SerializableFlashCard.Data data = new SerializableFlashCard.Data();
 		String parsedName;
 		try {
-			parsedName = Controller.parseInput(textFieldName.getText());
+			parsedName = Writer.parseInput(textFieldName.getText());
 			data.name = parsedName;
 		} catch (IOException iox) {
 			try {
-				data.name = Controller.parseInput(textQuestion.getText());
+				data.name = Writer.parseInput(textQuestion.getText());
 			} catch (IOException e1) {
 				Controller.guiMessage("Invalid card name");
 				return null;
