@@ -1,5 +1,7 @@
 package utils;
 
+import gui.GuiConstants;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,5 +67,38 @@ public class Writer {
 			s += (strs[i] +" ");
 		}
 		return s;
+	}
+
+	/**
+	 * Sanitizes input and spacing.
+	 * @param text
+	 * @return
+	 * @throws IOException
+	 */
+	public static String parseInput(String text) throws IOException {
+		StringBuilder fixedText = new StringBuilder();
+		char currentCharacter;
+		for (int i = 0; i < text.length(); i++) {
+			currentCharacter = text.charAt(i);
+			if (Character.isJavaIdentifierPart(currentCharacter)) {
+				fixedText.append(currentCharacter);
+			} else if (Character.isWhitespace(currentCharacter)) {
+				fixedText.append(" ");
+			}
+		}
+		String newText = fixedText.toString().trim();
+		if (newText.length() == 0) {
+			throw new IOException("No valid cards");
+		} else {
+			return newText;
+		}
+	}
+
+	public static String shortenText(String text) {
+		if (text.length() > GuiConstants.MAX_TEXT_LENGTH) {
+			return text.substring(0, GuiConstants.MAX_TEXT_LENGTH) + "...";
+		} else {
+			return text;
+		}
 	}
 }
