@@ -45,7 +45,7 @@ public class Writer {
 		}
 		catch(IOException ignore) {}
 
-		File audioFile = new File(filename + ".wav");
+		File audioFile = new File(filename);
 		AudioSystem.write(stream, AudioFileFormat.Type.WAVE, audioFile);
 	}
 

@@ -34,3 +34,5 @@ files/*
 
 # Directory for finalized wav files
 output/*
+
+.config
