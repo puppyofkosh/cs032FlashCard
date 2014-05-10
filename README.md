@@ -1,3 +1,8 @@
+<h1> TO USE </h1>
+ant clean && ant
+bin/gui
+
+
 <h1>Useful Links:</h1>
 
 <h3>Project Documents:</h3>
