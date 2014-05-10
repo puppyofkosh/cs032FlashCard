@@ -1,5 +1,5 @@
 <h1> TO USE </h1>
-ant clean && ant
+ant clean && ant <br>
 bin/gui
 
 
